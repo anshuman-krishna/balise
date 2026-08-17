@@ -16,14 +16,16 @@ screenshots, the fidelity source).
 
 ## Current status
 
-**Phase: V0.3 shipped (2026-08-17), V0.4 next.** Eight of the fifteen surfaces are built
+**Phase: V0.4 shipped (2026-08-17), V0.5 next.** Eleven of the fifteen surfaces are built
 on canon fixtures and verified against the design reference: Dashboard, Run detail,
-Comparison, Budgets, PR check, and now the Criteria workspace (summary strip, three tier
-cards with progress, working tier filter chips, 14-row representative table with official
-statuses) and the Declaration editor (blocking list, known-gaps editor with the required
-section note, version history, live preview of the published page with per-family
-conformity bars and the footer badge). All code comments lowercase, house style.
-102 tests green. Next slice: tender workspace, contract tracker, fleet.
+Comparison, Budgets, PR check, Criteria workspace, Declaration editor, and now the
+Tender workspace (five-step stepper, proposed commitments drawn from the measured
+baseline with the third-party warning strip, measured-history sparkline, output card),
+the Contract tracker (engagement table with headroom bars, 90-day trend sparklines,
+quarterly delivery squares, early warning, contract calendar) and the Fleet view
+(summary strip, six-service table using the compact ToleranceBand for carbon per visit,
+sector benchmark histogram, dark client-access card). All code comments lowercase,
+house style. 102 tests green. Next slice: the three documents in the print register.
 
 ---
 
@@ -98,7 +100,7 @@ conformity bars and the footer badge). All code comments lowercase, house style.
 - [x] ~~Budgets screen (visual table + YAML toggle)~~ (V0.2, plus re-baseline history and overrides cards)
 - [x] ~~Criteria workspace (tier cards, filter chips, criteria table)~~ (V0.3, filter chips functional)
 - [x] ~~Declaration editor (blocking list, known gaps, live preview)~~ (V0.3, preview shares its numbers with the criteria fixture)
-- [ ] Tender workspace, contract tracker, fleet
+- [x] ~~Tender workspace, contract tracker, fleet~~ (V0.4, fleet rows reuse the compact ToleranceBand on a shared scale)
 - [x] ~~PR check screen (GitHub register, radius exception)~~ (V0.2)
 - [ ] Documents (declaration, annexe, rapport) in the print register
 - [ ] Public surfaces (free scan, observatory, ledger verification)

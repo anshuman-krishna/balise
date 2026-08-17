@@ -14,6 +14,9 @@ import { Comparison } from './screens/Comparison';
 import { Budgets } from './screens/Budgets';
 import { Criteria } from './screens/Criteria';
 import { Declaration } from './screens/Declaration';
+import { Tender } from './screens/Tender';
+import { Contract } from './screens/Contract';
+import { Fleet } from './screens/Fleet';
 import { PrCheck } from './screens/PrCheck';
 import { Placeholder } from './screens/Placeholder';
 import { t } from './i18n';
@@ -26,9 +29,6 @@ interface PlannedScreen {
 }
 
 const planned: PlannedScreen[] = [
-  { path: '/tender', title: t.nav.items.tenderWorkspace, version: 'V0.4', appBar: true },
-  { path: '/contract', title: t.nav.items.contractTracker, version: 'V0.4', appBar: true },
-  { path: '/fleet', title: t.nav.items.fleet, version: 'V0.4', appBar: true },
   { path: '/documents/declaration', title: t.nav.items.docDeclaration, version: 'V0.5', appBar: false },
   { path: '/documents/annexe', title: t.nav.items.docAnnexe, version: 'V0.5', appBar: false },
   { path: '/documents/rapport', title: t.nav.items.docRapport, version: 'V0.5', appBar: false },
@@ -91,6 +91,30 @@ createRoot(root).render(
           element={
             <AppShell>
               <Declaration />
+            </AppShell>
+          }
+        />
+        <Route
+          path="/tender"
+          element={
+            <AppShell>
+              <Tender />
+            </AppShell>
+          }
+        />
+        <Route
+          path="/contract"
+          element={
+            <AppShell>
+              <Contract />
+            </AppShell>
+          }
+        />
+        <Route
+          path="/fleet"
+          element={
+            <AppShell>
+              <Fleet />
             </AppShell>
           }
         />

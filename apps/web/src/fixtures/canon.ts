@@ -538,6 +538,286 @@ export const declarationFixture = {
   },
 } as const;
 
+// ---- tender workspace ----
+
+export type CommitmentMargin =
+  | { kind: 'headroom'; pct: number }
+  | { kind: 'stretch'; points: number }
+  | { kind: 'notMet' }
+  | { kind: 'process' };
+
+export interface CommitmentRow {
+  checked: boolean;
+  // commitment wording appears verbatim in the annex; french legal register
+  label: string;
+  measured: string;
+  measuredTone?: 'breach';
+  proposed: string;
+  margin: CommitmentMargin;
+}
+
+export const tenderFixture = {
+  ref: 'AO-2026-SL-0417',
+  title: 'Refonte du portail métropolitain',
+  deadline: { date: '12 SEP 2026 · 12:00', days: 28, platform: 'PLACE' },
+  currentStep: 2,
+  commitments: [
+    {
+      checked: true,
+      label: 'Poids médian des 10 pages principales',
+      measured: `${formatInt(1258)} KB`,
+      proposed: `≤ ${formatInt(1400)} KB`,
+      margin: { kind: 'headroom', pct: 11 },
+    },
+    {
+      checked: true,
+      label: 'Empreinte estimée par visite (SWD v4)',
+      measured: '0.42 g',
+      proposed: '≤ 0.55 g',
+      margin: { kind: 'headroom', pct: 24 },
+    },
+    {
+      checked: true,
+      label: 'Taux de conformité RGESN à 12 mois',
+      measured: '59%',
+      proposed: '≥ 75%',
+      margin: { kind: 'stretch', points: 16 },
+    },
+    {
+      checked: false,
+      label: 'Part des tiers dans les octets transférés',
+      measured: '38%',
+      measuredTone: 'breach',
+      proposed: '≤ 30%',
+      margin: { kind: 'notMet' },
+    },
+    {
+      checked: true,
+      label: "Rapport d'exécution trimestriel horodaté",
+      measured: '–',
+      proposed: '4 / an',
+      margin: { kind: 'process' },
+    },
+  ] as readonly CommitmentRow[],
+  warningPoints: 8,
+  history: {
+    since: '03 Mar 2026',
+    days: 165,
+    runs: 4812,
+    declarationVersions: 3,
+    rateFrom: 28,
+    rateTo: 59,
+    // conformity sparkline, y values on a 46-high viewbox, from the handoff
+    points: '4,34 22,33 40,30 58,31 76,28 94,29 112,25 130,26 148,22 166,20 184,21 202,16 220,14 240,12',
+  },
+  output: {
+    branding: 'Atelier Sextant · sans marque Balise',
+    pages: 9,
+    figureCount: 6,
+    verifyUrl: 'balise.fr/v/9f4c8e21',
+  },
+} as const;
+
+// ---- contract tracker ----
+
+export type ContractStatus = 'tenu' | 'atRisk' | 'aJour';
+
+export interface ContractRow {
+  label: string;
+  seuil: string;
+  actuel: string;
+  actuelTone?: 'caution';
+  // gauge rows have a bar; the quarterly row shows delivery squares instead
+  headroom?: { barPct: number; tone: 'ok' | 'caution'; labelPct?: number; ptToGo?: number };
+  quarters?: { text: string; delivered: number; total: number };
+  trendPoints: string;
+  trendTone: 'neutral' | 'caution';
+  status: ContractStatus;
+  rowTint?: 'caution';
+}
+
+export const contractFixture = {
+  ref: '2026-SL-0417',
+  notified: '02 Apr 2026',
+  months: 36,
+  article: '8.4',
+  quarter: 'Q3',
+  rows: [
+    {
+      label: 'Poids médian des 10 pages principales',
+      seuil: formatInt(1400),
+      actuel: formatInt(1258),
+      headroom: { barPct: 90, tone: 'ok', labelPct: 10 },
+      trendPoints: '2,12 16,11 30,13 44,10 58,4 72,5 86,11 108,12',
+      trendTone: 'neutral',
+      status: 'tenu',
+    },
+    {
+      label: 'Empreinte estimée par visite (SWD v4)',
+      seuil: '0.55',
+      actuel: '0.42',
+      headroom: { barPct: 76, tone: 'ok', labelPct: 24 },
+      trendPoints: '2,8 16,9 30,7 44,10 58,11 72,12 86,13 108,13',
+      trendTone: 'neutral',
+      status: 'tenu',
+    },
+    {
+      label: 'Taux de conformité RGESN à 12 mois',
+      seuil: '75%',
+      actuel: '59%',
+      actuelTone: 'caution',
+      headroom: { barPct: 79, tone: 'caution', ptToGo: 16 },
+      trendPoints: '2,15 16,14 30,13 44,12 58,11 72,11 86,10 108,10',
+      trendTone: 'caution',
+      status: 'atRisk',
+      rowTint: 'caution',
+    },
+    {
+      label: "Rapport d'exécution trimestriel horodaté",
+      seuil: '4/an',
+      actuel: '2/2',
+      quarters: { text: 'Q1 ✓ 31 Mar · Q2 ✓ 30 Jun', delivered: 2, total: 4 },
+      trendPoints: '',
+      trendTone: 'neutral',
+      status: 'aJour',
+    },
+  ] as readonly ContractRow[],
+  // the early warning is engine analysis, kept as data
+  earlyWarningParts: [
+    { text: 'Conformity is rising at ' },
+    { text: '1.9 pt/month', mono: true },
+    { text: '. At that rate you reach ' },
+    { text: '70%', mono: true },
+    { text: ' by the 12-month review, not 75%.' },
+  ] as ReadonlyArray<{ text: string; mono?: boolean }>,
+  earlyWarningDetail:
+    'The 14 unassessed declarative criteria are the whole gap. Assigning them closes 11 points without touching the code.',
+  unassessedCount: 14,
+  calendar: [
+    { date: '30 SEP 26', label: "Rapport d'exécution Q3", days: 45, urgent: true },
+    { date: '31 DEC 26', label: "Rapport d'exécution Q4", days: 137 },
+    { date: '12 MAR 27', label: 'Revue annuelle · déclaration', days: 208 },
+    { date: '02 APR 27', label: 'Revue contractuelle 12 mois', days: 229 },
+    { date: '02 APR 29', label: 'Fin du marché · reconduction', days: null },
+  ] as ReadonlyArray<{ date: string; label: string; days: number | null; urgent?: boolean }>,
+} as const;
+
+// ---- fleet ----
+
+export interface FleetRow {
+  domain: string;
+  // carbon per visit on the shared 0 to 1.6 gco2e scale
+  band: {
+    median: number;
+    low: number;
+    high: number;
+    noiseLow: number;
+    noiseHigh: number;
+    state: 'normal' | 'breach';
+    confidence: 'high' | 'low';
+  };
+  conf: 'high' | 'low';
+  rgesnPct: number;
+  declaration: { text: string; tone: 'ok' | 'muted' | 'caution' | 'breach' };
+  contract: string;
+  alert: { text: string; tone: 'none' | 'caution' | 'breach' };
+}
+
+export const fleetFixture = {
+  services: 6,
+  activeContracts: 2,
+  openTenders: 1,
+  summary: { breaches: 3, staleDeclarations: 2, deadlines30d: 1 },
+  scale: { min: 0, max: 1.6 },
+  rows: [
+    {
+      domain: 'sevre-et-loire.fr',
+      band: { median: 0.42, low: 0.31, high: 0.58, noiseLow: 0.39, noiseHigh: 0.45, state: 'normal', confidence: 'high' },
+      conf: 'high',
+      rgesnPct: 59,
+      declaration: { text: 'v2 · 156 d', tone: 'muted' },
+      contract: '0417 · Q3 due',
+      alert: { text: 'budget breach', tone: 'breach' },
+    },
+    {
+      domain: 'transports-selo.fr',
+      band: { median: 0.86, low: 0.6, high: 1.35, noiseLow: 0.78, noiseHigh: 0.95, state: 'breach', confidence: 'high' },
+      conf: 'high',
+      rgesnPct: 44,
+      declaration: { text: 'v1 · 248 d', tone: 'caution' },
+      contract: '0392 · active',
+      alert: { text: 'declaration stale', tone: 'caution' },
+    },
+    {
+      domain: 'bibliotheques-selo.fr',
+      band: { median: 0.24, low: 0.1, high: 0.52, noiseLow: 0.18, noiseHigh: 0.3, state: 'normal', confidence: 'high' },
+      conf: 'high',
+      rgesnPct: 71,
+      declaration: { text: 'none', tone: 'breach' },
+      contract: '–',
+      alert: { text: 'obligated · not published', tone: 'breach' },
+    },
+    {
+      domain: 'chu-armorique.fr',
+      band: { median: 1.2, low: 0.88, high: 1.53, noiseLow: 1.05, noiseHigh: 1.43, state: 'normal', confidence: 'low' },
+      conf: 'low',
+      rgesnPct: 38,
+      declaration: { text: 'v1 · 426 d', tone: 'caution' },
+      contract: '–',
+      alert: { text: 'runner unstable 3 d', tone: 'caution' },
+    },
+    {
+      domain: 'craonnais.fr',
+      band: { median: 0.14, low: 0.05, high: 0.32, noiseLow: 0.1, noiseHigh: 0.2, state: 'normal', confidence: 'high' },
+      conf: 'high',
+      rgesnPct: 82,
+      declaration: { text: 'v4 · 21 d', tone: 'ok' },
+      contract: '–',
+      alert: { text: 'none', tone: 'none' },
+    },
+    {
+      domain: 'eau-selo.fr',
+      band: { median: 0.58, low: 0.38, high: 0.98, noiseLow: 0.5, noiseHigh: 0.65, state: 'normal', confidence: 'high' },
+      conf: 'high',
+      rgesnPct: 64,
+      declaration: { text: 'v2 · 88 d', tone: 'muted' },
+      contract: '–',
+      alert: { text: '3p share 41%', tone: 'breach' },
+    },
+  ] as readonly FleetRow[],
+  benchmark: {
+    n: 112,
+    bestPct: 38,
+    // histogram bar geometry on the 380 by 92 viewbox, from the handoff
+    bars: [
+      { x: 24, y: 46, h: 20 },
+      { x: 46, y: 38, h: 28 },
+      { x: 68, y: 26, h: 40 },
+      { x: 90, y: 18, h: 48 },
+      { x: 112, y: 24, h: 42 },
+      { x: 134, y: 34, h: 32 },
+      { x: 156, y: 42, h: 24 },
+      { x: 178, y: 50, h: 16 },
+      { x: 200, y: 54, h: 12 },
+      { x: 222, y: 58, h: 8 },
+      { x: 244, y: 60, h: 6 },
+      { x: 266, y: 62, h: 4 },
+    ],
+    markerX: 99,
+    markerLabel: 'sevre-et-loire · 0.42 · P38',
+    medianX: 200,
+    medianValue: '0.71',
+    axis: ['0.2', '0.8', '1.6 gCO₂e'],
+  },
+  clientAccess: {
+    viewers: [
+      { email: 'dsi@sevre-et-loire.fr', services: 1 },
+      { email: 'numerique@transports-selo.fr', services: 1 },
+    ],
+    pendingInvitations: 2,
+  },
+} as const;
+
 // ---- pull request check ----
 
 export type PrVerdict = 'fail' | 'warn' | 'noSig';
