@@ -1,4 +1,4 @@
-# Balise
+## Balise
 
 Evidence infrastructure for the environmental criterion in French public procurement,
 applied to digital services.
