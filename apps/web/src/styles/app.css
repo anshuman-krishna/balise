@@ -406,6 +406,72 @@ a:hover {
   color: var(--paper);
 }
 
+/* ---- document register ---- */
+
+/* the print register: a dark surround holding white pages. the hard-edge
+   offset under each page comes from the handoff; it is the paper edge of the
+   document register, not an interface shadow. */
+.screen-document {
+  padding: 30px 0 60px;
+  background: var(--ink);
+  min-height: 100vh;
+}
+
+.doc-chrome {
+  margin: 0 auto;
+  padding: 0 24px 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.doc-chrome-eyebrow {
+  font-family: var(--font-display);
+  font-variation-settings: 'wdth' 125;
+  font-weight: 600;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+.doc-chrome-title {
+  margin-top: 6px;
+  font-size: 13px;
+  color: var(--paper);
+}
+
+.doc-pages {
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.doc-page {
+  background: var(--surface);
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.4);
+}
+
+.btn-doc-primary {
+  appearance: none;
+  border: none;
+  border-radius: 0;
+  cursor: pointer;
+  padding: 6px 12px;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 11px;
+}
+.btn-doc-primary:hover {
+  background: var(--measured);
+  color: #ffffff;
+}
+
 /* ---- filter chips ---- */
 
 .chip {

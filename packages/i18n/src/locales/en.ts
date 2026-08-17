@@ -373,6 +373,82 @@ export const en = {
     viewerService: 'viewer · {count} service',
     invitationsPending: '{count} invitations pending',
   },
+  docs: {
+    register: 'Document register',
+    publishedPage: 'published page',
+    backToEditor: 'Back to editor',
+    backToWorkspace: 'Back to workspace',
+    backToTracker: 'Back to tracker',
+    exportPdf: 'Export PDF/A-3',
+    anchorSend: 'Anchor & send',
+    draft: '{version} draft',
+  },
+  // the three documents are french legal artifacts; their content renders in
+  // french in every locale, like the declaration preview.
+  docDeclaration: {
+    intro1: "Cette déclaration s'applique au",
+    intro2:
+      "({domain}). Elle est établie au regard du référentiel général d'écoconception de services numériques, version 2 (2024), et sera revue au plus tard le {reviewDate}.",
+    stats: {
+      taux: 'TAUX DE CONFORMITÉ',
+      tauxSub: '{conformes} conformes / {applicables} applicables',
+      partiels: 'PARTIELLEMENT CONFORMES',
+      partielsSub: 'justification fournie',
+      nonConformes: 'NON CONFORMES',
+      nonConformesSub: 'détaillés ci-dessous',
+    },
+    nonConformesTitle: 'Critères non conformes',
+    headers: { id: 'N°', criterion: 'CRITÈRE', justification: 'JUSTIFICATION' },
+    hostingTitle: 'Hébergement et mesure',
+    hostingBody:
+      "Hébergement Scaleway, centre de données DC5 (Paris). Électricité d'origine renouvelable vérifiée auprès du jeu de données Green Web Foundation le {verifiedDate}. Les indicateurs sont mesurés en continu depuis le {since} selon la méthodologie Balise {methodology}, publiée et versionnée. Chaque relevé est horodaté et chaîné : l'ensemble est vérifiable sans compte à l'adresse ci-dessous.",
+    hashLabel: 'EMPREINTE DE CETTE VERSION',
+    verificationLabel: 'VÉRIFICATION PUBLIQUE',
+    footer:
+      'Déclaration établie le {date} par la Direction du numérique · contact {contact} · version 3, remplaçant la version 2 du 12 mars 2026.',
+  },
+  docAnnexe: {
+    memoire: 'MÉMOIRE TECHNIQUE',
+    annexeLine: 'ANNEXE 4 · ENVIRONNEMENT',
+    consultation: 'CONSULTATION {ref}',
+    title: 'Performance environnementale du service',
+    lede:
+      "{title} · {organisation}. Mesures continues, méthodologie publiée, engagements chiffrés et vérifiables par l'acheteur.",
+    stats: {
+      since: 'MESURE CONTINUE DEPUIS',
+      runs: 'RELEVÉS HORODATÉS',
+      conformity: 'CONFORMITÉ RGESN',
+      commitments: 'ENGAGEMENTS CHIFFRÉS',
+    },
+    docHashLabel: 'EMPREINTE DU DOCUMENT',
+    runningRight: 'ANNEXE 4 · {page}/{pages}',
+    section2Title: '2. État mesuré du service existant',
+    section2Body:
+      "Les valeurs ci-dessous sont les médianes de cinq exécutions par scénario, réalisées sur un navigateur épinglé et un profil de bridage documenté. Chaque estimation carbone est présentée sous forme d'étendue inter-modèles, le modèle de référence étant indiqué. Aucune valeur n'est lissée.",
+    figLabel: "FIG. 3 · EMPREINTE ESTIMÉE PAR VISITE · PAGE D'ACCUEIL",
+    figCaption:
+      'Hachures : étendue inter-modèles (EcoIndex 3.1 · SWD v4 · ADEME BE 2024 · 1byte). Pointillé : plancher de bruit ±0,03. Trait plein : médiane, modèle de référence SWD v4.',
+    headers: { indicator: 'INDICATEUR', median: 'MÉDIANE', mad: 'MAD', confidence: 'CONFIANCE' },
+    confHigh: 'Élevée',
+    confMedium: 'Moyenne △',
+    ecartsStrong: 'Écarts connus.',
+    hashLabel: 'EMPREINTE',
+  },
+  docRapport: {
+    marcheRef: 'marché {ref}',
+    holder: 'titulaire du marché {ref}',
+    headRight1: "RAPPORT D'EXÉCUTION · {quarter}",
+    headRight2: 'PÉRIODE {period}',
+    headRight3: 'CLAUSE ENVIRONNEMENTALE ART. {article}',
+    title: 'Suivi des engagements environnementaux',
+    intro:
+      'Établi à partir de {runs} relevés horodatés sur la période. Les valeurs sont des médianes de cinq exécutions ; les écarts inférieurs au plancher de bruit sont déclarés sans évolution significative.',
+    headers: { engagement: 'ENGAGEMENT', seuil: 'SEUIL', t3: 'T3', marge: 'MARGE', etat: 'ÉTAT' },
+    etats: { tenu: 'TENU', enCours: 'EN COURS', nonTenu: 'NON TENU' },
+    eventsTitle: 'Événements de la période',
+    calloutStrong: 'Engagement non tenu : part des tiers.',
+    hashLabel: 'EMPREINTE DU RAPPORT',
+  },
   placeholder: {
     eyebrow: 'PLANNED',
     body: 'Planned for {version}. Nothing renders here until it can be measured; invented numbers would defeat the point.',

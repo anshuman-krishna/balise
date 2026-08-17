@@ -28,10 +28,15 @@ describe('catalogs', () => {
 
   it('no string uses banned marketing vocabulary', () => {
     const banned = [/sustainab/i, /eco-friendly/i, /\bgreen\b/i, /planet/i, /seamless/i, /empower/i];
+    // the green web foundation is the named source of the hosting dataset
+    // (operating manual section 10); a data source citation is not marketing
+    // vocabulary, so the exact proper noun is exempt
+    const properNouns = [/Green Web Foundation/g];
     for (const [locale, catalog] of Object.entries(catalogs)) {
       for (const [key, text] of flatten(catalog)) {
+        const scanned = properNouns.reduce((acc, noun) => acc.replace(noun, ''), text);
         for (const pattern of banned) {
-          expect(pattern.test(text), `${locale}:${key} matches ${pattern}`).toBe(false);
+          expect(pattern.test(scanned), `${locale}:${key} matches ${pattern}`).toBe(false);
         }
       }
     }

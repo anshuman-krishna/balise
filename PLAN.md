@@ -16,16 +16,20 @@ screenshots, the fidelity source).
 
 ## Current status
 
-**Phase: V0.4 shipped (2026-08-17), V0.5 next.** Eleven of the fifteen surfaces are built
-on canon fixtures and verified against the design reference: Dashboard, Run detail,
-Comparison, Budgets, PR check, Criteria workspace, Declaration editor, and now the
-Tender workspace (five-step stepper, proposed commitments drawn from the measured
-baseline with the third-party warning strip, measured-history sparkline, output card),
-the Contract tracker (engagement table with headroom bars, 90-day trend sparklines,
-quarterly delivery squares, early warning, contract calendar) and the Fleet view
-(summary strip, six-service table using the compact ToleranceBand for carbon per visit,
-sector benchmark histogram, dark client-access card). All code comments lowercase,
-house style. 102 tests green. Next slice: the three documents in the print register.
+**Phase: V0.5 shipped (2026-08-17), V0.6 next.** Fourteen of the fifteen surfaces are
+built on canon fixtures and verified against the design reference. New in V0.5, the
+three documents in the print register: a shared document-register chrome (dark
+surround, register header, white pages with the paper edge), the published
+Déclaration d'écoconception (intro, conformity stat strip, non-conforme table with
+justifications, hosting and measure section, dark hash block), the Annexe
+environnementale (agency letterhead cover with consultation title, stat strip,
+white-label method line and document hash; page 2 with FIG. 3 rendered by the real
+print-register ToleranceBand, indicator table, écarts connus callout, stamp mark)
+and the Rapport d'exécution (engagement table with gauges and TENU / EN COURS /
+NON TENU states, period events including the dérogation, non-tenu callout, registre
+footer). Document content is french in both locales; register chrome translates.
+102 tests green. Next slice: public surfaces (free scan, observatory, ledger
+verification).
 
 ---
 
@@ -102,7 +106,7 @@ house style. 102 tests green. Next slice: the three documents in the print regis
 - [x] ~~Declaration editor (blocking list, known gaps, live preview)~~ (V0.3, preview shares its numbers with the criteria fixture)
 - [x] ~~Tender workspace, contract tracker, fleet~~ (V0.4, fleet rows reuse the compact ToleranceBand on a shared scale)
 - [x] ~~PR check screen (GitHub register, radius exception)~~ (V0.2)
-- [ ] Documents (declaration, annexe, rapport) in the print register
+- [x] ~~Documents (declaration, annexe, rapport) in the print register~~ (V0.5, FIG. 3 goes through the print ToleranceBand; document content french in both locales)
 - [ ] Public surfaces (free scan, observatory, ledger verification)
 - [ ] ToleranceBand trend + dispersion + print register variants
 - [ ] Self-hosted font subsetting check (weight budget)
@@ -165,6 +169,15 @@ Later versions: see roadmap; detailed to-dos are appended when the version start
   across the whole codebase in one sweep. The only exception is exact case-sensitive
   code identifiers and real filenames (classifyDelta, MetricId, PLAN.md), which keep
   their true casing so references stay accurate.
+
+- **2026-08-17 · "Green Web Foundation" is exempt from the banned-vocabulary test.**
+  The i18n test bans marketing words including bare "green"; the exact proper noun of
+  the hosting dataset (operating manual section 10 requires naming it) is stripped
+  before scanning. Marketing uses of the word remain banned.
+- **2026-08-17 · The print register keeps the handoff's hard-edge paper offset.** The
+  design brief bans interface shadows; the 2px zero-blur offset under document pages
+  is the paper edge of the print register in the handoff, not an interface shadow,
+  and is kept verbatim.
 
 ## Open questions (product, not engineering)
 

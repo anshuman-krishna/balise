@@ -17,6 +17,9 @@ import { Declaration } from './screens/Declaration';
 import { Tender } from './screens/Tender';
 import { Contract } from './screens/Contract';
 import { Fleet } from './screens/Fleet';
+import { DocDeclaration } from './screens/DocDeclaration';
+import { DocAnnexe } from './screens/DocAnnexe';
+import { DocRapport } from './screens/DocRapport';
 import { PrCheck } from './screens/PrCheck';
 import { Placeholder } from './screens/Placeholder';
 import { t } from './i18n';
@@ -29,9 +32,6 @@ interface PlannedScreen {
 }
 
 const planned: PlannedScreen[] = [
-  { path: '/documents/declaration', title: t.nav.items.docDeclaration, version: 'V0.5', appBar: false },
-  { path: '/documents/annexe', title: t.nav.items.docAnnexe, version: 'V0.5', appBar: false },
-  { path: '/documents/rapport', title: t.nav.items.docRapport, version: 'V0.5', appBar: false },
   { path: '/public/scan', title: t.nav.items.freeScan, version: 'V0.6', appBar: false },
   { path: '/public/observatory', title: t.nav.items.observatory, version: 'V0.6', appBar: false },
   { path: '/public/ledger', title: t.nav.items.ledgerVerification, version: 'V0.6', appBar: false },
@@ -123,6 +123,30 @@ createRoot(root).render(
           element={
             <AppShell>
               <PrCheck />
+            </AppShell>
+          }
+        />
+        <Route
+          path="/documents/declaration"
+          element={
+            <AppShell showAppBar={false} register="document">
+              <DocDeclaration />
+            </AppShell>
+          }
+        />
+        <Route
+          path="/documents/annexe"
+          element={
+            <AppShell showAppBar={false} register="document">
+              <DocAnnexe />
+            </AppShell>
+          }
+        />
+        <Route
+          path="/documents/rapport"
+          element={
+            <AppShell showAppBar={false} register="document">
+              <DocRapport />
             </AppShell>
           }
         />

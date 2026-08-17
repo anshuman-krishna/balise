@@ -612,6 +612,9 @@ export const tenderFixture = {
   },
   output: {
     branding: 'Atelier Sextant · sans marque Balise',
+    // the white-label method sentence, printed on the annex cover
+    methodLine:
+      'Mesures produites selon la méthodologie Balise v1.2, publiée et versionnée. Atelier Sextant est seul signataire du présent mémoire.',
     pages: 9,
     figureCount: 6,
     verifyUrl: 'balise.fr/v/9f4c8e21',
@@ -815,6 +818,169 @@ export const fleetFixture = {
       { email: 'numerique@transports-selo.fr', services: 1 },
     ],
     pendingInvitations: 2,
+  },
+} as const;
+
+// ---- the three documents, print register ----
+
+export interface DocEventPart {
+  text: string;
+  mono?: boolean;
+  strong?: boolean;
+}
+
+export const documentsFixture = {
+  declaration: {
+    url: 'sevre-et-loire.fr/ecoconception',
+    version: 'v3',
+    reviewDate: '12 mars 2027',
+    established: '15 août 2026',
+    since: '3 mars 2026',
+    methodology: 'v1.2',
+    stats: { taux: 59, conformes: 41, applicables: 70, partiels: 14, nonConformes: 9 },
+    // justifications are customer-authored content, not template copy
+    nonConformes: [
+      {
+        id: '4.3',
+        criterion: 'Éviter les animations non essentielles',
+        justification: "Trois carrousels animés en page d'accueil. Retrait au T4 2026.",
+      },
+      {
+        id: '5.7',
+        criterion: 'Lecture manuelle des contenus vidéo',
+        justification: 'Lecteur tiers en lecture automatique. Remplacement au 01/09/2026.',
+      },
+      {
+        id: '6.2',
+        criterion: 'Maîtrise du poids des ressources',
+        justification: 'Budget dépassé sur deux routes de démarches. Correctif en cours (PR #418).',
+      },
+      {
+        id: '6.9',
+        criterion: 'Fonctionnement sans JavaScript',
+        justification: "Le parcours de demande d'acte requiert JavaScript. Refonte prévue T1 2027.",
+      },
+    ],
+    hash: '9f4c8e21b7d3a04f…c7a1',
+    verifyUrl: 'balise.fr/v/9f4c8e21',
+    contact: 'ecoconception@sevre-et-loire.fr',
+  },
+  annexe: {
+    agencyName: 'ATELIER SEXTANT',
+    agencyLine: '14 rue Kervégan · 44000 Nantes · SIRET 892 411 507 00018',
+    date: '15 août 2026',
+    ref: 'AO-2026-SL-0417',
+    coverStats: [
+      { value: '165 j' },
+      { value: formatInt(4812) },
+      { value: '59%' },
+      { value: '4' },
+    ],
+    // fig. 3 in value space; rendered through the print ToleranceBand so the
+    // document figure and the app figure are the same component
+    fig3: {
+      scaleMin: 0.2,
+      scaleMax: 0.7,
+      median: 0.42,
+      bandLow: 0.31,
+      bandHigh: 0.58,
+      noiseLow: 0.39,
+      noiseHigh: 0.45,
+    },
+    indicators: [
+      { label: 'Octets transférés (froid)', median: `${formatInt(1258)} KB`, mad: '6 KB', conf: 'high' },
+      { label: 'Requêtes HTTP', median: '84', mad: '1', conf: 'high' },
+      { label: 'Nœuds DOM', median: formatInt(2140), mad: '78', conf: 'medium' },
+      { label: 'Part des tiers', median: '38%', mad: '2 pt', conf: 'high' },
+    ] as ReadonlyArray<{ label: string; median: string; mad: string; conf: 'high' | 'medium' }>,
+    ecartsBody:
+      "La part des tiers (38%) dépasse la cible de 30% que nous nous fixons. Le lecteur vidéo de la rubrique actualités en représente 15 points. Son remplacement par une intégration à la demande est planifié au 1er septembre 2026 et figure au chapitre 5 comme engagement daté.",
+    footerLine1: 'MÉTHODOLOGIE v1.2 · balise.fr/methodologie',
+    footerLine2: 'RELEVÉS 03/03/2026 → 15/08/2026 · CHROMIUM 127.0.6533.88',
+    hash: '9f4c8e21b7d3…c7a1',
+    verifyUrl: 'balise.fr/v/9f4c8e21',
+    page: 3,
+    pages: 9,
+  },
+  rapport: {
+    ref: '2026-SL-0417',
+    quarterLabel: 'Q3 2026',
+    quarter: 'T3 2026',
+    period: '01/07 → 30/09/2026',
+    article: '8.4',
+    runs: 1284,
+    rows: [
+      {
+        label: 'Poids médian des 10 pages principales',
+        seuil: `${formatInt(1400)} KB`,
+        t3: `${formatInt(1258)} KB`,
+        gauge: { fillPct: 90, tone: 'held' },
+        etat: 'tenu',
+      },
+      {
+        label: 'Empreinte estimée par visite (SWD v4)',
+        seuil: '0,55 g',
+        t3: '0,42 g',
+        gauge: { fillPct: 77, tone: 'held' },
+        etat: 'tenu',
+      },
+      {
+        label: 'Taux de conformité RGESN (cible 12 mois)',
+        seuil: '75%',
+        t3: '59%',
+        gauge: { fillPct: 78, tone: 'caution' },
+        etat: 'enCours',
+      },
+      {
+        label: 'Part des tiers dans les octets transférés',
+        seuil: '30%',
+        t3: '38%',
+        t3Tone: 'breach',
+        gauge: { fillPct: 100, tone: 'breach' },
+        etat: 'nonTenu',
+      },
+    ] as ReadonlyArray<{
+      label: string;
+      seuil: string;
+      t3: string;
+      t3Tone?: 'breach';
+      gauge: { fillPct: number; tone: 'held' | 'caution' | 'breach' };
+      etat: 'tenu' | 'enCours' | 'nonTenu';
+    }>,
+    // period events are engine and reviewer output, kept as data
+    events: [
+      {
+        date: '15/08',
+        parts: [
+          { text: 'Régression de 184 KB détectée sur ' },
+          { text: '/demarches/acte-naissance', mono: true },
+          { text: ' (PR #412), bloquée avant fusion. Correctif attendu en T3.' },
+        ],
+      },
+      {
+        date: '08/07',
+        parts: [
+          { text: 'Dérogation enregistrée', strong: true },
+          {
+            text: ' : vidéo de 340 KB en page actualités, demandée par la direction de la communication pour la campagne du 14 juillet. Retrait planifié au 01/09/2026. Autorisée par m. carbonne.',
+          },
+        ],
+      },
+      {
+        date: '03/08',
+        parts: [
+          { text: 'Nouvelle référence de comparaison établie sur ' },
+          { text: 'main', mono: true },
+          { text: ' après refonte, consignée au registre.' },
+        ],
+      },
+    ] as ReadonlyArray<{ date: string; parts: readonly DocEventPart[] }>,
+    calloutBody:
+      'Le lecteur vidéo tiers représente 15 des 38 points mesurés. Son remplacement par une intégration à la demande est engagé (livraison 01/09/2026), ce qui ramènera la part attendue à 26%. La prochaine mesure trimestrielle vérifiera ce point.',
+    footerLine1: `MÉTHODOLOGIE v1.2 · ${formatInt(1284)} RELEVÉS · CHROMIUM 127.0.6533.88`,
+    footerLine2: `REGISTRE : ${formatInt(4812)} ENTRÉES · RACINE ANCRÉE 15/08/2026 04:00 UTC`,
+    hash: 'd1e7 42ab 90c5 …3f',
+    verifyUrl: 'balise.fr/v/d1e742ab',
   },
 } as const;
 
