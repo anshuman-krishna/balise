@@ -1,0 +1,18 @@
+{
+  "name": "@balise/i18n",
+  "version": "0.1.0",
+  "description": "Every user-facing string in Balise. Nothing is hardcoded in a component.",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

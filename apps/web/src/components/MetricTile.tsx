@@ -1,0 +1,103 @@
+import { ToleranceBand, type ToleranceBandProps } from '@balise/ui';
+import type { Confidence } from '@balise/schemas';
+
+export interface MetricTileProps {
+  label: string;
+  valueText: string;
+  unitText: string;
+  rightPrimary?: string;
+  rightSecondary?: string;
+  confidence: Confidence;
+  confidenceLabel: string;
+  band: Omit<ToleranceBandProps, 'size' | 'width'>;
+  /** Mandatory. A tile without provenance is a bare number. */
+  provenance: string;
+  stateMessage?: { text: string; tone: 'breach' | 'caution' };
+}
+
+const CONFIDENCE_COLOR: Record<Confidence, string> = {
+  high: 'var(--conforme)',
+  medium: 'var(--caution)',
+  low: 'var(--caution)',
+};
+
+export function MetricTile(props: MetricTileProps) {
+  const {
+    label,
+    valueText,
+    unitText,
+    rightPrimary,
+    rightSecondary,
+    confidence,
+    confidenceLabel,
+    band,
+    provenance,
+    stateMessage,
+  } = props;
+
+  return (
+    <div className="card">
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+        <span className="eyebrow">{label}</span>
+        <span
+          className="mono"
+          style={{
+            fontWeight: 500,
+            fontSize: 9,
+            letterSpacing: '.06em',
+            color: CONFIDENCE_COLOR[confidence],
+          }}
+        >
+          {confidenceLabel}
+        </span>
+      </div>
+      <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, margin: '13px 0 4px' }}>
+        <span
+          className="mono"
+          style={{ fontSize: 29, letterSpacing: '-.04em', lineHeight: 1 }}
+        >
+          {valueText}
+        </span>
+        <span style={{ fontSize: 10, color: 'var(--text-secondary)' }}>{unitText}</span>
+        {rightPrimary !== undefined ? (
+          <span
+            className="mono"
+            style={{
+              marginLeft: 'auto',
+              fontSize: 9.5,
+              color: 'var(--text-secondary)',
+              textAlign: 'right',
+              lineHeight: 1.4,
+            }}
+          >
+            {rightPrimary}
+            {rightSecondary !== undefined ? (
+              <>
+                <br />
+                <span style={{ color: 'var(--text-tertiary)' }}>{rightSecondary}</span>
+              </>
+            ) : null}
+          </span>
+        ) : null}
+      </div>
+      <div style={{ marginTop: 8 }}>
+        <ToleranceBand {...band} size="compact" width={236} />
+      </div>
+      <div
+        className="mono"
+        style={{
+          marginTop: 9,
+          fontSize: 9.5,
+          color:
+            stateMessage === undefined
+              ? 'var(--text-tertiary)'
+              : stateMessage.tone === 'breach'
+                ? 'var(--breach)'
+                : 'var(--caution)',
+        }}
+      >
+        {stateMessage?.text ?? provenance}
+      </div>
+    </div>
+  );
+}

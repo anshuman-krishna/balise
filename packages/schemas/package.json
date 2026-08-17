@@ -1,0 +1,21 @@
+{
+  "name": "@balise/schemas",
+  "version": "0.1.0",
+  "description": "Zod contracts shared across Balise. Single source of truth for every shape crossing a boundary.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

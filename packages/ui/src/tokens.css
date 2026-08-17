@@ -1,0 +1,41 @@
+/* Balise design tokens. Source: design brief sections 4 to 6.
+   Green is a pass state only, never a brand colour. */
+
+:root {
+  --ink: #15181b;
+  --paper: #f3f4f1;
+  --surface: #ffffff;
+  --text-secondary: #5a6169;
+  --text-tertiary: #8b939b;
+  --on-dark-text: #c9ced2;
+  --on-dark-muted: #6e767e;
+  --measured: #2b3fd9;
+  --measured-on-dark: #8fa3ff;
+  --measured-band-on-dark: #5a78ff;
+  --conforme: #3e7a5e;
+  --caution: #c4761a;
+  --breach: #b3312c;
+  --breach-on-dark: #e8807b;
+  --caution-on-dark: #e0a05c;
+
+  --border-card: rgba(21, 24, 27, 0.14);
+  --border-strong: rgba(21, 24, 27, 0.2);
+  --border-strongest: rgba(21, 24, 27, 0.25);
+  --divider-row: rgba(21, 24, 27, 0.07);
+  --divider-cell: rgba(21, 24, 27, 0.11);
+  --hover-row: rgba(43, 63, 217, 0.04);
+  --selected-row: rgba(43, 63, 217, 0.06);
+  --tint-breach: rgba(179, 49, 44, 0.05);
+  --tint-caution: rgba(196, 118, 26, 0.06);
+  --track: rgba(21, 24, 27, 0.09);
+  --inset-panel: rgba(21, 24, 27, 0.05);
+
+  --on-dark-divider: rgba(243, 244, 241, 0.12);
+  --on-dark-hover: rgba(243, 244, 241, 0.07);
+  --on-dark-outline: rgba(243, 244, 241, 0.4);
+  --nav-active: rgba(43, 63, 217, 0.22);
+
+  --font-display: 'Archivo Variable', 'Archivo', sans-serif;
+  --font-body: 'Public Sans Variable', 'Public Sans', sans-serif;
+  --font-mono: 'Martian Mono Variable', 'Martian Mono', monospace;
+}

@@ -1,0 +1,348 @@
+/* Balise application styles. Instrument register: dense, quiet, monospaced
+   numerals, hairline rules, zero border radius, no shadows, no gradients.
+   Values come from the design handoff and are used verbatim. */
+
+@import '@balise/ui/tokens.css';
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--measured);
+  text-decoration: none;
+}
+a:hover {
+  color: var(--ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--measured);
+  outline-offset: 1px;
+}
+
+.archivo {
+  font-family: var(--font-display);
+  font-variation-settings: 'wdth' 125;
+}
+
+.mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- shell ---- */
+
+.app {
+  display: grid;
+  grid-template-columns: 212px 1fr;
+  min-height: 100vh;
+}
+
+.nav-rail {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: auto;
+  background: var(--ink);
+  color: var(--paper);
+  display: flex;
+  flex-direction: column;
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 16px 6px;
+}
+
+.nav-brand-name {
+  font-family: var(--font-display);
+  font-variation-settings: 'wdth' 125;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.1em;
+}
+
+.nav-version {
+  padding: 0 16px 14px;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  color: var(--on-dark-muted);
+  border-bottom: 1px solid var(--on-dark-divider);
+}
+
+.nav-group-label {
+  padding: 14px 16px 6px;
+  font-family: var(--font-display);
+  font-variation-settings: 'wdth' 125;
+  font-weight: 600;
+  font-size: 8.5px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--on-dark-muted);
+}
+
+.nav-group {
+  border-bottom: 1px solid var(--on-dark-divider);
+  padding-bottom: 10px;
+}
+
+.nav-item {
+  position: relative;
+  display: block;
+  padding: 7px 16px;
+  font-size: 12px;
+  color: var(--on-dark-text);
+}
+
+.nav-item:hover {
+  background: var(--on-dark-hover);
+  color: var(--paper);
+}
+
+.nav-item.active {
+  background: var(--nav-active);
+  color: var(--paper);
+}
+
+.nav-item.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--measured);
+}
+
+.nav-tenant {
+  margin-top: auto;
+  padding: 14px 16px 16px;
+  border-top: 1px solid var(--on-dark-divider);
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  line-height: 1.7;
+  color: var(--on-dark-muted);
+}
+
+/* ---- app bar ---- */
+
+.app-bar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--paper);
+  border-bottom: 1px solid rgba(21, 24, 27, 0.16);
+}
+
+.app-bar-row1 {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 26px 8px;
+}
+
+.service-switcher {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 10px;
+  border: 1px solid var(--border-strong);
+  background: var(--surface);
+  cursor: pointer;
+}
+.service-switcher:hover {
+  border-color: var(--measured);
+}
+
+.deadline-pill {
+  padding: 5px 9px;
+  border: 1px solid rgba(196, 118, 26, 0.45);
+  background: rgba(196, 118, 26, 0.08);
+  color: var(--caution);
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 9px;
+  letter-spacing: 0.06em;
+}
+
+.avatar {
+  width: 26px;
+  height: 26px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+}
+
+.app-bar-row2 {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 0 26px 8px;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  color: var(--text-secondary);
+}
+
+.app-bar-row2 .label {
+  color: var(--text-tertiary);
+  letter-spacing: 0.07em;
+}
+
+/* ---- content ---- */
+
+.screen {
+  padding: 24px 26px 40px;
+}
+
+.screen-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-variation-settings: 'wdth' 125;
+  font-weight: 600;
+  font-size: 19px;
+  letter-spacing: -0.005em;
+}
+
+.screen-subtitle {
+  margin-top: 5px;
+  font-size: 11.5px;
+  color: var(--text-secondary);
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border-card);
+  padding: 15px 17px 16px;
+}
+
+.card-dark {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 15px 17px 16px;
+}
+
+.eyebrow {
+  font-family: var(--font-display);
+  font-variation-settings: 'wdth' 125;
+  font-weight: 600;
+  font-size: 9.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.card-dark .eyebrow {
+  color: var(--on-dark-muted);
+}
+
+.tile-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(268px, 1fr));
+  gap: 14px;
+  margin-top: 16px;
+}
+
+.dashboard-cols {
+  display: grid;
+  grid-template-columns: 1.55fr 1fr;
+  gap: 14px;
+  margin-top: 14px;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .dashboard-cols {
+    grid-template-columns: 1fr;
+  }
+  .app {
+    grid-template-columns: 1fr;
+  }
+  .nav-rail {
+    position: static;
+    height: auto;
+  }
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* ---- buttons ---- */
+
+.btn {
+  appearance: none;
+  border: none;
+  border-radius: 0;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 10.5px;
+  padding: 5px 11px;
+  background: var(--surface);
+  color: var(--text-secondary);
+  border: 1px solid rgba(21, 24, 27, 0.3);
+}
+.btn:hover {
+  border-color: var(--ink);
+  color: var(--ink);
+}
+
+.btn-primary {
+  background: var(--measured);
+  border: 1px solid var(--measured);
+  color: #ffffff;
+}
+.btn-primary:hover {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--paper);
+}
+
+.btn-on-dark {
+  background: transparent;
+  border: 1px solid var(--on-dark-outline);
+  color: var(--paper);
+}
+.btn-on-dark:hover {
+  background: var(--paper);
+  color: var(--ink);
+  border-color: var(--paper);
+}
+
+/* ---- state expression ---- */
+
+.left-rule {
+  border-left: 2px solid var(--text-secondary);
+  padding: 2px 0 2px 10px;
+}
+.left-rule.breach {
+  border-left-color: var(--breach);
+}
+.left-rule.caution {
+  border-left-color: var(--caution);
+}
+
+.progress-track {
+  height: 5px;
+  background: var(--track);
+}
+.progress-fill {
+  height: 100%;
+}

@@ -1,0 +1,22 @@
+{
+  "name": "balise",
+  "private": true,
+  "packageManager": "pnpm@11.22.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "typecheck": "turbo run typecheck",
+    "lint": "eslint ."
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.36.0",
+    "eslint": "^9.36.0",
+    "turbo": "^2.5.0",
+    "typescript": "catalog:",
+    "typescript-eslint": "^8.44.0"
+  }
+}

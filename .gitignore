@@ -1,0 +1,21 @@
+# Local context material, never committed
+testing/
+
+# OS
+.DS_Store
+
+# Node
+node_modules/
+*.log
+.pnpm-store/
+
+# Build output
+dist/
+build/
+.turbo/
+coverage/
+
+# Env
+.env
+.env.*
+!.env.example

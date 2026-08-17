@@ -1,0 +1,21 @@
+{
+  "name": "@balise/carbon-models",
+  "version": "0.1.0",
+  "description": "Pluggable, versioned carbon estimation models for web measurement. Models disagree; that is the point. They are never averaged.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@balise/schemas": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}
