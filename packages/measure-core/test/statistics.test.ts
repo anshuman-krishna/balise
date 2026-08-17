@@ -41,12 +41,12 @@ describe('medianAbsoluteDeviation', () => {
   });
 
   it('computes the median of absolute deviations from the median', () => {
-    // median = 3, |deviations| = [2, 1, 0, 1, 2], MAD = 1
+    // median = 3, |deviations| = [2, 1, 0, 1, 2], mad = 1
     expect(medianAbsoluteDeviation([1, 2, 3, 4, 5])).toBe(1);
   });
 
   it('is robust to a single extreme outlier', () => {
-    // median = 100; deviations [0, 1, 1, 0, 99900]; MAD = 1
+    // median = 100; deviations [0, 1, 1, 0, 99900]; mad = 1
     expect(medianAbsoluteDeviation([100, 101, 99, 100, 100_000])).toBe(1);
   });
 });

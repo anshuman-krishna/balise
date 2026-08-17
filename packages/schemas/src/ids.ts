@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
-// Branded identifiers: strings at runtime, distinct at compile time.
-// Passing a RunId where a ServiceId is expected must fail to compile.
+// branded identifiers: strings at runtime, distinct at compile time.
+// passing a RunId where a ServiceId is expected must fail to compile.
 
 export const OrganizationId = z.string().min(1).brand<'OrganizationId'>();
 export type OrganizationId = z.infer<typeof OrganizationId>;
@@ -18,6 +18,6 @@ export type ScenarioId = z.infer<typeof ScenarioId>;
 export const RunId = z.string().min(1).brand<'RunId'>();
 export type RunId = z.infer<typeof RunId>;
 
-// Criterion ids are the official referential ids ("4.3"). Never renumbered.
+// criterion ids are the official referential ids ("4.3"). never renumbered.
 export const CriterionId = z.string().min(1).brand<'CriterionId'>();
 export type CriterionId = z.infer<typeof CriterionId>;

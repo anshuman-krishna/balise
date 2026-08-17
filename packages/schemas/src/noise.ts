@@ -1,9 +1,9 @@
 import { z } from 'zod';
 import { MetricId, Unit } from './metrics.js';
 
-// The dispersion below which a delta is not a change. Computed per metric per
+// the dispersion below which a delta is not a change. computed per metric per
 // scenario from a rolling window of historical aggregations, never guessed,
-// never a fixed percentage. When history is insufficient there is no floor,
+// never a fixed percentage. when history is insufficient there is no floor,
 // and without a floor there are no verdicts.
 export const NoiseFloor = z.discriminatedUnion('status', [
   z.object({

@@ -3,11 +3,11 @@ import type { DeltaClassification } from '@balise/schemas';
 export type VerdictKey = 'breach' | 'real' | 'noSig' | 'indeterminate';
 
 /**
- * Maps a kernel classification plus threshold state to the fixed verdict
- * vocabulary. BREACH requires both clearing the noise floor and exceeding a
- * threshold; a significant change without a threshold breach is REAL, in
- * either direction. This never overrides the classification: a sub-floor
- * delta can never become BREACH here.
+ * maps a kernel classification plus threshold state to the fixed verdict
+ * vocabulary. breach requires both clearing the noise floor and exceeding a
+ * threshold; a significant change without a threshold breach is real, in
+ * either direction. this never overrides the classification: a sub-floor
+ * delta can never become breach here.
  */
 export function verdictKeyFor(
   classification: DeltaClassification,

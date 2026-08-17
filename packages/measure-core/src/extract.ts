@@ -10,12 +10,12 @@ function originOf(url: string): string | null {
 }
 
 /**
- * Pure extraction from a raw capture to a metric set. No IO, no rounding:
+ * pure extraction from a raw capture to a metric set. no io, no rounding:
  * stored values are raw, display precision is applied at the edge
  * (invariant 6).
  *
  * dom_node_count is the count at network idle, the stricter of the two
- * captured counts. Both stay available on the capture.
+ * captured counts. both stay available on the capture.
  */
 export function extractMetrics(capture: RawCapture): MetricSet {
   const serviceOrigin = originOf(capture.serviceOrigin);
@@ -28,9 +28,9 @@ export function extractMetrics(capture: RawCapture): MetricSet {
   for (const resource of capture.resources) {
     totalBytes += resource.transferredBytes;
     const origin = originOf(resource.url);
-    // Unparsable URLs and opaque origins (data:, about:, blob:) have no
+    // unparsable urls and opaque origins (data:, about:, blob:) have no
     // network host of their own; they count as first party rather than
-    // being guessed at. An opaque origin serializes to the string "null".
+    // being guessed at. an opaque origin serializes to the string "null".
     if (origin !== null && origin !== 'null' && origin !== serviceOrigin) {
       thirdPartyBytes += resource.transferredBytes;
     }

@@ -25,8 +25,8 @@ function Group({ label, entries }: { label: string; entries: NavEntry[] }) {
   );
 }
 
-// The four groups are the information architecture: measurement, gating,
-// paperwork, public accountability. Preserved even as items are added.
+// the four groups are the information architecture: measurement, gating,
+// paperwork, public accountability. preserved even as items are added.
 export function NavRail() {
   const nav = t.nav;
   return (

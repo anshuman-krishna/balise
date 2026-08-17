@@ -1,5 +1,5 @@
-// Horizontal bars, one per model, each with the model's own stated
-// uncertainty extent, the reference model marked. All bars share one scale so
+// horizontal bars, one per model, each with the model's own stated
+// uncertainty extent, the reference model marked. all bars share one scale so
 // disagreement between models is visible, never reconciled.
 
 export interface ModelOutputRow {

@@ -22,7 +22,7 @@ const NAME_COLOR: Record<WaterfallKind, string> = {
   'third-party': 'var(--caution)',
 };
 
-// Resource list with proportional bars positioned by start time. Bars share
+// resource list with proportional bars positioned by start time. bars share
 // one scale: width is bytes relative to the largest resource, offset is the
 // start fraction of the scenario duration.
 export function Waterfall({ rows, moreCount, moreKb }: { rows: readonly WaterfallRow[]; moreCount: number; moreKb: number }) {

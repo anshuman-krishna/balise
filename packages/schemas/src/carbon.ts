@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-// Grid intensity is never silently assumed (CLAUDE.md section 10). The source
+// grid intensity is never silently assumed (the operating manual section 10). the source
 // and zone travel with the value and are stated on every surface.
 export const GridIntensity = z.object({
   gCO2ePerKwh: z.number().finite().positive(),
@@ -19,8 +19,8 @@ export const ModelInput = z.object({
 });
 export type ModelInput = z.infer<typeof ModelInput>;
 
-// Assumptions are data, not documentation. They render on every surface where
-// the model's output appears. If an assumption is not in this array, we are
+// assumptions are data, not documentation. they render on every surface where
+// the model's output appears. if an assumption is not in this array, we are
 // hiding it.
 export const Assumption = z.object({
   id: z.string().min(1),
@@ -32,10 +32,10 @@ export type Assumption = z.infer<typeof Assumption>;
 export const ModelOutput = z.object({
   value: z.number().finite(),
   unit: z.enum(['gCO2e', 'score', 'grade']),
-  // The model's own stated uncertainty, if it publishes one.
+  // the model's own stated uncertainty, if it publishes one.
   low: z.number().finite().optional(),
   high: z.number().finite().optional(),
-  // EcoIndex-style extras. Present only when the model defines them.
+  // ecoindex-style extras. present only when the model defines them.
   score: z.number().finite().optional(),
   grade: z.string().optional(),
   notes: z.array(z.string()),

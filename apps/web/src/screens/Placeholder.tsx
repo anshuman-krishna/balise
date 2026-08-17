@@ -1,7 +1,7 @@
 import { fill, t } from '../i18n';
 
-// The designed empty state for surfaces that exist in the reference but are
-// not yet built. It states the absence; it does not fake content.
+// the designed empty state for surfaces that exist in the reference but are
+// not yet built. it states the absence; it does not fake content.
 export function Placeholder({ title, version }: { title: string; version: string }) {
   return (
     <>

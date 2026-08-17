@@ -1,7 +1,7 @@
 import type { Confidence, DeltaClassification } from '@balise/schemas';
 
-// Pure geometry and state resolution for the tolerance band. Kept out of the
-// component so the product rules are unit-testable without a DOM.
+// pure geometry and state resolution for the tolerance band. kept out of the
+// component so the product rules are unit-testable without a dom.
 
 export interface LinearScale {
   domainMin: number;
@@ -10,7 +10,7 @@ export interface LinearScale {
   rangeMax: number;
 }
 
-/** Linear map from domain to range, clamped to the range. */
+/** linear map from domain to range, clamped to the range. */
 export function xPosition(scale: LinearScale, value: number): number {
   const { domainMin, domainMax, rangeMin, rangeMax } = scale;
   if (domainMax === domainMin) {
@@ -21,7 +21,7 @@ export function xPosition(scale: LinearScale, value: number): number {
   return rangeMin + clamped * (rangeMax - rangeMin);
 }
 
-/** Evenly spaced tick values across the domain, endpoints included. */
+/** evenly spaced tick values across the domain, endpoints included. */
 export function tickValues(domainMin: number, domainMax: number, count: number): number[] {
   if (count < 2) {
     throw new Error('tickValues needs at least two ticks');
@@ -33,8 +33,8 @@ export function tickValues(domainMin: number, domainMax: number, count: number):
 export type BandState = 'normal' | 'breach' | 'caution';
 
 /**
- * Product rule 2, enforced in code: a delta renders as breach only if it
- * cleared the noise floor, meaning it was classified as a regression. An
+ * product rule 2, enforced in code: a delta renders as breach only if it
+ * cleared the noise floor, meaning it was classified as a regression. an
  * absolute threshold breach (no delta involved) passes no classification and
  * renders as requested.
  */
@@ -55,7 +55,7 @@ export function resolveBandState(
 export type BandSize = 'canonical' | 'compact' | 'badge';
 
 /**
- * Product rule 3: low confidence dashes the median rule. Never omitted to
+ * product rule 3: low confidence dashes the median rule. never omitted to
  * save space; other layers are dropped first.
  */
 export function medianDashArray(confidence: Confidence, size: BandSize): string | undefined {
@@ -86,7 +86,7 @@ export interface BandLayout {
   tickCount: number;
 }
 
-// Dimensions from the design prototypes (Tolerance Band.dc.html), verbatim.
+// dimensions from the design prototypes (tolerance band.dc.html), verbatim.
 export const BAND_LAYOUTS: Record<BandSize, BandLayout> = {
   canonical: {
     width: 460,

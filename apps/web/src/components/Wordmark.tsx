@@ -1,5 +1,5 @@
-// The wordmark: a survey staff. A vertical rule with three horizontal marks
-// of decreasing width, the second in the measured colour. No image assets.
+// the wordmark: a survey staff. a vertical rule with three horizontal marks
+// of decreasing width, the second in the measured colour. no image assets.
 
 export function Wordmark({ size = 16, onDark = true }: { size?: number; onDark?: boolean }) {
   const stroke = onDark ? '#F3F4F1' : '#15181B';

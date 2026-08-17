@@ -37,7 +37,7 @@ describe('gradeConfidence', () => {
   });
 
   it('degrades to medium on moderate dispersion', () => {
-    // relative MAD 0.10: above the high bar, inside the medium bar
+    // relative mad 0.10: above the high bar, inside the medium bar
     expect(
       gradeConfidence(metric({ median: 100, mad: 10 }), { fingerprintStable: true }),
     ).toBe('medium');

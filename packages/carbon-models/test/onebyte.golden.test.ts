@@ -2,8 +2,8 @@ import { describe, expect, it } from 'vitest';
 import type { ModelInput } from '@balise/schemas';
 import { onebyteModel } from '../src/models/onebyte.js';
 
-// Golden fixtures. Expected values computed by running the Green Web
-// Foundation co2.js 1byte implementation on 2026-08-17. Any drift fails.
+// golden fixtures. expected values computed by running the green web
+// foundation co2.js 1byte implementation on 2026-08-17. any drift fails.
 const GOLDEN = [
   { bytes: 1_258_000, greenHostingFactor: 0, expected: 0.36584275399999994 },
   { bytes: 1_258_000, greenHostingFactor: 1, expected: 0.29180358333333334 },

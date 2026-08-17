@@ -1,21 +1,15 @@
-# Local working material, never committed
-testing/
-CLAUDE.md
-CLAUDE-*.md
-.claude/
-
-# OS
+# os
 .DS_Store
 Thumbs.db
 
-# Node
+# node
 node_modules/
 *.log
 npm-debug.log*
 pnpm-debug.log*
 .pnpm-store/
 
-# Build output
+# build output
 dist/
 build/
 .turbo/
@@ -23,17 +17,23 @@ coverage/
 *.tsbuildinfo
 .vite/
 
-# Environment and secrets
+# environment and secrets
 .env
 .env.*
 !.env.example
 
-# Editors
+# editors
 .vscode/
 .idea/
 *.swp
 *.swo
 
-# Test and tooling artifacts
+# test and tooling artifacts
 playwright-report/
 test-results/
+
+# validation, testing, ideation, and other temporary files
+testing/
+CLAUDE.md
+CLAUDE-*.md
+.claude/

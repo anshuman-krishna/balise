@@ -3,7 +3,7 @@ import { MetricId, Unit } from './metrics.js';
 import { NoiseFloor } from './noise.js';
 
 // 'indeterminate' is the honest degradation when no noise floor is established:
-// no floor, no verdict. It is never rendered as a change in any direction.
+// no floor, no verdict. it is never rendered as a change in any direction.
 export const DeltaClassification = z.enum([
   'regression',
   'improvement',
@@ -19,7 +19,7 @@ export const Delta = z.object({
   after: z.number().finite(),
   value: z.number().finite(),
   classification: DeltaClassification,
-  // The floor the classification was made against, kept for rendering
+  // the floor the classification was made against, kept for rendering
   // "vs noise" and for audit.
   floor: NoiseFloor,
 });

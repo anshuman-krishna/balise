@@ -7,15 +7,15 @@ export const CapturedResource = z.object({
 });
 export type CapturedResource = z.infer<typeof CapturedResource>;
 
-// What the runner hands to extraction. The raw capture in object storage holds
-// far more (full HAR, CDP trace); this is the slice extraction needs.
+// what the runner hands to extraction. the raw capture in object storage holds
+// far more (full har, cdp trace); this is the slice extraction needs.
 export const RawCapture = z.object({
-  // Origin of the audited service, e.g. "https://sevre-et-loire.fr".
-  // Resources on any other origin are third party.
+  // origin of the audited service, e.g. "https://sevre-et-loire.fr".
+  // resources on any other origin are third party.
   serviceOrigin: z.string().min(1),
   pass: CachePass,
   resources: z.array(CapturedResource),
-  // Requests can exceed resource entries (redirects, aborted requests).
+  // requests can exceed resource entries (redirects, aborted requests).
   requestCount: z.number().int().nonnegative(),
   domNodeCountAtLoad: z.number().int().nonnegative(),
   domNodeCountAtNetworkIdle: z.number().int().nonnegative(),

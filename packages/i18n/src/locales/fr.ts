@@ -1,7 +1,7 @@
 import type { Catalog } from './en.js';
 
-// Catalogue français. Même structure que le catalogue anglais, vérifiée par
-// le compilateur. Règle maison : aucun tiret cadratin dans les chaînes.
+// catalogue français. même structure que le catalogue anglais, vérifiée par
+// le compilateur. règle maison : aucun tiret cadratin dans les chaînes.
 
 export const fr: Catalog = {
   nav: {
@@ -158,6 +158,56 @@ export const fr: Catalog = {
     newOrigin: 'NOUVELLE ORIGINE',
     noSourceMap:
       "Attribution indisponible pour {origin} : aucune source map servie. Origine et poids sont consignés ; la cause n'est pas déduite.",
+  },
+  budgets: {
+    subtitle: 'Écrit dans {file} sur {branch} · chaque modification est un commit',
+    toggleVisual: 'Visuel',
+    toggleYaml: 'YAML',
+    headers: {
+      scopeMetric: 'PÉRIMÈTRE · MÉTRIQUE',
+      current: 'ACTUEL',
+      threshold: 'SEUIL',
+      headroom: 'MARGE',
+      onBreach: 'AU DÉPASSEMENT',
+    },
+    relativeNote: 'règle relative · bornée par le plancher de bruit',
+    rebaselineTitle: 'HISTORIQUE DE RE-BASELINE',
+    rebaselineNote:
+      'Chaque re-baseline est inscrite au registre. Déplacer les bornes est possible et visible en permanence.',
+    overridesTitle: 'DÉROGATIONS · {count} ACTIVE',
+    overridesNotePrefix: 'Les dérogations apparaissent mot pour mot dans le',
+    overridesNoteSuffix: '. Personne ne désactive le contrôle en silence.',
+    rapportName: "rapport d'exécution",
+  },
+  prCheck: {
+    title: 'Le contrôle',
+    subtitle: "Balise tel qu'il apparaît dans l'outil du développeur. Rien à apprendre, rien à ouvrir.",
+    merge1: 'souhaite fusionner',
+    merge2: 'commits dans',
+    merge3: 'depuis',
+    blockedTitle: 'La fusion est bloquée',
+    blockedBody1: 'Un contrôle requis a échoué.',
+    blockedBody2: 'est un statut requis sur',
+    details: 'Détails',
+    commented: 'a commenté',
+    measurementLine: 'Mesure · {runs} relevés par scénario · empreintes identiques',
+    headers: {
+      route: 'ROUTE',
+      base: 'BASE',
+      head: 'HEAD',
+      delta: 'Δ',
+      vsNoise: 'VS BRUIT',
+      verdict: 'VERDICT',
+    },
+    attributionHeading: 'Attribution',
+    fixLabel: 'Correction :',
+    provenanceMethodology: 'Méthodologie',
+    provenanceModels: 'modèles',
+    provenanceRun: 'relevé',
+    provenanceLedger: 'registre',
+    overrideLink: 'déroger à ce contrôle',
+    overrideNote: "(motif requis, apparaît dans le rapport d'exécution)",
+    annotationTitle: 'ANNOTATION EN LIGNE · {file}',
   },
   placeholder: {
     eyebrow: 'PRÉVU',

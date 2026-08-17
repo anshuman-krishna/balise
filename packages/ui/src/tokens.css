@@ -1,5 +1,5 @@
-/* Balise design tokens. Source: design brief sections 4 to 6.
-   Green is a pass state only, never a brand colour. */
+/* balise design tokens. source: design brief sections 4 to 6.
+   green is a pass state only, never a brand colour. */
 
 :root {
   --ink: #15181b;

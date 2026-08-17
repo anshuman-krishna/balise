@@ -10,7 +10,7 @@ export interface MetricTileProps {
   confidence: Confidence;
   confidenceLabel: string;
   band: Omit<ToleranceBandProps, 'size' | 'width'>;
-  /** Mandatory. A tile without provenance is a bare number. */
+  /** mandatory. a tile without provenance is a bare number. */
   provenance: string;
   stateMessage?: { text: string; tone: 'breach' | 'caution' };
 }

@@ -1,6 +1,6 @@
-// Display formatting, applied at the edge only. Stored values stay raw
-// (invariant 6). Screen register: period decimals, narrow no-break space
-// thousands. The document register (French comma decimals) arrives with the
+// display formatting, applied at the edge only. stored values stay raw
+// (invariant 6). screen register: period decimals, narrow no-break space
+// thousands. the document register (french comma decimals) arrives with the
 // document pipeline.
 
 export const NARROW_NBSP = ' ';

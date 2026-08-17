@@ -3,8 +3,8 @@ import { z } from 'zod';
 export const ThrottleProfile = z.enum(['desktop-fibre', 'mobile-4g', 'mobile-3g']);
 export type ThrottleProfile = z.infer<typeof ThrottleProfile>;
 
-// Recorded on every run. Two runs are only comparable when fingerprints match
-// (invariant 3). Comparing across fingerprints requires an explicit,
+// recorded on every run. two runs are only comparable when fingerprints match
+// (invariant 3). comparing across fingerprints requires an explicit,
 // user-acknowledged, ledger-recorded flag.
 export const EnvironmentFingerprint = z.object({
   browserBuild: z.string().min(1),

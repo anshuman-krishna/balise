@@ -1,9 +1,9 @@
 import type { ModelInput, ModelOutput } from '@balise/schemas';
 import type { CarbonModel } from '../types.js';
 
-// The 1byte model (The Shift Project), as carried by the Green Web
-// Foundation's co2.js (Apache-2.0). An older per-byte model, included for
-// comparison and because some buyers still cite it. Constants are the
+// the 1byte model (the shift project), as carried by the green web
+// foundation's co2.js (apache-2.0). an older per-byte model, included for
+// comparison and because some buyers still cite it. constants are the
 // reference implementation's, reproduced exactly.
 
 const KWH_PER_BYTE_DATACENTER = 7.2e-11;

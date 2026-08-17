@@ -1,5 +1,5 @@
-// Dispersion plot: individual run dots, median rule, median ± MAD box, the
-// noise field around the baseline median, and the delta called out. Used
+// dispersion plot: individual run dots, median rule, median ± mad box, the
+// noise field around the baseline median, and the delta called out. used
 // where the question is not "how much" but "is it real".
 
 export interface DispersionPlotProps {
@@ -15,7 +15,7 @@ export interface DispersionPlotProps {
   deltaLabel: string;
   baselineRowLabel: string;
   candidateRowLabel: string;
-  /** True when the delta cleared the noise floor; controls the breach colour. */
+  /** true when the delta cleared the noise floor; controls the breach colour. */
   significant: boolean;
 }
 

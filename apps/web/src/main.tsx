@@ -11,6 +11,8 @@ import { AppShell } from './layout/AppShell';
 import { Dashboard } from './screens/Dashboard';
 import { RunDetail } from './screens/RunDetail';
 import { Comparison } from './screens/Comparison';
+import { Budgets } from './screens/Budgets';
+import { PrCheck } from './screens/PrCheck';
 import { Placeholder } from './screens/Placeholder';
 import { t } from './i18n';
 
@@ -22,13 +24,11 @@ interface PlannedScreen {
 }
 
 const planned: PlannedScreen[] = [
-  { path: '/budgets', title: t.nav.items.budgets, version: 'V0.2', appBar: true },
   { path: '/criteria', title: t.nav.items.criteria, version: 'V0.3', appBar: true },
   { path: '/declaration', title: t.nav.items.declarationEditor, version: 'V0.3', appBar: true },
   { path: '/tender', title: t.nav.items.tenderWorkspace, version: 'V0.4', appBar: true },
   { path: '/contract', title: t.nav.items.contractTracker, version: 'V0.4', appBar: true },
   { path: '/fleet', title: t.nav.items.fleet, version: 'V0.4', appBar: true },
-  { path: '/pr-check', title: t.nav.items.prCheck, version: 'V0.2', appBar: true },
   { path: '/documents/declaration', title: t.nav.items.docDeclaration, version: 'V0.5', appBar: false },
   { path: '/documents/annexe', title: t.nav.items.docAnnexe, version: 'V0.5', appBar: false },
   { path: '/documents/rapport', title: t.nav.items.docRapport, version: 'V0.5', appBar: false },
@@ -67,6 +67,22 @@ createRoot(root).render(
           element={
             <AppShell>
               <Comparison />
+            </AppShell>
+          }
+        />
+        <Route
+          path="/budgets"
+          element={
+            <AppShell>
+              <Budgets />
+            </AppShell>
+          }
+        />
+        <Route
+          path="/pr-check"
+          element={
+            <AppShell>
+              <PrCheck />
             </AppShell>
           }
         />

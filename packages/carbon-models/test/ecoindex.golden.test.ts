@@ -2,15 +2,15 @@ import { describe, expect, it } from 'vitest';
 import type { ModelInput } from '@balise/schemas';
 import { ecoindexModel } from '../src/models/ecoindex.js';
 
-// Golden fixtures. Expected values computed by running the CNUMR reference
+// golden fixtures. expected values computed by running the cnumr reference
 // implementation (GreenIT-Analysis ecoIndex.js, quantiles from the published
-// EcoIndex method) on 2026-08-17. Any drift fails.
+// ecoindex method) on 2026-08-17. any drift fails.
 const GOLDEN = [
   { dom: 2140, req: 84, sizeKb: 1258, score: 28.370642293477175, grade: 'E', ges: 2.4325871541304567 },
   { dom: 600, req: 40, sizeKb: 1024, score: 60.917231866923856, grade: 'C', ges: 1.7816553626615228 },
   { dom: 300, req: 20, sizeKb: 500, score: 79.80443358905427, grade: 'B', ges: 1.4039113282189146 },
   { dom: 0, req: 0, sizeKb: 0, score: 100, grade: 'A', ges: 1 },
-  // Upper bound of every quantile table pins the score to 0, grade G.
+  // upper bound of every quantile table pins the score to 0, grade g.
   { dom: 594601, req: 3920, sizeKb: 223212.26, score: 0, grade: 'G', ges: 3 },
 ] as const;
 

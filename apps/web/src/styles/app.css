@@ -1,6 +1,6 @@
-/* Balise application styles. Instrument register: dense, quiet, monospaced
+/* balise application styles. instrument register: dense, quiet, monospaced
    numerals, hairline rules, zero border radius, no shadows, no gradients.
-   Values come from the design handoff and are used verbatim. */
+   values come from the design handoff and are used verbatim. */
 
 @import '@balise/ui/tokens.css';
 
@@ -379,6 +379,104 @@ a:hover {
 .inset-panel {
   background: var(--inset-panel);
   padding: 10px 12px;
+}
+
+/* ---- segmented control ---- */
+
+.segmented {
+  display: inline-flex;
+  border: 1px solid rgba(21, 24, 27, 0.3);
+}
+
+.segmented button {
+  appearance: none;
+  border: none;
+  border-radius: 0;
+  cursor: pointer;
+  padding: 5px 12px;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 10.5px;
+  background: var(--surface);
+  color: var(--text-secondary);
+}
+
+.segmented button.active {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* ---- code and yaml display ---- */
+
+.code-block {
+  background: var(--ink);
+  padding: 18px 20px;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 11.5px;
+  line-height: 1.85;
+  color: var(--on-dark-text);
+  overflow-x: auto;
+  white-space: pre;
+}
+
+.code-block .v {
+  color: var(--measured-on-dark);
+}
+
+.code-block .c {
+  color: var(--on-dark-muted);
+}
+
+/* ---- github register, the one place radius is allowed ---- */
+
+.gh-card {
+  background: var(--surface);
+  border: 1px solid rgba(21, 24, 27, 0.18);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.gh-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex: none;
+}
+
+.gh-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 14px 16px;
+  padding: 11px 13px;
+  border: 1px solid rgba(179, 49, 44, 0.35);
+  border-radius: 3px;
+  background: rgba(179, 49, 44, 0.06);
+}
+
+.diff-line {
+  display: grid;
+  grid-template-columns: 34px 1fr;
+  gap: 0 12px;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 11px;
+  line-height: 1.9;
+}
+
+.diff-line .no {
+  text-align: right;
+  color: var(--text-tertiary);
+}
+
+.diff-line.added {
+  background: rgba(179, 49, 44, 0.1);
+}
+
+.diff-line.added .code {
+  color: var(--breach);
 }
 
 /* ---- state expression ---- */

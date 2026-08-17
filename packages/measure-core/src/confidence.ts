@@ -1,9 +1,9 @@
 import type { AggregatedMetric, Confidence } from '@balise/schemas';
 
 /**
- * PROVISIONAL thresholds, flagged in PLAN.md. Confidence is derived from run
+ * provisional thresholds, flagged in PLAN.md. confidence is derived from run
  * dispersion, sample count and fingerprint stability, and it appears next to
- * every figure it applies to (CLAUDE.md section 9).
+ * every figure it applies to (the operating manual section 9).
  */
 export const CONFIDENCE_THRESHOLDS = {
   minRunsForHigh: 5,
@@ -13,7 +13,7 @@ export const CONFIDENCE_THRESHOLDS = {
 } as const;
 
 export interface ConfidenceContext {
-  // False when the runs behind this aggregate carry differing fingerprints.
+  // false when the runs behind this aggregate carry differing fingerprints.
   fingerprintStable: boolean;
 }
 
@@ -25,7 +25,7 @@ export function gradeConfidence(metric: AggregatedMetric, context: ConfidenceCon
     return 'low';
   }
 
-  // A zero median with any dispersion is unstable by definition; with no
+  // a zero median with any dispersion is unstable by definition; with no
   // dispersion it is perfectly stable.
   const relativeMad = metric.median === 0 ? (metric.mad === 0 ? 0 : Infinity) : metric.mad / Math.abs(metric.median);
 

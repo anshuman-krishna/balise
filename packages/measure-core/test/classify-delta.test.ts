@@ -34,7 +34,7 @@ const noFloor: NoiseFloor = {
 };
 
 describe('classifyDelta', () => {
-  // The canon incident: +184 KB against a 7 KB floor is a real regression.
+  // the canon incident: +184 kb against a 7 kb floor is a real regression.
   it('classifies a growth far beyond the floor as a regression', () => {
     const delta = classifyDelta(
       metric({ median: 1_114_000 }),
@@ -45,7 +45,7 @@ describe('classifyDelta', () => {
     expect(delta.value).toBe(184_000);
   });
 
-  // The canon counter-example: -5 KB inside a 7 KB floor is not an improvement.
+  // the canon counter-example: -5 kb inside a 7 kb floor is not an improvement.
   it('reports a favourable-looking delta inside the floor as no significant change', () => {
     const delta = classifyDelta(
       metric({ median: 1_258_000 }),

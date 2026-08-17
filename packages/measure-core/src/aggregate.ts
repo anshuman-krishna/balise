@@ -2,10 +2,10 @@ import type { AggregatedMetric, AggregatedMetrics, MetricId, MetricSet } from '@
 import { median, medianAbsoluteDeviation } from './statistics.js';
 
 /**
- * Median + MAD across runs of one scenario, one pass.
+ * median + mad across runs of one scenario, one pass.
  *
- * Cold and warm passes are different questions and are never averaged
- * together; mixing them here is a caller bug and throws. A metric missing
+ * cold and warm passes are different questions and are never averaged
+ * together; mixing them here is a caller bug and throws. a metric missing
  * from any run also throws: extraction always emits the full set, so a gap
  * signals a corrupt input, and missing data is never imputed.
  */

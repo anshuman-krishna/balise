@@ -3,14 +3,14 @@ import { getAggregatedMetric } from './aggregate.js';
 import { median } from './statistics.js';
 
 /**
- * PROVISIONAL. The scaling factor is a product decision (CLAUDE.md section
- * 29) and must be signed off before V1 ships. See PLAN.md decisions log,
- * 2026-08-17. It is an explicit parameter everywhere so no caller can depend
+ * provisional. the scaling factor is a product decision (the operating manual section
+ * 29) and must be signed off before v1 ships. see PLAN.md decisions log,
+ * 2026-08-17. it is an explicit parameter everywhere so no caller can depend
  * on the default silently.
  */
 export const PROVISIONAL_NOISE_FLOOR_SCALING_FACTOR = 1.2;
 
-/** Minimum historical aggregations before a floor exists (METHODOLOGY rule 8). */
+/** minimum historical aggregations before a floor exists (methodology rule 8). */
 export const NOISE_FLOOR_MIN_HISTORY = 20;
 
 export interface NoiseFloorOptions {
@@ -19,8 +19,8 @@ export interface NoiseFloorOptions {
 }
 
 /**
- * The noise floor for a metric on a scenario: the median of historical MADs,
- * scaled. Not a fixed percentage, not guessed. With insufficient history the
+ * the noise floor for a metric on a scenario: the median of historical mads,
+ * scaled. not a fixed percentage, not guessed. with insufficient history the
  * floor is not established, everything on the scenario is low confidence, and
  * no verdict or budget failure can rest on it.
  */

@@ -1,6 +1,6 @@
-// Robust statistics only. Median, not mean: page load distributions have long
-// right tails and a mean is not reproducible. MAD, not standard deviation,
-// for the same reason. (CLAUDE.md section 9.)
+// robust statistics only. median, not mean: page load distributions have long
+// right tails and a mean is not reproducible. mad, not standard deviation,
+// for the same reason. (the operating manual section 9.)
 
 export function median(values: readonly number[]): number {
   if (values.length === 0) {

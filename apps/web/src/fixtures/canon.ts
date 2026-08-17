@@ -1,9 +1,10 @@
 import type { AggregatedMetric, MetricId, NoiseFloor, Unit } from '@balise/schemas';
+import { formatInt } from '@balise/ui';
 
-// The scenario canon: one internally consistent fictional dataset, from the
-// design handoff. None of it is measured. It exists so every screen tells the
-// same story until the runner (V1) and the API (V2) replace it with real data.
-// Keep the cross-screen arithmetic consistent; the design brief in testing/
+// the scenario canon: one internally consistent fictional dataset, from the
+// design handoff. none of it is measured. it exists so every screen tells the
+// same story until the runner (v1) and the api (v2) replace it with real data.
+// keep the cross-screen arithmetic consistent; the design brief in testing/
 // holds the canon.
 
 export const canon = {
@@ -83,7 +84,7 @@ export const canon = {
     startLabel: '17 JUL',
     endLabel: '15 AUG',
     gridValues: [1250, 1350, 1450],
-    // 14 samples, medians in KB with run dispersion envelope.
+    // 14 samples, medians in kb with run dispersion envelope.
     points: [
       { median: 1242, low: 1218, high: 1266 },
       { median: 1238, low: 1212, high: 1264 },
@@ -125,7 +126,7 @@ export const canon = {
   },
 } as const;
 
-// ---- Run detail ----
+// ---- run detail ----
 
 export type WaterfallKind = 'first-party' | 'app' | 'regression' | 'third-party';
 
@@ -177,7 +178,7 @@ export const runDetailFixture = {
   ] as ReadonlyArray<{ key: string; value: string; link?: boolean }>,
 } as const;
 
-// ---- Comparison ----
+// ---- comparison ----
 
 function agg(metricId: MetricId, unit: Unit, median: number, mad: number): AggregatedMetric {
   return { metricId, unit, median, mad, min: median - 2 * mad, max: median + 2 * mad, sampleCount: 5 };
@@ -189,13 +190,13 @@ function establishedFloor(metricId: MetricId, unit: Unit, value: number): NoiseF
 
 export interface ComparisonRow {
   label: string;
-  /** Display formatting family; raw values stay raw (invariant 6). */
+  /** display formatting family; raw values stay raw (invariant 6). */
   kind: 'kb' | 'ms' | 'count' | 'g';
   lowConfidence?: boolean;
   before: AggregatedMetric;
   after: AggregatedMetric;
   floor: NoiseFloor;
-  /** An absolute budget or contractual threshold is exceeded. */
+  /** an absolute budget or contractual threshold is exceeded. */
   overThreshold: boolean;
 }
 
@@ -237,7 +238,7 @@ export const comparisonFixture = {
       overThreshold: false,
     },
   ] as readonly ComparisonRow[],
-  // Estimates are not kernel metrics; the carbon row inherits significance
+  // estimates are not kernel metrics; the carbon row inherits significance
   // from the transferred-bytes delta that drives it and is precomputed here.
   carbonRow: {
     label: 'Carbon / visit (SWD v4)',
@@ -249,7 +250,7 @@ export const comparisonFixture = {
     verdict: 'breach' as const,
   },
   attribution: {
-    // The attribution engine emits plain language (operating manual section
+    // the attribution engine emits plain language (operating manual section
     // 12); the sentence is engine output, so it lives here as data.
     leadParts: [
       { text: '/demarches/acte-naissance', mono: true },
@@ -280,5 +281,221 @@ export const comparisonFixture = {
       { origin: 'tarteaucitron.io', status: 'unchanged', kb: 96 },
     ] as ReadonlyArray<{ origin: string; status: 'unchanged' | 'new'; kb: number }>,
     noSourceMapOrigin: 'player.dailymotion',
+  },
+} as const;
+
+// ---- budgets ----
+
+export type BudgetTone = 'ok' | 'warn' | 'breach';
+
+export interface BudgetRow {
+  scope: string;
+  metric: string;
+  current: string;
+  currentTone: BudgetTone;
+  threshold: string;
+  // bar fill percentage; absent for relative rules that have no gauge
+  barPct?: number;
+  barTone?: BudgetTone;
+  headroom?: string;
+  // a note replaces the bar for relative rules
+  note?: boolean;
+  action: 'fail' | 'warn';
+  rowTone?: 'breach';
+}
+
+export interface YamlSeg {
+  text: string;
+  // v = value, c = comment; plain otherwise
+  k?: 'v' | 'c';
+}
+
+export const budgetsFixture = {
+  file: 'balise.yml',
+  branch: 'main',
+  rows: [
+    {
+      scope: '/accueil',
+      metric: 'bytes',
+      current: '842 KB',
+      currentTone: 'ok',
+      threshold: '900 KB',
+      barPct: 93.6,
+      barTone: 'ok',
+      headroom: '6%',
+      action: 'fail',
+    },
+    {
+      scope: '/demarches/*',
+      metric: 'bytes',
+      current: `${formatInt(1298)} KB`,
+      currentTone: 'breach',
+      threshold: `${formatInt(1300)} KB`,
+      barPct: 99.8,
+      barTone: 'breach',
+      headroom: '2 KB',
+      action: 'fail',
+      rowTone: 'breach',
+    },
+    {
+      scope: "journey: demande d'acte",
+      metric: 'bytes',
+      current: `${formatInt(1258)} KB`,
+      currentTone: 'ok',
+      threshold: `${formatInt(1400)} KB`,
+      barPct: 89.9,
+      barTone: 'ok',
+      headroom: '10%',
+      action: 'warn',
+    },
+    {
+      scope: 'service',
+      metric: 'third-party share',
+      current: '38%',
+      currentTone: 'breach',
+      threshold: '30%',
+      barPct: 100,
+      barTone: 'breach',
+      headroom: '-8 pt',
+      action: 'fail',
+    },
+    {
+      scope: 'any route',
+      metric: 'Δ vs baseline',
+      current: '–',
+      currentTone: 'ok',
+      threshold: '+3% rel.',
+      note: true,
+      action: 'warn',
+    },
+  ] as readonly BudgetRow[],
+  yaml: [
+    [{ text: '# balise.yml · sevre-et-loire.fr · pack rgesn-2024-v2', k: 'c' }],
+    [{ text: 'version: ' }, { text: '1', k: 'v' }],
+    [{ text: 'service: ' }, { text: 'portail-metropolitain', k: 'v' }],
+    [{ text: 'runs: ' }, { text: '5', k: 'v' }],
+    [
+      { text: 'profiles: [' },
+      { text: 'desktop-fibre', k: 'v' },
+      { text: ', ' },
+      { text: 'mobile-4g', k: 'v' },
+      { text: ']' },
+    ],
+    [{ text: 'reference_model: ' }, { text: 'swd@4.0', k: 'v' }],
+    [{ text: '# deltas below the computed noise floor are never failures', k: 'c' }],
+    [{ text: 'noise_floor: ' }, { text: 'auto', k: 'v' }],
+    [{ text: '' }],
+    [{ text: 'budgets:' }],
+    [{ text: '  - scope: ' }, { text: '/accueil', k: 'v' }],
+    [
+      { text: '    bytes: { warn: ' },
+      { text: '860KB', k: 'v' },
+      { text: ', fail: ' },
+      { text: '900KB', k: 'v' },
+      { text: ' }' },
+    ],
+    [{ text: '  - scope: ' }, { text: '/demarches/*', k: 'v' }],
+    [
+      { text: '    bytes: { warn: ' },
+      { text: '1250KB', k: 'v' },
+      { text: ', fail: ' },
+      { text: '1300KB', k: 'v' },
+      { text: ' }' },
+    ],
+    [{ text: '    requests: { fail: ' }, { text: '90', k: 'v' }, { text: ' }' }],
+    [{ text: '  - scope: ' }, { text: 'journey:demande-acte', k: 'v' }],
+    [{ text: '    bytes: { fail: ' }, { text: '1400KB', k: 'v' }, { text: ' }' }],
+    [{ text: '  - scope: ' }, { text: 'service', k: 'v' }],
+    [{ text: '    third_party_share: { fail: ' }, { text: '30%', k: 'v' }, { text: ' }' }],
+    [{ text: '    relative_to_baseline: { warn: ' }, { text: '+3%', k: 'v' }, { text: ' }' }],
+    [{ text: '' }],
+    [{ text: 'check:' }],
+    [{ text: '  block_merge_on: ' }, { text: 'fail', k: 'v' }],
+    [{ text: '  annotate_files: ' }, { text: 'true', k: 'v' }],
+  ] as ReadonlyArray<readonly YamlSeg[]>,
+  rebaselines: [
+    { date: '03 AUG', move: 'main → #4790', author: 'c. bellanger', reason: '"post-refonte"' },
+    { date: '11 JUL', move: 'main → #4612', author: 'm. carbonne', reason: '"new hosting"' },
+  ],
+  override: {
+    pr: 'PR #401',
+    summary: '340 KB video hero on',
+    route: '/actualites',
+    quote: '"Mandated by comms for the 14 July campaign, removal scheduled 01 Sep."',
+    by: 'm. carbonne, 08 Jul',
+  },
+} as const;
+
+// ---- pull request check ----
+
+export type PrVerdict = 'fail' | 'warn' | 'noSig';
+
+export interface PrCheckRow {
+  route: string;
+  baseKb: number;
+  headKb: number;
+  deltaKb: number;
+  floorKb: number;
+  madKb: number;
+  verdict: PrVerdict;
+}
+
+export const prCheckFixture = {
+  title: 'Ajoute le formatage des dates localisé',
+  number: '#412',
+  author: 'c-bellanger',
+  commits: 3,
+  into: 'main',
+  from: 'feat/dates-locale',
+  requiredCheck: 'balise/budget',
+  statuses: [
+    { name: 'balise / budget', state: 'fail', text: '1 route over budget, 1 real regression' },
+    { name: 'balise / criteria', state: 'pass', text: 'no RGESN criterion regressed' },
+    { name: 'ci / test', state: 'pass', text: '248 passed' },
+  ] as ReadonlyArray<{ name: string; state: 'fail' | 'pass'; text: string }>,
+  commentedMinutesAgo: 22,
+  runsPerScenario: 5,
+  rows: [
+    { route: '/demarches/acte-naissance', baseKb: 1114, headKb: 1298, deltaKb: 184, floorKb: 7, madKb: 9, verdict: 'fail' },
+    { route: '/accueil', baseKb: 840, headKb: 842, deltaKb: 2, floorKb: 7, madKb: 3, verdict: 'noSig' },
+    { route: "journey: demande d'acte", baseKb: 1258, headKb: 1442, deltaKb: 184, floorKb: 7, madKb: 9, verdict: 'warn' },
+  ] as readonly PrCheckRow[],
+  // attribution and fix sentences are engine output, kept as data
+  attributionParts: [
+    { text: '/demarches/acte-naissance', mono: true },
+    { text: ' gained ' },
+    { text: '184 KB', strong: true },
+    { text: '. ' },
+    { text: '160 KB', strong: true },
+    { text: ' is ' },
+    { text: 'date-fns', mono: true },
+    { text: ' locale data introduced by this PR in ' },
+    { text: 'src/lib/dates.ts', mono: true },
+    { text: '. The remaining 24 KB is bundler overhead.' },
+  ] as ReadonlyArray<{ text: string; mono?: boolean; strong?: boolean }>,
+  fixParts: [
+    { text: 'import ' },
+    { text: 'date-fns/locale/fr', mono: true },
+    { text: ' and ' },
+    { text: '/br', mono: true },
+    { text: ' directly instead of the locale index. Estimated recovery 158 KB, which brings the route to ' },
+    { text: `${formatInt(1140)} KB`, strong: true },
+    { text: ', under budget.' },
+  ] as ReadonlyArray<{ text: string; mono?: boolean; strong?: boolean }>,
+  provenance: {
+    methodology: 'v1.2',
+    models: 'ecoindex@3.1 swd@4.0 ademe@2024',
+    run: '#4812',
+    ledger: '9f4c8e21',
+  },
+  annotation: {
+    file: 'src/lib/dates.ts',
+    lines: [
+      { no: 12, text: "import { format } from 'date-fns'", added: false },
+      { no: 14, text: "+ import * as locales from 'date-fns/locale'", added: true },
+      { no: 15, text: "const fmt = (d, l) => format(d, 'PPP', { locale: locales[l] })", added: false },
+    ] as ReadonlyArray<{ no: number; text: string; added: boolean }>,
+    costKb: 160,
+    note: 'Namespace import pulls all 96 locales into the route bundle. Two are used at runtime.',
   },
 } as const;

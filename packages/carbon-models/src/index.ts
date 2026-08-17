@@ -9,8 +9,8 @@ export { ecoindexModel, computeEcoIndexScore, ecoIndexGrade } from './models/eco
 export { swdModel } from './models/swd.js';
 export { onebyteModel } from './models/onebyte.js';
 
-// The model index. Registering here is the only step besides creating the
-// model file; engine code is never touched (CLAUDE.md section 21).
+// the model index. registering here is the only step besides creating the
+// model file; engine code is never touched (the operating manual section 21).
 export const carbonModels: readonly CarbonModel[] = [ecoindexModel, swdModel, onebyteModel];
 
 export function getCarbonModel(id: string): CarbonModel | undefined {
@@ -24,8 +24,8 @@ const INPUT_FIELD: Record<string, (input: ModelInput) => unknown> = {
 };
 
 /**
- * Validates that an input carries everything a model declares in `inputs`,
- * before the call (CLAUDE.md section 6).
+ * validates that an input carries everything a model declares in `inputs`,
+ * before the call (the operating manual section 6).
  */
 export function assertModelInputs(model: CarbonModel, input: ModelInput): void {
   const missing = model.inputs.filter((metricId: MetricId) => {

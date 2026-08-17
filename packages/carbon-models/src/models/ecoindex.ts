@@ -1,11 +1,11 @@
 import type { ModelInput, ModelOutput } from '@balise/schemas';
 import type { CarbonModel } from '../types.js';
 
-// EcoIndex, the published French scoring model (www.ecoindex.fr).
-// Quantile tables and formula from the published methodology; values match
-// the CNUMR reference implementation (GreenIT-Analysis, ecoIndex.js).
-// Score weights: DOM nodes x3, requests x2, page weight x1, over quantile
-// ranks. Grade A to G. GES in gCO2e derives from the score alone.
+// ecoindex, the published french scoring model (www.ecoindex.fr).
+// quantile tables and formula from the published methodology; values match
+// the cnumr reference implementation (GreenIT-Analysis, ecoIndex.js).
+// score weights: dom nodes x3, requests x2, page weight x1, over quantile
+// ranks. grade a to g. ges in gco2e derives from the score alone.
 
 const QUANTILES_DOM = [
   0, 47, 75, 159, 233, 298, 358, 417, 476, 537, 603, 674, 753, 843, 949, 1076, 1237, 1459, 1801,
@@ -85,8 +85,8 @@ export const ecoindexModel: CarbonModel = {
     const sizeKb = input.transferredBytes / 1000;
     const score = computeEcoIndexScore(input.domNodeCount, input.requestCount, sizeKb);
     const grade = ecoIndexGrade(score);
-    // Published GES formula; stored unrounded, display rounding happens at
-    // the edge (invariant 6). The reference implementation rounds to 2
+    // published ges formula; stored unrounded, display rounding happens at
+    // the edge (invariant 6). the reference implementation rounds to 2
     // decimals for display only.
     const ges = 2 + (2 * (50 - score)) / 100;
     return {

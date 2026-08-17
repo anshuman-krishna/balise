@@ -23,33 +23,33 @@ export interface ToleranceBandProps {
   register?: 'screen' | 'print';
   scaleMin: number;
   scaleMax: number;
-  /** The reported value, from the reference model. */
+  /** the reported value, from the reference model. */
   median: number;
   bandLow: number;
   bandHigh: number;
   noiseLow?: number;
   noiseHigh?: number;
   models?: readonly ToleranceBandModel[];
-  /** Rule 1: no figure without its reference model version. Required. */
+  /** rule 1: no figure without its reference model version. required. */
   referenceModel: { id: string; version: string };
   confidence: Confidence;
   state?: BandState;
-  /** Rule 2: breach from a delta renders only when it cleared the floor. */
+  /** rule 2: breach from a delta renders only when it cleared the floor. */
   deltaClassification?: DeltaClassification;
   budget?: number;
   budgetLabel?: string;
-  /** For the accessible text equivalent, e.g. "gCO₂e / visit". */
+  /** for the accessible text equivalent, e.g. "gCO₂e / visit". */
   unitLabel: string;
   formatTick?: (value: number) => string;
-  /** Optional horizontal stretch; vertical geometry is fixed per size. */
+  /** optional horizontal stretch; vertical geometry is fixed per size. */
   width?: number;
 }
 
 const MONO = "'Martian Mono Variable', 'Martian Mono', monospace";
 
 /**
- * The signature component. One geometry, rendered at different budgets of
- * space and ink. Enforces the four product rules in code; see geometry.ts.
+ * the signature component. one geometry, rendered at different budgets of
+ * space and ink. enforces the four product rules in code; see geometry.ts.
  */
 export function ToleranceBand(props: ToleranceBandProps) {
   const {
@@ -96,8 +96,18 @@ export function ToleranceBand(props: ToleranceBandProps) {
   const noiseX1 = hasNoise ? xPosition(scale, noiseLow) : 0;
   const noiseX2 = hasNoise ? xPosition(scale, noiseHigh) : 0;
 
-  const bandFill = state === 'breach' ? BAND_COLORS.bandBreach : BAND_COLORS.band;
-  const medianColor = state === 'breach' ? BAND_COLORS.medianBreach : BAND_COLORS.median;
+  const bandFill =
+    state === 'breach'
+      ? BAND_COLORS.bandBreach
+      : state === 'caution'
+        ? BAND_COLORS.noiseCaution
+        : BAND_COLORS.band;
+  const medianColor =
+    state === 'breach'
+      ? BAND_COLORS.medianBreach
+      : state === 'caution'
+        ? BAND_COLORS.noiseCaution
+        : BAND_COLORS.median;
   const noiseFill = confidence === 'low' ? BAND_COLORS.noiseCaution : BAND_COLORS.noise;
   const dash = medianDashArray(confidence, size);
 

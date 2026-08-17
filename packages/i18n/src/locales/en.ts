@@ -1,6 +1,6 @@
-// English catalog: the app chrome language in the current design canon.
-// French domain terms stay French, verbatim; they are legal vocabulary,
-// not translatable copy. House rule: no em dashes in any string.
+// english catalog: the app chrome language in the current design canon.
+// french domain terms stay french, verbatim; they are legal vocabulary,
+// not translatable copy. house rule: no em dashes in any string.
 
 export const en = {
   nav: {
@@ -154,6 +154,56 @@ export const en = {
     newOrigin: 'NEW ORIGIN',
     noSourceMap:
       'Attribution unavailable for {origin}: no source map served. Origin and size are recorded; cause is not inferred.',
+  },
+  budgets: {
+    subtitle: 'Writes back to {file} on {branch} · every edit is a commit',
+    toggleVisual: 'Visual',
+    toggleYaml: 'YAML',
+    headers: {
+      scopeMetric: 'SCOPE · METRIC',
+      current: 'CURRENT',
+      threshold: 'THRESHOLD',
+      headroom: 'HEADROOM',
+      onBreach: 'ON BREACH',
+    },
+    relativeNote: 'relative rule · noise-floor gated',
+    rebaselineTitle: 'RE-BASELINE HISTORY',
+    rebaselineNote:
+      'Every re-baseline is written to the ledger. Moving the goalposts is possible and permanently visible.',
+    overridesTitle: 'OVERRIDES · {count} ACTIVE',
+    overridesNotePrefix: 'Overrides appear verbatim in the',
+    overridesNoteSuffix: '. Nobody disables the check quietly.',
+    rapportName: "rapport d'exécution",
+  },
+  prCheck: {
+    title: 'The check',
+    subtitle: "How Balise appears inside the developer's own tool. Nothing to learn, nothing to open.",
+    merge1: 'wants to merge',
+    merge2: 'commits into',
+    merge3: 'from',
+    blockedTitle: 'Merging is blocked',
+    blockedBody1: 'One required check failed.',
+    blockedBody2: 'is a required status on',
+    details: 'Details',
+    commented: 'commented',
+    measurementLine: 'Measurement · {runs} runs per scenario · fingerprint matched',
+    headers: {
+      route: 'ROUTE',
+      base: 'BASE',
+      head: 'HEAD',
+      delta: 'Δ',
+      vsNoise: 'VS NOISE',
+      verdict: 'VERDICT',
+    },
+    attributionHeading: 'Attribution',
+    fixLabel: 'Fix:',
+    provenanceMethodology: 'Methodology',
+    provenanceModels: 'models',
+    provenanceRun: 'run',
+    provenanceLedger: 'ledger',
+    overrideLink: 'override this check',
+    overrideNote: '(reason required, appears in the execution report)',
+    annotationTitle: 'INLINE ANNOTATION · {file}',
   },
   placeholder: {
     eyebrow: 'PLANNED',

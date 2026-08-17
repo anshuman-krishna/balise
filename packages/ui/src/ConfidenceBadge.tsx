@@ -21,7 +21,7 @@ const BORDERS: Record<Confidence, string> = {
 export interface ConfidenceBadgeProps {
   confidence: Confidence;
   label: string;
-  /** Bare coloured text, for table rows. */
+  /** bare coloured text, for table rows. */
   bare?: boolean;
 }
 

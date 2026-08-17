@@ -16,7 +16,7 @@ export type Unit = z.infer<typeof Unit>;
 export const Confidence = z.enum(['high', 'medium', 'low']);
 export type Confidence = z.infer<typeof Confidence>;
 
-// Canonical unit for each metric. Units live in names and in data, never implied.
+// canonical unit for each metric. units live in names and in data, never implied.
 export const METRIC_UNIT: Record<MetricId, Unit> = {
   transferred_bytes: 'bytes',
   request_count: 'count',
@@ -26,7 +26,7 @@ export const METRIC_UNIT: Record<MetricId, Unit> = {
   third_party_share_pct: 'pct',
 };
 
-// Direction of harm. Every V0 metric regresses when it grows.
+// direction of harm. every v0 metric regresses when it grows.
 export const MetricDirection = z.enum(['lower-is-better', 'higher-is-better']);
 export type MetricDirection = z.infer<typeof MetricDirection>;
 
@@ -49,14 +49,14 @@ export type MetricValue = z.infer<typeof MetricValue>;
 export const CachePass = z.enum(['cold', 'warm']);
 export type CachePass = z.infer<typeof CachePass>;
 
-// The output of one measurement run after extraction. Raw, unrounded.
+// the output of one measurement run after extraction. raw, unrounded.
 export const MetricSet = z.object({
   pass: CachePass,
   values: z.array(MetricValue),
 });
 export type MetricSet = z.infer<typeof MetricSet>;
 
-// Median and MAD across n runs of one scenario. Never mean, never a single run.
+// median and mad across n runs of one scenario. never mean, never a single run.
 export const AggregatedMetric = z.object({
   metricId: MetricId,
   unit: Unit,

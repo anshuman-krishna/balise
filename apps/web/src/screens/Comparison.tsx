@@ -44,8 +44,8 @@ interface DisplayRow {
   };
 }
 
-// The verdicts come from the kernel: classifyDelta is called here, not
-// reimplemented. The delta band shows the delta against the noise field,
+// the verdicts come from the kernel: classifyDelta is called here, not
+// reimplemented. the delta band shows the delta against the noise field,
 // centred on zero.
 function toDisplayRow(row: ComparisonRow): DisplayRow {
   const delta = classifyDelta(row.before, row.after, row.floor);

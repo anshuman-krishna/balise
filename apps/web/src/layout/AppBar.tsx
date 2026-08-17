@@ -1,8 +1,8 @@
 import { fill, t } from '../i18n';
 import { canon } from '../fixtures/canon';
 
-// Row 2 is a credibility feature, not debug output. The full environment
-// fingerprint stays visible at all times; it answers "how do I know this is
+// row 2 is a credibility feature, not debug output. the full environment
+// fingerprint stays visible at all times; it answers "how do i know this is
 // comparable?".
 export function AppBar() {
   const { service, appBar } = canon;

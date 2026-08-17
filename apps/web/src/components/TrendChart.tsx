@@ -1,5 +1,5 @@
-// Trend with envelope: median line over time inside a dispersion envelope,
-// deploy markers on the axis, one budget rule. Data-driven; the geometry
+// trend with envelope: median line over time inside a dispersion envelope,
+// deploy markers on the axis, one budget rule. data-driven; the geometry
 // grammar comes from the design prototype (band rendering 1b).
 
 export interface TrendPoint {

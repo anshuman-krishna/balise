@@ -16,13 +16,14 @@ screenshots, the fidelity source).
 
 ## Current status
 
-**Phase: V0.1 shipped (2026-08-17), V0.2 next.** On top of V0 (kernel, carbon models,
-tokens, ToleranceBand, Dashboard), V0.1 adds the run detail screen (tabbed waterfall,
-model outputs side by side, run-to-run dispersion, environment fingerprint) and the
-comparison screen (verdict table computed through the kernel's classifyDelta, source-map
-attribution, third-party diff with the no-source-map admission), both visually verified
-against the design reference. 102 tests green. Housekeeping: full README, hardened
-gitignore, local working files never committed. Next slice: budgets and the PR check.
+**Phase: V0.2 shipped (2026-08-17), V0.3 next.** Six of the fifteen surfaces are built
+on canon fixtures and verified against the design reference: Dashboard, Run detail,
+Comparison, Budgets (visual table with headroom bars, YAML view of balise.yml,
+re-baseline history, active overrides) and the PR check (GitHub register with the
+radius exception, blocked-merge banner, bot comment with measurement table, attribution,
+provenance footer, inline diff annotation). All code comments are now written fully in
+lowercase, house style. 102 tests green. Next slice: criteria workspace and declaration
+editor.
 
 ---
 
@@ -94,11 +95,11 @@ gitignore, local working files never committed. Next slice: budgets and the PR c
 - [x] ~~Run detail screen (waterfall, model outputs side by side, dispersion, fingerprint card)~~ (V0.1)
 - [x] ~~Comparison screen (verdict table, attribution mock, third-party diff)~~ (V0.1, verdicts computed through classifyDelta, not hardcoded)
 - [ ] Run detail: Resources tab (planned panel today)
-- [ ] Budgets screen (visual table + YAML toggle)
+- [x] ~~Budgets screen (visual table + YAML toggle)~~ (V0.2, plus re-baseline history and overrides cards)
 - [ ] Criteria workspace (tier cards, filter chips, criteria table)
 - [ ] Declaration editor (blocking list, known gaps, live preview)
 - [ ] Tender workspace, contract tracker, fleet
-- [ ] PR check screen (GitHub register, radius exception)
+- [x] ~~PR check screen (GitHub register, radius exception)~~ (V0.2)
 - [ ] Documents (declaration, annexe, rapport) in the print register
 - [ ] Public surfaces (free scan, observatory, ledger verification)
 - [ ] ToleranceBand trend + dispersion + print register variants
@@ -158,6 +159,10 @@ Later versions: see roadmap; detailed to-dos are appended when the version start
   vocabulary in one tested helper. There is no second delta implementation in the
   frontend. The carbon row is the one precomputed exception until estimates get their
   own delta pipeline.
+- **2026-08-17 · Code comments are written entirely in lowercase.** House style, applied
+  across the whole codebase in one sweep. The only exception is exact case-sensitive
+  code identifiers and real filenames (classifyDelta, MetricId, PLAN.md), which keep
+  their true casing so references stay accurate.
 
 ## Open questions (product, not engineering)
 

@@ -1,9 +1,9 @@
 import type { ModelInput, ModelOutput } from '@balise/schemas';
 import type { CarbonModel } from '../types.js';
 
-// Sustainable Web Design model, version 4.
-// Published constants from sustainablewebdesign.org/estimating-digital-emissions,
-// as carried by the Green Web Foundation's co2.js (Apache-2.0). Segments:
+// sustainable web design model, version 4.
+// published constants from sustainablewebdesign.org/estimating-digital-emissions,
+// as carried by the green web foundation's co2.js (apache-2.0). segments:
 // data centre, network, device; operational and embodied for each.
 
 const GIGABYTE = 1_000_000_000;
@@ -20,7 +20,7 @@ const EMBODIED_KWH_PER_GB = {
   device: 0.081,
 } as const;
 
-// Per SWDM v4 guidance, embodied emissions use the global average intensity
+// per swdm v4 guidance, embodied emissions use the global average intensity
 // regardless of the visitor's grid.
 const GLOBAL_GRID_INTENSITY = 494;
 

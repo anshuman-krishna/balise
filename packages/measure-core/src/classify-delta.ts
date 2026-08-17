@@ -2,16 +2,16 @@ import type { AggregatedMetric, Delta, NoiseFloor } from '@balise/schemas';
 import { METRIC_DIRECTION } from '@balise/schemas';
 
 /**
- * The mechanical implementation of invariant 2: a delta below or at the noise
- * floor is not a change. This is the only implementation; the API and the
- * frontend call it, they never reimplement it. Any change to this function
- * requires an ADR.
+ * the mechanical implementation of invariant 2: a delta below or at the noise
+ * floor is not a change. this is the only implementation; the api and the
+ * frontend call it, they never reimplement it. any change to this function
+ * requires an adr.
  *
- * Rules, in order:
- * 1. No established floor: 'indeterminate'. No floor, no verdict.
- * 2. |delta| must strictly exceed the floor to be significant. Equality is
+ * rules, in order:
+ * 1. no established floor: 'indeterminate'. no floor, no verdict.
+ * 2. |delta| must strictly exceed the floor to be significant. equality is
  *    not significant.
- * 3. Direction of harm comes from METRIC_DIRECTION. Every V0 metric
+ * 3. direction of harm comes from metric_direction. every v0 metric
  *    regresses when it grows.
  */
 export function classifyDelta(

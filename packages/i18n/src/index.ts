@@ -10,7 +10,7 @@ export type Locale = (typeof locales)[number];
 export const catalogs: Record<Locale, Catalog> = { fr, en };
 
 /**
- * Fills {placeholders} in a catalog string. Values are formatted at the call
+ * fills {placeholders} in a catalog string. values are formatted at the call
  * site; this only substitutes.
  */
 export function fill(template: string, values: Record<string, string | number>): string {

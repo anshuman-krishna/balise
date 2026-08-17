@@ -111,7 +111,7 @@ export function Dashboard() {
             bandLow: canon.thirdParty.bandLow,
             bandHigh: canon.thirdParty.bandHigh,
             budget: canon.thirdParty.commitCeilingPct,
-            // Absolute contractual threshold, no delta involved: breach is
+            // absolute contractual threshold, no delta involved: breach is
             // legitimate without a classification.
             state: 'breach',
             referenceModel: ref,
