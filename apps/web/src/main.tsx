@@ -12,6 +12,8 @@ import { Dashboard } from './screens/Dashboard';
 import { RunDetail } from './screens/RunDetail';
 import { Comparison } from './screens/Comparison';
 import { Budgets } from './screens/Budgets';
+import { Criteria } from './screens/Criteria';
+import { Declaration } from './screens/Declaration';
 import { PrCheck } from './screens/PrCheck';
 import { Placeholder } from './screens/Placeholder';
 import { t } from './i18n';
@@ -24,8 +26,6 @@ interface PlannedScreen {
 }
 
 const planned: PlannedScreen[] = [
-  { path: '/criteria', title: t.nav.items.criteria, version: 'V0.3', appBar: true },
-  { path: '/declaration', title: t.nav.items.declarationEditor, version: 'V0.3', appBar: true },
   { path: '/tender', title: t.nav.items.tenderWorkspace, version: 'V0.4', appBar: true },
   { path: '/contract', title: t.nav.items.contractTracker, version: 'V0.4', appBar: true },
   { path: '/fleet', title: t.nav.items.fleet, version: 'V0.4', appBar: true },
@@ -75,6 +75,22 @@ createRoot(root).render(
           element={
             <AppShell>
               <Budgets />
+            </AppShell>
+          }
+        />
+        <Route
+          path="/criteria"
+          element={
+            <AppShell>
+              <Criteria />
+            </AppShell>
+          }
+        />
+        <Route
+          path="/declaration"
+          element={
+            <AppShell>
+              <Declaration />
             </AppShell>
           }
         />

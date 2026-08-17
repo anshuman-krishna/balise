@@ -16,14 +16,14 @@ screenshots, the fidelity source).
 
 ## Current status
 
-**Phase: V0.2 shipped (2026-08-17), V0.3 next.** Six of the fifteen surfaces are built
+**Phase: V0.3 shipped (2026-08-17), V0.4 next.** Eight of the fifteen surfaces are built
 on canon fixtures and verified against the design reference: Dashboard, Run detail,
-Comparison, Budgets (visual table with headroom bars, YAML view of balise.yml,
-re-baseline history, active overrides) and the PR check (GitHub register with the
-radius exception, blocked-merge banner, bot comment with measurement table, attribution,
-provenance footer, inline diff annotation). All code comments are now written fully in
-lowercase, house style. 102 tests green. Next slice: criteria workspace and declaration
-editor.
+Comparison, Budgets, PR check, and now the Criteria workspace (summary strip, three tier
+cards with progress, working tier filter chips, 14-row representative table with official
+statuses) and the Declaration editor (blocking list, known-gaps editor with the required
+section note, version history, live preview of the published page with per-family
+conformity bars and the footer badge). All code comments lowercase, house style.
+102 tests green. Next slice: tender workspace, contract tracker, fleet.
 
 ---
 
@@ -96,8 +96,8 @@ editor.
 - [x] ~~Comparison screen (verdict table, attribution mock, third-party diff)~~ (V0.1, verdicts computed through classifyDelta, not hardcoded)
 - [ ] Run detail: Resources tab (planned panel today)
 - [x] ~~Budgets screen (visual table + YAML toggle)~~ (V0.2, plus re-baseline history and overrides cards)
-- [ ] Criteria workspace (tier cards, filter chips, criteria table)
-- [ ] Declaration editor (blocking list, known gaps, live preview)
+- [x] ~~Criteria workspace (tier cards, filter chips, criteria table)~~ (V0.3, filter chips functional)
+- [x] ~~Declaration editor (blocking list, known gaps, live preview)~~ (V0.3, preview shares its numbers with the criteria fixture)
 - [ ] Tender workspace, contract tracker, fleet
 - [x] ~~PR check screen (GitHub register, radius exception)~~ (V0.2)
 - [ ] Documents (declaration, annexe, rapport) in the print register

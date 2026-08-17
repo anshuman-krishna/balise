@@ -426,6 +426,118 @@ export const budgetsFixture = {
   },
 } as const;
 
+// ---- criteria workspace ----
+
+export type CriterionTier = 'AUTO' | 'ASSIST' | 'DECL';
+export type CriterionStatus =
+  | 'conforme'
+  | 'partiellement'
+  | 'nonConforme'
+  | 'nonEvalue'
+  | 'nonApplicable';
+
+export interface CriterionRow {
+  id: string;
+  family: string;
+  title: string;
+  tier: CriterionTier;
+  status: CriterionStatus;
+  evidence: string;
+  who: string;
+}
+
+export const criteriaFixture = {
+  pack: 'rgesn-2024-v2',
+  criteriaCount: 78,
+  familiesCount: 9,
+  // counts agree with canon.completeness: 41 conforme out of 70 applicable
+  summary: { conforme: 41, partiel: 14, nonConforme: 9, na: 8, tauxDone: 41, tauxTotal: 70, tauxPct: 59 },
+  tierCounts: { all: 78, automated: 31, assisted: 24, declarative: 23 },
+  // criterion statements are questions from the referential; evidence lines
+  // are engine or reviewer output, kept as data like the attribution parts
+  rows: [
+    { id: '3.1', family: 'Architecture', title: 'Le nombre de requêtes est-il limité au nécessaire ?', tier: 'AUTO', status: 'conforme', evidence: 'run #4812 · 84 requêtes', who: 'auto · 15 Aug' },
+    { id: '5.2', family: 'Contenus', title: 'Les images sont-elles compressées et dimensionnées ?', tier: 'AUTO', status: 'partiellement', evidence: '6 des 41 images non optimisées', who: 'auto · 15 Aug' },
+    { id: '5.7', family: 'Contenus', title: 'La lecture des vidéos est-elle manuelle ?', tier: 'AUTO', status: 'nonConforme', evidence: 'player.dailymotion · autoplay', who: 'auto · 15 Aug' },
+    { id: '6.2', family: 'Frontend', title: 'Le poids des ressources est-il maîtrisé ?', tier: 'AUTO', status: 'nonConforme', evidence: 'budget dépassé sur 2 routes', who: 'auto · 15 Aug' },
+    { id: '8.5', family: 'Hébergement', title: "L'électricité est-elle d'origine renouvelable ?", tier: 'AUTO', status: 'conforme', evidence: 'Green Web Foundation · 15/08', who: 'auto · 15 Aug' },
+    { id: '2.4', family: 'Spécifications', title: 'Les fonctionnalités sont-elles hiérarchisées par utilité ?', tier: 'ASSIST', status: 'partiellement', evidence: 'analyse Matomo · 3 pages orphelines', who: 'c. bellanger' },
+    { id: '4.3', family: 'UX / UI', title: 'Les animations non essentielles sont-elles évitées ?', tier: 'ASSIST', status: 'nonConforme', evidence: '3 carrousels autoplay détectés', who: 'c. bellanger' },
+    { id: '4.8', family: 'UX / UI', title: 'Le service est-il utilisable sur du matériel ancien ?', tier: 'ASSIST', status: 'partiellement', evidence: 'mobile-3g · LCP 6,2 s', who: 'c. bellanger' },
+    { id: '6.9', family: 'Frontend', title: 'Les parcours essentiels fonctionnent-ils sans JavaScript ?', tier: 'ASSIST', status: 'nonConforme', evidence: 'parcours démarche inopérant', who: 'c. bellanger' },
+    { id: '8.1', family: 'Hébergement', title: "L'hébergeur publie-t-il des indicateurs environnementaux ?", tier: 'ASSIST', status: 'conforme', evidence: 'Scaleway · PUE 1,16 · attestation', who: 'm. carbonne' },
+    { id: '1.2', family: 'Stratégie', title: 'Une revue annuelle du service est-elle planifiée ?', tier: 'DECL', status: 'conforme', evidence: 'PV de revue 2026.pdf', who: 'm. carbonne' },
+    { id: '2.1', family: 'Spécifications', title: 'Une revue des besoins a-t-elle limité les fonctionnalités ?', tier: 'DECL', status: 'nonApplicable', evidence: 'hors périmètre du marché', who: 'm. carbonne' },
+    { id: '7.4', family: 'Backend', title: 'Les données sont-elles mises en cache côté serveur ?', tier: 'DECL', status: 'nonEvalue', evidence: 'artefact requis · non assigné', who: '–' },
+    { id: '9.2', family: 'Algorithmie', title: 'Les traitements lourds sont-ils déclenchés à la demande ?', tier: 'DECL', status: 'nonEvalue', evidence: 'artefact requis · non assigné', who: '–' },
+  ] as readonly CriterionRow[],
+} as const;
+
+// ---- declaration editor ----
+
+export interface DeclarationBlocking {
+  parts: ReadonlyArray<{ text: string; mono?: boolean }>;
+  note: string;
+}
+
+export const declarationFixture = {
+  draft: 'v3',
+  published: 'v2',
+  publishedDate: '12 Mar 2026',
+  reviewDate: '12 Mar 2027',
+  // blocking findings are engine output, kept as data
+  blocking: [
+    {
+      parts: [{ text: '4.3', mono: true }, { text: ' non conforme with no justification text' }],
+      note: 'Required by the official grid.',
+    },
+    {
+      parts: [
+        { text: '7.4', mono: true },
+        { text: ', ' },
+        { text: '9.2', mono: true },
+        { text: ' unassessed declarative criteria' },
+      ],
+      note: 'Need a named responsible person and an artifact.',
+    },
+    {
+      parts: [{ text: 'Hosting attestation older than 12 months' }],
+      note: 'Uploaded 22 Jul 2025. Re-request from Scaleway.',
+    },
+  ] as readonly DeclarationBlocking[],
+  // the known-gaps text is customer-authored content, not template copy
+  knownGapsText:
+    "Le lecteur vidéo tiers utilisé sur la rubrique actualités déclenche une lecture automatique et n'est pas conforme au critère 5.7. Son remplacement est planifié pour le 1er septembre 2026. Trois carrousels animés subsistent en page d'accueil (critère 4.3).",
+  versions: [
+    { tag: 'v3', draft: true, date: '15 Aug', conforme: 41 },
+    { tag: 'v2', draft: false, date: '12 Mar', conforme: 34, ledger: '3a91…' },
+    { tag: 'v1', draft: false, date: '04 Mar', conforme: 28, ledger: '1c07…' },
+  ] as ReadonlyArray<{ tag: string; draft: boolean; date: string; conforme: number; ledger?: string }>,
+  preview: {
+    url: 'sevre-et-loire.fr/ecoconception',
+    orgEyebrow: 'MÉTROPOLE DE SÈVRE-ET-LOIRE',
+    establishedDate: '15 août 2026',
+    referential: 'RGESN version 2 (2024)',
+    host: 'Scaleway, Paris (DC5)',
+    verifiedDate: '15 août 2026',
+    methodologyVersion: 'v1.2',
+    verifyUrl: 'balise.fr/v/9f4c8e21',
+    badgeDate: '15.08.26',
+    // per-family conformity: segment widths in percent, count label verbatim
+    families: [
+      { name: '1 Stratégie', ok: 57, warn: 14, bad: 15, label: '4/6' },
+      { name: '2 Spécifications', ok: 50, warn: 33, bad: 0, label: '3/6' },
+      { name: '3 Architecture', ok: 71, warn: 14, bad: 0, label: '5/7' },
+      { name: '4 UX / UI', ok: 50, warn: 25, bad: 17, label: '6/12' },
+      { name: '5 Contenus', ok: 55, warn: 18, bad: 18, label: '6/11' },
+      { name: '6 Frontend', ok: 62, warn: 15, bad: 15, label: '8/13' },
+      { name: '7 Backend', ok: 57, warn: 14, bad: 0, label: '4/7' },
+      { name: '8 Hébergement', ok: 88, warn: 0, bad: 0, label: '7/8' },
+      { name: '9 Algorithmie', ok: 33, warn: 17, bad: 17, label: '2/6' },
+    ] as ReadonlyArray<{ name: string; ok: number; warn: number; bad: number; label: string }>,
+  },
+} as const;
+
 // ---- pull request check ----
 
 export type PrVerdict = 'fail' | 'warn' | 'noSig';

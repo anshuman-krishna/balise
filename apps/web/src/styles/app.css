@@ -406,6 +406,34 @@ a:hover {
   color: var(--paper);
 }
 
+/* ---- filter chips ---- */
+
+.chip {
+  appearance: none;
+  border-radius: 0;
+  cursor: pointer;
+  padding: 4px 10px;
+  border: 1px solid rgba(21, 24, 27, 0.22);
+  background: var(--surface);
+  color: var(--text-secondary);
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 10.5px;
+}
+.chip:hover {
+  border-color: var(--ink);
+  color: var(--ink);
+}
+.chip.active {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--paper);
+}
+
+.row-hover:hover {
+  background: var(--hover-row);
+}
+
 /* ---- code and yaml display ---- */
 
 .code-block {

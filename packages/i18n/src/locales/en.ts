@@ -205,6 +205,78 @@ export const en = {
     overrideNote: '(reason required, appears in the execution report)',
     annotationTitle: 'INLINE ANNOTATION · {file}',
   },
+  criteria: {
+    subtitle: 'Pack {pack} · {criteria} criteria · {families} families · assessment pinned to this pack version',
+    summary: {
+      conforme: 'CONFORME',
+      partiel: 'PARTIEL',
+      nonConf: 'NON CONF.',
+      na: 'N/A',
+      taux: 'TAUX ({done}/{total})',
+    },
+    tiers: {
+      automatedDesc: 'Machine-verifiable. Re-evaluated on every run.',
+      assistedDesc: 'Evidence gathered, answer proposed, human confirms.',
+      declarativeDesc: 'Human attestation, artifact and named person required.',
+    },
+    filter: {
+      tier: 'TIER',
+      all: 'All {count}',
+      automated: 'Automated {count}',
+      assisted: 'Assisted {count}',
+      declarative: 'Declarative {count}',
+      shown: '{count} shown',
+    },
+    headers: {
+      id: 'ID',
+      criterion: 'CRITERION',
+      family: 'FAMILY',
+      tier: 'TIER',
+      status: 'STATUS',
+      evidence: 'EVIDENCE',
+      verified: 'VERIFIED',
+    },
+    // statuses follow the official rgesn grid verbatim; they are legal
+    // vocabulary and stay french in every locale.
+    statuses: {
+      conforme: 'Conforme',
+      partiellement: 'Partiellement',
+      nonConforme: 'Non conforme',
+      nonEvalue: 'Non évalué',
+      nonApplicable: 'Non applicable',
+    },
+    footnote:
+      'Showing a representative slice. Every non-conforme row requires justification text before the declaration can publish.',
+  },
+  declaration: {
+    subtitle: 'Draft {draft} · last published {published} on {publishedDate} · next review due {reviewDate}',
+    diffVs: 'Diff vs {version}',
+    previewPage: 'Preview page',
+    publishBlocked: 'Publish · blocked',
+    blockingTitle: 'BLOCKING · {count}',
+    knownGapsTitle: 'KNOWN GAPS · REQUIRED SECTION',
+    knownGapsNote:
+      'The template will not let you publish an empty gaps section. A declaration claiming 100% conformity reads as unverified.',
+    versionHistoryTitle: 'VERSION HISTORY',
+    draftTag: 'DRAFT',
+    conformeCount: '{count} conforme',
+    ledgerRef: 'ledger {hash}',
+    livePreviewTitle: 'LIVE PREVIEW · PUBLISHED PAGE',
+    footerBadge: 'FOOTER BADGE · reachable from every page',
+    // the preview is the published declaration itself: a french legal
+    // document, rendered in french in every locale.
+    preview: {
+      heading: "Déclaration d'écoconception",
+      meta: '{service} · établie le {date} · référentiel {referential}',
+      taux: 'TAUX DE CONFORMITÉ',
+      conformes: 'CRITÈRES CONFORMES',
+      nonConformes: 'NON CONFORMES',
+      familyTitle: 'CONFORMITÉ PAR FAMILLE',
+      hosting:
+        "Hébergement : {host} · électricité d'origine renouvelable vérifiée le {date}. Mesures produites par la méthodologie Balise {version}, vérifiables à l'adresse",
+      badgeName: 'Écoconception',
+    },
+  },
   placeholder: {
     eyebrow: 'PLANNED',
     body: 'Planned for {version}. Nothing renders here until it can be measured; invented numbers would defeat the point.',
