@@ -1,3 +1,4 @@
+import { Link } from 'react-router';
 import { formatInt, formatNumber, formatSigned } from '@balise/ui';
 import { fill, t } from '../i18n';
 import { canon } from '../fixtures/canon';
@@ -216,9 +217,9 @@ export function Dashboard() {
                 introduced by <span className="mono" style={{ fontSize: 10 }}>PR #412</span> · c. bellanger
               </div>
               <div style={{ display: 'flex', gap: 8, marginTop: 10 }}>
-                <button type="button" className="btn btn-primary">
+                <Link to="/comparison" className="btn btn-primary" style={{ display: 'inline-block' }}>
                   {d.regressions.openComparison}
-                </button>
+                </Link>
                 <button type="button" className="btn">
                   {d.regressions.addToBacklog}
                 </button>

@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@balise/i18n": "workspace:*",
+    "@balise/measure-core": "workspace:*",
     "@balise/schemas": "workspace:*",
     "@balise/ui": "workspace:*",
     "@fontsource-variable/archivo": "^5.2.0",

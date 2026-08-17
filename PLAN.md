@@ -8,25 +8,27 @@ Living document. Rules for maintaining it:
 - Version tags (`v0`, `v0.1`, `v1`, ...) are pushed at the end of each completed slice.
 - No em dashes anywhere in this file or in any user-facing string. House rule.
 
-Companion documents: `CLAUDE.md` (operating manual, invariants, stack), `testing/CLAUDE-2.md`
-(design brief, gitignored), `testing/design_handoff_balise 2/` (mockups, fidelity source).
+Companion documents, all local-only in `testing/` (gitignored): the operating manual
+(invariants, stack, conventions), the design brief, and the design handoff (mockups,
+screenshots, the fidelity source).
 
 ---
 
 ## Current status
 
-**Phase: V0 shipped (2026-08-17), V0.1 next.** The monorepo builds, typechecks, lints and
-passes 97 tests: measurement kernel (median/MAD, noise floor, classifyDelta, confidence),
-three carbon models with golden fixtures pinned to published reference implementations,
-design tokens, ToleranceBand (canonical, compact, badge, print patterns), and the Dashboard
-on canon fixture data, visually verified against the design reference. Remaining surfaces
-are designed placeholder states. Next slice: run detail and comparison screens.
+**Phase: V0.1 shipped (2026-08-17), V0.2 next.** On top of V0 (kernel, carbon models,
+tokens, ToleranceBand, Dashboard), V0.1 adds the run detail screen (tabbed waterfall,
+model outputs side by side, run-to-run dispersion, environment fingerprint) and the
+comparison screen (verdict table computed through the kernel's classifyDelta, source-map
+attribution, third-party diff with the no-source-map admission), both visually verified
+against the design reference. 102 tests green. Housekeeping: full README, hardened
+gitignore, local working files never committed. Next slice: budgets and the PR check.
 
 ---
 
 ## Version roadmap
 
-| Version | Scope | Maps to CLAUDE.md sequence |
+| Version | Scope | Maps to the operating manual sequence |
 | --- | --- | --- |
 | **V0** | Monorepo, schemas, measure-core statistics kernel, carbon-models (ecoindex, swd, onebyte), i18n, ui tokens + ToleranceBand, web shell + Dashboard on fixture data | Weeks 1-2 (kernel core) + design foundation |
 | **V0.x** | Remaining instrument screens on fixture data: run detail, comparison, budgets, criteria, declaration editor, tender, contract, fleet, PR check mock, public surfaces | Design build-out |
@@ -87,10 +89,11 @@ are designed placeholder states. Next slice: run detail and comparison screens.
 - [x] ~~Root: typecheck, tests, build all green~~ (97 tests, 6 packages)
 - [x] ~~Commit and push v0~~
 
-## To-do: V0.x (design build-out, next)
+## To-do: V0.x (design build-out, in progress)
 
-- [ ] Run detail screen (waterfall, model outputs side by side, dispersion, fingerprint card)
-- [ ] Comparison screen (verdict table, attribution mock, third-party diff)
+- [x] ~~Run detail screen (waterfall, model outputs side by side, dispersion, fingerprint card)~~ (V0.1)
+- [x] ~~Comparison screen (verdict table, attribution mock, third-party diff)~~ (V0.1, verdicts computed through classifyDelta, not hardcoded)
+- [ ] Run detail: Resources tab (planned panel today)
 - [ ] Budgets screen (visual table + YAML toggle)
 - [ ] Criteria workspace (tier cards, filter chips, criteria table)
 - [ ] Declaration editor (blocking list, known gaps, live preview)
@@ -106,7 +109,7 @@ are designed placeholder states. Next slice: run detail and comparison screens.
 - [ ] Playwright runner app with pinned Chromium in a digest-locked container
 - [ ] HAR + CDP trace capture, cold and warm passes kept separate
 - [ ] EnvironmentFingerprint recorded on every run
-- [ ] METHODOLOGY.md v1 published (requires sign-off, CLAUDE.md section 29)
+- [ ] METHODOLOGY.md v1 published (requires sign-off, operating manual section 29)
 - [ ] The reproducibility test: twenty runs, same verdict, in CI
 
 Later versions: see roadmap; detailed to-dos are appended when the version starts.
@@ -120,16 +123,16 @@ Later versions: see roadmap; detailed to-dos are appended when the version start
 - **2026-08-17 · No em dashes in any user-facing surface or repo doc.** User instruction.
   The mockups contain them; replace with a middle dot, colon, or restructure when porting copy.
 - **2026-08-17 · UI language follows the design canon**: English app chrome, French domain
-  terms verbatim, documents entirely French. Note: CLAUDE.md section 2 says French-first UI;
+  terms verbatim, documents entirely French. Note: the operating manual says French-first UI;
   flagged to the user, one-line switch later since all strings live in packages/i18n.
 - **2026-08-17 · Carbon model constants come from published reference implementations**
   (CNUMR GreenIT-Analysis for EcoIndex, Green Web Foundation co2.js for SWD v4 and 1byte).
   Golden fixtures pin those values; any drift fails.
 - **2026-08-17 · Noise floor scaling factor is provisional.** Implemented as an explicit
   parameter, default 1.2 x median historical MAD, marked provisional in code and here.
-  Final value is a product decision (CLAUDE.md section 29), needs sign-off before V1 ships.
+  Final value is a product decision (operating manual section 29), needs sign-off before V1 ships.
 - **2026-08-17 · Delta classification includes `indeterminate`** for the no-established-floor
-  case, extending the three-state contract in CLAUDE.md section 6. Honest degradation:
+  case, extending the three-state contract in operating manual section 6. Honest degradation:
   without a floor there are no verdicts (design brief, states section).
 - **2026-08-17 · ademe model deferred** until real Base Empreinte factors are sourced.
   Inventing factors would break the credibility invariant.
@@ -138,17 +141,27 @@ Later versions: see roadmap; detailed to-dos are appended when the version start
   packages/ui when the run-detail dispersion variant lands.
 - **2026-08-17 · V0 styling is hand-rolled CSS over the token layer** (packages/ui
   tokens.css + app.css), for pixel fidelity to the handoff. The Tailwind preset promised in
-  CLAUDE.md (packages/config) is deferred; revisit before the codebase grows past a handful
+  the operating manual (packages/config) is deferred; revisit before the codebase grows past a handful
   of screens.
 - **2026-08-17 · zod is the single runtime dependency of the OSS packages**, via
   @balise/schemas (Apache-2.0 so measure-core and carbon-models stay standalone). Mandated
-  by the stack choice in CLAUDE.md section 4; flagged here per the ask-before-adding rule.
+  by the stack choice in operating manual section 4; flagged here per the ask-before-adding rule.
 - **2026-08-17 · Fonts are self-hosted** through fontsource packages; no third-party font
   requests, which the dogfood budget would otherwise count against us.
+- **2026-08-17 · Local working files are never committed.** The operating manual and all
+  design references live in `testing/`, gitignored end to end; committed docs refer to
+  them only as "the operating manual" and "the design brief". The repo history before
+  this decision contains one copy of the manual (tag v0); removing it would mean
+  rewriting published history, which the manual itself forbids. Flagged to the owner.
+- **2026-08-17 · Comparison verdicts go through the kernel.** The screen calls
+  classifyDelta and maps classification plus threshold state to the fixed verdict
+  vocabulary in one tested helper. There is no second delta implementation in the
+  frontend. The carbon row is the one precomputed exception until estimates get their
+  own delta pipeline.
 
 ## Open questions (product, not engineering)
 
-Carried from CLAUDE.md section 31 and the design handoff. Do not build ahead of these.
+Carried from operating manual section 31 and the design handoff. Do not build ahead of these.
 
 1. Tender annex vs execution report: which pain is more acute?
 2. Actual weighting of environmental criteria in tenders after 21 Aug 2026.

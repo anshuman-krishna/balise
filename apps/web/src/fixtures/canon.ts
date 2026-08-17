@@ -1,8 +1,10 @@
+import type { AggregatedMetric, MetricId, NoiseFloor, Unit } from '@balise/schemas';
+
 // The scenario canon: one internally consistent fictional dataset, from the
 // design handoff. None of it is measured. It exists so every screen tells the
 // same story until the runner (V1) and the API (V2) replace it with real data.
-// Keep the cross-screen arithmetic consistent; see testing/CLAUDE-2.md
-// section 14.
+// Keep the cross-screen arithmetic consistent; the design brief in testing/
+// holds the canon.
 
 export const canon = {
   tenant: {
@@ -120,5 +122,163 @@ export const canon = {
     date: '30 SEP 2026',
     contract: '2026-SL-0417',
     days: 45,
+  },
+} as const;
+
+// ---- Run detail ----
+
+export type WaterfallKind = 'first-party' | 'app' | 'regression' | 'third-party';
+
+export const runDetailFixture = {
+  id: '#4812',
+  timestamp: '15 Aug 2026 14:02:41 UTC',
+  route: '/demarches/acte-naissance',
+  profile: 'mobile-4g',
+  requests: 84,
+  totalKb: 1298,
+  waterfall: [
+    { name: 'document', kb: 42, start: 0, kind: 'first-party' },
+    { name: 'app.a91f.js', kb: 412, start: 0.08, kind: 'app' },
+    { name: 'vendor-dates.c40e.js', kb: 184, start: 0.13, kind: 'regression' },
+    { name: 'marianne-bold.woff2', kb: 68, start: 0.11, kind: 'first-party' },
+    { name: 'hero-mairie.jpg', kb: 224, start: 0.18, kind: 'first-party' },
+    { name: 'tarteaucitron.js', kb: 96, start: 0.32, kind: 'third-party' },
+    { name: 'matomo.js', kb: 72, start: 0.36, kind: 'third-party' },
+    { name: 'player.dailymotion', kb: 198, start: 0.42, kind: 'third-party' },
+  ] as ReadonlyArray<{ name: string; kb: number; start: number; kind: WaterfallKind }>,
+  moreCount: 76,
+  moreKb: 2,
+  models: [
+    { name: 'EcoIndex', value: 0.31, low: 0.28, high: 0.35, isReference: false },
+    { name: 'SWD v4', value: 0.42, low: 0.36, high: 0.49, isReference: true },
+    { name: 'ADEME BE', value: 0.37, low: 0.33, high: 0.42, isReference: false },
+    { name: '1byte', value: 0.58, low: 0.52, high: 0.63, isReference: false },
+  ],
+  modelScale: { min: 0.2, max: 0.7 },
+  dispersion: {
+    baselineRuns: [1104, 1110, 1114, 1118, 1123],
+    candidateRuns: [1289, 1294, 1298, 1303, 1307],
+    baselineMedian: 1114,
+    candidateMedian: 1298,
+    mad: 9,
+    noiseKb: 7,
+    deltaKb: 184,
+    noiseRatio: 26,
+    scaleMin: 1080,
+    scaleMax: 1330,
+  },
+  fingerprint: [
+    { key: 'chromium', value: '127.0.6533.88' },
+    { key: 'image', value: 'sha256:4e91c2a7…' },
+    { key: 'throttle', value: 'mobile-4g (1.6 Mbps / 4× CPU)' },
+    { key: 'region', value: 'eu-west-par' },
+    { key: 'models', value: 'ecoindex@3.1 swd@4.0 ademe@2024 1byte@2021' },
+    { key: 'ledger', value: '9f4c8e21…c7', link: true },
+  ] as ReadonlyArray<{ key: string; value: string; link?: boolean }>,
+} as const;
+
+// ---- Comparison ----
+
+function agg(metricId: MetricId, unit: Unit, median: number, mad: number): AggregatedMetric {
+  return { metricId, unit, median, mad, min: median - 2 * mad, max: median + 2 * mad, sampleCount: 5 };
+}
+
+function establishedFloor(metricId: MetricId, unit: Unit, value: number): NoiseFloor {
+  return { status: 'established', metricId, unit, value, sampleCount: 30, scalingFactor: 1.2 };
+}
+
+export interface ComparisonRow {
+  label: string;
+  /** Display formatting family; raw values stay raw (invariant 6). */
+  kind: 'kb' | 'ms' | 'count' | 'g';
+  lowConfidence?: boolean;
+  before: AggregatedMetric;
+  after: AggregatedMetric;
+  floor: NoiseFloor;
+  /** An absolute budget or contractual threshold is exceeded. */
+  overThreshold: boolean;
+}
+
+export const comparisonFixture = {
+  baseline: { run: '#4790', date: '09 Aug 03:00', branch: 'main' },
+  candidate: { run: '#4812', date: '15 Aug 14:02', branch: 'pr/412' },
+  rows: [
+    {
+      label: 'Transferred bytes',
+      kind: 'kb',
+      before: agg('transferred_bytes', 'bytes', 1_114_000, 6_000),
+      after: agg('transferred_bytes', 'bytes', 1_298_000, 9_000),
+      floor: establishedFloor('transferred_bytes', 'bytes', 7_000),
+      overThreshold: true,
+    },
+    {
+      label: 'Requests',
+      kind: 'count',
+      before: agg('request_count', 'count', 82, 1),
+      after: agg('request_count', 'count', 84, 1),
+      floor: establishedFloor('request_count', 'count', 2),
+      overThreshold: false,
+    },
+    {
+      label: 'JS execution time',
+      kind: 'ms',
+      before: agg('js_execution_ms', 'ms', 548, 12),
+      after: agg('js_execution_ms', 'ms', 612, 15),
+      floor: establishedFloor('js_execution_ms', 'ms', 30),
+      overThreshold: false,
+    },
+    {
+      label: 'DOM nodes',
+      kind: 'count',
+      lowConfidence: true,
+      before: agg('dom_node_count', 'count', 2_118, 78),
+      after: agg('dom_node_count', 'count', 2_140, 82),
+      floor: establishedFloor('dom_node_count', 'count', 90),
+      overThreshold: false,
+    },
+  ] as readonly ComparisonRow[],
+  // Estimates are not kernel metrics; the carbon row inherits significance
+  // from the transferred-bytes delta that drives it and is precomputed here.
+  carbonRow: {
+    label: 'Carbon / visit (SWD v4)',
+    before: 0.98,
+    after: 1.14,
+    delta: 0.16,
+    floorG: 0.02,
+    madG: 0.02,
+    verdict: 'breach' as const,
+  },
+  attribution: {
+    // The attribution engine emits plain language (operating manual section
+    // 12); the sentence is engine output, so it lives here as data.
+    leadParts: [
+      { text: '/demarches/acte-naissance', mono: true },
+      { text: ' gained ' },
+      { text: '184 KB', strong: true },
+      { text: '. ' },
+      { text: '160 KB', strong: true },
+      { text: ' is ' },
+      { text: 'date-fns', mono: true },
+      { text: ' locale data introduced by ' },
+      { text: 'PR #412', mono: true },
+      { text: '.' },
+    ] as ReadonlyArray<{ text: string; mono?: boolean; strong?: boolean }>,
+    table: [
+      { key: 'bundle', value: 'vendor-dates.c40e.js', note: '+184 KB', tone: 'breach' },
+      { key: 'module', value: 'date-fns/locale/*', note: '+160 KB', tone: 'breach' },
+      { key: 'file', value: 'src/lib/dates.ts:14', note: 'import *', tone: 'muted' },
+      { key: 'commit', value: 'a7f2c91 · c. bellanger', note: '12 Aug', tone: 'muted' },
+      { key: 'remainder', value: 'tree-shake overhead', note: '+24 KB', tone: 'muted' },
+    ] as ReadonlyArray<{ key: string; value: string; note: string; tone: 'breach' | 'muted' }>,
+    fix: 'import the two locales in use (fr, br) rather than the locale index. Estimated recovery 158 KB.',
+  },
+  thirdParty: {
+    rows: [
+      { origin: 'geo.api.gouv.fr', status: 'unchanged', kb: 12 },
+      { origin: 'matomo.selo.fr', status: 'unchanged', kb: 72 },
+      { origin: 'player.dailymotion.com', status: 'new', kb: 198 },
+      { origin: 'tarteaucitron.io', status: 'unchanged', kb: 96 },
+    ] as ReadonlyArray<{ origin: string; status: 'unchanged' | 'new'; kb: number }>,
+    noSourceMapOrigin: 'player.dailymotion',
   },
 } as const;

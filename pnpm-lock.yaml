@@ -53,6 +53,9 @@ importers:
       '@balise/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
+      '@balise/measure-core':
+        specifier: workspace:*
+        version: link:../../packages/measure-core
       '@balise/schemas':
         specifier: workspace:*
         version: link:../../packages/schemas

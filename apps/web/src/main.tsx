@@ -9,6 +9,8 @@ import './styles/app.css';
 
 import { AppShell } from './layout/AppShell';
 import { Dashboard } from './screens/Dashboard';
+import { RunDetail } from './screens/RunDetail';
+import { Comparison } from './screens/Comparison';
 import { Placeholder } from './screens/Placeholder';
 import { t } from './i18n';
 
@@ -20,8 +22,6 @@ interface PlannedScreen {
 }
 
 const planned: PlannedScreen[] = [
-  { path: '/runs', title: t.nav.items.runDetail, version: 'V0.1', appBar: true },
-  { path: '/comparison', title: t.nav.items.comparison, version: 'V0.1', appBar: true },
   { path: '/budgets', title: t.nav.items.budgets, version: 'V0.2', appBar: true },
   { path: '/criteria', title: t.nav.items.criteria, version: 'V0.3', appBar: true },
   { path: '/declaration', title: t.nav.items.declarationEditor, version: 'V0.3', appBar: true },
@@ -51,6 +51,22 @@ createRoot(root).render(
           element={
             <AppShell>
               <Dashboard />
+            </AppShell>
+          }
+        />
+        <Route
+          path="/runs"
+          element={
+            <AppShell>
+              <RunDetail />
+            </AppShell>
+          }
+        />
+        <Route
+          path="/comparison"
+          element={
+            <AppShell>
+              <Comparison />
             </AppShell>
           }
         />
