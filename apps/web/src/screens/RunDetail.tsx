@@ -1,10 +1,21 @@
 import { useState } from 'react';
+import { classifyDelta } from '@balise/measure-core';
+import { formatInt, ToleranceDispersion } from '@balise/ui';
 import { fill, t } from '../i18n';
 import { runDetailFixture as run } from '../fixtures/canon';
-import { formatInt } from '@balise/ui';
 import { Waterfall } from '../components/Waterfall';
 import { ModelComparison } from '../components/ModelComparison';
-import { DispersionPlot } from '../components/DispersionPlot';
+import { ResourceTable } from '../components/ResourceTable';
+import { ResourceTypeSummary } from '../components/ResourceTypeSummary';
+import { summariseResources } from '../lib/resources';
+
+// the verdict on this card comes from the kernel, like the comparison
+// verdicts do. nothing here decides for itself whether a delta is real.
+const dispersionDelta = classifyDelta(run.dispersion.before, run.dispersion.after, run.dispersion.floor);
+const deltaKb = Math.round(dispersionDelta.value / 1000);
+const floorKb = run.dispersion.floor.status === 'established' ? run.dispersion.floor.value / 1000 : 0;
+const noiseRatio = floorKb === 0 ? 0 : Math.round(Math.abs(deltaKb) / floorKb);
+const resourceSummary = summariseResources(run.resources, run.remainder);
 
 type Tab = 'waterfall' | 'resources' | 'dispersion' | 'models' | 'environment';
 
@@ -30,7 +41,7 @@ function DispersionCard() {
     <div className="card">
       <span className="eyebrow">{fill(t.runDetail.dispersionTitle, { n: d.baselineRuns.length })}</span>
       <div style={{ marginTop: 12 }}>
-        <DispersionPlot
+        <ToleranceDispersion
           baselineRuns={d.baselineRuns}
           candidateRuns={d.candidateRuns}
           baselineMedian={d.baselineMedian}
@@ -40,10 +51,11 @@ function DispersionCard() {
           scaleMin={d.scaleMin}
           scaleMax={d.scaleMax}
           noiseLabel={fill(t.runDetail.noiseFloorLabel, { value: d.noiseKb })}
-          deltaLabel={fill(t.runDetail.deltaTimesNoise, { delta: d.deltaKb, ratio: d.noiseRatio })}
+          deltaLabel={fill(t.runDetail.deltaTimesNoise, { delta: deltaKb, ratio: noiseRatio })}
           baselineRowLabel={t.runDetail.baselineRow}
           candidateRowLabel={t.runDetail.candidateRow}
-          significant
+          deltaClassification={dispersionDelta.classification}
+          formatTick={(value) => formatInt(value)}
         />
       </div>
       <p style={{ margin: '10px 0 0', fontSize: 10.5, lineHeight: 1.5, color: 'var(--text-secondary)', maxWidth: '62ch' }}>
@@ -160,9 +172,27 @@ export function RunDetail() {
       ) : null}
 
       {tab === 'resources' ? (
-        <p style={{ marginTop: 18, fontSize: 12, lineHeight: 1.6, color: 'var(--text-secondary)', maxWidth: '56ch' }}>
-          {fill(t.runDetail.plannedPanel, { version: 'V0.2' })}
-        </p>
+        <div className="dashboard-cols" style={{ gridTemplateColumns: '1.5fr 1fr', marginTop: 14 }}>
+          <div className="stack">
+            <ResourceTable
+              records={run.resources}
+              remainder={run.remainder}
+              totalRequests={resourceSummary.totalRequests}
+            />
+            <p style={{ margin: 0, fontSize: 10.5, lineHeight: 1.6, color: 'var(--text-secondary)', maxWidth: '72ch' }}>
+              {t.runDetail.resources.coverageCaption}
+            </p>
+          </div>
+          <div className="stack">
+            <ResourceTypeSummary summary={resourceSummary} />
+            <p style={{ margin: 0, fontSize: 10.5, lineHeight: 1.6, color: 'var(--text-secondary)' }}>
+              {fill(t.runDetail.resources.tailCaption, {
+                count: run.remainder.requests,
+                kb: run.remainder.transferredKb,
+              })}
+            </p>
+          </div>
+        </div>
       ) : null}
     </>
   );

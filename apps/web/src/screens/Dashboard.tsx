@@ -1,9 +1,8 @@
 import { Link } from 'react-router';
-import { formatInt, formatNumber, formatSigned } from '@balise/ui';
+import { formatInt, formatNumber, formatSigned, ToleranceTrend } from '@balise/ui';
 import { fill, t } from '../i18n';
 import { canon } from '../fixtures/canon';
 import { MetricTile } from '../components/MetricTile';
-import { TrendChart } from '../components/TrendChart';
 
 function TierRow({ label, done, total, color }: { label: string; done: number; total: number; color: string }) {
   const overColor = done < total && color === 'var(--conforme)' ? 'var(--measured)' : color;
@@ -161,7 +160,7 @@ export function Dashboard() {
             </span>
           </div>
           <div style={{ marginTop: 14 }}>
-            <TrendChart
+            <ToleranceTrend
               points={canon.trend.points}
               deploys={canon.trend.deploys}
               gridValues={canon.trend.gridValues}
@@ -169,6 +168,7 @@ export function Dashboard() {
               budgetLabel={fill(d.trend.budgetLabel, { value: formatInt(canon.trend.budgetKb) })}
               startLabel={canon.trend.startLabel}
               endLabel={canon.trend.endLabel}
+              unitLabel={d.tiles.kbUnit}
             />
           </div>
           <div

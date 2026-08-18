@@ -125,6 +125,35 @@ export const fr: Catalog = {
       'Changement réel. MAD {mad} Ko, cinq relevés, même empreinte que la base.',
     baselineRow: 'base',
     candidateRow: 'candidat',
+    resources: {
+      byTypeTitle: 'PAR TYPE · {requests} REQUÊTES · {kb} KB',
+      headers: {
+        type: 'TYPE',
+        requests: 'REQ',
+        transferred: 'TRANSFÉRÉ',
+        share: 'PART',
+        resource: 'RESSOURCE',
+        decoded: 'DÉCOMPRESSÉ',
+        unused: 'INUTILISÉ',
+        origin: 'ORIGINE',
+      },
+      types: {
+        document: 'document',
+        script: 'script',
+        stylesheet: 'feuille de style',
+        image: 'image',
+        font: 'police',
+        media: 'média',
+        other: 'autre',
+      },
+      recordsTitle: 'RELEVÉS · {count} SUR {requests} REQUÊTES',
+      remainderRow: '{count} requêtes plus petites, aucun relevé par ressource conservé',
+      firstParty: 'première partie',
+      coverageCaption:
+        "Inutilisé compte les octets décompressés jamais exécutés, relevés par la couverture de code. Ce n'est pas une économie de transfert : ce que la compression aurait fait de ces octets est une autre question, à laquelle le panneau d'attribution répond bundle par bundle.",
+      tailCaption:
+        'Les {count} requêtes hors des relevés ci-dessus représentent {kb} KB. Elles sont comptées dans les totaux et dans la ligne autre, jamais estimées.',
+    },
     fingerprintTitle: 'EMPREINTE ENVIRONNEMENT',
     fingerprintMatchNote:
       "Empreinte identique à celle de la base. Comparaison permise sans signalement.",

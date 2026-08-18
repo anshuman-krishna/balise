@@ -16,19 +16,18 @@ screenshots, the fidelity source).
 
 ## Current status
 
-**Phase: V0.6 shipped (2026-08-18), V0.7 next.** All fifteen surfaces from the design
-handoff are built on canon fixtures and verified against the reference. New in V0.6, the
-three public surfaces, in the instrument register at lower density with no app chrome:
-the free scan (hero, URL field, EcoIndex grade beside the band, three findings, the
-declaration-lookup panel that is the acquisition hook, and an honest no-record state for
-any domain we hold no capture for), the observatory (412-entry public index shown as a
-six-row extract, working sector and declaration filters, per-row compact bands on one
-shared scale, trend colour gated on significance) and the ledger verification permalink
-at `/v/:hash`, which resolves with no session and no app chrome, states the append-only
-rule, and reports an unknown empreinte as unknown rather than showing the nearest record.
-The verification URL printed in each of the three document footers now resolves to it.
-121 tests green. Next slice: the run-detail Resources tab and the remaining ToleranceBand
-variants (trend, dispersion), then V1, the runner.
+**Phase: V0.7 shipped (2026-08-18), V1 next.** The design build-out is complete: all
+fifteen surfaces plus every tab inside them. New in V0.7, the run-detail Resources tab
+(per-resource records with type, decoded size, coverage and origin, beside a by-type
+summary derived from the same records so the two panels cannot disagree with the
+waterfall) and the two remaining ToleranceBand renderings moved into `packages/ui`:
+`ToleranceTrend` (the band over time, with the dispersion envelope and deploy markers)
+and `ToleranceDispersion` (individual runs, median and MAD, against the noise field).
+Both now enforce the noise-floor rule in code rather than trusting the caller: a deploy
+marker or a candidate row draws in breach only for a kernel `regression`. The run-detail
+dispersion verdict is computed through `classifyDelta` instead of being asserted in the
+fixture. 135 tests green. Next: V1, the runner, which is where fixtures start being
+replaced by measurements.
 
 ---
 
@@ -99,7 +98,7 @@ variants (trend, dispersion), then V1, the runner.
 
 - [x] ~~Run detail screen (waterfall, model outputs side by side, dispersion, fingerprint card)~~ (V0.1)
 - [x] ~~Comparison screen (verdict table, attribution mock, third-party diff)~~ (V0.1, verdicts computed through classifyDelta, not hardcoded)
-- [ ] Run detail: Resources tab (planned panel today)
+- [x] ~~Run detail: Resources tab~~ (V0.7, records plus a derived by-type summary; coverage is reported on decoded bytes and never presented as a transferred saving)
 - [x] ~~Budgets screen (visual table + YAML toggle)~~ (V0.2, plus re-baseline history and overrides cards)
 - [x] ~~Criteria workspace (tier cards, filter chips, criteria table)~~ (V0.3, filter chips functional)
 - [x] ~~Declaration editor (blocking list, known gaps, live preview)~~ (V0.3, preview shares its numbers with the criteria fixture)
@@ -107,7 +106,8 @@ variants (trend, dispersion), then V1, the runner.
 - [x] ~~PR check screen (GitHub register, radius exception)~~ (V0.2)
 - [x] ~~Documents (declaration, annexe, rapport) in the print register~~ (V0.5, FIG. 3 goes through the print ToleranceBand; document content french in both locales)
 - [x] ~~Public surfaces (free scan, observatory, ledger verification)~~ (V0.6, `/v/:hash` is a real permalink and the document footers link to it)
-- [ ] ToleranceBand trend + dispersion + print register variants
+- [x] ~~ToleranceBand trend + dispersion variants~~ (V0.7, moved into packages/ui as ToleranceTrend and ToleranceDispersion, geometry unit-tested, rule 2 enforced in the component)
+- [ ] ToleranceBand print register for trend and dispersion (the handoff specifies print for the canonical band only; needed when the Typst pipeline lands)
 - [ ] Self-hosted font subsetting check (weight budget)
 
 ## To-do: V1 (runner)
@@ -204,6 +204,28 @@ Later versions: see roadmap; detailed to-dos are appended when the version start
   page computes or checks a hash chain yet; the screen states only what the record says.
   The `ledger` package with real hashing, Merkle anchoring and adversarial tests stays a
   V5 slice, per the roadmap.
+
+- **2026-08-18 · The trend and dispersion renderings live in `packages/ui`.** This
+  completes the move flagged on 2026-08-17. Both take the kernel's `DeltaClassification`
+  rather than a boolean the caller computed, so product rule 2 is mechanical: nothing but
+  a `regression` can draw in breach, in either rendering. Their geometry (`trendDomain`,
+  `envelopePolygon`, the two layout tables) sits in `geometry.ts` with the band's, unit
+  tested without a DOM, because these components also have to render in the headless
+  screenshot path for the PR comment and the PDF.
+- **2026-08-18 · The run-detail dispersion verdict goes through the kernel.** It was a
+  hardcoded `significant` prop. The fixture now carries the aggregated metrics and the
+  floor, and the screen calls `classifyDelta`, like the comparison screen does. The delta
+  and the noise ratio on that card are derived, not written down.
+- **2026-08-18 · Coverage is reported on decoded bytes, in its own column.** Unused
+  bytes from the coverage capture are not a transferred saving, and the two must never be
+  added or compared on screen. The panel says so in a caption and points at attribution,
+  which answers the transferred question per bundle.
+- **2026-08-18 · The resource tail is carried as a group, not invented row by row.** The
+  canon's waterfall states 76 further requests totalling 2 KB. That is implausible for a
+  cold-cache run and is inherited from the mock data; rather than write a false
+  explanation for it, the Resources panel shows the group as it stands and the totals
+  include it. Replace it with real capture records when the runner lands, and expect the
+  number to change.
 
 ## Open questions (product, not engineering)
 

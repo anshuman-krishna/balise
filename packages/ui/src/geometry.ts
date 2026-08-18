@@ -160,3 +160,107 @@ export const BAND_COLORS = {
   medianBreach: '#B3312C',
   axis: '#5A6169',
 } as const;
+
+// ---- trend rendering (band over time) ----
+
+export interface TrendLayout {
+  width: number;
+  height: number;
+  plotLeft: number;
+  plotRight: number;
+  plotTop: number;
+  plotBottom: number;
+  axisY: number;
+  labelY: number;
+}
+
+// dimensions from the design prototype (rendering 1b), verbatim.
+export const TREND_LAYOUT: TrendLayout = {
+  width: 460,
+  height: 152,
+  plotLeft: 30,
+  plotRight: 430,
+  plotTop: 26,
+  plotBottom: 112,
+  axisY: 126,
+  labelY: 150,
+};
+
+export interface TrendPoint {
+  median: number;
+  low: number;
+  high: number;
+}
+
+/**
+ * the drawn domain: the full dispersion envelope plus a budget rule if one
+ * exists, with a small margin so nothing touches the frame. the envelope is
+ * never clipped, because clipping it would hide dispersion, which is the
+ * one thing this chart exists to show.
+ */
+export function trendDomain(
+  points: readonly TrendPoint[],
+  budget?: number,
+): { min: number; max: number } {
+  if (points.length === 0) {
+    throw new Error('trendDomain needs at least one point');
+  }
+  const values = points.flatMap((point) => [point.low, point.high]);
+  if (budget !== undefined) {
+    values.push(budget);
+  }
+  const low = Math.min(...values);
+  const high = Math.max(...values);
+  // a flat series still needs a drawable domain
+  const margin = (high - low) * 0.06 || 1;
+  return { min: low - margin, max: high + margin };
+}
+
+/**
+ * the envelope polygon: the high edge left to right, then the low edge back.
+ * returned as svg point pairs.
+ */
+export function envelopePolygon(
+  points: readonly TrendPoint[],
+  x: (index: number) => number,
+  y: (value: number) => number,
+): string {
+  const forward = points.map((point, index) => `${x(index)},${y(point.high)}`);
+  const back = points.map((point, index) => `${x(index)},${y(point.low)}`).reverse();
+  return [...forward, ...back].join(' ');
+}
+
+// ---- dispersion rendering (individual runs, median and mad) ----
+
+export interface DispersionLayout {
+  width: number;
+  height: number;
+  plotLeft: number;
+  plotRight: number;
+  baselineY: number;
+  candidateY: number;
+  axisY: number;
+  rowHalfHeight: number;
+  medianHalfHeight: number;
+  noiseY: number;
+  noiseHeight: number;
+  runRadius: number;
+  tickCount: number;
+}
+
+// dimensions from the design prototype (rendering 1c), verbatim.
+export const DISPERSION_LAYOUT: DispersionLayout = {
+  width: 460,
+  height: 128,
+  plotLeft: 91,
+  plotRight: 430,
+  baselineY: 42,
+  candidateY: 76,
+  axisY: 98,
+  rowHalfHeight: 7,
+  medianHalfHeight: 11,
+  noiseY: 10,
+  noiseHeight: 76,
+  runRadius: 2.4,
+  tickCount: 4,
+};

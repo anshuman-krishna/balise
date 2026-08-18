@@ -1,5 +1,10 @@
 export { ToleranceBand, type ToleranceBandProps, type ToleranceBandModel } from './ToleranceBand.js';
 export { ConfidenceBadge, type ConfidenceBadgeProps } from './ConfidenceBadge.js';
+export { ToleranceTrend, type ToleranceTrendProps, type TrendDeploy } from './ToleranceTrend.js';
+export {
+  ToleranceDispersion,
+  type ToleranceDispersionProps,
+} from './ToleranceDispersion.js';
 export {
   xPosition,
   tickValues,
@@ -7,6 +12,13 @@ export {
   medianDashArray,
   BAND_LAYOUTS,
   BAND_COLORS,
+  TREND_LAYOUT,
+  DISPERSION_LAYOUT,
+  trendDomain,
+  envelopePolygon,
+  type TrendPoint,
+  type TrendLayout,
+  type DispersionLayout,
   type BandSize,
   type BandState,
   type BandLayout,

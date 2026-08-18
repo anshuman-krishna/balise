@@ -101,11 +101,14 @@ export const canon = {
       { median: 1263, low: 1238, high: 1288 },
       { median: 1258, low: 1233, high: 1283 },
     ],
+    // classification is the kernel's vocabulary, not a drawing instruction:
+    // the trend component draws breach only for 'regression'. the two
+    // unclassified deploys had no delta measured against them.
     deploys: [
-      { index: 3, label: '#398', kind: 'normal' as const },
-      { index: 6, label: '#405', kind: 'normal' as const },
-      { index: 9, label: '#412', kind: 'regression' as const },
-      { index: 12, label: '#417', kind: 'no-sig' as const },
+      { index: 3, label: '#398' },
+      { index: 6, label: '#405' },
+      { index: 9, label: '#412', classification: 'regression' as const },
+      { index: 12, label: '#417', classification: 'no-significant-change' as const },
     ],
   },
   regression: {
@@ -130,6 +133,22 @@ export const canon = {
 
 export type WaterfallKind = 'first-party' | 'app' | 'regression' | 'third-party';
 
+export type ResourceType = 'document' | 'script' | 'stylesheet' | 'image' | 'font' | 'media' | 'other';
+
+export interface ResourceRecord {
+  name: string;
+  type: ResourceType;
+  transferredKb: number;
+  /** bytes after decompression. coverage is measured against this. */
+  decodedKb: number;
+  /** decoded bytes never executed, from the coverage capture. js and css only. */
+  unusedDecodedKb?: number;
+  /** absent for first-party resources. */
+  origin?: string;
+  /** the resource this run's regression was attributed to. */
+  regression?: boolean;
+}
+
 export const runDetailFixture = {
   id: '#4812',
   timestamp: '15 Aug 2026 14:02:41 UTC',
@@ -149,6 +168,45 @@ export const runDetailFixture = {
   ] as ReadonlyArray<{ name: string; kb: number; start: number; kind: WaterfallKind }>,
   moreCount: 76,
   moreKb: 2,
+  // the resource inventory behind the waterfall. same capture, same totals:
+  // eight records plus the tail add to 84 requests and 1 298 KB. coverage is
+  // measured on decoded bytes, so unusedDecodedKb is never a transferred
+  // saving; the two are kept in separate columns for that reason.
+  resources: [
+    { name: 'document', type: 'document', transferredKb: 42, decodedKb: 210 },
+    { name: 'app.a91f.js', type: 'script', transferredKb: 412, decodedKb: 1180, unusedDecodedKb: 402 },
+    {
+      name: 'vendor-dates.c40e.js',
+      type: 'script',
+      transferredKb: 184,
+      decodedKb: 604,
+      unusedDecodedKb: 574,
+      regression: true,
+    },
+    { name: 'marianne-bold.woff2', type: 'font', transferredKb: 68, decodedKb: 68 },
+    { name: 'hero-mairie.jpg', type: 'image', transferredKb: 224, decodedKb: 224 },
+    {
+      name: 'tarteaucitron.js',
+      type: 'script',
+      transferredKb: 96,
+      decodedKb: 288,
+      unusedDecodedKb: 121,
+      origin: 'tarteaucitron.io',
+    },
+    {
+      name: 'matomo.js',
+      type: 'script',
+      transferredKb: 72,
+      decodedKb: 214,
+      unusedDecodedKb: 96,
+      origin: 'matomo.selo.fr',
+    },
+    { name: 'player.dailymotion', type: 'media', transferredKb: 198, decodedKb: 198, origin: 'player.dailymotion.com' },
+  ] as readonly ResourceRecord[],
+  // the tail the waterfall shows as "+ 76 more". we hold no per-resource
+  // record for it here, so it is carried as one group rather than invented
+  // row by row.
+  remainder: { requests: 76, transferredKb: 2 },
   models: [
     { name: 'EcoIndex', value: 0.31, low: 0.28, high: 0.35, isReference: false },
     { name: 'SWD v4', value: 0.42, low: 0.36, high: 0.49, isReference: true },
@@ -163,10 +221,14 @@ export const runDetailFixture = {
     candidateMedian: 1298,
     mad: 9,
     noiseKb: 7,
-    deltaKb: 184,
-    noiseRatio: 26,
     scaleMin: 1080,
     scaleMax: 1330,
+    // kernel inputs. the verdict on this card is computed through
+    // classifyDelta, never asserted here; the delta and the noise ratio are
+    // derived from these at the call site.
+    before: agg('transferred_bytes', 'bytes', 1_114_000, 9_000),
+    after: agg('transferred_bytes', 'bytes', 1_298_000, 9_000),
+    floor: establishedFloor('transferred_bytes', 'bytes', 7_000),
   },
   fingerprint: [
     { key: 'chromium', value: '127.0.6533.88' },

@@ -122,6 +122,35 @@ export const en = {
     dispersionCaption: 'Real change. MAD {mad} KB, five runs, same fingerprint as baseline.',
     baselineRow: 'baseline',
     candidateRow: 'candidate',
+    resources: {
+      byTypeTitle: 'BY TYPE · {requests} REQUESTS · {kb} KB',
+      headers: {
+        type: 'TYPE',
+        requests: 'REQ',
+        transferred: 'TRANSFERRED',
+        share: 'SHARE',
+        resource: 'RESOURCE',
+        decoded: 'DECODED',
+        unused: 'UNUSED',
+        origin: 'ORIGIN',
+      },
+      types: {
+        document: 'document',
+        script: 'script',
+        stylesheet: 'stylesheet',
+        image: 'image',
+        font: 'font',
+        media: 'media',
+        other: 'other',
+      },
+      recordsTitle: 'RECORDS · {count} OF {requests} REQUESTS',
+      remainderRow: '{count} smaller requests, no per-resource record held',
+      firstParty: 'first-party',
+      coverageCaption:
+        'Unused is decoded bytes never executed, from the coverage capture. It is not a transferred saving: what compression would have done with those bytes is a separate question, and the attribution panel answers it per bundle.',
+      tailCaption:
+        'The {count} requests outside the records above account for {kb} KB. They are counted in the totals and in the other row, never estimated.',
+    },
     fingerprintTitle: 'ENVIRONMENT FINGERPRINT',
     fingerprintMatchNote: 'Identical to baseline fingerprint. Comparison permitted without a flag.',
     plannedPanel:

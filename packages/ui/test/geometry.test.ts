@@ -1,8 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import {
+  envelopePolygon,
   medianDashArray,
   resolveBandState,
   tickValues,
+  trendDomain,
   xPosition,
 } from '../src/geometry.js';
 
@@ -75,5 +77,55 @@ describe('medianDashArray (product rule 3)', () => {
   it('keeps the dash legible at small sizes instead of dropping it', () => {
     expect(medianDashArray('low', 'compact')).toBe('3 2');
     expect(medianDashArray('low', 'badge')).toBe('3 2');
+  });
+});
+
+describe('trendDomain', () => {
+  const points = [
+    { median: 100, low: 90, high: 110 },
+    { median: 120, low: 112, high: 128 },
+  ];
+
+  it('spans the full envelope, not the medians', () => {
+    const domain = trendDomain(points);
+    expect(domain.min).toBeLessThan(90);
+    expect(domain.max).toBeGreaterThan(128);
+  });
+
+  it('adds a margin of six percent of the extent', () => {
+    const domain = trendDomain(points);
+    expect(domain.min).toBeCloseTo(90 - 38 * 0.06, 10);
+    expect(domain.max).toBeCloseTo(128 + 38 * 0.06, 10);
+  });
+
+  it('includes a budget rule that sits outside the data', () => {
+    const domain = trendDomain(points, 300);
+    expect(domain.max).toBeGreaterThan(300);
+  });
+
+  it('keeps a flat series drawable', () => {
+    const flat = [{ median: 5, low: 5, high: 5 }];
+    expect(trendDomain(flat)).toEqual({ min: 4, max: 6 });
+  });
+
+  it('refuses an empty series rather than inventing a domain', () => {
+    expect(() => trendDomain([])).toThrow();
+  });
+});
+
+describe('envelopePolygon', () => {
+  const points = [
+    { median: 1, low: 0, high: 2 },
+    { median: 3, low: 2, high: 4 },
+  ];
+  const x = (index: number) => index * 10;
+  const y = (value: number) => 100 - value;
+
+  it('traces the high edge forward then the low edge back', () => {
+    expect(envelopePolygon(points, x, y)).toBe('0,98 10,96 10,98 0,100');
+  });
+
+  it('emits two points per sample so the polygon closes', () => {
+    expect(envelopePolygon(points, x, y).split(' ')).toHaveLength(points.length * 2);
   });
 });
