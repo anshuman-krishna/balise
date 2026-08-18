@@ -1,0 +1,21 @@
+{
+  "name": "@balise/criteria-engine",
+  "version": "0.1.0",
+  "description": "Referential-agnostic rule evaluation. Loads a rule pack, answers what it can, and says what it cannot.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@balise/schemas": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

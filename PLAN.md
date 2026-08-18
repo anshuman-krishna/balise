@@ -16,17 +16,18 @@ screenshots, the fidelity source).
 
 ## Current status
 
-**Phase: the canon runs on a real register (2026-08-18).** Every hash the interface and
-the three documents show is now an entry in a chain built by `@balise/ledger`: 4 820
-entries covering the 4 812 retained runs, the two published declaration versions and the
-third, the budget override, both re-baselines, the methodology version and the quarterly
-report, in the order they happened. `pnpm gen:ledger-canon` writes the cited entries to a
-generated fixture; a test rebuilds the chain and holds the checked-in copy to it, parses
-every entry through the schema and recomputes both of its hashes, so a hand edit or a
-change in the ledger package cannot pass unnoticed. `/v/:hash` resolves a real prefix,
-reports the real position and the real previous entry, and shows nothing an entry does not
-carry. The document footers, the PR check and the run detail all link into it. 214 tests
-pass. Still open: METHODOLOGY.md sign-off, and no browser has ever run here.
+**Phase: `packages/criteria-engine` landed (2026-08-18).** Referential-agnostic rule
+evaluation, with the three tiers enforced in code: an automated criterion is answered from
+the measurement, an assisted one is *proposed* and counts for nothing until a person
+confirms it, and a declarative one is never touched by the engine at all. A human
+attestation always wins, including over a measurement. Everything the engine cannot
+answer, because the indicator was not measured or the rule is a type it does not
+understand, comes back `non_evalue` with the reason in plain french, never as a failure.
+`completion` splits by tier so auto-answered criteria cannot be read as a finished
+declaration; `blockingFindings` is the mechanical form of the official grid's rule that
+anything not conforme needs a justification. Two fixture packs with different vocabularies
+prove the engine knows nothing about RGESN specifically. 254 tests pass. Not built: the
+rgesn-2024-v2 pack itself, which needs the official verbatim text.
 
 ---
 
@@ -108,6 +109,20 @@ pass. Still open: METHODOLOGY.md sign-off, and no browser has ever run here.
 - [x] ~~ToleranceBand trend + dispersion variants~~ (V0.7, moved into packages/ui as ToleranceTrend and ToleranceDispersion, geometry unit-tested, rule 2 enforced in the component)
 - [ ] ToleranceBand print register for trend and dispersion (the handoff specifies print for the canonical band only; needed when the Typst pipeline lands)
 - [ ] Self-hosted font subsetting check (weight budget)
+
+## To-do: criteria (brought forward from V5)
+
+- [x] ~~`packages/criteria-engine`: pack validation, evaluation, completion by tier, blocking findings~~
+- [ ] `packages/rule-packs` with `rgesn-2024-v2.yaml`. **Blocked**: needs the official
+      statement text verbatim (operating manual section 11) and a signed-off tier per
+      criterion (section 29). Neither is mine to invent.
+- [ ] Decide the pack authoring format. The manual specifies YAML, which needs a parser
+      dependency in an OSS package, so it needs asking first. The alternative is authoring
+      in typescript and emitting the yaml, which inverts the workflow in section 21.
+- [ ] Wire the criteria workspace and the declaration editor's blocking list to the
+      engine. Waits on the pack: feeding fourteen fixture criteria through it would produce
+      totals that contradict the canon's 78.
+- [ ] Evaluation types beyond `metric_threshold`, once the pack says which are needed
 
 ## To-do: ledger (brought forward from V5)
 
@@ -339,6 +354,28 @@ Later versions: see roadmap; detailed to-dos are appended when the version start
   either has a ledger entry or it does not. The chain records `declaration_v3` so the
   document has something real to cite; the editor screen is unchanged. Resolving which of
   the two is right is a product call.
+
+- **2026-08-18 · The criteria engine was brought forward from V5**, for the same reason
+  as the ledger: it is pure, so it could be built and fully verified here while the runner
+  is blocked on the environment.
+- **2026-08-18 · An unanswerable criterion is `non_evalue`, never `non_conforme`.** Not
+  having looked is not the same as having failed, and a declaration that reported one as
+  the other would be lying in the customer's favour or against it depending on the
+  criterion. The engine carries the reason in french on every one of them.
+- **2026-08-18 · An assisted answer is a proposal and counts for nothing.** It is
+  excluded from the completion figure, excluded from the conformity rate, and it blocks
+  publication until a person confirms it. This is the tier model made mechanical rather
+  than left to the interface.
+- **2026-08-18 · A human attestation overrules a measurement.** A named person put their
+  name to it; the engine does not get to overrule that. The assessment records who and
+  when.
+- **2026-08-18 · `non_applicable` needs a justification too.** The official grid requires
+  one for anything that is not conforme, and "does not apply" is the easiest status to
+  reach for. Whitespace does not count as a justification.
+- **2026-08-18 · The rgesn pack is not written and will not be invented.** Section 11
+  requires the statement text verbatim from the official referential and section 29 makes
+  the tier of each criterion a decision to take with someone. The engine ships with two
+  fixture packs instead, which is also what proves it is referential-agnostic.
 
 ## Open questions (product, not engineering)
 
