@@ -11,6 +11,7 @@
     "test": "vitest run --passWithNoTests"
   },
   "dependencies": {
+    "@balise/attribution": "workspace:*",
     "@balise/i18n": "workspace:*",
     "@balise/ledger": "workspace:*",
     "@balise/measure-core": "workspace:*",

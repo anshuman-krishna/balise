@@ -13,7 +13,8 @@
     "lint": "eslint .",
     "runner:local": "pnpm --filter @balise/runner measure",
     "test:repro": "pnpm --filter @balise/runner test:repro",
-    "gen:ledger-canon": "node --experimental-strip-types --import ./scripts/ts-loader.mjs apps/web/scripts/generate-ledger-canon.ts"
+    "gen:ledger-canon": "node --experimental-strip-types --import ./scripts/ts-loader.mjs apps/web/scripts/generate-ledger-canon.ts",
+    "gen:attribution-canon": "node --experimental-strip-types --import ./scripts/ts-loader.mjs apps/web/scripts/generate-attribution-canon.ts"
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",

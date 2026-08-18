@@ -38,6 +38,7 @@ export const fr: Catalog = {
     declarationDue: 'DÉCLARATION DUE DANS {days} J',
     minutesAgo: 'il y a {minutes} min',
   },
+  months: ['janv.', 'févr.', 'mars', 'avr.', 'mai', 'juin', 'juil.', 'août', 'sept.', 'oct.', 'nov.', 'déc.'],
   confidence: {
     high: 'ÉLEVÉE',
     medium: 'MOYENNE',
@@ -176,12 +177,18 @@ export const fr: Catalog = {
     attributionTitle: 'ATTRIBUTION · RÉSOLUE PAR SOURCE MAPS',
     attributionKeys: {
       bundle: 'bundle',
+      dependency: 'dépendance',
       module: 'module',
       file: 'fichier',
       commit: 'commit',
       remainder: 'reste',
     },
-    suggestedFixLabel: 'Correction proposée :',
+    attributionLead:
+      '{bundle} a pris {amount} décompressés. {share} viennent de {package}, dans {count} nouveaux modules, introduits par {commit}.',
+    attributionLeadNoCommit:
+      '{bundle} a pris {amount} décompressés. {share} viennent de {package}, dans {count} nouveaux modules. Aucune plage de commits n\'est configurée pour cette comparaison.',
+    attributionCoverage:
+      '{explained} sur {measured} mesurés sont attribués à des modules. {remainder} sont de la sortie de bundler qu\'aucun mapping ne couvre, consignés plutôt que répartis.',
     thirdPartyTitle: 'DIFF DES TIERS',
     unchanged: 'inchangé',
     newOrigin: 'NOUVELLE ORIGINE',

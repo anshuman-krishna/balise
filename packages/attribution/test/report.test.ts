@@ -119,6 +119,7 @@ describe('attribute, when a bundle cannot be read', () => {
   });
 
   it('claims nothing about modules', () => {
+    expect(report.modules.comparable).toBe(false);
     expect(report.modules.complete).toBe(false);
     expect(report.modules.modules).toEqual([]);
     expect(report.modules.packages).toEqual([]);

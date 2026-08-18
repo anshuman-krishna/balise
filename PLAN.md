@@ -16,24 +16,29 @@ screenshots, the fidelity source).
 
 ## Current status
 
-**Phase: attribution explains a regression, or says it cannot (2026-08-19).**
-`packages/attribution` diffs two runs and names what grew. The diff is taken at
-**module** level, not file level: bundle names carry a content hash and rotate on
-every build, so pairing files would mean matching on a name pattern, while module
-identity comes from the source map and survives the rotation. Source maps are read
-with a base64 vlq decoder written in the package, every byte of a bundle is either
-credited to a source file or counted as unattributed, and blame is the commits
-touching a file between the baseline and candidate commits rather than whoever
-last edited it.
+**Phase: the comparison screen is engine output (2026-08-19).** `packages/attribution`
+diffs two runs and names what grew, and the comparison screen now renders what it
+computes rather than a sentence typed into a fixture. The canon's regression is two
+actual builds with actual source maps: `pnpm gen:attribution-canon` runs the engine
+over them and writes the result, and a test recomputes the whole thing and holds the
+checked-in copy to it. The two resource lists sum to the transferred medians the
+comparison fixture already published, so the attribution card and the metric table
+above it describe the same two runs.
+
+The diff is taken at **module** level, not file level: bundle names carry a content
+hash and rotate on every build, so pairing files would mean matching on a name
+pattern, while module identity comes from the source map and survives the rotation.
+Every byte of a bundle is either credited to a source file or counted as
+unattributed, and blame is the commits touching a file between the baseline and
+candidate commits rather than whoever last edited it.
 
 The honest paths are the tested ones. A bundle with no map, an unreadable map or a
-map that does not describe the file it was given is reported by name, per bundle;
-if any bundle on either side could not be read the module changes are withheld
-entirely, because emitting them would report every module of that bundle as
-removed. A dependency's bytes are never blamed on whoever touched the lockfile.
-Reconciliation compares against decoded bytes, never transferred ones, and states
-what is left unexplained instead of absorbing it. 359 tests pass across eleven
-packages.
+map that does not describe the file it was given is reported by name; if a bundle is
+readable on one side and not on the other the module changes are withheld entirely,
+because emitting them would report every module of that bundle as removed. A
+dependency's bytes are never blamed on whoever touched the lockfile. Reconciliation
+compares against decoded bytes, never transferred ones, and the card states in words
+what the modules explain and what is left over. 388 tests pass across eleven packages.
 
 ---
 
@@ -150,10 +155,12 @@ packages.
 - [ ] Fetch source maps from the customer's build artifacts or a configured url,
       use them and discard them. The package is pure and takes them as input; the
       fetching side and its retention rule belong to the runner or the api
-- [ ] Wire the comparison screen to the engine. Needs a fixture pair of real
-      bundles with maps, generated the way the ledger canon is
-- [ ] Phrase the plain-language sentence in `packages/i18n`, french first. The
-      package returns structure, deliberately, so the wording stays in one place
+- [x] ~~Wire the comparison screen to the engine~~ (`pnpm gen:attribution-canon`
+      builds two bundles with real source maps, runs the engine over them and writes
+      the result; a test recomputes it and holds the checked-in copy to it)
+- [x] ~~Phrase the plain-language sentence in `packages/i18n`~~ (`fillParts` keeps
+      the sentence one translatable string while still marking its identifiers and
+      quantities, so the clause order stays the translator's)
 - [ ] Index maps (`sections`), once a customer build produces one
 
 ## To-do: ledger (brought forward from V5)
@@ -447,13 +454,17 @@ Later versions: see roadmap; detailed to-dos are appended when the version start
   out of the source map and survives the rename, so that comparison is exact. The
   resource diff still reports the rename as one removal and one addition, because
   that is what happened on the wire.
-- **2026-08-19 · An incomplete side withholds the whole module diff.** If any
-  bundle on either side could not be read, no module changes are emitted at all.
-  The alternative is worse than useless: every module of the unreadable bundle
-  reads as removed, and a fabricated 160 KB removal is a finding we invented. The
-  per-bundle outcomes are still in the report, so a surface can name the one
-  bundle that stopped it. This is stricter than the operating manual's
-  "attribution unavailable for this bundle", and deliberately so.
+- **2026-08-19 · An asymmetric failure withholds the whole module diff.** If a
+  bundle is readable on one side and not on the other, no module changes are
+  emitted at all. The alternative is worse than useless: every module of that
+  bundle reads as removed, and a fabricated 160 KB removal is a finding we
+  invented. The first version of this rule withheld the diff whenever *any*
+  bundle failed, which one unmappable third-party tag would have been enough to
+  trigger for the whole page; the rule is now symmetry, not perfection. A bundle
+  that fails identically on both sides contributes nothing to either total, so
+  the comparison still holds and its bytes surface in the reconciliation as
+  unexplained. The per-bundle outcomes are in the report either way, so a surface
+  can name the bundle that stopped it.
 - **2026-08-19 · Reconciliation is against decoded bytes, never transferred
   ones.** A source map explains the file as written, not as compressed. The report
   carries both quantities and never substitutes one for the other, in either
@@ -490,6 +501,34 @@ Later versions: see roadmap; detailed to-dos are appended when the version start
   expected bytes with TextEncoder rather than with the package's own counter, so a
   green test is not two halves of the same mistake agreeing. The decoder is
   additionally held to hand-computed literals from the base64 alphabet.
+
+- **2026-08-19 · The canon's regression is two real builds, not a sentence.**
+  `apps/web/scripts/attribution-canon-source.ts` assembles a baseline and a candidate
+  bundle with real source maps and runs the engine over them, the way the ledger
+  canon builds a real chain. Every figure on the comparison screen is therefore
+  computed: the 160 KB is the sum of three locale modules the map actually points at,
+  and the 24 KB remainder is bundler output no mapping covers. The two resource lists
+  sum to the transferred medians the comparison fixture already published (1 114 000
+  and 1 298 000 bytes, 82 and 84 requests), so the card and the metric table above it
+  are two views of the same pair of runs rather than two unrelated fixtures.
+- **2026-08-19 · The suggested-fix panel became a coverage statement.** The mockup
+  ends the attribution card with a remediation and an estimated recovery. Neither is
+  measurable from a source map, and inventing them is the speculation the attribution
+  rules exist to prevent. The panel now says what the modules explain and what they do
+  not, in the same position and the same register. A deliberate deviation from the
+  handoff.
+- **2026-08-19 · The lead sentence stays one translatable string.** `fillParts` fills
+  the placeholders and marks each substitution as an identifier or a measured
+  quantity, so the card can typeset them differently without the sentence being cut
+  into fragments a translator cannot reorder. French and English word order differ
+  here and the fragment approach would have forced one of them to read badly.
+- **2026-08-19 · A sub-kilobyte delta is shown in bytes.** `src/lib/dates.ts` grew by
+  120 bytes, which rounds to 0 KB. A change rounded away is still a change, so the
+  formatter switches unit rather than losing it.
+- **2026-08-19 · The screen no longer names a PR number.** The mockup's sentence ends
+  "introduced by PR #412". Blame returns commits, so the card names the commit and its
+  author; the pull request number survives in the commit subject where a squash merge
+  puts it. Nothing is invented to match the mockup's wording.
 
 ## Open questions (product, not engineering)
 

@@ -50,10 +50,12 @@ export function reconcile(before: AttributionSide, after: AttributionSide, modul
   const beforeBytes = submittedDecodedBytes(before);
   const afterBytes = submittedDecodedBytes(after);
   const measuredDelta = beforeBytes === null || afterBytes === null ? null : afterBytes - beforeBytes;
-  // an incomplete module diff explains nothing, so it claims nothing. the whole
-  // measured delta stays unexplained rather than being partly accounted for by
-  // a comparison that is missing one side.
-  const explainedDelta = modules.complete ? modules.after.attributedBytes - modules.before.attributedBytes : 0;
+  // a diff that could not be taken explains nothing, so it claims nothing: the
+  // whole measured delta stays unexplained rather than being partly accounted
+  // for by a comparison that is missing one side.
+  const explainedDelta = modules.comparable
+    ? modules.after.attributedBytes - modules.before.attributedBytes
+    : 0;
   return {
     measuredDelta,
     explainedDelta,

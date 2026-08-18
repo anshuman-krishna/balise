@@ -6,4 +6,4 @@ export const locale: Locale = 'en';
 
 export const t = catalogs[locale];
 
-export { fill } from '@balise/i18n';
+export { fill, fillParts } from '@balise/i18n';

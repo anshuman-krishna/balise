@@ -72,6 +72,9 @@ importers:
 
   apps/web:
     dependencies:
+      '@balise/attribution':
+        specifier: workspace:*
+        version: link:../../packages/attribution
       '@balise/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n

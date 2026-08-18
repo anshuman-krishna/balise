@@ -313,39 +313,9 @@ export const comparisonFixture = {
     madG: 0.02,
     verdict: 'breach' as const,
   },
-  attribution: {
-    // the attribution engine emits plain language (operating manual section
-    // 12); the sentence is engine output, so it lives here as data.
-    leadParts: [
-      { text: '/demarches/acte-naissance', mono: true },
-      { text: ' gained ' },
-      { text: '184 KB', strong: true },
-      { text: '. ' },
-      { text: '160 KB', strong: true },
-      { text: ' is ' },
-      { text: 'date-fns', mono: true },
-      { text: ' locale data introduced by ' },
-      { text: 'PR #412', mono: true },
-      { text: '.' },
-    ] as ReadonlyArray<{ text: string; mono?: boolean; strong?: boolean }>,
-    table: [
-      { key: 'bundle', value: 'vendor-dates.c40e.js', note: '+184 KB', tone: 'breach' },
-      { key: 'module', value: 'date-fns/locale/*', note: '+160 KB', tone: 'breach' },
-      { key: 'file', value: 'src/lib/dates.ts:14', note: 'import *', tone: 'muted' },
-      { key: 'commit', value: 'a7f2c91 · c. bellanger', note: '12 Aug', tone: 'muted' },
-      { key: 'remainder', value: 'tree-shake overhead', note: '+24 KB', tone: 'muted' },
-    ] as ReadonlyArray<{ key: string; value: string; note: string; tone: 'breach' | 'muted' }>,
-    fix: 'import the two locales in use (fr, br) rather than the locale index. Estimated recovery 158 KB.',
-  },
-  thirdParty: {
-    rows: [
-      { origin: 'geo.api.gouv.fr', status: 'unchanged', kb: 12 },
-      { origin: 'matomo.selo.fr', status: 'unchanged', kb: 72 },
-      { origin: 'player.dailymotion.com', status: 'new', kb: 198 },
-      { origin: 'tarteaucitron.io', status: 'unchanged', kb: 96 },
-    ] as ReadonlyArray<{ origin: string; status: 'unchanged' | 'new'; kb: number }>,
-    noSourceMapOrigin: 'player.dailymotion',
-  },
+  // the attribution card and the third-party diff are computed by
+  // @balise/attribution from two builds with real source maps. see
+  // fixtures/attribution-canon.ts, which is generated.
 } as const;
 
 // ---- budgets ----

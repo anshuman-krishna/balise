@@ -37,6 +37,7 @@ export const en = {
     declarationDue: 'DÉCLARATION DUE IN {days} D',
     minutesAgo: '{minutes} min ago',
   },
+  months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
   confidence: {
     high: 'HIGH',
     medium: 'MEDIUM',
@@ -172,12 +173,18 @@ export const en = {
     attributionTitle: 'ATTRIBUTION · RESOLVED THROUGH SOURCE MAPS',
     attributionKeys: {
       bundle: 'bundle',
+      dependency: 'dependency',
       module: 'module',
       file: 'file',
       commit: 'commit',
       remainder: 'remainder',
     },
-    suggestedFixLabel: 'Suggested fix:',
+    attributionLead:
+      '{bundle} gained {amount} decoded. {share} is {package}, in {count} new modules, introduced by {commit}.',
+    attributionLeadNoCommit:
+      '{bundle} gained {amount} decoded. {share} is {package}, in {count} new modules. No commit range was configured for this comparison.',
+    attributionCoverage:
+      '{explained} of {measured} measured is attributed to modules. {remainder} is bundler output no mapping covers, and is reported rather than shared out.',
     thirdPartyTitle: 'THIRD-PARTY DIFF',
     unchanged: 'unchanged',
     newOrigin: 'NEW ORIGIN',

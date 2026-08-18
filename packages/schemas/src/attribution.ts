@@ -192,16 +192,24 @@ export const BundleCoverage = z.object({
 export type BundleCoverage = z.infer<typeof BundleCoverage>;
 
 export const ModuleDiff = z.object({
-  // empty when `complete` is false. a bundle we could not read would otherwise
-  // make every module it contains look removed, which is a finding we would be
-  // inventing rather than measuring.
+  // empty when `comparable` is false. a bundle readable on one side and not on
+  // the other would otherwise make every module it contains look removed,
+  // which is a finding we would be inventing rather than measuring.
   modules: z.array(ModuleChange),
   packages: z.array(PackageChange),
   unattributed: z.object({ before: z.number(), after: z.number(), delta: z.number() }),
   before: BundleCoverage,
   after: BundleCoverage,
-  // true only when every bundle on both sides resolved. when false the module
-  // deltas explain part of the change and the rest is stated as unexplained.
+  /**
+   * whether the two sides can be compared at all. true when the same bundle
+   * urls failed on both sides, so an unreadable bundle contributes nothing to
+   * either total and no module can appear to have been removed. false as soon
+   * as the failures are asymmetric, and then no module changes are emitted.
+   */
+  comparable: z.boolean(),
+  // true only when every bundle on both sides resolved. a comparable diff that
+  // is not complete explains part of the change; the rest is reported as
+  // unexplained rather than absorbed.
   complete: z.boolean(),
 });
 export type ModuleDiff = z.infer<typeof ModuleDiff>;

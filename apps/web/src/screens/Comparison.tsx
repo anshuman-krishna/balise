@@ -5,6 +5,13 @@ import { formatInt, formatNumber, formatSigned, ToleranceBand } from '@balise/ui
 import { fill, t } from '../i18n';
 import { canon, comparisonFixture as cmp, type ComparisonRow } from '../fixtures/canon';
 import { VERDICT_COLOR, verdictKeyFor, type VerdictKey } from '../lib/verdict';
+import {
+  attributionCoverage,
+  attributionLead,
+  attributionRows,
+  originRows,
+  unexplainedOrigin,
+} from '../lib/attribution-view';
 
 const GRID = 'minmax(160px,1.4fr) 88px 88px 96px 146px 92px';
 
@@ -118,7 +125,12 @@ function RunChip({ run, date, tag, accent }: { run: string; date: string; tag: s
 export function Comparison() {
   const rows = cmp.rows.map(toDisplayRow);
   const carbon = cmp.carbonRow;
-  const attributionLabels = t.comparison.attributionKeys as Record<string, string>;
+  // the attribution card is engine output: every figure below comes from
+  // @balise/attribution, computed over two builds with real source maps.
+  const lead = attributionLead();
+  const attribution = attributionRows();
+  const origins = originRows();
+  const unexplained = unexplainedOrigin();
 
   return (
     <>
@@ -270,13 +282,15 @@ export function Comparison() {
           <span className="eyebrow">{t.comparison.attributionTitle}</span>
           <div className="left-rule breach" style={{ marginTop: 12 }}>
             <span style={{ fontSize: 11.5, lineHeight: 1.6 }}>
-              {cmp.attribution.leadParts.map((part, index) =>
-                part.mono === true ? (
+              {lead.map((part, index) =>
+                part.token === true ? (
                   <span key={index} className="mono" style={{ fontSize: 10.5 }}>
                     {part.text}
                   </span>
-                ) : part.strong === true ? (
-                  <strong key={index}>{part.text}</strong>
+                ) : part.measure === true ? (
+                  <strong key={index} className="mono" style={{ fontSize: 10.5 }}>
+                    {part.text}
+                  </strong>
                 ) : (
                   <span key={index}>{part.text}</span>
                 ),
@@ -284,12 +298,12 @@ export function Comparison() {
             </span>
           </div>
           <div className="kv-grid" style={{ marginTop: 14, gridTemplateColumns: '86px 1fr auto' }}>
-            {cmp.attribution.table.map((entry) => (
+            {attribution.map((entry) => (
               <div key={entry.key} style={{ display: 'contents' }}>
                 <span className="mono" style={{ fontSize: 10, color: 'var(--text-tertiary)' }}>
-                  {attributionLabels[entry.key] ?? entry.key}
+                  {t.comparison.attributionKeys[entry.key]}
                 </span>
-                <span className="mono" style={{ fontSize: 10.5 }}>{entry.value}</span>
+                <span className="mono" style={{ fontSize: 10.5, overflowWrap: 'anywhere' }}>{entry.value}</span>
                 <span
                   className="mono"
                   style={{ fontSize: 10, textAlign: 'right', color: entry.tone === 'breach' ? 'var(--breach)' : 'var(--text-secondary)' }}
@@ -301,7 +315,7 @@ export function Comparison() {
           </div>
           <div className="inset-panel" style={{ marginTop: 14 }}>
             <span style={{ fontSize: 10.5, lineHeight: 1.6, color: 'var(--text-secondary)' }}>
-              {t.comparison.suggestedFixLabel} {cmp.attribution.fix}
+              {attributionCoverage()}
             </span>
           </div>
         </div>
@@ -309,7 +323,7 @@ export function Comparison() {
         <div className="card">
           <span className="eyebrow">{t.comparison.thirdPartyTitle}</span>
           <div style={{ marginTop: 8 }}>
-            {cmp.thirdParty.rows.map((row) => (
+            {origins.map((row) => (
               <div
                 key={row.origin}
                 style={{
@@ -318,35 +332,37 @@ export function Comparison() {
                   gap: 12,
                   padding: '9px 0',
                   borderBottom: '1px solid var(--divider-row)',
-                  background: row.status === 'new' ? 'var(--tint-caution)' : undefined,
+                  background: row.isNew ? 'var(--tint-caution)' : undefined,
                 }}
               >
-                <span className="mono" style={{ fontSize: 10.5, color: row.status === 'new' ? 'var(--caution)' : 'var(--ink)' }}>
+                <span className="mono" style={{ fontSize: 10.5, color: row.isNew ? 'var(--caution)' : 'var(--ink)' }}>
                   {row.origin}
                 </span>
                 <span
                   className="mono"
                   style={{
                     marginLeft: 'auto',
-                    fontSize: row.status === 'new' ? 9.5 : 10,
-                    fontWeight: row.status === 'new' ? 500 : 400,
-                    letterSpacing: row.status === 'new' ? '.05em' : undefined,
-                    color: row.status === 'new' ? 'var(--caution)' : 'var(--text-secondary)',
+                    fontSize: row.isNew ? 9.5 : 10,
+                    fontWeight: row.isNew ? 500 : 400,
+                    letterSpacing: row.isNew ? '.05em' : undefined,
+                    color: row.isNew ? 'var(--caution)' : 'var(--text-secondary)',
                   }}
                 >
-                  {row.status === 'new' ? t.comparison.newOrigin : t.comparison.unchanged}
+                  {row.isNew ? t.comparison.newOrigin : t.comparison.unchanged}
                 </span>
                 <span className="mono" style={{ fontSize: 10.5, minWidth: 52, textAlign: 'right' }}>
-                  {row.kb} KB
+                  {row.transferred}
                 </span>
               </div>
             ))}
           </div>
-          <div className="inset-panel" style={{ marginTop: 14 }}>
-            <span style={{ fontSize: 10.5, lineHeight: 1.6, color: 'var(--text-secondary)' }}>
-              {fill(t.comparison.noSourceMap, { origin: cmp.thirdParty.noSourceMapOrigin })}
-            </span>
-          </div>
+          {unexplained === null ? null : (
+            <div className="inset-panel" style={{ marginTop: 14 }}>
+              <span style={{ fontSize: 10.5, lineHeight: 1.6, color: 'var(--text-secondary)' }}>
+                {fill(t.comparison.noSourceMap, { origin: unexplained })}
+              </span>
+            </div>
+          )}
         </div>
       </div>
     </>

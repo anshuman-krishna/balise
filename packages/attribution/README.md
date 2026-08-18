@@ -34,10 +34,13 @@ which is what actually happened on the wire. The module diff explains it.
 - **No fallback attribution.** A bundle with no source map, an unreadable map, an
   index map, a map that does not describe the file it was given: each is reported
   as itself, by name, per bundle. There is no heuristic path.
-- **No partial module diff.** If any bundle on either side could not be read, the
-  module changes are withheld entirely. Emitting them would report every module
-  of the unreadable bundle as removed, which is a finding we would be inventing.
-  `complete: false` and the coverage says which bundle stopped it.
+- **No partial module diff.** If a bundle is readable on one side and not on the
+  other, the module changes are withheld entirely. Emitting them would report
+  every module of that bundle as removed, which is a finding we would be
+  inventing. `comparable: false`, and the coverage says which bundle stopped it.
+  The same bundle failing on both sides is survivable: it contributes nothing to
+  either total, so `comparable` stays true, `complete` goes false, and its bytes
+  surface in the reconciliation as unexplained.
 - **No spreading the remainder.** Bytes no mapping covers (bundler prelude,
   runtime, banners) are counted as unattributed and reported. They are never
   distributed across the sources to make the columns add up.

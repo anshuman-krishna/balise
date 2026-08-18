@@ -101,16 +101,18 @@ describe('diffModules', () => {
     expect(diff.unattributed).toEqual({ before: 200, after: 220, delta: 20 });
   });
 
-  it('withholds the module diff when a bundle could not be read', () => {
-    const unavailable: BundleAttribution = {
-      status: 'unavailable',
-      url: 'https://selo.fr/vendor.b81c.js',
-      reason: 'no-source-map',
-    };
-    const diff = diffModules(before, [...after, unavailable]);
+  const unreadable = (url: string): BundleAttribution => ({
+    status: 'unavailable',
+    url,
+    reason: 'no-source-map',
+  });
+
+  it('withholds the module diff when a bundle is readable on one side only', () => {
+    const diff = diffModules(before, [...after, unreadable('https://selo.fr/vendor.b81c.js')]);
 
     // the honest outcome: no module changes at all. reporting them would say
     // the modules of the unreadable bundle had been removed.
+    expect(diff.comparable).toBe(false);
     expect(diff.complete).toBe(false);
     expect(diff.modules).toEqual([]);
     expect(diff.packages).toEqual([]);
@@ -118,8 +120,28 @@ describe('diffModules', () => {
     expect(diff.after.resolvedBundles).toBe(1);
   });
 
-  it('is complete when both sides resolved', () => {
-    expect(diffModules(before, after).complete).toBe(true);
+  it('still compares when the same bundle is unreadable on both sides', () => {
+    // a third-party script that never ships a map contributes nothing to either
+    // total, so nothing can look removed. its bytes surface in the
+    // reconciliation instead.
+    const tag = 'https://player.dailymotion.com/embed.js';
+    const diff = diffModules([...before, unreadable(tag)], [...after, unreadable(tag)]);
+    expect(diff.comparable).toBe(true);
+    expect(diff.complete).toBe(false);
+    expect(diff.modules.find((row) => row.path.includes('date-fns'))?.delta).toBe(4000);
+  });
+
+  it('refuses to compare when the unreadable bundle was renamed', () => {
+    const diff = diffModules(
+      [...before, unreadable('https://cdn.example.fr/tag.a1.js')],
+      [...after, unreadable('https://cdn.example.fr/tag.b2.js')],
+    );
+    expect(diff.comparable).toBe(false);
+    expect(diff.modules).toEqual([]);
+  });
+
+  it('is complete and comparable when both sides resolved', () => {
+    expect(diffModules(before, after)).toMatchObject({ complete: true, comparable: true });
   });
 
   it('sums a module split across several bundles', () => {

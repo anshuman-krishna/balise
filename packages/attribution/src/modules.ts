@@ -111,6 +111,15 @@ function foldSide(bundles: readonly BundleAttribution[]): SideTotals {
   };
 }
 
+function sameUrls(
+  left: BundleCoverage['unavailable'],
+  right: BundleCoverage['unavailable'],
+): boolean {
+  if (left.length !== right.length) return false;
+  const seen = new Set(left.map((entry) => entry.url));
+  return right.every((entry) => seen.has(entry.url));
+}
+
 function byImpact<T extends { delta: number }>(key: (row: T) => string) {
   return (a: T, b: T): number => {
     const magnitude = Math.abs(b.delta) - Math.abs(a.delta);
@@ -131,6 +140,10 @@ export function diffModules(
   const left = foldSide(before);
   const right = foldSide(after);
   const complete = left.coverage.unavailable.length === 0 && right.coverage.unavailable.length === 0;
+  // the same bundles failing on both sides is survivable: they contribute
+  // nothing to either total, so nothing can look removed. their bytes still
+  // count in the reconciliation, where they show up as unexplained.
+  const comparable = sameUrls(left.coverage.unavailable, right.coverage.unavailable);
 
   const paths = new Set<string>([...left.bytesByPath.keys(), ...right.bytesByPath.keys()]);
   const modules: ModuleChange[] = [];
@@ -170,11 +183,11 @@ export function diffModules(
     .sort(byImpact<PackageChange>((row) => row.packageName));
 
   return {
-    // a side we could not read completely is not comparable to one we could:
-    // every module in the unreadable bundle would read as removed. the diff is
-    // withheld and the coverage says which bundle stopped it.
-    modules: complete ? modules : [],
-    packages: complete ? packageChanges : [],
+    // a bundle readable on one side and not on the other makes its modules read
+    // as removed. the diff is withheld and the coverage says which bundle
+    // stopped it.
+    modules: comparable ? modules : [],
+    packages: comparable ? packageChanges : [],
     unattributed: {
       before: left.coverage.unattributedBytes,
       after: right.coverage.unattributedBytes,
@@ -182,6 +195,7 @@ export function diffModules(
     },
     before: left.coverage,
     after: right.coverage,
+    comparable,
     complete,
   };
 }

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { catalogs, fill } from '../src/index.js';
+import { catalogs, fill, fillParts } from '../src/index.js';
 
 function flatten(value: unknown, path: string[] = []): Array<[string, string]> {
   if (typeof value === 'string') {
@@ -47,5 +47,31 @@ describe('catalogs', () => {
       'Continuous since 03 Mar · 4 812 runs retained',
     );
     expect(fill('{missing} stays', {})).toBe('{missing} stays');
+  });
+});
+
+describe('fillParts', () => {
+  it('keeps each substitution addressable and the prose between them intact', () => {
+    const parts = fillParts('{bundle} gained {amount}.', {
+      bundle: { text: 'app.b81c.js', token: true },
+      amount: { text: '184 KB', measure: true },
+    });
+    expect(parts).toEqual([
+      { text: 'app.b81c.js', token: true },
+      { text: ' gained ' },
+      { text: '184 KB', measure: true },
+      { text: '.' },
+    ]);
+  });
+
+  it('accepts a plain value and leaves an unknown placeholder in place', () => {
+    expect(fillParts('{count} modules, {nope}', { count: 3 })).toEqual([
+      { text: '3' },
+      { text: ' modules, {nope}' },
+    ]);
+  });
+
+  it('handles a template that is only a placeholder', () => {
+    expect(fillParts('{x}', { x: 'y' })).toEqual([{ text: 'y' }]);
   });
 });
