@@ -75,6 +75,9 @@ importers:
       '@balise/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
+      '@balise/ledger':
+        specifier: workspace:*
+        version: link:../../packages/ledger
       '@balise/measure-core':
         specifier: workspace:*
         version: link:../../packages/measure-core

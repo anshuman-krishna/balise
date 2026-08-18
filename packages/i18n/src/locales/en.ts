@@ -555,6 +555,9 @@ export const en = {
     eyebrow: 'ENREGISTREMENT VÉRIFIÉ',
     intact: 'Chaîne intacte',
     checkedNow: "contrôlé à l'instant",
+    checkedCount: '{count} entrées vérifiées',
+    positionValue: 'entrée {position}',
+    merkleValue: 'racine {root} sur {leaves} entrées · ancrée le 15/08/2026 04:00 UTC',
     keys: {
       hash: 'EMPREINTE',
       type: 'TYPE',

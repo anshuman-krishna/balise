@@ -1,31 +1,31 @@
-import type { LedgerRecord } from '../fixtures/canon';
+import type { LedgerEntry } from '@balise/schemas';
 
 export type LedgerLookup =
-  | { status: 'found'; record: LedgerRecord }
+  | { status: 'found'; entry: LedgerEntry }
   | { status: 'not-found'; query: string };
 
 /** a shorter prefix would match by accident; documents print eight or more. */
 export const MIN_HASH_PREFIX = 8;
 
 /**
- * resolves the hash in a /v/:hash permalink against the records we hold. a
- * miss is a miss: the screen says the empreinte is unknown rather than
- * showing the nearest record, because a verification page that guesses is
- * worth nothing to the buyer reading it.
+ * resolves the hash in a /v/:hash permalink against the register. a miss is a
+ * miss: the screen says the empreinte is unknown rather than showing the
+ * nearest entry, because a verification page that guesses is worth nothing to
+ * the buyer reading it.
  */
-export function lookupLedgerRecord(
+export function lookupLedgerEntry(
   query: string | undefined,
-  records: readonly LedgerRecord[],
+  entries: readonly LedgerEntry[],
 ): LedgerLookup {
-  const first = records[0];
   if (query === undefined || query === '') {
     // the nav entry carries no hash and opens the most recent record
-    return first === undefined ? { status: 'not-found', query: '' } : { status: 'found', record: first };
+    const newest = [...entries].sort((a, b) => a.sequence - b.sequence).at(-1);
+    return newest === undefined ? { status: 'not-found', query: '' } : { status: 'found', entry: newest };
   }
   const normalised = query.trim().toLowerCase();
   if (normalised.length < MIN_HASH_PREFIX) {
     return { status: 'not-found', query };
   }
-  const record = records.find((candidate) => candidate.hash.toLowerCase().startsWith(normalised));
-  return record === undefined ? { status: 'not-found', query } : { status: 'found', record };
+  const entry = entries.find((candidate) => candidate.entryHash.toLowerCase().startsWith(normalised));
+  return entry === undefined ? { status: 'not-found', query } : { status: 'found', entry };
 }

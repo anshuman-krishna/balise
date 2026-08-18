@@ -1,5 +1,7 @@
 import type { AggregatedMetric, MetricId, NoiseFloor, Unit } from '@balise/schemas';
 import { formatInt } from '@balise/ui';
+import { elidedHash, groupedHash, REF, shortHash, verifyUrl } from './ledger-refs';
+import { ledgerCanon } from './ledger-canon';
 
 // the scenario canon: one internally consistent fictional dataset, from the
 // design handoff. none of it is measured. it exists so every screen tells the
@@ -236,7 +238,7 @@ export const runDetailFixture = {
     { key: 'throttle', value: 'mobile-4g (1.6 Mbps / 4× CPU)' },
     { key: 'region', value: 'eu-west-par' },
     { key: 'models', value: 'ecoindex@3.1 swd@4.0 ademe@2024 1byte@2021' },
-    { key: 'ledger', value: '9f4c8e21…c7', link: true },
+    { key: 'ledger', value: `${shortHash(REF.run)}…`, link: true },
   ] as ReadonlyArray<{ key: string; value: string; link?: boolean }>,
 } as const;
 
@@ -572,8 +574,8 @@ export const declarationFixture = {
     "Le lecteur vidéo tiers utilisé sur la rubrique actualités déclenche une lecture automatique et n'est pas conforme au critère 5.7. Son remplacement est planifié pour le 1er septembre 2026. Trois carrousels animés subsistent en page d'accueil (critère 4.3).",
   versions: [
     { tag: 'v3', draft: true, date: '15 Aug', conforme: 41 },
-    { tag: 'v2', draft: false, date: '12 Mar', conforme: 34, ledger: '3a91…' },
-    { tag: 'v1', draft: false, date: '04 Mar', conforme: 28, ledger: '1c07…' },
+    { tag: 'v2', draft: false, date: '12 Mar', conforme: 34, ledger: `${shortHash(REF.declarationV2)}…` },
+    { tag: 'v1', draft: false, date: '04 Mar', conforme: 28, ledger: `${shortHash(REF.declarationV1)}…` },
   ] as ReadonlyArray<{ tag: string; draft: boolean; date: string; conforme: number; ledger?: string }>,
   preview: {
     url: 'sevre-et-loire.fr/ecoconception',
@@ -583,7 +585,7 @@ export const declarationFixture = {
     host: 'Scaleway, Paris (DC5)',
     verifiedDate: '15 août 2026',
     methodologyVersion: 'v1.2',
-    verifyUrl: 'balise.fr/v/9f4c8e21',
+    verifyUrl: verifyUrl(REF.declarationV3),
     badgeDate: '15.08.26',
     // per-family conformity: segment widths in percent, count label verbatim
     families: [
@@ -679,7 +681,7 @@ export const tenderFixture = {
       'Mesures produites selon la méthodologie Balise v1.2, publiée et versionnée. Atelier Sextant est seul signataire du présent mémoire.',
     pages: 9,
     figureCount: 6,
-    verifyUrl: 'balise.fr/v/9f4c8e21',
+    verifyUrl: verifyUrl(REF.run),
   },
 } as const;
 
@@ -923,8 +925,8 @@ export const documentsFixture = {
         justification: "Le parcours de demande d'acte requiert JavaScript. Refonte prévue T1 2027.",
       },
     ],
-    hash: '9f4c8e21b7d3a04f…c7a1',
-    verifyUrl: 'balise.fr/v/9f4c8e21',
+    hash: elidedHash(REF.declarationV3, 16, 4),
+    verifyUrl: verifyUrl(REF.declarationV3),
     contact: 'ecoconception@sevre-et-loire.fr',
   },
   annexe: {
@@ -959,8 +961,8 @@ export const documentsFixture = {
       "La part des tiers (38%) dépasse la cible de 30% que nous nous fixons. Le lecteur vidéo de la rubrique actualités en représente 15 points. Son remplacement par une intégration à la demande est planifié au 1er septembre 2026 et figure au chapitre 5 comme engagement daté.",
     footerLine1: 'MÉTHODOLOGIE v1.2 · balise.fr/methodologie',
     footerLine2: 'RELEVÉS 03/03/2026 → 15/08/2026 · CHROMIUM 127.0.6533.88',
-    hash: '9f4c8e21b7d3…c7a1',
-    verifyUrl: 'balise.fr/v/9f4c8e21',
+    hash: elidedHash(REF.run, 12, 4),
+    verifyUrl: verifyUrl(REF.run),
     page: 3,
     pages: 9,
   },
@@ -1040,9 +1042,9 @@ export const documentsFixture = {
     calloutBody:
       'Le lecteur vidéo tiers représente 15 des 38 points mesurés. Son remplacement par une intégration à la demande est engagé (livraison 01/09/2026), ce qui ramènera la part attendue à 26%. La prochaine mesure trimestrielle vérifiera ce point.',
     footerLine1: `MÉTHODOLOGIE v1.2 · ${formatInt(1284)} RELEVÉS · CHROMIUM 127.0.6533.88`,
-    footerLine2: `REGISTRE : ${formatInt(4812)} ENTRÉES · RACINE ANCRÉE 15/08/2026 04:00 UTC`,
-    hash: 'd1e7 42ab 90c5 …3f',
-    verifyUrl: 'balise.fr/v/d1e742ab',
+    footerLine2: `REGISTRE : ${formatInt(ledgerCanon.entryCount)} ENTRÉES · RACINE ANCRÉE 15/08/2026 04:00 UTC`,
+    hash: groupedHash(REF.report),
+    verifyUrl: verifyUrl(REF.report),
   },
 } as const;
 
@@ -1106,7 +1108,7 @@ export const prCheckFixture = {
     methodology: 'v1.2',
     models: 'ecoindex@3.1 swd@4.0 ademe@2024',
     run: '#4812',
-    ledger: '9f4c8e21',
+    ledger: shortHash(REF.run),
   },
   annotation: {
     file: 'src/lib/dates.ts',
@@ -1283,82 +1285,4 @@ export const observatoryFixture = {
       agency: null,
     },
   ] as readonly ObservatoryRow[],
-} as const;
-
-export interface LedgerRecord {
-  hash: string;
-  shortHash: string;
-  type: string;
-  recordedAt: string;
-  service: string;
-  methodology: string;
-  methodologyUrl: string;
-  models: string;
-  fingerprint: string;
-  position: string;
-  merkle: string;
-  values: {
-    transferredKb: string;
-    madKb: string;
-    requests: string;
-    domNodes: string;
-    carbon: string;
-    model: string;
-    low: string;
-    high: string;
-  };
-}
-
-// the entry the three documents and the pr check all point at. the record is
-// the fixture stand-in for the ledger package (v5); nothing here computes a
-// chain, and the screen says only what the record states.
-export const ledgerFixture = {
-  records: [
-    {
-      hash: '9f4c8e21b7d3a04f2c8819ee5b7740a3d6c1f0928bb4e5a7c7',
-      shortHash: '9f4c8e21',
-      type: 'run · scenario /accueil · mobile-4g',
-      recordedAt: '15/08/2026 14:02:41 UTC',
-      service: 'portail métropolitain · sevre-et-loire.fr',
-      methodology: 'v1.2',
-      methodologyUrl: 'balise.fr/methodologie',
-      models: 'ecoindex@3.1 · swd@4.0 · ademe@2024 · 1byte@2021',
-      fingerprint: 'chromium 127.0.6533.88 · img sha256:4e91c2a7 · eu-west-par',
-      position: 'entrée 4 812 · précédente 8c02…41d9',
-      merkle: 'ancrée le 15/08/2026 04:00 UTC · horodatage RFC 3161 disponible',
-      values: {
-        transferredKb: formatInt(1258),
-        madKb: '6',
-        requests: '84',
-        domNodes: formatInt(2140),
-        carbon: '0,42',
-        model: 'SWD v4',
-        low: '0,31',
-        high: '0,58',
-      },
-    },
-    {
-      hash: 'd1e742ab90c5f83b16d0a4e7c2915bb8074fe3a6d95c210f3f',
-      shortHash: 'd1e742ab',
-      type: "report_generated · rapport d'exécution T3 2026",
-      recordedAt: '15/08/2026 15:20:08 UTC',
-      service: 'portail métropolitain · sevre-et-loire.fr',
-      methodology: 'v1.2',
-      methodologyUrl: 'balise.fr/methodologie',
-      models: 'ecoindex@3.1 · swd@4.0 · ademe@2024 · 1byte@2021',
-      fingerprint: 'chromium 127.0.6533.88 · img sha256:4e91c2a7 · eu-west-par',
-      position: 'entrée 4 831 · précédente 9f4c…a7c7',
-      merkle: 'ancrée le 15/08/2026 04:00 UTC · horodatage RFC 3161 disponible',
-      values: {
-        transferredKb: formatInt(1258),
-        madKb: '6',
-        requests: '84',
-        domNodes: formatInt(2140),
-        carbon: '0,42',
-        model: 'SWD v4',
-        low: '0,31',
-        high: '0,58',
-      },
-    },
-  ] as readonly LedgerRecord[],
 } as const;

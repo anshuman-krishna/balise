@@ -1,4 +1,5 @@
 import { formatInt, formatSigned, ToleranceBand } from '@balise/ui';
+import { Link } from 'react-router';
 import { fill, t } from '../i18n';
 import { canon, prCheckFixture as pr, type PrCheckRow, type PrVerdict } from '../fixtures/canon';
 import { Wordmark } from '../components/Wordmark';
@@ -249,7 +250,10 @@ export function PrCheck() {
               {t.prCheck.provenanceMethodology} {pr.provenance.methodology} · {t.prCheck.provenanceModels}{' '}
               <span className="mono" style={{ fontSize: 9.5 }}>{pr.provenance.models}</span> · {t.prCheck.provenanceRun}{' '}
               <span className="mono" style={{ fontSize: 9.5 }}>{pr.provenance.run}</span> · {t.prCheck.provenanceLedger}{' '}
-              <a href="#ledger" className="mono" style={{ fontSize: 9.5 }}>{pr.provenance.ledger}</a> ·{' '}
+              <Link to={`/v/${pr.provenance.ledger}`} className="mono" style={{ fontSize: 9.5 }}>
+                {pr.provenance.ledger}
+              </Link>{' '}
+              ·{' '}
               <a href="#override">{t.prCheck.overrideLink}</a> {t.prCheck.overrideNote}
             </div>
           </div>

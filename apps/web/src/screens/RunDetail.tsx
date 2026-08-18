@@ -1,8 +1,10 @@
 import { useState } from 'react';
+import { Link } from 'react-router';
 import { classifyDelta } from '@balise/measure-core';
 import { formatInt, ToleranceDispersion } from '@balise/ui';
 import { fill, t } from '../i18n';
 import { runDetailFixture as run } from '../fixtures/canon';
+import { REF, shortHash } from '../fixtures/ledger-refs';
 import { Waterfall } from '../components/Waterfall';
 import { ModelComparison } from '../components/ModelComparison';
 import { ResourceTable } from '../components/ResourceTable';
@@ -76,9 +78,9 @@ function FingerprintCard() {
               {entry.key}
             </span>
             {entry.link === true ? (
-              <a href="#ledger" className="mono" style={{ fontSize: 10.5 }}>
+              <Link to={`/v/${shortHash(REF.run)}`} className="mono" style={{ fontSize: 10.5 }}>
                 {entry.value} ↗
-              </a>
+              </Link>
             ) : (
               <span className="mono" style={{ fontSize: 10.5 }}>
                 {entry.value}

@@ -1,9 +1,12 @@
 import type { ReactNode } from 'react';
 import { useNavigate, useParams } from 'react-router';
+import { formatInt } from '@balise/ui';
 import { fill, t } from '../i18n';
-import { ledgerFixture, type LedgerRecord } from '../fixtures/canon';
+import { canon } from '../fixtures/canon';
+import { ledgerCanon } from '../fixtures/ledger-canon';
 import { PublicHeader } from '../components/PublicHeader';
-import { lookupLedgerRecord } from '../lib/ledger-lookup';
+import { lookupLedgerEntry } from '../lib/ledger-lookup';
+import { toRecordView, type LedgerRecordView } from '../lib/ledger-view';
 
 function Row({ label, children }: { label: string; children: ReactNode }) {
   return (
@@ -24,7 +27,7 @@ function Row({ label, children }: { label: string; children: ReactNode }) {
   );
 }
 
-function Record({ record }: { record: LedgerRecord }) {
+function Record({ view }: { view: LedgerRecordView }) {
   const keys = t.ledger.keys;
   return (
     <>
@@ -51,22 +54,29 @@ function Record({ record }: { record: LedgerRecord }) {
           {t.ledger.intact}
         </span>
         <span className="mono" style={{ marginLeft: 'auto', fontSize: 10.5, color: 'var(--text-secondary)' }}>
-          {t.ledger.checkedNow}
+          {fill(t.ledger.checkedCount, { count: formatInt(ledgerCanon.verification.checkedCount) })}
         </span>
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: '150px 1fr', marginTop: 2 }}>
-        <Row label={keys.hash}>{record.hash}</Row>
-        <Row label={keys.type}>{record.type}</Row>
-        <Row label={keys.recordedAt}>{record.recordedAt}</Row>
-        <Row label={keys.service}>{record.service}</Row>
+        <Row label={keys.hash}>{view.hash}</Row>
+        <Row label={keys.type}>{view.type}</Row>
+        <Row label={keys.recordedAt}>{view.recordedAt}</Row>
+        <Row label={keys.service}>{canon.service.title} · {canon.service.domain}</Row>
         <Row label={keys.methodology}>
-          {record.methodology} · <a href="#methodology">{record.methodologyUrl}</a>
+          {view.methodology} · <a href="#methodology">balise.fr/methodologie</a>
         </Row>
-        <Row label={keys.models}>{record.models}</Row>
-        <Row label={keys.fingerprint}>{record.fingerprint}</Row>
-        <Row label={keys.position}>{record.position}</Row>
-        <Row label={keys.merkle}>{record.merkle}</Row>
+        {view.models === undefined ? null : <Row label={keys.models}>{view.models}</Row>}
+        {view.fingerprint === undefined ? null : <Row label={keys.fingerprint}>{view.fingerprint}</Row>}
+        <Row label={keys.position}>
+          {fill(t.ledger.positionValue, { position: view.position })}
+        </Row>
+        <Row label={keys.merkle}>
+          {fill(t.ledger.merkleValue, {
+            root: `${ledgerCanon.merkleRoot.slice(0, 12)}…`,
+            leaves: formatInt(ledgerCanon.entryCount),
+          })}
+        </Row>
       </div>
 
       {/* invariant 4 stated to the reader: the chain is append only */}
@@ -76,18 +86,20 @@ function Record({ record }: { record: LedgerRecord }) {
         </p>
       </div>
 
-      <p style={{ margin: '22px 0 0', fontSize: 11, lineHeight: 1.7, color: 'var(--text-secondary)' }}>
-        {fill(t.ledger.recordedValues, {
-          transferred: record.values.transferredKb,
-          mad: record.values.madKb,
-          requests: record.values.requests,
-          dom: record.values.domNodes,
-          carbon: record.values.carbon,
-          model: record.values.model,
-          low: record.values.low,
-          high: record.values.high,
-        })}
-      </p>
+      {view.values === undefined ? null : (
+        <p style={{ margin: '22px 0 0', fontSize: 11, lineHeight: 1.7, color: 'var(--text-secondary)' }}>
+          {fill(t.ledger.recordedValues, {
+            transferred: view.values.transferredKb,
+            mad: view.values.madKb,
+            requests: view.values.requests,
+            dom: view.values.domNodes,
+            carbon: view.values.carbon,
+            model: canon.models.find((model) => model.isReference)?.name ?? '',
+            low: view.values.low,
+            high: view.values.high,
+          })}
+        </p>
+      )}
     </>
   );
 }
@@ -138,19 +150,19 @@ function NotFound({ query, onKnown }: { query: string; onKnown: () => void }) {
 export function LedgerVerification() {
   const navigate = useNavigate();
   const params = useParams();
-  const lookup = lookupLedgerRecord(params.hash, ledgerFixture.records);
-  const shown = lookup.status === 'found' ? lookup.record.shortHash : lookup.query;
+  const lookup = lookupLedgerEntry(params.hash, ledgerCanon.entries);
+  const shown = lookup.status === 'found' ? lookup.entry.entryHash.slice(0, 8) : lookup.query;
 
   return (
     <div className="screen-public">
       <PublicHeader path={fill(t.ledger.chrome, { hash: shown })} />
       <div style={{ maxWidth: 720, margin: '0 auto', padding: '44px 26px 70px' }}>
         {lookup.status === 'found' ? (
-          <Record record={lookup.record} />
+          <Record view={toRecordView(lookup.entry)} />
         ) : (
           <NotFound
             query={lookup.query}
-            onKnown={() => navigate(`/v/${ledgerFixture.records[0]?.shortHash ?? ''}`)}
+            onKnown={() => navigate(`/v/${ledgerCanon.entries[0]?.entryHash.slice(0, 8) ?? ''}`)}
           />
         )}
       </div>
