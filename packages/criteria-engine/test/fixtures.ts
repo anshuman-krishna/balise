@@ -12,6 +12,7 @@ export const ecoPack: RulePack = {
   version: '2024.1',
   locale: 'fr',
   source: 'fixture',
+  tiersSignedOff: true,
   families: [
     { id: 'architecture', labelFr: 'Architecture' },
     { id: 'contenus', labelFr: 'Contenus' },
@@ -93,6 +94,7 @@ export const accessPack: RulePack = {
   version: '4.1',
   locale: 'fr',
   source: 'fixture',
+  tiersSignedOff: true,
   families: [{ id: 'images', labelFr: 'Images' }],
   criteria: [
     {

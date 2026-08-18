@@ -84,6 +84,15 @@ export function evaluateCriterion(
     return attested;
   }
 
+  if (!pack.tiersSignedOff) {
+    // the tiers in this pack are a proposal nobody has accepted yet, so
+    // nothing may be answered automatically on the strength of them
+    return unevaluated(
+      pack,
+      criterion,
+      `Répartition par niveau non validée pour le référentiel ${pack.id}@${pack.version} : attestation humaine requise.`,
+    );
+  }
   if (criterion.tier === 'declarative') {
     return unevaluated(pack, criterion, 'Attestation humaine requise, non fournie.');
   }

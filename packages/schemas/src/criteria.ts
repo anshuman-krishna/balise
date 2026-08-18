@@ -52,10 +52,15 @@ export const EvidenceRequirement = z.object({
 });
 export type EvidenceRequirement = z.infer<typeof EvidenceRequirement>;
 
+/** the referential's own priority label, carried through unchanged. */
+export const CriterionPriority = z.enum(['prioritaire', 'recommande', 'modere']);
+export type CriterionPriority = z.infer<typeof CriterionPriority>;
+
 export const Criterion = z.object({
   id: CriterionId,
   family: z.string().min(1),
   tier: CriterionTier,
+  priority: CriterionPriority.optional(),
   /** verbatim from the official referential. never paraphrased, never translated. */
   statementFr: z.string().min(1),
   evaluation: CriterionEvaluation.optional(),
@@ -77,6 +82,13 @@ export const RulePack = z.object({
   version: z.string().min(1),
   locale: z.string().min(1),
   source: z.string().min(1),
+  /**
+   * whether the tier of every criterion has been reviewed and accepted.
+   * which tier a criterion belongs in is a product decision, so until this is
+   * true the engine answers nothing automatically and every criterion needs a
+   * human. see the operating manual section 29.
+   */
+  tiersSignedOff: z.boolean(),
   families: z.array(RulePackFamily).min(1),
   criteria: z.array(Criterion).min(1),
 });

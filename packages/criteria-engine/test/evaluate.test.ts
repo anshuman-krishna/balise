@@ -113,3 +113,36 @@ describe('comparison operators', () => {
     expect(evaluate(pack, measured)[0]!.status).toBe(expected);
   });
 });
+
+describe('an unsigned pack', () => {
+  // which tier a criterion belongs in is a product decision. until it is
+  // taken, the engine answers nothing on the strength of a guess.
+  const unsigned = { ...ecoPack, tiersSignedOff: false };
+
+  it('answers nothing automatically, whatever the tiers say', () => {
+    const assessments = evaluate(unsigned, measured);
+    expect(assessments.every((a) => a.status === 'non_evalue')).toBe(true);
+    expect(assessments.every((a) => a.source === 'unevaluated')).toBe(true);
+  });
+
+  it('says why, naming the pack', () => {
+    expect(evaluate(unsigned, measured)[0]!.evidenceFr).toContain('fixture-eco@2024.1');
+  });
+
+  it('still lets a human attestation stand', () => {
+    const evidence: CriterionEvidence = {
+      metrics: {},
+      attestations: {
+        '3.1': {
+          status: 'conforme',
+          attestedBy: 'm. carbonne',
+          attestedAt: '2026-08-15T10:00:00.000Z',
+          evidenceRefs: [],
+        },
+      },
+    };
+    const assessment = evaluate(unsigned, evidence).find((a) => a.criterionId === id('3.1'))!;
+    expect(assessment.status).toBe('conforme');
+    expect(assessment.source).toBe('attested');
+  });
+});

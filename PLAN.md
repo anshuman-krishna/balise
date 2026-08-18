@@ -16,18 +16,17 @@ screenshots, the fidelity source).
 
 ## Current status
 
-**Phase: `packages/criteria-engine` landed (2026-08-18).** Referential-agnostic rule
-evaluation, with the three tiers enforced in code: an automated criterion is answered from
-the measurement, an assisted one is *proposed* and counts for nothing until a person
-confirms it, and a declarative one is never touched by the engine at all. A human
-attestation always wins, including over a measurement. Everything the engine cannot
-answer, because the indicator was not measured or the rule is a type it does not
-understand, comes back `non_evalue` with the reason in plain french, never as a failure.
-`completion` splits by tier so auto-answered criteria cannot be read as a finished
-declaration; `blockingFindings` is the mechanical form of the official grid's rule that
-anything not conforme needs a justification. Two fixture packs with different vocabularies
-prove the engine knows nothing about RGESN specifically. 254 tests pass. Not built: the
-rgesn-2024-v2 pack itself, which needs the official verbatim text.
+**Phase: the RGESN pack is real (2026-08-18).** `packages/rule-packs` carries
+rgesn-2024-v2: 78 criteria in 9 families, every statement verbatim from the official
+evaluation spreadsheet published alongside the referential, with the official numbering
+and the referential's own priority on each. Nothing is paraphrased. A test holds the
+module to the extracted source, so a reworded statement fails the build, and the
+extraction tool is checked in so the provenance is inspectable.
+
+The pack ships `tiersSignedOff: false`, and that flag is load-bearing: the engine answers
+**nothing** automatically from an unsigned pack, whatever the tiers say, so the tier
+proposal cannot quietly become a decision. The proposal is 9 automated, 22 assisted, 47
+declarative, deliberately under-claimed. 268 tests pass across ten packages.
 
 ---
 
@@ -113,12 +112,15 @@ rgesn-2024-v2 pack itself, which needs the official verbatim text.
 ## To-do: criteria (brought forward from V5)
 
 - [x] ~~`packages/criteria-engine`: pack validation, evaluation, completion by tier, blocking findings~~
-- [ ] `packages/rule-packs` with `rgesn-2024-v2.yaml`. **Blocked**: needs the official
-      statement text verbatim (operating manual section 11) and a signed-off tier per
-      criterion (section 29). Neither is mine to invent.
-- [ ] Decide the pack authoring format. The manual specifies YAML, which needs a parser
-      dependency in an OSS package, so it needs asking first. The alternative is authoring
-      in typescript and emitting the yaml, which inverts the workflow in section 21.
+- [x] ~~`packages/rule-packs` with rgesn-2024-v2~~ (78 criteria verbatim from the official evaluation spreadsheet; extraction and generation tools checked in)
+- [ ] **Sign off the tier of each criterion.** The pack proposes 9 automated, 22 assisted,
+      47 declarative and ships `tiersSignedOff: false`; until that is reviewed the engine
+      answers nothing automatically. This is the gate, not a formality.
+- [ ] Sign off the evaluation thresholds. The referential asks questions and sets almost
+      no numbers, so every threshold in an `evaluation` block is ours.
+- [x] ~~Decide the pack authoring format~~ (typescript module generated from the official
+      spreadsheet, with the yaml emitted from it as the readable copy; inverts the workflow
+      in section 21 and avoids a yaml parser in an OSS package)
 - [ ] Wire the criteria workspace and the declaration editor's blocking list to the
       engine. Waits on the pack: feeding fourteen fixture criteria through it would produce
       totals that contradict the canon's 78.
@@ -376,6 +378,33 @@ Later versions: see roadmap; detailed to-dos are appended when the version start
   requires the statement text verbatim from the official referential and section 29 makes
   the tier of each criterion a decision to take with someone. The engine ships with two
   fixture packs instead, which is also what proves it is referential-agnostic.
+
+- **2026-08-18 · The referential text comes from the official spreadsheet, not the
+  PDF.** Both are published; the spreadsheet is the machine-readable one and its "libellé
+  du critère" column is the statement verbatim. Extracting from the PDF was tried first
+  and lost text in 21 of 78 statements; where the PDF extraction was intact it agreed with
+  the spreadsheet exactly, which is what confirms the source. The extraction tool is
+  checked in with the source json it produced.
+- **2026-08-18 · The pack is authored in typescript and the yaml is generated from it.**
+  The operating manual section 21 has it the other way round, but reading yaml means a
+  parser dependency inside an OSS package, and section 5 makes that a trust-surface
+  decision to ask about. The yaml is still checked in and is still what an auditor reads.
+  Reversible the day a parser is agreed.
+- **2026-08-18 · `tiersSignedOff` is a gate in code, not a note in a document.** An
+  unsigned pack cannot produce a single automatic answer: every criterion comes back
+  `non_evalue` naming the pack, and only a human attestation gets through. The tier of a
+  criterion decides whether the product may answer it without a person, which section 29
+  puts outside engineering, so the safe state had to be the default rather than the
+  reminder.
+- **2026-08-18 · The automated count is 9, not the manual's rough 20.** Automated is used
+  only where the current metric set answers the question outright. The referential is
+  mostly organisational, and most of what looks automatable needs a person to confirm what
+  the capture found. Under-claiming is the correct direction of error here.
+- **2026-08-18 · The criteria workspace is not wired to the pack yet.** With the tiers
+  unsigned the engine answers nothing, so a wired screen would show 78 criteria at zero
+  percent and contradict the canon's 59%. Wiring needs either the sign-off or a full set
+  of fixture attestations for all 78, and either is a deliberate act rather than a side
+  effect of landing the pack.
 
 ## Open questions (product, not engineering)
 

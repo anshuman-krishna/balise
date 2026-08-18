@@ -45,6 +45,7 @@ packages/
   measure-core/         Metric extraction, statistics, noise floor, delta classification
   carbon-models/        Pluggable estimation models (ecoindex, swd v4, onebyte)
   criteria-engine/      Referential-agnostic rule evaluation, tiers and blocking findings
+  rule-packs/           Versioned referentials. RGESN 2024 v2, statements verbatim
   ledger/               Append-only hash chain, Merkle anchoring, verification
   i18n/                 Every user-facing string, fr + en
   ui/                   Design tokens and shared components, including ToleranceBand
@@ -53,7 +54,7 @@ docs/
   METHODOLOGY.md        The public measurement contract, versioned
 ```
 
-`measure-core`, `carbon-models`, `criteria-engine` and `schemas` are Apache-2.0 and intended for standalone
+`measure-core`, `carbon-models`, `criteria-engine`, `rule-packs` and `schemas` are Apache-2.0 and intended for standalone
 publication: audit evidence cannot come from a black box. The platform around them
 (history, documents, multi-tenancy, workflow) is the proprietary part.
 

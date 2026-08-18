@@ -1,0 +1,22 @@
+{
+  "name": "@balise/rule-packs",
+  "version": "0.1.0",
+  "description": "Versioned referential packs. RGESN 2024 v2, statements verbatim from the published referential.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@balise/schemas": "workspace:*"
+  },
+  "devDependencies": {
+    "@balise/criteria-engine": "workspace:*",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

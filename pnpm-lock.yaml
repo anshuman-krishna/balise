@@ -189,6 +189,22 @@ importers:
         specifier: 'catalog:'
         version: 3.2.7(@types/node@24.13.3)(supports-color@7.2.0)
 
+  packages/rule-packs:
+    dependencies:
+      '@balise/schemas':
+        specifier: workspace:*
+        version: link:../schemas
+    devDependencies:
+      '@balise/criteria-engine':
+        specifier: workspace:*
+        version: link:../criteria-engine
+      typescript:
+        specifier: 'catalog:'
+        version: 5.9.3
+      vitest:
+        specifier: 'catalog:'
+        version: 3.2.7(@types/node@24.13.3)(supports-color@7.2.0)
+
   packages/schemas:
     dependencies:
       zod:

@@ -1,0 +1,327 @@
+{
+ "families": {
+  "1": "Stratégie",
+  "2": "Spécifications",
+  "3": "Architecture",
+  "4": "Expérience et interface utilisateur",
+  "5": "Contenus",
+  "6": "Frontend",
+  "7": "Backend",
+  "8": "Hébergement",
+  "9": "Algorithmie"
+ },
+ "criteria": {
+  "1.1": {
+   "statement": "Le service numérique a-t-il été évalué favorablement en termes d’utilité en tenant compte de ses impacts environnementaux ?",
+   "priority": "Prioritaire"
+  },
+  "1.2": {
+   "statement": "Le service numérique a-t-il défini ses cibles utilisatrices, les besoins métiers et les attentes réelles des utilisateurs-cibles ?",
+   "priority": "Prioritaire"
+  },
+  "1.3": {
+   "statement": "Le service numérique a-t-il au moins un référent identifié en écoconception numérique ?",
+   "priority": "Recommandé"
+  },
+  "1.4": {
+   "statement": "Le service numérique réalise-t-il régulièrement des revues pour s’assurer du respect de sa démarche d’écoconception ?",
+   "priority": "Prioritaire"
+  },
+  "1.5": {
+   "statement": "Le service numérique s’est-il fixé des objectifs en matière de réduction ou de limitation de ses propres impacts environnementaux ?",
+   "priority": "Prioritaire"
+  },
+  "1.6": {
+   "statement": "Le service numérique collecte-t-il la donnée de façon responsable et raisonnée ?",
+   "priority": "Recommandé"
+  },
+  "1.7": {
+   "statement": "Le service numérique a-t-il recours à un niveau de chiffrement adapté à ses besoins ?",
+   "priority": "Modéré"
+  },
+  "1.8": {
+   "statement": "Le service numérique a-t-il mis en place des efforts d’open source ?",
+   "priority": "Recommandé"
+  },
+  "1.9": {
+   "statement": "Le service numérique a-t-il été conçu avec des technologies standard interopérables plutôt que des technologies spécifiques et fermées ?",
+   "priority": "Prioritaire"
+  },
+  "1.10": {
+   "statement": "Le service numérique repose-t-il sur des API documentées et ouvertes pour interagir avec le matériel ?",
+   "priority": "Recommandé"
+  },
+  "2.1": {
+   "statement": "Le service numérique a-t-il défini la liste des profils de matériels que les utilisateurs vont pouvoir employer pour y accéder ?",
+   "priority": "Prioritaire"
+  },
+  "2.2": {
+   "statement": "Le service numérique est-il utilisable sur d’anciens modèles de terminaux ?",
+   "priority": "Prioritaire"
+  },
+  "2.3": {
+   "statement": "Le service numérique est-il utilisable via une connexion bas débit ou hors connexion ?",
+   "priority": "Recommandé"
+  },
+  "2.4": {
+   "statement": "Le service numérique est-il utilisable sur d’anciennes versions de système d’exploitation et de navigateurs web ?",
+   "priority": "Prioritaire"
+  },
+  "2.5": {
+   "statement": "Le service numérique s’adapte-t-il à différents types de terminaux d’affichage ?",
+   "priority": "Prioritaire"
+  },
+  "2.6": {
+   "statement": "Le service numérique a-t-il été conçu avec une revue de conception et une revue de code comprenant parmi ses objectifs la réduction des impacts environnementaux de chaque fonctionnalité ?",
+   "priority": "Recommandé"
+  },
+  "2.7": {
+   "statement": "Le service numérique a-t-il prévu une stratégie de maintenance et de décommissionnement ?",
+   "priority": "Prioritaire"
+  },
+  "2.8": {
+   "statement": "Le service numérique impose-t-il à ses fournisseurs de garantir une démarche de réduction de leurs impacts environnementaux ?",
+   "priority": "Prioritaire"
+  },
+  "2.9": {
+   "statement": "Le service numérique a-t-il pris en compte les impacts environnementaux des composants d’interface prêts à l’emploi utilisés ?",
+   "priority": "Modéré"
+  },
+  "2.10": {
+   "statement": "Le service numérique a-t-il pris en compte les impacts environnementaux des services tiers utilisés lors de leur sélection ?",
+   "priority": "Prioritaire"
+  },
+  "3.1": {
+   "statement": "Le service numérique repose-t-il sur une architecture, des ressources ou des composants conçus pour réduire leurs propres impacts environnementaux ?",
+   "priority": "Prioritaire"
+  },
+  "3.2": {
+   "statement": "Le service numérique fonctionne-t-il sur une architecture pouvant adapter la quantité de ressources utilisées à la consommation du service ?",
+   "priority": "Recommandé"
+  },
+  "3.3": {
+   "statement": "Le service numérique est-il en mesure de supporter l’évolution technique des protocoles ?",
+   "priority": "Modéré"
+  },
+  "3.4": {
+   "statement": "Le service numérique garantit-il la mise à disposition de mises à jour correctives pendant toute la durée de vie prévue des équipements et des logiciels liés au service ?",
+   "priority": "Prioritaire"
+  },
+  "3.5": {
+   "statement": "Le service numérique propose-t-il d’installer des mises à jour correctives indépendamment des mises à jour évolutives de façon transparente ?",
+   "priority": "Modéré"
+  },
+  "3.6": {
+   "statement": "Le service numérique propose-t-il les mises à jour incrémentielles, afin de ne pas remplacer tout le code à chaque mise à jour ?",
+   "priority": "Modéré"
+  },
+  "3.7": {
+   "statement": "Le service numérique optimise-t-il la sollicitation des environnements de développement, de préproduction ou de test en fonction de ses besoins ?",
+   "priority": "Modéré"
+  },
+  "4.1": {
+   "statement": "Le service numérique comporte-t-il uniquement des animations, vidéos et sons dont la lecture automatique est désactivée ?",
+   "priority": "Prioritaire"
+  },
+  "4.2": {
+   "statement": "Le service numérique affiche-t-il uniquement des contenus sans défilement infini ?",
+   "priority": "Prioritaire"
+  },
+  "4.3": {
+   "statement": "Le service numérique optimise-t-il le parcours de navigation pour chaque fonctionnalité principale ?",
+   "priority": "Recommandé"
+  },
+  "4.4": {
+   "statement": "Le service numérique permet-il à l’utilisateur de décider de l’activation d’un service tiers ?",
+   "priority": "Recommandé"
+  },
+  "4.5": {
+   "statement": "Le service numérique utilise-t-il majoritairement des composants fonctionnels natifs du système d’exploitation, du navigateur ou du langage utilisé ?",
+   "priority": "Modéré"
+  },
+  "4.6": {
+   "statement": "Le service numérique utilise-t-il uniquement du contenu vidéo, audio et animé porteur d’informations ?",
+   "priority": "Recommandé"
+  },
+  "4.7": {
+   "statement": "Le service numérique opte-t-il pour les choix les plus sobres entre le texte, l’image, l’audio ou la vidéo, selon les besoins utilisateurs ?",
+   "priority": "Modéré"
+  },
+  "4.8": {
+   "statement": "Le service numérique limite-t-il le nombre des polices de caractères téléchargées ?",
+   "priority": "Modéré"
+  },
+  "4.9": {
+   "statement": "Le service numérique limite-t-il les requêtes serveur lors de la saisie utilisateur ?",
+   "priority": "Modéré"
+  },
+  "4.10": {
+   "statement": "Le service numérique informe-t-il l’utilisateur du format de saisie attendu, en évitant les requêtes serveur inutiles pour la soumission d’un formulaire ?",
+   "priority": "Modéré"
+  },
+  "4.11": {
+   "statement": "Le service numérique informe-t-il l’utilisateur, avant le transfert, des poids et formats de fichier attendus ?",
+   "priority": "Modéré"
+  },
+  "4.12": {
+   "statement": "Le service numérique indique-t-il à l’utilisateur que l’utilisation d’une fonctionnalité a des impacts environnementaux importants ?",
+   "priority": "Recommandé"
+  },
+  "4.13": {
+   "statement": "Le service numérique limite-t-il le recours aux notifications, tout en laissant la possibilité à l’utilisateur de les désactiver ?",
+   "priority": "Prioritaire"
+  },
+  "4.14": {
+   "statement": "Le service numérique évite-t-il le recours à des procédés manipulatoires dans son interface utilisateur ?",
+   "priority": "Recommandé"
+  },
+  "4.15": {
+   "statement": "Le service numérique fournit-il à l’utilisateur un moyen de contrôle sur ses usages afin de suivre et de réduire les impacts environnementaux associés ?",
+   "priority": "Recommandé"
+  },
+  "5.1": {
+   "statement": "Le service numérique utilise-t-il un format de fichier adapté au contenu et au contexte de visualisation de chaque image ?",
+   "priority": "Recommandé"
+  },
+  "5.2": {
+   "statement": "Le service numérique propose-t-il des images dont le niveau de compression est adapté au contenu et au contexte de visualisation ?",
+   "priority": "Recommandé"
+  },
+  "5.3": {
+   "statement": "Le service numérique utilise-t-il, pour chaque vidéo, une définition adaptée au contenu et au contexte de visualisation ?",
+   "priority": "Prioritaire"
+  },
+  "5.4": {
+   "statement": "Le service numérique propose-t-il des vidéos dont le mode de compression est efficace et adapté au contenu et au contexte de visualisation ?",
+   "priority": "Prioritaire"
+  },
+  "5.5": {
+   "statement": "Le service numérique propose-t-il un mode « écoute seule » pour ses vidéos ?",
+   "priority": "Prioritaire"
+  },
+  "5.6": {
+   "statement": "Le service numérique propose-t-il des contenus audios dont le mode de compression est adapté au contenu et au contexte d’écoute ?",
+   "priority": "Modéré"
+  },
+  "5.7": {
+   "statement": "Le service numérique utilise-t-il un format de fichier adapté au contenu et au contexte d’utilisation pour chaque document ?",
+   "priority": "Modéré"
+  },
+  "5.8": {
+   "statement": "Le service numérique a-t-il une stratégie d’archivage et de suppression, automatique ou manuelle, des contenus obsolètes ou périmés ?",
+   "priority": "Recommandé"
+  },
+  "6.1": {
+   "statement": "Le service numérique s’astreint-il à un poids maximum et une limite de requête par écran ?",
+   "priority": "Recommandé"
+  },
+  "6.2": {
+   "statement": "Le service numérique utilise-t-il des mécanismes de mise en cache pour la totalité des contenus transférés dont il a le contrôle ?",
+   "priority": "Recommandé"
+  },
+  "6.3": {
+   "statement": "Le service numérique a-t-il mis en place des techniques de compression pour les ressources transférées dont il a le contrôle ?",
+   "priority": "Modéré"
+  },
+  "6.4": {
+   "statement": "Le service numérique affiche-t-il majoritairement des images dont les dimensions d’origine correspondent aux dimensions du contexte d’affichage ?",
+   "priority": "Recommandé"
+  },
+  "6.5": {
+   "statement": "Le service numérique évite-t-il de déclencher le chargement de ressources et de contenus inutilisés pour chaque fonctionnalité ?",
+   "priority": "Recommandé"
+  },
+  "6.6": {
+   "statement": "Le service numérique restreint-il l’usage des capteurs des terminaux utilisateurs au besoin du service ?",
+   "priority": "Modéré"
+  },
+  "6.7": {
+   "statement": "Le service numérique héberge-t-il toutes les ressources statiques transférées dont il est l’émetteur sur un même domaine ?",
+   "priority": "Modéré"
+  },
+  "7.1": {
+   "statement": "Le service numérique a-t-il recours à un système de cache serveur pour les données les plus utilisées ?",
+   "priority": "Recommandé"
+  },
+  "7.2": {
+   "statement": "Le service numérique met-il en place des durées de conservation sur les données et documents en vue de leur suppression ou archivage passé ce délai ?",
+   "priority": "Recommandé"
+  },
+  "7.3": {
+   "statement": "Le service numérique informe-t-il l’utilisateur d’un traitement en cours en arrière-plan ?",
+   "priority": "Modéré"
+  },
+  "7.4": {
+   "statement": "Le service numérique s’appuie-t-il sur un mécanisme de consensus qui minimise sa consommation de ressources ?",
+   "priority": "Prioritaire"
+  },
+  "8.1": {
+   "statement": "Le service numérique utilise-t-il un hébergement ayant une démarche de réduction de son empreinte environnementale ?",
+   "priority": "Prioritaire"
+  },
+  "8.2": {
+   "statement": "Le service numérique utilise-t-il un hébergement qui fournit une politique de gestion durable des équipements ?",
+   "priority": "Prioritaire"
+  },
+  "8.3": {
+   "statement": "Le service numérique utilise-t-il un hébergement dont le PUE (Power Usage Effectiveness) est minimisé ?",
+   "priority": "Prioritaire"
+  },
+  "8.4": {
+   "statement": "Le service numérique utilise-t-il un hébergement dont son WUE (Water Usage Effectiveness) est minimisé ?",
+   "priority": "Recommandé"
+  },
+  "8.5": {
+   "statement": "Le service numérique utilise-t-il un hébergement dont l’origine de consommation d’électricité est documentée et majoritairement d’origine renouvelable ?",
+   "priority": "Recommandé"
+  },
+  "8.6": {
+   "statement": "Le service numérique utilise-t-il un hébergement dont la localisation géographique est cohérente avec ses activités et qui minimise son empreinte environnementale ?",
+   "priority": "Recommandé"
+  },
+  "8.7": {
+   "statement": "Le service numérique utilise-t-il un hébergement qui traite efficacement la chaleur produite par les serveurs ?",
+   "priority": "Recommandé"
+  },
+  "8.8": {
+   "statement": "Le service numérique héberge-t-il de façon distincte les données « chaudes » et « froides » ?",
+   "priority": "Modéré"
+  },
+  "8.9": {
+   "statement": "Le service numérique duplique-t-il les données uniquement lorsque cela est nécessaire ?",
+   "priority": "Recommandé"
+  },
+  "8.10": {
+   "statement": "Le service numérique tient-il compte des contraintes externes pour minimiser l’impact environnemental des calculs et transferts de données asynchrones ?",
+   "priority": "Recommandé"
+  },
+  "9.1": {
+   "statement": "Le service numérique a-t-il interrogé la nécessité d’une phase d’entraînement pour éviter un usage non justifié et déraisonné ?",
+   "priority": "Prioritaire"
+  },
+  "9.2": {
+   "statement": "Le service numérique utilise-t-il une phase d’apprentissage avec un niveau de complexité minimisé et proportionné à l’usage effectif du service ?",
+   "priority": "Prioritaire"
+  },
+  "9.3": {
+   "statement": "Le service numérique a-t-il mis en place des mécanismes visant à limiter la quantité d’entraînement nécessaire à son fonctionnement ?",
+   "priority": "Prioritaire"
+  },
+  "9.4": {
+   "statement": "Le service numérique limite-il la quantité de données utilisées pour la phase d’apprentissage au strict nécessaire ?",
+   "priority": "Prioritaire"
+  },
+  "9.5": {
+   "statement": "Le service numérique optimise-t-il l’occurrence de mise à jour et de réentraînement des modèles en fonction de ses besoins et des cibles utilisatrices ?",
+   "priority": "Prioritaire"
+  },
+  "9.6": {
+   "statement": "Le service numérique utilise-t-il des techniques de compression pour les modèles utilisés lors de la phase d’entraînement ?",
+   "priority": "Recommandé"
+  },
+  "9.7": {
+   "statement": "Le service numérique utilise-t-il une stratégie d’inférence optimisée en termes de consommation de ressources et des cibles utilisatrices ?",
+   "priority": "Prioritaire"
+  }
+ }
+}
