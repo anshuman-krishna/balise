@@ -16,17 +16,24 @@ screenshots, the fidelity source).
 
 ## Current status
 
-**Phase: the RGESN pack is real (2026-08-18).** `packages/rule-packs` carries
-rgesn-2024-v2: 78 criteria in 9 families, every statement verbatim from the official
-evaluation spreadsheet published alongside the referential, with the official numbering
-and the referential's own priority on each. Nothing is paraphrased. A test holds the
-module to the extracted source, so a reworded statement fails the build, and the
-extraction tool is checked in so the provenance is inspectable.
+**Phase: attribution explains a regression, or says it cannot (2026-08-19).**
+`packages/attribution` diffs two runs and names what grew. The diff is taken at
+**module** level, not file level: bundle names carry a content hash and rotate on
+every build, so pairing files would mean matching on a name pattern, while module
+identity comes from the source map and survives the rotation. Source maps are read
+with a base64 vlq decoder written in the package, every byte of a bundle is either
+credited to a source file or counted as unattributed, and blame is the commits
+touching a file between the baseline and candidate commits rather than whoever
+last edited it.
 
-The pack ships `tiersSignedOff: false`, and that flag is load-bearing: the engine answers
-**nothing** automatically from an unsigned pack, whatever the tiers say, so the tier
-proposal cannot quietly become a decision. The proposal is 9 automated, 22 assisted, 47
-declarative, deliberately under-claimed. 268 tests pass across ten packages.
+The honest paths are the tested ones. A bundle with no map, an unreadable map or a
+map that does not describe the file it was given is reported by name, per bundle;
+if any bundle on either side could not be read the module changes are withheld
+entirely, because emitting them would report every module of that bundle as
+removed. A dependency's bytes are never blamed on whoever touched the lockfile.
+Reconciliation compares against decoded bytes, never transferred ones, and states
+what is left unexplained instead of absorbing it. 359 tests pass across eleven
+packages.
 
 ---
 
@@ -73,6 +80,14 @@ declarative, deliberately under-claimed. 268 tests pass across ten packages.
   Enforces in code: no bare numbers, breach only past the noise floor, dashed median on low
   confidence, never green.
 - Screens: Dashboard first, then the other 14 surfaces from the handoff.
+
+### Attribution (packages/attribution)
+- Resource and origin diff, third-party vendors named from a maintained list only.
+- Source map v3 reading with its own vlq decoder; bytes credited per source file.
+- Module-level diff, so a content-hashed bundle rename does not defeat the comparison.
+- Blame over the commit range between the two runs, through an injected git port.
+- Every function can answer "could not determine", and the module diff is withheld
+  rather than half-computed.
 
 ### Platform (proprietary, later versions)
 - Runner, API, ledger, attribution, criteria engine, rule packs, documents, billing:
@@ -125,6 +140,21 @@ declarative, deliberately under-claimed. 268 tests pass across ten packages.
       engine. Waits on the pack: feeding fourteen fixture criteria through it would produce
       totals that contradict the canon's 78.
 - [ ] Evaluation types beyond `metric_threshold`, once the pack says which are needed
+
+## To-do: attribution (V4)
+
+- [x] ~~`packages/attribution`: resource diff, origin diff, source map reading, module
+      diff, reconciliation, blame~~ (91 tests)
+- [x] ~~Honest degradation on every path: per-bundle reasons, withheld module diff,
+      no vendor named without a match, no person blamed for a dependency~~
+- [ ] Fetch source maps from the customer's build artifacts or a configured url,
+      use them and discard them. The package is pure and takes them as input; the
+      fetching side and its retention rule belong to the runner or the api
+- [ ] Wire the comparison screen to the engine. Needs a fixture pair of real
+      bundles with maps, generated the way the ledger canon is
+- [ ] Phrase the plain-language sentence in `packages/i18n`, french first. The
+      package returns structure, deliberately, so the wording stays in one place
+- [ ] Index maps (`sections`), once a customer build produces one
 
 ## To-do: ledger (brought forward from V5)
 
@@ -405,6 +435,61 @@ Later versions: see roadmap; detailed to-dos are appended when the version start
   percent and contradict the canon's 59%. Wiring needs either the sign-off or a full set
   of fixture attestations for all 78, and either is a deliberate act rather than a side
   effect of landing the pack.
+
+- **2026-08-19 · Attribution was brought forward from V4**, for the third time the
+  same reason: it is pure, so it could be built and fully verified here while the
+  runner waits on an environment that cannot install a browser. Nothing else in
+  the roadmap was reordered.
+- **2026-08-19 · The diff is taken at module level, not at file level.** Bundle
+  file names carry a content hash and rotate on every build, so pairing
+  `app.a3f2.js` with `app.b81c.js` would mean matching on a name pattern, which is
+  the filename heuristic the honest-degradation rule forbids. Module identity comes
+  out of the source map and survives the rename, so that comparison is exact. The
+  resource diff still reports the rename as one removal and one addition, because
+  that is what happened on the wire.
+- **2026-08-19 · An incomplete side withholds the whole module diff.** If any
+  bundle on either side could not be read, no module changes are emitted at all.
+  The alternative is worse than useless: every module of the unreadable bundle
+  reads as removed, and a fabricated 160 KB removal is a finding we invented. The
+  per-bundle outcomes are still in the report, so a surface can name the one
+  bundle that stopped it. This is stricter than the operating manual's
+  "attribution unavailable for this bundle", and deliberately so.
+- **2026-08-19 · Reconciliation is against decoded bytes, never transferred
+  ones.** A source map explains the file as written, not as compressed. The report
+  carries both quantities and never substitutes one for the other, in either
+  direction, which is the same rule the run-detail coverage column already
+  follows.
+- **2026-08-19 · Unmapped bytes are reported, not spread.** Bundler prelude,
+  runtime and banners are counted as unattributed. Distributing them across the
+  named sources would make the columns add up and would attribute bytes to files
+  that did not contain them.
+- **2026-08-19 · Blame is a commit range, not a last-touch.** The commits asked
+  for are those touching the file between the baseline run's commit and the
+  candidate run's commit, which are the commits responsible for the change being
+  explained. "Who last edited this file" is a different question and frequently
+  names the wrong person.
+- **2026-08-19 · A dependency is never blamed on a person.** Bytes under
+  node_modules come back as `third-party-module` with the package named, and the
+  repository is not even queried. The lockfile author is not the author of those
+  bytes.
+- **2026-08-19 · The source map reader is written here, not taken from a
+  dependency.** The vlq decoder and the mapping walk are about a hundred and fifty
+  lines, and this package's whole job is to be defensible in front of an auditor.
+  The package's only dependency stays `@balise/schemas`.
+- **2026-08-19 · The vendor list is short and matched exactly.** Third-party
+  origins match on the full hostname or on a dot boundary. No fuzzy matching: a
+  near miss would put a named company on traffic that is not theirs. An unmatched
+  origin is still reported, by hostname, with its measured cost.
+- **2026-08-19 · The git port is injected, and the cli implementation is a
+  separate entry point.** The pure core imports nothing from node, and the one
+  place that shells out passes its arguments as an array, never through a shell,
+  refuses a path that leaves the repository, and only ever reads. Invariant 10
+  holds by construction rather than by care.
+- **2026-08-19 · The bundle fixtures carry their own vlq encoder.** The test
+  builder encodes mappings independently of the decoder under test and counts
+  expected bytes with TextEncoder rather than with the package's own counter, so a
+  green test is not two halves of the same mistake agreeing. The decoder is
+  additionally held to hand-computed literals from the base64 alphabet.
 
 ## Open questions (product, not engineering)
 

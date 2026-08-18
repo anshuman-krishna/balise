@@ -46,6 +46,7 @@ packages/
   carbon-models/        Pluggable estimation models (ecoindex, swd v4, onebyte)
   criteria-engine/      Referential-agnostic rule evaluation, tiers and blocking findings
   rule-packs/           Versioned referentials. RGESN 2024 v2, statements verbatim
+  attribution/          Bundle diff, source maps, blame, and honest unavailability
   ledger/               Append-only hash chain, Merkle anchoring, verification
   i18n/                 Every user-facing string, fr + en
   ui/                   Design tokens and shared components, including ToleranceBand

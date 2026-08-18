@@ -1,0 +1,23 @@
+{
+  "name": "@balise/attribution",
+  "version": "0.1.0",
+  "description": "Explains what changed between two runs and who introduced it, or states that it cannot.",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./git-cli": "./src/git-cli.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@balise/schemas": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^24.5.0",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}
