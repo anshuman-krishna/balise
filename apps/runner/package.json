@@ -10,7 +10,8 @@
   "scripts": {
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "measure": "node --experimental-strip-types --import ./src/register-loader.mjs src/cli.ts"
+    "measure": "node --experimental-strip-types --import ./src/register-loader.mjs src/cli.ts",
+    "test:repro": "vitest run --config vitest.repro.config.ts"
   },
   "dependencies": {
     "@balise/measure-core": "workspace:*",

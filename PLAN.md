@@ -16,17 +16,17 @@ screenshots, the fidelity source).
 
 ## Current status
 
-**Phase: V1 started (2026-08-18).** The design build-out is done; `apps/runner` now
-exists and is the first code that measures anything. It launches the full pinned Chromium
-(not playwright's headless shell), applies a named throttle profile through CDP, takes a
-fresh context per run so a cold pass stays cold, and produces a `RawCapture` plus a
-complete `EnvironmentFingerprint` that the kernel already knows how to consume. `measure`
-runs a scenario n times, carries failures instead of hiding them, and returns
-`insufficient-runs` rather than an aggregate when fewer than three succeed. A local run
-stamps `unpinned-local` for image and region and the CLI says plainly that it is not audit
-evidence. 156 tests pass, 4 capture integration tests skip until the pinned browser is
-installed locally. Still open in V1: the digest-locked container, METHODOLOGY.md v1
-(needs sign-off) and the twenty-run reproducibility test.
+**Phase: V1 in progress (2026-08-18).** `docs/METHODOLOGY.md` exists as a **v1.0 draft,
+not in force**, stating exactly what the runner implements today; its section 12 lists
+the thirteen decisions that need sign-off before any measurement can be presented under
+"methodology v1.0", and that section has to be empty first. The reproducibility suite is
+written and wired to `pnpm test:repro` and to CI: twenty-one sessions of five runs against
+an unchanged fixture site, asserting one fingerprint throughout, an established floor on
+every metric, no significant change on any of the twenty comparisons, and one confidence
+grade per metric across every session. 158 tests pass in the normal loop. The
+reproducibility suite and the four capture integration tests have not run in this
+environment: playwright's chromium download completes and then extracts an incomplete app
+bundle, so no browser is available here. They run in CI, which installs it.
 
 ---
 
@@ -116,8 +116,10 @@ installed locally. Still open in V1: the digest-locked container, METHODOLOGY.md
 - [x] ~~Cold and warm passes kept separate~~ (V1.0, the warm pass is a second navigation in the same context; the kernel already refuses to average the two)
 - [ ] Full HAR + CDP trace persisted to object storage (the capture today carries the slice extraction needs)
 - [x] ~~EnvironmentFingerprint recorded on every run~~ (V1.0, every field compared for invariant 3, with a test that fails if a field is ever left out of the comparison)
-- [ ] METHODOLOGY.md v1 published (requires sign-off, operating manual section 29)
-- [ ] The reproducibility test: twenty runs, same verdict, in CI
+- [~] METHODOLOGY.md v1 **drafted**, not published and not in force. Thirteen open decisions in its section 12 need sign-off (operating manual section 29)
+- [ ] Sign off the noise floor scaling factor, the throttle profile parameters and the confidence thresholds
+- [x] ~~The reproducibility test: twenty runs, same verdict, in CI~~ (V1.1, `pnpm test:repro`, its own vitest config so it stays out of the normal loop, plus a CI job that installs the browser)
+- [ ] Run the reproducibility suite for real and record what it says; it has never executed
 
 Later versions: see roadmap; detailed to-dos are appended when the version starts.
 
@@ -260,6 +262,30 @@ Later versions: see roadmap; detailed to-dos are appended when the version start
   surface for one command.
 - **2026-08-18 · CLI strings stay inline rather than in packages/i18n.** The i18n rule
   covers what a customer reads. The runner cli is developer tooling and has no locale.
+
+- **2026-08-18 · METHODOLOGY.md is written as a draft that is explicitly not in force.**
+  Writing it down is how the open decisions become answerable: section 12 turns "what
+  should the scaling factor be" into a list of thirteen items with the consequence of each
+  spelled out. Nothing may be presented as evidence under "methodology v1.0" until that
+  section is empty. The document states what the code does today, not what we wish it did.
+- **2026-08-18 · A near-zero noise floor is pinned by a characterisation test, not
+  fixed.** The floor is derived from measured dispersion, so a metric that barely varies
+  gets a floor near zero and any jitter then reads as a change. Two tests in
+  `measure-core` state that behaviour exactly, including the delta it misclassifies.
+  Adding an absolute per-metric minimum would fix it and would also be a hand-chosen
+  number, which is what the derived floor exists to avoid. It is open decision 12 in
+  METHODOLOGY.md; the test is there so that whatever is chosen is chosen deliberately.
+- **2026-08-18 · The reproducibility suite lives in `repro/` with its own vitest
+  config.** The operating manual lists `pnpm test` and `pnpm test:repro` as separate
+  commands, and the suite is a hundred page loads through a real browser. Keeping it out
+  of the normal loop is not the same as moving it to a nightly job: it runs on every push
+  and pull request in CI.
+- **2026-08-18 · No browser runs in this development environment.** Playwright reports
+  its chromium download at 100 percent and exits zero, but the extracted app bundle is
+  624 KB with no framework in it, on a disk with 295 GB free. The capture and
+  reproducibility suites skip loudly rather than pretending. Nothing in the runner has
+  been observed measuring a real page yet, and that stays true until either CI runs green
+  or the local install is fixed.
 
 ## Open questions (product, not engineering)
 

@@ -1,12 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import type { AggregatedMetrics } from '@balise/schemas';
+import { classifyDelta } from '../src/classify-delta.js';
 import {
   computeNoiseFloor,
   NOISE_FLOOR_MIN_HISTORY,
   PROVISIONAL_NOISE_FLOOR_SCALING_FACTOR,
 } from '../src/noise-floor.js';
 
-function aggregation(mad: number): AggregatedMetrics {
+function aggregation(mad: number, median = 1_258_000): AggregatedMetrics {
   return {
     pass: 'cold',
     sampleCount: 5,
@@ -14,7 +15,7 @@ function aggregation(mad: number): AggregatedMetrics {
       {
         metricId: 'transferred_bytes',
         unit: 'bytes',
-        median: 1_258_000,
+        median,
         mad,
         min: 1_250_000,
         max: 1_266_000,
@@ -75,5 +76,29 @@ describe('computeNoiseFloor', () => {
     if (floor.status !== 'established') throw new Error('expected established floor');
     expect(floor.value).toBe(20_000);
     expect(floor.scalingFactor).toBe(2);
+  });
+
+  // characterisation, not endorsement. the floor is derived from measured
+  // dispersion, so a metric that barely varies gets a floor near zero and then
+  // any jitter at all clears it. on a real page js_execution_ms is the metric
+  // most likely to land here. whether a floor should have an absolute minimum
+  // per metric is open in METHODOLOGY.md section 12 and is not decided here.
+  it('collapses toward zero when a metric barely varies', () => {
+    const history = Array.from({ length: 25 }, () => aggregation(0.05, 0.4));
+    const floor = computeNoiseFloor(history, 'transferred_bytes');
+    if (floor.status !== 'established') throw new Error('expected established floor');
+    expect(floor.value).toBeCloseTo(0.06, 10);
+
+    const before = aggregation(0.05, 0.4).metrics[0]!;
+    const after = aggregation(0.05, 0.5).metrics[0]!;
+    // a tenth of a unit is a regression against a floor this narrow
+    expect(classifyDelta(before, after, floor).classification).toBe('regression');
+  });
+
+  it('is exactly zero when a metric does not vary at all', () => {
+    const history = Array.from({ length: 25 }, () => aggregation(0, 84));
+    const floor = computeNoiseFloor(history, 'transferred_bytes');
+    if (floor.status !== 'established') throw new Error('expected established floor');
+    expect(floor.value).toBe(0);
   });
 });
