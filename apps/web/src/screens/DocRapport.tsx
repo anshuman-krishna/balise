@@ -2,6 +2,7 @@ import { formatInt } from '@balise/ui';
 import { fill, t } from '../i18n';
 import { canon, documentsFixture, type DocEventPart } from '../fixtures/canon';
 import { DocumentRegister } from '../components/DocumentRegister';
+import { VerificationUrl } from '../components/VerificationUrl';
 
 const doc = documentsFixture.rapport;
 
@@ -193,7 +194,7 @@ export function DocRapport() {
           <div style={{ textAlign: 'right' }}>
             <div className="mono" style={{ fontSize: 8.5, color: 'var(--text-secondary)' }}>{t.docRapport.hashLabel}</div>
             <div className="mono" style={{ marginTop: 4, fontSize: 10 }}>{doc.hash}</div>
-            <div className="mono" style={{ marginTop: 4, fontSize: 9, color: 'var(--measured)' }}>{doc.verifyUrl}</div>
+            <VerificationUrl url={doc.verifyUrl} style={{ display: 'block', marginTop: 4, fontSize: 9 }} />
           </div>
         </div>
       </div>

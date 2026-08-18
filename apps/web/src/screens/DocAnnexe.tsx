@@ -2,6 +2,7 @@ import { ToleranceBand } from '@balise/ui';
 import { fill, t } from '../i18n';
 import { canon, documentsFixture, tenderFixture } from '../fixtures/canon';
 import { DocumentRegister } from '../components/DocumentRegister';
+import { VerificationUrl } from '../components/VerificationUrl';
 
 const doc = documentsFixture.annexe;
 
@@ -35,7 +36,7 @@ function HashBlock({ label }: { label: string }) {
     <div style={{ textAlign: 'right' }}>
       <div className="mono" style={{ fontSize: 8.5, color: 'var(--text-secondary)' }}>{label}</div>
       <div className="mono" style={{ marginTop: 4, fontSize: 9.5, letterSpacing: '.04em' }}>{doc.hash}</div>
-      <div className="mono" style={{ marginTop: 4, fontSize: 9, color: 'var(--measured)' }}>{doc.verifyUrl}</div>
+      <VerificationUrl url={doc.verifyUrl} style={{ display: 'block', marginTop: 4, fontSize: 9 }} />
     </div>
   );
 }

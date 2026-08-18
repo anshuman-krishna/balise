@@ -1,6 +1,7 @@
 import { fill, t } from '../i18n';
 import { canon, documentsFixture } from '../fixtures/canon';
 import { DocumentRegister } from '../components/DocumentRegister';
+import { VerificationUrl } from '../components/VerificationUrl';
 
 const doc = documentsFixture.declaration;
 
@@ -139,7 +140,7 @@ export function DocDeclaration() {
           </div>
           <div style={{ textAlign: 'right' }}>
             <div className="mono" style={{ fontSize: 8.5, color: 'var(--text-tertiary)' }}>{t.docDeclaration.verificationLabel}</div>
-            <div className="mono" style={{ marginTop: 4, fontSize: 11, color: 'var(--measured-on-dark)' }}>{doc.verifyUrl}</div>
+            <VerificationUrl url={doc.verifyUrl} tone="dark" style={{ display: 'block', marginTop: 4, fontSize: 11 }} />
           </div>
         </div>
 

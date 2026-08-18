@@ -1057,3 +1057,246 @@ export const prCheckFixture = {
     note: 'Namespace import pulls all 96 locales into the route bundle. Two are used at runtime.',
   },
 } as const;
+
+// ---- public surfaces ----
+
+export interface ScanFinding {
+  amount: string;
+  tone: 'breach' | 'caution';
+  text: string;
+}
+
+export const scanFixture = {
+  domain: 'bibliotheques-selo.fr',
+  profile: 'mobile-4g',
+  grade: 'B',
+  score: 71,
+  confidence: 'high',
+  carbon: {
+    median: 0.29,
+    low: 0.21,
+    high: 0.41,
+    // one cold pass on one page: the floor is the service default, not a
+    // floor computed from this scan's own history, which does not exist
+    noiseLow: 0.26,
+    noiseHigh: 0.32,
+    noise: 0.03,
+    scaleMin: 0.1,
+    scaleMax: 1.6,
+  },
+  modelCount: 4,
+  // findings are engine output, kept as data like the attribution parts
+  findings: [
+    {
+      amount: '−214 KB',
+      tone: 'breach',
+      text: "Quatre images en PNG non redimensionnées sur la page d'accueil.",
+    },
+    {
+      amount: '−96 KB',
+      tone: 'breach',
+      text: 'Deux familles de polices chargées, six graisses, aucune sous-classée.',
+    },
+    {
+      amount: formatInt(1830),
+      tone: 'caution',
+      text: 'Nœuds DOM : le seuil EcoIndex à partir duquel la note décroche.',
+    },
+  ] as readonly ScanFinding[],
+} as const;
+
+export type ObservatorySector = 'epci' | 'communes' | 'etat' | 'sante' | 'transport' | 'departements';
+
+export interface ObservatoryRow {
+  rank: number;
+  domain: string;
+  organisme: string;
+  sector: ObservatorySector;
+  band: {
+    median: number;
+    low: number;
+    high: number;
+    noiseLow: number;
+    noiseHigh: number;
+    state: 'normal' | 'breach';
+    confidence: 'high' | 'low';
+  };
+  grade: string;
+  gradeTone?: 'caution' | 'breach';
+  kb: number;
+  kbTone?: 'caution' | 'breach';
+  // null where 90 days of stable history do not exist; significance is the
+  // noise floor rule, so a sub-floor movement is never coloured as a change
+  trend: { pct: number; significant: boolean } | null;
+  declaration: { text: string; tone: 'ok' | 'muted' | 'caution' | 'breach' } | null;
+  agency: string | null;
+  highlighted?: boolean;
+}
+
+export const observatoryFixture = {
+  total: 412,
+  withoutDeclaration: 287,
+  measuredOn: '15 août 2026',
+  profile: 'mobile-4g',
+  methodology: 'v1.2',
+  modelCount: 4,
+  // shared scale across every row, so the bands are comparable by eye
+  scale: { min: 0, max: 1.6 },
+  rows: [
+    {
+      rank: 1,
+      domain: 'craonnais.fr',
+      organisme: 'Ville de Craonnais',
+      sector: 'communes',
+      band: { median: 0.14, low: 0.05, high: 0.32, noiseLow: 0.1, noiseHigh: 0.2, state: 'normal', confidence: 'high' },
+      grade: 'A',
+      kb: 318,
+      trend: { pct: -14, significant: true },
+      declaration: { text: 'v4 · 21 j', tone: 'ok' },
+      agency: 'Sextant',
+    },
+    {
+      rank: 2,
+      domain: 'ville-de-plessac.fr',
+      organisme: 'Commune de Plessac',
+      sector: 'communes',
+      band: { median: 0.18, low: 0.08, high: 0.34, noiseLow: 0.14, noiseHigh: 0.22, state: 'normal', confidence: 'high' },
+      grade: 'A',
+      kb: 402,
+      trend: { pct: -2, significant: false },
+      declaration: { text: 'v1 · 311 j', tone: 'caution' },
+      agency: null,
+    },
+    {
+      rank: 14,
+      domain: 'sevre-et-loire.fr',
+      organisme: 'Métropole de Sèvre-et-Loire',
+      sector: 'epci',
+      band: { median: 0.42, low: 0.31, high: 0.58, noiseLow: 0.39, noiseHigh: 0.45, state: 'normal', confidence: 'high' },
+      grade: 'B',
+      kb: 842,
+      trend: { pct: -9, significant: true },
+      declaration: { text: 'v2 · 156 j', tone: 'muted' },
+      agency: 'Sextant',
+      highlighted: true,
+    },
+    {
+      rank: 96,
+      domain: 'transports-selo.fr',
+      organisme: 'Réseau Naïade',
+      sector: 'transport',
+      band: { median: 0.86, low: 0.6, high: 1.35, noiseLow: 0.78, noiseHigh: 0.95, state: 'breach', confidence: 'high' },
+      grade: 'D',
+      kb: 2184,
+      trend: { pct: 21, significant: true },
+      declaration: { text: 'v1 · 248 j', tone: 'caution' },
+      agency: 'Sextant',
+    },
+    {
+      rank: 188,
+      domain: 'chu-armorique.fr',
+      organisme: "CHU d'Armorique",
+      sector: 'sante',
+      band: { median: 1.2, low: 0.88, high: 1.53, noiseLow: 1.05, noiseHigh: 1.43, state: 'normal', confidence: 'low' },
+      grade: 'E',
+      gradeTone: 'caution',
+      kb: 3062,
+      kbTone: 'caution',
+      trend: null,
+      declaration: { text: 'v1 · 426 j', tone: 'caution' },
+      agency: 'Sextant',
+    },
+    {
+      rank: 371,
+      domain: 'portail-arvor.fr',
+      organisme: "Département d'Arvor",
+      sector: 'departements',
+      band: { median: 1.42, low: 1.1, high: 1.58, noiseLow: 1.32, noiseHigh: 1.52, state: 'breach', confidence: 'high' },
+      grade: 'F',
+      gradeTone: 'breach',
+      kb: 4418,
+      kbTone: 'breach',
+      trend: { pct: 34, significant: true },
+      declaration: null,
+      agency: null,
+    },
+  ] as readonly ObservatoryRow[],
+} as const;
+
+export interface LedgerRecord {
+  hash: string;
+  shortHash: string;
+  type: string;
+  recordedAt: string;
+  service: string;
+  methodology: string;
+  methodologyUrl: string;
+  models: string;
+  fingerprint: string;
+  position: string;
+  merkle: string;
+  values: {
+    transferredKb: string;
+    madKb: string;
+    requests: string;
+    domNodes: string;
+    carbon: string;
+    model: string;
+    low: string;
+    high: string;
+  };
+}
+
+// the entry the three documents and the pr check all point at. the record is
+// the fixture stand-in for the ledger package (v5); nothing here computes a
+// chain, and the screen says only what the record states.
+export const ledgerFixture = {
+  records: [
+    {
+      hash: '9f4c8e21b7d3a04f2c8819ee5b7740a3d6c1f0928bb4e5a7c7',
+      shortHash: '9f4c8e21',
+      type: 'run · scenario /accueil · mobile-4g',
+      recordedAt: '15/08/2026 14:02:41 UTC',
+      service: 'portail métropolitain · sevre-et-loire.fr',
+      methodology: 'v1.2',
+      methodologyUrl: 'balise.fr/methodologie',
+      models: 'ecoindex@3.1 · swd@4.0 · ademe@2024 · 1byte@2021',
+      fingerprint: 'chromium 127.0.6533.88 · img sha256:4e91c2a7 · eu-west-par',
+      position: 'entrée 4 812 · précédente 8c02…41d9',
+      merkle: 'ancrée le 15/08/2026 04:00 UTC · horodatage RFC 3161 disponible',
+      values: {
+        transferredKb: formatInt(1258),
+        madKb: '6',
+        requests: '84',
+        domNodes: formatInt(2140),
+        carbon: '0,42',
+        model: 'SWD v4',
+        low: '0,31',
+        high: '0,58',
+      },
+    },
+    {
+      hash: 'd1e742ab90c5f83b16d0a4e7c2915bb8074fe3a6d95c210f3f',
+      shortHash: 'd1e742ab',
+      type: "report_generated · rapport d'exécution T3 2026",
+      recordedAt: '15/08/2026 15:20:08 UTC',
+      service: 'portail métropolitain · sevre-et-loire.fr',
+      methodology: 'v1.2',
+      methodologyUrl: 'balise.fr/methodologie',
+      models: 'ecoindex@3.1 · swd@4.0 · ademe@2024 · 1byte@2021',
+      fingerprint: 'chromium 127.0.6533.88 · img sha256:4e91c2a7 · eu-west-par',
+      position: 'entrée 4 831 · précédente 9f4c…a7c7',
+      merkle: 'ancrée le 15/08/2026 04:00 UTC · horodatage RFC 3161 disponible',
+      values: {
+        transferredKb: formatInt(1258),
+        madKb: '6',
+        requests: '84',
+        domNodes: formatInt(2140),
+        carbon: '0,42',
+        model: 'SWD v4',
+        low: '0,31',
+        high: '0,58',
+      },
+    },
+  ] as readonly LedgerRecord[],
+} as const;

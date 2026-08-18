@@ -21,21 +21,9 @@ import { DocDeclaration } from './screens/DocDeclaration';
 import { DocAnnexe } from './screens/DocAnnexe';
 import { DocRapport } from './screens/DocRapport';
 import { PrCheck } from './screens/PrCheck';
-import { Placeholder } from './screens/Placeholder';
-import { t } from './i18n';
-
-interface PlannedScreen {
-  path: string;
-  title: string;
-  version: string;
-  appBar: boolean;
-}
-
-const planned: PlannedScreen[] = [
-  { path: '/public/scan', title: t.nav.items.freeScan, version: 'V0.6', appBar: false },
-  { path: '/public/observatory', title: t.nav.items.observatory, version: 'V0.6', appBar: false },
-  { path: '/public/ledger', title: t.nav.items.ledgerVerification, version: 'V0.6', appBar: false },
-];
+import { FreeScan } from './screens/FreeScan';
+import { Observatory } from './screens/Observatory';
+import { LedgerVerification } from './screens/LedgerVerification';
 
 const root = document.getElementById('root');
 if (!root) {
@@ -150,17 +138,33 @@ createRoot(root).render(
             </AppShell>
           }
         />
-        {planned.map((screen) => (
-          <Route
-            key={screen.path}
-            path={screen.path}
-            element={
-              <AppShell showAppBar={screen.appBar}>
-                <Placeholder title={screen.title} version={screen.version} />
-              </AppShell>
-            }
-          />
-        ))}
+        <Route
+          path="/public/scan"
+          element={
+            <AppShell showAppBar={false} register="public">
+              <FreeScan />
+            </AppShell>
+          }
+        />
+        <Route
+          path="/public/observatory"
+          element={
+            <AppShell showAppBar={false} register="public">
+              <Observatory />
+            </AppShell>
+          }
+        />
+        <Route
+          path="/public/ledger"
+          element={
+            <AppShell showAppBar={false} register="public">
+              <LedgerVerification />
+            </AppShell>
+          }
+        />
+        {/* the verification permalink printed on every document. it must
+            resolve with no session, so it carries no app chrome at all. */}
+        <Route path="/v/:hash" element={<LedgerVerification />} />
       </Routes>
     </BrowserRouter>
   </StrictMode>,

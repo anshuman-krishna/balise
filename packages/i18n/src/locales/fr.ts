@@ -449,6 +449,105 @@ export const fr: Catalog = {
     calloutStrong: 'Engagement non tenu : part des tiers.',
     hashLabel: 'EMPREINTE DU RAPPORT',
   },
+  // the public surfaces are french public pages, like the three documents:
+  // their content renders in french in every locale. only the app chrome
+  // around them (nav rail labels) follows the interface locale.
+  publicScan: {
+    navObservatory: 'Observatoire',
+    navMethodology: 'Méthodologie',
+    navPricing: 'Tarifs',
+    title: 'Mesurez une page. Sans compte.',
+    lede:
+      "Cinq exécutions, quatre modèles d'estimation, méthodologie publiée. Le résultat indique aussi si le service publie une déclaration d'écoconception.",
+    fieldLabel: 'Adresse du service à mesurer',
+    submit: 'Mesurer',
+    gradeLabel: 'ECOINDEX',
+    gradeScore: '{score}/100',
+    bandLabel: 'EMPREINTE PAR VISITE · ÉTENDUE INTER-MODÈLES',
+    confidenceHigh: 'CONFIANCE ÉLEVÉE',
+    provenance: 'médiane {model} · étendue sur {count} modèles · plancher de bruit ±{noise}',
+    findingsTitle: "Trois points d'attention",
+    declarationTitle: "Déclaration d'écoconception",
+    declarationNone: 'Aucune déclaration trouvée',
+    declarationBody:
+      "Ce service relève d'un EPCI de plus de 50 000 habitants : la publication d'une déclaration est attendue. Nous avons cherché aux emplacements usuels et dans le pied de page.",
+    follow: 'Suivre ce service en continu',
+    captionBefore: 'Mesure unique, cache froid, profil ',
+    captionAfter:
+      ", une seule page. Un suivi continu produit des médianes sur cinq exécutions, un plancher de bruit propre au service et un historique horodaté : ce qu'une mesure ponctuelle ne peut pas fournir.",
+    noRecordTitle: 'Aucune mesure prise pour ce domaine',
+    noRecordBody:
+      "Cette page affiche les relevés déjà enregistrés. Elle ne déclenche pas de mesure en direct et n'estime rien à partir d'un nom de domaine.",
+    noRecordAction: 'Voir un service mesuré',
+  },
+  observatory: {
+    path: '/observatoire',
+    navScan: 'Mesurer une page',
+    navMethodology: 'Méthodologie',
+    title: 'Observatoire des services numériques publics',
+    introBefore:
+      '{count} services mesurés en continu · relevés du {date} · registre public, mis à jour chaque semaine. Les valeurs sont des médianes de cinq exécutions sur profil ',
+    introAfter: ', cache froid. Méthodologie identique pour tous.',
+    filtersLabel: 'FILTRES',
+    sectors: {
+      epci: 'Métropoles & EPCI',
+      communes: 'Communes',
+      etat: 'État',
+      sante: 'Santé',
+      transport: 'Transport',
+    },
+    withoutDeclaration: 'Sans déclaration · {count}',
+    headers: {
+      rank: '#',
+      service: 'SERVICE',
+      organisme: 'ORGANISME',
+      footprint: 'EMPREINTE / VISITE',
+      grade: 'NOTE',
+      kb: 'KB',
+      trend: 'TEND. 90J',
+      declaration: 'DÉCLARATION',
+      agency: 'AGENCE',
+    },
+    trendNa: 'n/a',
+    declarationNone: 'aucune',
+    noAgency: '–',
+    footer:
+      'Extrait de {total} entrées · classement par empreinte croissante · chaque ligne a un permalien et un historique public.',
+    footerModel:
+      'Bandes : étendue inter-modèles sur {models} modèles, médiane au modèle de référence {model}. Méthodologie {methodology}.',
+    filteredFooter: '{shown} entrées de cet extrait correspondent au filtre.',
+    emptyTitle: 'Aucune entrée de cet extrait ne correspond',
+    emptyBody:
+      "L'extrait public compte {shown} lignes sur {total} entrées mesurées. Retirez le filtre pour voir l'extrait complet.",
+    emptyAction: 'Retirer le filtre',
+  },
+  ledger: {
+    chrome: '/v/{hash} · vérification publique · aucun compte requis',
+    eyebrow: 'ENREGISTREMENT VÉRIFIÉ',
+    intact: 'Chaîne intacte',
+    checkedNow: "contrôlé à l'instant",
+    keys: {
+      hash: 'EMPREINTE',
+      type: 'TYPE',
+      recordedAt: 'ENREGISTRÉ LE',
+      service: 'SERVICE',
+      methodology: 'MÉTHODOLOGIE',
+      models: 'MODÈLES',
+      fingerprint: 'EMPREINTE ENV.',
+      position: 'POSITION',
+      merkle: 'RACINE MERKLE',
+    },
+    appendOnly:
+      "Cet enregistrement est en lecture seule. Une correction ne remplace jamais une entrée : elle est ajoutée à la suite, avec son motif. Les mesures déclarées pour une période donnée ne peuvent donc pas être réécrites après coup.",
+    recordedValues:
+      'Valeurs consignées : {transferred} KB transférés (MAD {mad}), {requests} requêtes, {dom} nœuds DOM, {carbon} gCO₂e par visite selon {model} · étendue inter-modèles {low} à {high}. Confiance élevée, cinq exécutions.',
+    notFoundEyebrow: 'EMPREINTE INCONNUE',
+    notFoundTitle: 'Aucune entrée pour cette empreinte',
+    notFoundBody:
+      "Cette empreinte ne correspond à aucune entrée du registre public. Chaque document généré reproduit son empreinte intégrale en pied de page : vérifiez la valeur relevée, y compris ses derniers caractères.",
+    notFoundQueried: 'EMPREINTE RECHERCHÉE',
+    notFoundAction: 'Voir un enregistrement vérifié',
+  },
   placeholder: {
     eyebrow: 'PRÉVU',
     body: "Prévu pour la {version}. Rien ne s'affiche ici tant que ce ne peut pas être mesuré ; des chiffres inventés ruineraient l'exercice.",

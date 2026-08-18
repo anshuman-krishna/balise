@@ -16,20 +16,19 @@ screenshots, the fidelity source).
 
 ## Current status
 
-**Phase: V0.5 shipped (2026-08-17), V0.6 next.** Fourteen of the fifteen surfaces are
-built on canon fixtures and verified against the design reference. New in V0.5, the
-three documents in the print register: a shared document-register chrome (dark
-surround, register header, white pages with the paper edge), the published
-Déclaration d'écoconception (intro, conformity stat strip, non-conforme table with
-justifications, hosting and measure section, dark hash block), the Annexe
-environnementale (agency letterhead cover with consultation title, stat strip,
-white-label method line and document hash; page 2 with FIG. 3 rendered by the real
-print-register ToleranceBand, indicator table, écarts connus callout, stamp mark)
-and the Rapport d'exécution (engagement table with gauges and TENU / EN COURS /
-NON TENU states, period events including the dérogation, non-tenu callout, registre
-footer). Document content is french in both locales; register chrome translates.
-102 tests green. Next slice: public surfaces (free scan, observatory, ledger
-verification).
+**Phase: V0.6 shipped (2026-08-18), V0.7 next.** All fifteen surfaces from the design
+handoff are built on canon fixtures and verified against the reference. New in V0.6, the
+three public surfaces, in the instrument register at lower density with no app chrome:
+the free scan (hero, URL field, EcoIndex grade beside the band, three findings, the
+declaration-lookup panel that is the acquisition hook, and an honest no-record state for
+any domain we hold no capture for), the observatory (412-entry public index shown as a
+six-row extract, working sector and declaration filters, per-row compact bands on one
+shared scale, trend colour gated on significance) and the ledger verification permalink
+at `/v/:hash`, which resolves with no session and no app chrome, states the append-only
+rule, and reports an unknown empreinte as unknown rather than showing the nearest record.
+The verification URL printed in each of the three document footers now resolves to it.
+121 tests green. Next slice: the run-detail Resources tab and the remaining ToleranceBand
+variants (trend, dispersion), then V1, the runner.
 
 ---
 
@@ -107,7 +106,7 @@ verification).
 - [x] ~~Tender workspace, contract tracker, fleet~~ (V0.4, fleet rows reuse the compact ToleranceBand on a shared scale)
 - [x] ~~PR check screen (GitHub register, radius exception)~~ (V0.2)
 - [x] ~~Documents (declaration, annexe, rapport) in the print register~~ (V0.5, FIG. 3 goes through the print ToleranceBand; document content french in both locales)
-- [ ] Public surfaces (free scan, observatory, ledger verification)
+- [x] ~~Public surfaces (free scan, observatory, ledger verification)~~ (V0.6, `/v/:hash` is a real permalink and the document footers link to it)
 - [ ] ToleranceBand trend + dispersion + print register variants
 - [ ] Self-hosted font subsetting check (weight budget)
 
@@ -178,6 +177,33 @@ Later versions: see roadmap; detailed to-dos are appended when the version start
   design brief bans interface shadows; the 2px zero-blur offset under document pages
   is the paper edge of the print register in the handoff, not an interface shadow,
   and is kept verbatim.
+
+- **2026-08-18 · Public surface content is french in both locales.** Same rule as the
+  three documents: the free scan, the observatory and the verification page are public
+  french pages, so their copy renders in french whatever the interface locale is. Only
+  the nav rail labels around them follow the interface language.
+- **2026-08-18 · Observatory sector chips start unselected.** The mockup draws
+  "Métropoles & EPCI" as active while listing communes, a transport network, a CHU and a
+  département, so the active state there is illustrative. The chips are implemented as a
+  real exclusive filter that starts cleared, which is the only reading under which the
+  screenshot's row set is correct. The chip set is also deliberately partial: the
+  département row is reachable by no chip and stays visible in the unfiltered extract.
+- **2026-08-18 · The free scan measures nothing.** It renders the captures we hold and,
+  for any other domain, says so and offers the measured example. Estimating from a domain
+  name would be the exact failure the product exists to argue against. The live scan
+  arrives with the runner in V1.
+- **2026-08-18 · An unknown empreinte is reported as unknown.** `/v/:hash` never falls
+  back to the nearest or most recent record. A prefix shorter than eight characters is
+  refused rather than matched loosely. Tested in `ledger-lookup.test.ts`.
+- **2026-08-18 · The public estimates carry their reference model explicitly.** The
+  mockups show the scan figure and the observatory bands without naming a model, which
+  invariant 1 forbids. Both surfaces gained a provenance line naming the reference model
+  and version, the model count and the noise floor. This is an addition to the design,
+  not a deviation from it.
+- **2026-08-18 · Ledger records are fixtures, not a chain.** Nothing on the verification
+  page computes or checks a hash chain yet; the screen states only what the record says.
+  The `ledger` package with real hashing, Merkle anchoring and adversarial tests stays a
+  V5 slice, per the roadmap.
 
 ## Open questions (product, not engineering)
 
