@@ -1,0 +1,25 @@
+{
+  "name": "@balise/runner",
+  "version": "0.1.0",
+  "description": "Playwright measurement worker. Produces RawCapture and EnvironmentFingerprint.",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "balise-runner": "./src/cli.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "measure": "node --experimental-strip-types --import ./src/register-loader.mjs src/cli.ts"
+  },
+  "dependencies": {
+    "@balise/measure-core": "workspace:*",
+    "@balise/schemas": "workspace:*",
+    "playwright-core": "1.56.1"
+  },
+  "devDependencies": {
+    "@types/node": "^24.5.0",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

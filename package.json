@@ -10,7 +10,8 @@
     "build": "turbo run build",
     "test": "turbo run test",
     "typecheck": "turbo run typecheck",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "runner:local": "pnpm --filter @balise/runner measure"
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",

@@ -16,18 +16,17 @@ screenshots, the fidelity source).
 
 ## Current status
 
-**Phase: V0.7 shipped (2026-08-18), V1 next.** The design build-out is complete: all
-fifteen surfaces plus every tab inside them. New in V0.7, the run-detail Resources tab
-(per-resource records with type, decoded size, coverage and origin, beside a by-type
-summary derived from the same records so the two panels cannot disagree with the
-waterfall) and the two remaining ToleranceBand renderings moved into `packages/ui`:
-`ToleranceTrend` (the band over time, with the dispersion envelope and deploy markers)
-and `ToleranceDispersion` (individual runs, median and MAD, against the noise field).
-Both now enforce the noise-floor rule in code rather than trusting the caller: a deploy
-marker or a candidate row draws in breach only for a kernel `regression`. The run-detail
-dispersion verdict is computed through `classifyDelta` instead of being asserted in the
-fixture. 135 tests green. Next: V1, the runner, which is where fixtures start being
-replaced by measurements.
+**Phase: V1 started (2026-08-18).** The design build-out is done; `apps/runner` now
+exists and is the first code that measures anything. It launches the full pinned Chromium
+(not playwright's headless shell), applies a named throttle profile through CDP, takes a
+fresh context per run so a cold pass stays cold, and produces a `RawCapture` plus a
+complete `EnvironmentFingerprint` that the kernel already knows how to consume. `measure`
+runs a scenario n times, carries failures instead of hiding them, and returns
+`insufficient-runs` rather than an aggregate when fewer than three succeed. A local run
+stamps `unpinned-local` for image and region and the CLI says plainly that it is not audit
+evidence. 156 tests pass, 4 capture integration tests skip until the pinned browser is
+installed locally. Still open in V1: the digest-locked container, METHODOLOGY.md v1
+(needs sign-off) and the twenty-run reproducibility test.
 
 ---
 
@@ -112,9 +111,11 @@ replaced by measurements.
 
 ## To-do: V1 (runner)
 
-- [ ] Playwright runner app with pinned Chromium in a digest-locked container
-- [ ] HAR + CDP trace capture, cold and warm passes kept separate
-- [ ] EnvironmentFingerprint recorded on every run
+- [x] ~~Playwright runner app with pinned Chromium~~ (V1.0, `apps/runner`; full chromium via `channel: 'chromium'`, fresh context per run, prediction and background networking off)
+- [ ] Digest-locked container around it (`BALISE_IMAGE_DIGEST` and `BALISE_REGION` are read already; without them a run is marked not auditable)
+- [x] ~~Cold and warm passes kept separate~~ (V1.0, the warm pass is a second navigation in the same context; the kernel already refuses to average the two)
+- [ ] Full HAR + CDP trace persisted to object storage (the capture today carries the slice extraction needs)
+- [x] ~~EnvironmentFingerprint recorded on every run~~ (V1.0, every field compared for invariant 3, with a test that fails if a field is ever left out of the comparison)
 - [ ] METHODOLOGY.md v1 published (requires sign-off, operating manual section 29)
 - [ ] The reproducibility test: twenty runs, same verdict, in CI
 
@@ -226,6 +227,39 @@ Later versions: see roadmap; detailed to-dos are appended when the version start
   explanation for it, the Resources panel shows the group as it stands and the totals
   include it. Replace it with real capture records when the runner lands, and expect the
   number to change.
+
+- **2026-08-18 · Throttle profile parameters are provisional, in code.** `desktop-fibre`
+  is unthrottled; `mobile-4g` is 1.6 Mbps down / 750 Kbps up / 150 ms with 4x CPU, which is
+  what the scenario canon already quotes; `mobile-3g` is 400 Kbps each way / 400 ms with 4x
+  CPU. Viewport, scale factor, locale and timezone are part of each profile. All of it is
+  marked provisional in `profiles.ts` and is frozen only by METHODOLOGY.md v1, which needs
+  sign-off (operating manual section 29). Changing one of these numbers afterwards is a
+  breaking change to every historical comparison.
+- **2026-08-18 · The user agent is fixed per profile, not taken from the host.** A run
+  from a laptop and a run from the container have to ask the server the same question, so
+  the platform token is fixed and only the chromium major version varies. A patch bump
+  therefore does not change the user agent, while the fingerprint's `browserBuild` still
+  records it.
+- **2026-08-18 · A run outside the pinned container is marked, not rejected.** Image
+  digest and region come from the environment; without them the fingerprint carries
+  `unpinned-local`, `isAuditable` is false and the CLI says the run is not audit evidence.
+  The marker is deliberately not digest-shaped so nothing downstream can mistake one for
+  the other.
+- **2026-08-18 · The runner uses the full chromium build, not playwright's headless
+  shell.** The shell is a stripped browser; we are measuring what a visitor's browser
+  does, so the browser has to be the one a visitor has.
+- **2026-08-18 · The capture integration tests skip when the pinned browser is absent,
+  loudly.** They probe by launching exactly what they will launch, and a second suite
+  prints the install command when the probe fails. A skipped test is visible in the run
+  output; a silently green suite that measured nothing would not be.
+- **2026-08-18 · The runner cli reads typescript through a resolution hook, not a new
+  dependency.** The workspace packages ship `.ts` and import each other with the `.js`
+  specifiers nodenext requires, which node's own type stripping does not rewrite.
+  `register-loader.mjs` maps them, in about fifteen lines, and is deleted the day the
+  packages emit javascript. This avoided adding a typescript runner to the dependency
+  surface for one command.
+- **2026-08-18 · CLI strings stay inline rather than in packages/i18n.** The i18n rule
+  covers what a customer reads. The runner cli is developer tooling and has no locale.
 
 ## Open questions (product, not engineering)
 
