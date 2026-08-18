@@ -1,0 +1,22 @@
+{
+  "name": "@balise/ledger",
+  "version": "0.1.0",
+  "description": "Append-only hash chain, Merkle anchoring and verification.",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@balise/schemas": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^24.5.0",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

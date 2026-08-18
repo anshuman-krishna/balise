@@ -38,13 +38,18 @@ multi-model, uncertainty-explicit, and chained to tamper-evident evidence.
 ```
 apps/
   web/                  React application (Vite, React 19)
+  runner/               Playwright measurement worker, pinned Chromium
 
 packages/
   schemas/              Zod contracts, single source of truth for every shape
   measure-core/         Metric extraction, statistics, noise floor, delta classification
   carbon-models/        Pluggable estimation models (ecoindex, swd v4, onebyte)
+  ledger/               Append-only hash chain, Merkle anchoring, verification
   i18n/                 Every user-facing string, fr + en
   ui/                   Design tokens and shared components, including ToleranceBand
+
+docs/
+  METHODOLOGY.md        The public measurement contract, versioned
 ```
 
 `measure-core`, `carbon-models` and `schemas` are Apache-2.0 and intended for standalone
@@ -59,6 +64,7 @@ Requirements: Node 22+ and pnpm.
 pnpm install
 pnpm dev          # run the web app
 pnpm test         # all test suites
+pnpm test:repro   # the reproducibility suite, slow, needs a pinned browser
 pnpm typecheck
 pnpm lint
 pnpm build

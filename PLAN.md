@@ -16,17 +16,16 @@ screenshots, the fidelity source).
 
 ## Current status
 
-**Phase: V1 in progress (2026-08-18).** `docs/METHODOLOGY.md` exists as a **v1.0 draft,
-not in force**, stating exactly what the runner implements today; its section 12 lists
-the thirteen decisions that need sign-off before any measurement can be presented under
-"methodology v1.0", and that section has to be empty first. The reproducibility suite is
-written and wired to `pnpm test:repro` and to CI: twenty-one sessions of five runs against
-an unchanged fixture site, asserting one fingerprint throughout, an established floor on
-every metric, no significant change on any of the twenty comparisons, and one confidence
-grade per metric across every session. 158 tests pass in the normal loop. The
-reproducibility suite and the four capture integration tests have not run in this
-environment: playwright's chromium download completes and then extracts an incomplete app
-bundle, so no browser is available here. They run in CI, which installs it.
+**Phase: V1 in progress, `packages/ledger` landed (2026-08-18).** The ledger is real:
+canonical json so the same facts always hash the same, sha-256 entry chaining per tenant,
+append as the only write, verification that reports every affected entry rather than
+throwing at the first, corrections appended with their reason while the original stays
+readable, and Merkle anchoring that promotes an odd node instead of duplicating it. Eleven
+adversarial tests try to change the record after the fact, including the case where the
+attacker recomputes the entry hash: the next link gives it away. Zero dependencies beyond
+`node:crypto`. 199 tests pass. Still open: METHODOLOGY.md sign-off (thirteen decisions),
+the reproducibility suite has never run for lack of a browser here, and the web app's
+ledger surfaces are still on hand-written fixture hashes rather than a computed chain.
 
 ---
 
@@ -108,6 +107,16 @@ bundle, so no browser is available here. They run in CI, which installs it.
 - [x] ~~ToleranceBand trend + dispersion variants~~ (V0.7, moved into packages/ui as ToleranceTrend and ToleranceDispersion, geometry unit-tested, rule 2 enforced in the component)
 - [ ] ToleranceBand print register for trend and dispersion (the handoff specifies print for the canonical band only; needed when the Typst pipeline lands)
 - [ ] Self-hosted font subsetting check (weight budget)
+
+## To-do: ledger (brought forward from V5)
+
+- [x] ~~`packages/ledger`: canonical json, entry hashing, per-tenant chain, append-only~~
+- [x] ~~Verification that reports findings instead of repairing anything~~
+- [x] ~~Merkle root and anchoring~~
+- [x] ~~Adversarial tests: edited payload, recomputed hashes, removal, reordering, splicing, backdating, edited correction reason~~
+- [ ] Wire the web app's canon to a computed chain, so the hashes in the three documents, the PR check and `/v/:hash` are the same real chain
+- [ ] Postgres store with INSERT and SELECT grants only, and the migration that revokes UPDATE and DELETE
+- [ ] RFC 3161 timestamping for customers who ask
 
 ## To-do: V1 (runner)
 
@@ -286,6 +295,26 @@ Later versions: see roadmap; detailed to-dos are appended when the version start
   reproducibility suites skip loudly rather than pretending. Nothing in the runner has
   been observed measuring a real page yet, and that stays true until either CI runs green
   or the local install is fixed.
+
+- **2026-08-18 · The ledger was brought forward from V5.** It needs no browser, no
+  database and no network, so it could be built and fully verified now, while the runner
+  work is blocked on an environment that cannot install a browser. Nothing else in the
+  roadmap was reordered.
+- **2026-08-18 · Canonical json before hashing.** Key order, `undefined`, `-0` and
+  non-finite numbers all have to be pinned down, or the same facts hash differently
+  depending on how the object was built and the chain stops verifying. `undefined` is
+  dropped from objects but refused inside an array, where dropping it would silently shift
+  every later element.
+- **2026-08-18 · An odd node in the Merkle tree is promoted, not duplicated.**
+  Duplicating the last leaf, as bitcoin does, makes two different leaf sets produce the
+  same root. That is precisely the property a tamper-evident structure must not have.
+  Pinned by a test.
+- **2026-08-18 · `LedgerStore` has no update and no delete.** Invariant 4 is enforced by
+  the shape of the interface as well as by the database grants that will sit behind it.
+  There is no repair utility: a broken chain is the finding, and it is surfaced.
+- **2026-08-18 · The entry hash covers position, time and the correction reason.**
+  Backdating an entry, moving it, or editing why a correction was made all change the
+  hash, and the next entry's link then fails. Each case has its own adversarial test.
 
 ## Open questions (product, not engineering)
 
