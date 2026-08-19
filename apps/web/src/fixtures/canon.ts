@@ -907,13 +907,8 @@ export const prCheckFixture = {
   runsPerScenario: 5,
   // the measurement rows come from @balise/budgets and the attribution
   // sentence from @balise/attribution: see budget-canon.ts and
-  // attribution-canon.ts, both generated.
-  provenance: {
-    methodology: 'v1.2',
-    models: 'ecoindex@3.1 swd@4.0 ademe@2024',
-    run: '#4812',
-    ledger: shortHash(REF.run),
-  },
+  // attribution-canon.ts, both generated. the provenance line comes from the
+  // same place the posted comment reads it, budgetCanon.provenance.
   annotation: {
     file: 'src/lib/dates.ts',
     lines: [

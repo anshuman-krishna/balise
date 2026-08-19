@@ -16,26 +16,31 @@ screenshots, the fidelity source).
 
 ## Current status
 
-**Phase: the check is engine output (2026-08-19).** `packages/budgets` reads
-`balise.yml`, evaluates every rule against every scenario it names, and decides what
-that does to a pull request. The Budgets screen and the pull request check now render
-what it computes. `pnpm gen:budget-canon` runs a real config over the same runs the
-attribution canon explains, and a test recomputes the whole evaluation, so the budget
-table, the check rows and the attribution card describe one set of measurements.
+**Phase: the check is an artifact (2026-08-19).** `packages/budgets` no longer
+stops at a verdict. `buildCheckRun` returns what the check posts: the line beside
+its name, the markdown body, and the annotations, all from the assessments the
+engine already produced. Nothing in it is decided at that stage. Every status
+comes from the assessments, every per-scenario verdict comes from `classifyDelta`,
+and every string comes from the catalog the screens render, so the mock of the
+comment and the comment cannot say different things.
 
-One rule shapes the package. A budget is checked only on a scenario whose noise floor
-is established; until then every verdict is `non_evalue`, the check reports neutral,
-and no merge is blocked. Growth limits go through `classifyDelta` before anything
-else, so a change the kernel does not call a change cannot break one whatever the
-percentage says. An override lifts the merge block and never the breach: the breach is
-still counted, still shown, still bound for the execution report, and it expires. The
-override the canon runs on is the ledger entry, read from the recorded payload.
+Three things the comment always does: it states the rule that nothing fails on
+noise whether or not anything was found, it writes every measured value beside its
+dispersion, and it carries the provenance the report is checkable from, down to
+the ledger entry and its verification url. Annotations land on the line of
+`balise.yml` that decided, which is what the yaml reader has been recording a line
+per threshold for. One annotation per rule, never one per rule and scenario. No
+source file is annotated at all, because attribution resolves bytes to a file and
+not yet to a line.
 
-`balise.yml` is read by a parser written in the package over a documented subset of
-yaml, refusing anything outside it by name and line, and refusing an unknown key
-outright. The repository now carries its own `balise.yml` with the budgets the
-operating manual sets for our screens, held to the reader by a test and not enforced
-until the runner measures us. 508 tests pass across twelve packages.
+The band now renders as a standalone svg document through `@balise/ui/svg`, for
+the comment image, the embeddable badge and the typst pipeline. It renders the
+component itself rather than redrawing it, so the three surfaces are the same
+code, and there is no headless browser in the path: a screenshot would add a
+second renderer, a font race and a timestamped png, none of which a document whose
+hash goes in the ledger can afford. The check screen gained a Markdown view beside
+the rendered one, showing the artifact verbatim. 548 tests pass across twelve
+packages.
 
 ---
 
@@ -78,7 +83,9 @@ until the runner measures us. 508 tests pass across twelve packages.
 ### UI (packages/ui + apps/web)
 - Design tokens per the brief: ink/paper/surface palette, Archivo + Public Sans + Martian Mono,
   zero radius, no shadows, no gradients.
-- ToleranceBand: canonical / compact / badge sizes now; trend, dispersion, print register next.
+- ToleranceBand: canonical / compact / badge, plus trend, dispersion and the print register.
+  `@balise/ui/svg` renders it to a standalone svg document for the check comment, the
+  embeddable badge and the typst pipeline: the same component, never a second drawing.
   Enforces in code: no bare numbers, breach only past the noise floor, dashed median on low
   confidence, never green.
 - Screens: Dashboard first, then the other 14 surfaces from the handoff.
@@ -175,10 +182,22 @@ until the runner measures us. 508 tests pass across twelve packages.
       (`pnpm gen:budget-canon` evaluates a real balise.yml against the runs the
       other canons publish and writes the result; a test recomputes it. The yaml
       view renders the file the engine actually read)
-- [ ] The GitHub check itself: Octokit, check run, PR comment, annotations. Needs
-      the api and a GitHub App, so it waits on V2
-- [ ] The PR comment SVG through `packages/ui` in a headless screenshot
+- [x] ~~The check run payload: title, markdown body, annotations~~ (`buildCheckRun`
+      in `packages/budgets`; annotations land on the line of `balise.yml` that
+      decided, which is why the yaml reader records a line per threshold)
+- [x] ~~The band as a standalone svg through `packages/ui`~~ (`@balise/ui/svg`
+      renders the component itself with react-dom, so the browser, the comment
+      and the pdf are the same code. no headless browser, no screenshot)
+- [x] ~~Show the posted artifact on the check screen~~ (a Markdown view beside the
+      rendered one, built from the same assessments and in the interface locale)
+- [ ] Post it: Octokit, check run creation, comment upsert, annotation batches.
+      Needs the api and a GitHub App, so it waits on V2
+- [ ] Serve the band svg from the api, so the comment can embed one
+      (`bandImageUrl` is already an input and is omitted while nothing serves it)
 - [ ] Record an override as a ledger entry when the api can write one
+- [ ] Annotate a source file once attribution can place a line in it. The source
+      map carries original positions; `attributeBundle` credits bytes per file and
+      discards them. Pointing an annotation at line 1 would be an invention
 
 ## To-do: ledger (brought forward from V5)
 
@@ -644,3 +663,46 @@ Carried from operating manual section 31 and the design handoff. Do not build ah
   comparison screen.** Both call `attributionLead`. The mockup's "suggested fix" line
   is replaced by the coverage statement for the reason already recorded: a remediation
   estimate is not measurable from a source map.
+- **2026-08-19 · The comment renders through the component, not through a
+  screenshot.** The operating manual asks for the same band in the browser, in the
+  pull request and in the pdf, and the only way to be sure of that is for the three
+  to be the same code. `@balise/ui/svg` renders `ToleranceBand` with react-dom and
+  returns a standalone document. A headless screenshot would have introduced a
+  second renderer, a font race and a png with a timestamp in it, and the document
+  hash goes in the ledger. react-dom is added to `packages/ui` as a peer: it was
+  already in the workspace, and `./svg` is a separate entry point so nothing pulls
+  the server renderer into the browser bundle. Verified against the built bundle.
+- **2026-08-19 · Annotations point at the budget file and nothing else.** Every
+  annotation names a line that was actually read: the yaml reader records a line per
+  threshold, so the note sits on the rule that decided. Attribution resolves grown
+  bytes to a source file but not to a position, so no source file is annotated;
+  pointing at line 1 would be exactly the guess invariant 5 forbids. Recorded as a
+  to-do: the mappings carry original lines, and `attributeBundle` currently discards
+  them.
+- **2026-08-19 · One annotation per rule, decided by its worst scenario.** A
+  service-wide rule evaluated over four scenarios would otherwise leave four notes on
+  one line of the file. The note names the scenario it was decided by when the rule
+  covered more than one.
+- **2026-08-19 · The check line counts budgets, not routes.** The mockup says "1
+  route over budget"; in the canon the breach is on a journey, so the copy was wrong
+  on its own data. It now reads "1 budget over its limit".
+- **2026-08-19 · Blocking is matched by value, never by object identity.** A summary
+  and its assessments reach a renderer through json as often as through memory. The
+  identity check worked in the package tests and stopped working the moment the
+  generated fixture round-tripped it, which is the failure a test now holds shut.
+- **2026-08-19 · Measured values are formatted in `@balise/schemas`, beside the
+  `Unit` they are formatting.** The screen, the check comment and the documents all
+  need "842 KB" to be the same string, and there was nowhere both a react package and
+  a node package could import it from. `@balise/ui` re-exports it, so no surface
+  changed.
+- **2026-08-19 · The metric labels moved to a top-level `metrics` in the catalog.**
+  They were under the budgets screen, and the artifact needs the same words.
+- **2026-08-19 · Axis ticks are formatted, measurements are not.** The band's default
+  tick formatter dropped binary floating point noise (`2.4000000000000004`), which is
+  a derived axis position and never a measured value. Invariant 6 is untouched: no
+  measurement passes through it.
+- **2026-08-19 · The check screen shows the artifact verbatim.** A Markdown view
+  beside the rendered one, built at render time from the same assessments so it
+  follows the interface locale. The generated canon carries the runs and the
+  provenance; the text is never baked into a fixture.
+

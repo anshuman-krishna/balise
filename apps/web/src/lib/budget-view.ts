@@ -1,7 +1,9 @@
-import type { BudgetAssessment, BudgetStatus, DeltaClassification, Unit } from '@balise/schemas';
-import { formatInt, formatNumber, formatSigned } from '@balise/ui';
-import { fill, t } from '../i18n';
+import type { BudgetAssessment, BudgetStatus, CheckRunOutput, DeltaClassification, Unit } from '@balise/schemas';
+import { buildCheckRun, checkTitle, measurementRows, outcomesByRule } from '@balise/budgets';
+import { formatMeasured, formatSigned } from '@balise/ui';
+import { t } from '../i18n';
 import { budgetCanon } from '../fixtures/budget-canon';
+import { attributionCoverage, attributionLead } from './attribution-view';
 
 /**
  * what the budgets table and the check comment render. everything here reads
@@ -9,18 +11,9 @@ import { budgetCanon } from '../fixtures/budget-canon';
  * the frontend.
  */
 
-const SEVERITY: Record<BudgetStatus, number> = { non_evalue: 0, conforme: 1, warn: 2, breach: 3 };
-
-export function formatMeasured(value: number, unit: Unit): string {
-  switch (unit) {
-    case 'bytes':
-      return Math.abs(value) < 1_000 ? `${formatInt(value)} B` : `${formatInt(value / 1_000)} KB`;
-    case 'pct':
-      return `${formatNumber(value, 1)} %`;
-    default:
-      return formatInt(value);
-  }
-}
+// the measured value is formatted once, in @balise/schemas, so the table, the
+// check comment and the documents cannot render the same figure differently.
+export { formatMeasured };
 
 /**
  * the distance to the threshold. shown as a share of the threshold when there is
@@ -38,7 +31,7 @@ export function formatHeadroom(headroom: number, threshold: number, unit: Unit):
 
 export function metricLabel(assessment: BudgetAssessment): string {
   if (assessment.rule.kind === 'relative') return t.budgets.relativeMetric;
-  return t.budgets.metrics[assessment.metricId];
+  return t.metrics[assessment.metricId];
 }
 
 export interface BudgetRow {
@@ -63,13 +56,6 @@ export interface BudgetRow {
   action: 'fail' | 'warn';
 }
 
-function ruleKey(assessment: BudgetAssessment): string {
-  const scope = assessment.rule.scope;
-  const label =
-    scope.kind === 'service' ? 'service' : scope.kind === 'journey' ? `journey:${scope.journey}` : scope.pattern;
-  return `${label} · ${assessment.metricId} · ${assessment.rule.kind}`;
-}
-
 function scopeText(assessment: BudgetAssessment): string {
   const scope = assessment.rule.scope;
   if (scope.kind === 'service') return 'service';
@@ -77,40 +63,22 @@ function scopeText(assessment: BudgetAssessment): string {
   return scope.pattern;
 }
 
-/** the worst assessment decides the row, and the row says which one it was. */
-function worst(group: readonly BudgetAssessment[]): BudgetAssessment {
-  return group.reduce((left, right) => {
-    if (SEVERITY[right.status] !== SEVERITY[left.status]) {
-      return SEVERITY[right.status] > SEVERITY[left.status] ? right : left;
-    }
-    return (right.headroom ?? Infinity) < (left.headroom ?? Infinity) ? right : left;
-  });
-}
-
 export function budgetRows(assessments: readonly BudgetAssessment[] = budgetCanon.main.assessments): BudgetRow[] {
-  const groups = new Map<string, BudgetAssessment[]>();
-  for (const assessment of assessments) {
-    const key = ruleKey(assessment);
-    const group = groups.get(key);
-    if (group === undefined) groups.set(key, [assessment]);
-    else group.push(assessment);
-  }
-
-  return [...groups.entries()].map(([key, group]) => {
-    const decided = worst(group);
-    const rule = decided.rule;
+  // one row per rule, decided by its worst scenario, grouped in @balise/budgets
+  // so the table and the check comment cannot group the same rules differently.
+  return outcomesByRule(assessments).map(({ rule, decided, scenarioCount }) => {
     const threshold = rule.fail ?? rule.warn;
     const blocks = budgetCanon.config.check.blockMergeOn !== 'never' && rule.fail !== null;
 
     return {
-      key,
+      key: `${scopeText(decided)} · ${decided.metricId} · ${rule.kind}`,
       scope: scopeText(decided),
       metric: metricLabel(decided),
       // naming a scenario is only useful when one of them is worse than the
       // others. on a rule where everything passed, or nothing was decided, it
       // would just be noise.
       scenario:
-        group.length > 1 && (decided.status === 'breach' || decided.status === 'warn')
+        scenarioCount > 1 && (decided.status === 'breach' || decided.status === 'warn')
           ? decided.scenarioLabel
           : null,
       current: decided.observed === null ? null : formatMeasured(decided.observed, decided.unit),
@@ -155,33 +123,33 @@ function kb(bytes: number): number {
   return Math.round(bytes / 1_000);
 }
 
+/**
+ * the check's measurement rows. the figures and the classification come from
+ * @balise/budgets, which takes the classification from the kernel; the verdict
+ * word is the only thing decided here, and only from a status the engine set.
+ */
 export function checkRows(): CheckRow[] {
-  return budgetCanon.measurements.map((measured) => {
-    const forScenario = budgetCanon.pull.assessments.filter(
-      (assessment) => assessment.scenarioId === measured.scenarioId,
-    );
-    const decided = forScenario.length === 0 ? null : worst(forScenario);
-    const delta = forScenario.find((assessment) => assessment.delta !== null)?.delta ?? null;
-    const classification: DeltaClassification = delta?.classification ?? 'indeterminate';
+  const rows = measurementRows(budgetCanon.pullScenarios, budgetCanon.pull.assessments);
 
+  return rows.map((row) => {
     const verdict: CheckVerdict =
-      decided?.status === 'breach'
+      row.status === 'breach'
         ? 'fail'
-        : decided?.status === 'warn'
+        : row.status === 'warn'
           ? 'warn'
-          : classification === 'no-significant-change'
+          : row.classification === 'no-significant-change'
             ? 'noSig'
             : 'pass';
 
     return {
-      scenarioId: measured.scenarioId,
-      label: measured.label,
-      baseKb: kb(measured.baseBytes),
-      headKb: kb(measured.headBytes),
-      deltaKb: kb(measured.headBytes - measured.baseBytes),
-      madKb: kb(measured.madBytes),
-      floorKb: kb(measured.floorBytes),
-      classification,
+      scenarioId: row.scenarioId,
+      label: row.label,
+      baseKb: kb(row.baseline ?? row.candidate),
+      headKb: kb(row.candidate),
+      deltaKb: kb(row.delta?.value ?? 0),
+      madKb: kb(row.mad),
+      floorKb: kb(row.floor.status === 'established' ? row.floor.value : 0),
+      classification: row.classification,
       verdict,
     };
   });
@@ -189,34 +157,34 @@ export function checkRows(): CheckRow[] {
 
 /** the one line the check reports next to its name, from the counts. */
 export function checkStatusText(): string {
-  const { counts } = budgetCanon.pull.summary;
-  const regressions = new Set(
-    budgetCanon.pull.assessments
-      .filter((assessment) => assessment.delta?.classification === 'regression')
-      .map((assessment) => assessment.scenarioId),
-  ).size;
-
-  const parts: string[] = [];
-  if (counts.breach > 0) {
-    parts.push(
-      counts.breach === 1 ? t.prCheck.statusBreachOne : fill(t.prCheck.statusBreachMany, { count: counts.breach }),
-    );
-  }
-  if (regressions > 0) {
-    parts.push(
-      regressions === 1
-        ? t.prCheck.statusRegressionOne
-        : fill(t.prCheck.statusRegressionMany, { count: regressions }),
-    );
-  }
-  if (counts.nonEvalue > 0) {
-    parts.push(fill(t.prCheck.statusUndecided, { count: counts.nonEvalue }));
-  }
-  return parts.length === 0 ? t.prCheck.statusClean : parts.join(', ');
+  return checkTitle(budgetCanon.pull.summary, budgetCanon.pull.assessments, t.checkRun);
 }
 
 export function checkFailed(): boolean {
   return budgetCanon.pull.summary.conclusion === 'failure';
+}
+
+/**
+ * the artifact itself: what the check would post, built from the same
+ * assessments the screen renders and in the interface locale. the screen shows
+ * it verbatim, so the mock of the comment cannot drift from the comment.
+ */
+export function checkRunOutput(): CheckRunOutput {
+  const lead = attributionLead()
+    .map((part) => part.text)
+    .join('');
+
+  return buildCheckRun({
+    config: budgetCanon.config,
+    scenarios: budgetCanon.pullScenarios,
+    assessments: budgetCanon.pull.assessments,
+    summary: budgetCanon.pull.summary,
+    strings: t.checkRun,
+    metricLabels: t.metrics,
+    provenance: budgetCanon.provenance,
+    configPath: budgetCanon.file,
+    attribution: `${lead} ${attributionCoverage()}`,
+  });
 }
 
 /** the recorded override, with what it is letting through stated in figures. */

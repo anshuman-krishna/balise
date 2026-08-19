@@ -7,15 +7,7 @@
 // status someone chose for the screen.
 
 import type { BudgetAssessment, BudgetConfig, BudgetOverride, CheckSummary } from '@balise/schemas';
-
-export interface BudgetMeasurement {
-  scenarioId: string;
-  label: string;
-  baseBytes: number;
-  headBytes: number;
-  madBytes: number;
-  floorBytes: number;
-}
+import type { CheckProvenance, ScenarioMeasurement } from '@balise/budgets';
 
 export interface BudgetCanon {
   file: string;
@@ -29,7 +21,14 @@ export interface BudgetCanon {
   main: { assessments: BudgetAssessment[]; summary: CheckSummary };
   /** the pull request: its scenarios against main. */
   pull: { assessments: BudgetAssessment[]; summary: CheckSummary };
-  measurements: BudgetMeasurement[];
+  /**
+   * the runs the pull request was evaluated on. the check comment is built
+   * from these at render time rather than baked in here, so it renders in the
+   * interface locale and carries the attribution sentence the screen shows.
+   */
+  pullScenarios: ScenarioMeasurement[];
+  /** what the check reports itself as, for the provenance footer. */
+  provenance: CheckProvenance;
 }
 
 export const budgetCanon: BudgetCanon = {
@@ -1266,30 +1265,309 @@ export const budgetCanon: BudgetCanon = {
     "overridden": []
 },
   },
-  measurements: [
+  pullScenarios: [
   {
-    "scenarioId": "/accueil",
+    "id": "/accueil",
+    "kind": "route",
     "label": "/accueil",
-    "baseBytes": 840000,
-    "headBytes": 842000,
-    "madBytes": 3000,
-    "floorBytes": 7000
+    "candidate": {
+      "pass": "cold",
+      "sampleCount": 5,
+      "metrics": [
+        {
+          "metricId": "transferred_bytes",
+          "unit": "bytes",
+          "median": 842000,
+          "mad": 3000,
+          "min": 839000,
+          "max": 845000,
+          "sampleCount": 5
+        },
+        {
+          "metricId": "request_count",
+          "unit": "count",
+          "median": 61,
+          "mad": 0,
+          "min": 61,
+          "max": 61,
+          "sampleCount": 5
+        },
+        {
+          "metricId": "third_party_share_pct",
+          "unit": "pct",
+          "median": 22,
+          "mad": 0.2,
+          "min": 21.8,
+          "max": 22.2,
+          "sampleCount": 5
+        }
+      ]
+    },
+    "baseline": {
+      "pass": "cold",
+      "sampleCount": 5,
+      "metrics": [
+        {
+          "metricId": "transferred_bytes",
+          "unit": "bytes",
+          "median": 840000,
+          "mad": 3000,
+          "min": 837000,
+          "max": 843000,
+          "sampleCount": 5
+        },
+        {
+          "metricId": "request_count",
+          "unit": "count",
+          "median": 61,
+          "mad": 0,
+          "min": 61,
+          "max": 61,
+          "sampleCount": 5
+        },
+        {
+          "metricId": "third_party_share_pct",
+          "unit": "pct",
+          "median": 22,
+          "mad": 0.2,
+          "min": 21.8,
+          "max": 22.2,
+          "sampleCount": 5
+        }
+      ]
+    },
+    "floors": [
+      {
+        "status": "established",
+        "metricId": "transferred_bytes",
+        "unit": "bytes",
+        "value": 7000,
+        "sampleCount": 24,
+        "scalingFactor": 1.2
+      },
+      {
+        "status": "established",
+        "metricId": "request_count",
+        "unit": "count",
+        "value": 1,
+        "sampleCount": 24,
+        "scalingFactor": 1.2
+      },
+      {
+        "status": "established",
+        "metricId": "third_party_share_pct",
+        "unit": "pct",
+        "value": 0.5,
+        "sampleCount": 24,
+        "scalingFactor": 1.2
+      }
+    ]
   },
   {
-    "scenarioId": "/demarches/acte-naissance",
+    "id": "/demarches/acte-naissance",
+    "kind": "route",
     "label": "/demarches/acte-naissance",
-    "baseBytes": 1114000,
-    "headBytes": 1298000,
-    "madBytes": 9000,
-    "floorBytes": 7000
+    "candidate": {
+      "pass": "cold",
+      "sampleCount": 5,
+      "metrics": [
+        {
+          "metricId": "transferred_bytes",
+          "unit": "bytes",
+          "median": 1298000,
+          "mad": 9000,
+          "min": 1289000,
+          "max": 1307000,
+          "sampleCount": 5
+        },
+        {
+          "metricId": "request_count",
+          "unit": "count",
+          "median": 84,
+          "mad": 0,
+          "min": 84,
+          "max": 84,
+          "sampleCount": 5
+        },
+        {
+          "metricId": "third_party_share_pct",
+          "unit": "pct",
+          "median": 29.121725731895225,
+          "mad": 0.2,
+          "min": 28.921725731895226,
+          "max": 29.321725731895224,
+          "sampleCount": 5
+        }
+      ]
+    },
+    "baseline": {
+      "pass": "cold",
+      "sampleCount": 5,
+      "metrics": [
+        {
+          "metricId": "transferred_bytes",
+          "unit": "bytes",
+          "median": 1114000,
+          "mad": 9000,
+          "min": 1105000,
+          "max": 1123000,
+          "sampleCount": 5
+        },
+        {
+          "metricId": "request_count",
+          "unit": "count",
+          "median": 82,
+          "mad": 0,
+          "min": 82,
+          "max": 82,
+          "sampleCount": 5
+        },
+        {
+          "metricId": "third_party_share_pct",
+          "unit": "pct",
+          "median": 16.15798922800718,
+          "mad": 0.2,
+          "min": 15.957989228007182,
+          "max": 16.35798922800718,
+          "sampleCount": 5
+        }
+      ]
+    },
+    "floors": [
+      {
+        "status": "established",
+        "metricId": "transferred_bytes",
+        "unit": "bytes",
+        "value": 7000,
+        "sampleCount": 24,
+        "scalingFactor": 1.2
+      },
+      {
+        "status": "established",
+        "metricId": "request_count",
+        "unit": "count",
+        "value": 1,
+        "sampleCount": 24,
+        "scalingFactor": 1.2
+      },
+      {
+        "status": "established",
+        "metricId": "third_party_share_pct",
+        "unit": "pct",
+        "value": 0.5,
+        "sampleCount": 24,
+        "scalingFactor": 1.2
+      }
+    ]
   },
   {
-    "scenarioId": "demande-acte",
+    "id": "demande-acte",
+    "kind": "journey",
     "label": "journey: demande d'acte",
-    "baseBytes": 1258000,
-    "headBytes": 1442000,
-    "madBytes": 9000,
-    "floorBytes": 7000
+    "candidate": {
+      "pass": "cold",
+      "sampleCount": 5,
+      "metrics": [
+        {
+          "metricId": "transferred_bytes",
+          "unit": "bytes",
+          "median": 1442000,
+          "mad": 9000,
+          "min": 1433000,
+          "max": 1451000,
+          "sampleCount": 5
+        },
+        {
+          "metricId": "request_count",
+          "unit": "count",
+          "median": 100,
+          "mad": 0,
+          "min": 100,
+          "max": 100,
+          "sampleCount": 5
+        },
+        {
+          "metricId": "third_party_share_pct",
+          "unit": "pct",
+          "median": 20.527045769764214,
+          "mad": 0.2,
+          "min": 20.327045769764215,
+          "max": 20.727045769764214,
+          "sampleCount": 5
+        }
+      ]
+    },
+    "baseline": {
+      "pass": "cold",
+      "sampleCount": 5,
+      "metrics": [
+        {
+          "metricId": "transferred_bytes",
+          "unit": "bytes",
+          "median": 1258000,
+          "mad": 9000,
+          "min": 1249000,
+          "max": 1267000,
+          "sampleCount": 5
+        },
+        {
+          "metricId": "request_count",
+          "unit": "count",
+          "median": 96,
+          "mad": 0,
+          "min": 96,
+          "max": 96,
+          "sampleCount": 5
+        },
+        {
+          "metricId": "third_party_share_pct",
+          "unit": "pct",
+          "median": 17.965023847376788,
+          "mad": 0.2,
+          "min": 17.76502384737679,
+          "max": 18.165023847376787,
+          "sampleCount": 5
+        }
+      ]
+    },
+    "floors": [
+      {
+        "status": "established",
+        "metricId": "transferred_bytes",
+        "unit": "bytes",
+        "value": 7000,
+        "sampleCount": 24,
+        "scalingFactor": 1.2
+      },
+      {
+        "status": "established",
+        "metricId": "request_count",
+        "unit": "count",
+        "value": 1,
+        "sampleCount": 24,
+        "scalingFactor": 1.2
+      },
+      {
+        "status": "established",
+        "metricId": "third_party_share_pct",
+        "unit": "pct",
+        "value": 0.5,
+        "sampleCount": 24,
+        "scalingFactor": 1.2
+      }
+    ]
   }
 ],
+  provenance: {
+  "methodologyVersion": "v1.2",
+  "models": [
+    "ecoindex@3.1",
+    "swd@4.0",
+    "ademe@2024"
+  ],
+  "runId": "#4812",
+  "ledgerRef": "0ad25303",
+  "verificationUrl": "balise.fr/v/0ad25303",
+  "fingerprintMatched": true
+},
 };

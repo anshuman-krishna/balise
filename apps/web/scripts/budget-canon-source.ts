@@ -7,9 +7,15 @@ import type {
 } from '@balise/schemas';
 import { METRIC_UNIT } from '@balise/schemas';
 import type { AttributionSide } from '@balise/attribution';
-import { evaluateBudgets, readConfig, summariseCheck, type ScenarioMeasurement } from '@balise/budgets';
+import {
+  evaluateBudgets,
+  readConfig,
+  summariseCheck,
+  type CheckProvenance,
+  type ScenarioMeasurement,
+} from '@balise/budgets';
 import { BASELINE_SIDE, CANDIDATE_SIDE, ROUTE } from './attribution-canon-source';
-import { ledgerEntry, REF } from '../src/fixtures/ledger-refs';
+import { ledgerEntry, REF, shortHash, verifyUrl } from '../src/fixtures/ledger-refs';
 
 /**
  * the canon's budgets, as a real balise.yml evaluated by @balise/budgets against
@@ -182,6 +188,24 @@ function overrideFromLedger(): BudgetOverride {
 }
 
 // ---------------------------------------------------------------------------
+// what the check says about itself
+// ---------------------------------------------------------------------------
+
+/**
+ * the provenance every check comment carries. the ledger reference is a real
+ * entry in the generated chain, and the verification url resolves to it, so
+ * the footer of the comment is checkable rather than decorative.
+ */
+const PROVENANCE: CheckProvenance = {
+  methodologyVersion: 'v1.2',
+  models: ['ecoindex@3.1', 'swd@4.0', 'ademe@2024'],
+  runId: '#4812',
+  ledgerRef: shortHash(REF.run),
+  verificationUrl: verifyUrl(REF.run),
+  fingerprintMatched: true,
+};
+
+// ---------------------------------------------------------------------------
 
 export function buildBudgetCanon() {
   const parsed = readConfig(CANON_CONFIG_SOURCE);
@@ -202,5 +226,6 @@ export function buildBudgetCanon() {
     main: { assessments: main, summary: summariseCheck(main, parsed.config.check) },
     pull: { assessments: pull, summary: summariseCheck(pull, parsed.config.check) },
     pullScenarios: PR_SCENARIOS,
+    provenance: PROVENANCE,
   };
 }

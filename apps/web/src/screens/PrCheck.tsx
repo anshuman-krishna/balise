@@ -1,10 +1,19 @@
+import { useState } from 'react';
 import { formatInt, formatSigned, ToleranceBand } from '@balise/ui';
 import { Link } from 'react-router';
 import { fill, t } from '../i18n';
 import { canon, prCheckFixture as pr } from '../fixtures/canon';
+import { budgetCanon } from '../fixtures/budget-canon';
 import { attributionCanon } from '../fixtures/attribution-canon';
 import { attributionCoverage, attributionLead, formatByteDelta } from '../lib/attribution-view';
-import { checkFailed, checkRows, checkStatusText, type CheckRow, type CheckVerdict } from '../lib/budget-view';
+import {
+  checkFailed,
+  checkRows,
+  checkRunOutput,
+  checkStatusText,
+  type CheckRow,
+  type CheckVerdict,
+} from '../lib/budget-view';
 import { Wordmark } from '../components/Wordmark';
 
 const GRID = 'minmax(190px,1.5fr) 82px 82px 82px 132px 76px';
@@ -30,6 +39,16 @@ const failed = checkFailed();
 const statusText = checkStatusText();
 const lead = attributionLead();
 const introduced = attributionCanon.packages.find((entry) => entry.delta > 0) ?? null;
+// the artifact itself, built by @balise/budgets from the same assessments the
+// rendered view above is drawn from.
+const output = checkRunOutput();
+const provenance = budgetCanon.provenance;
+
+const ANNOTATION_COLOR: Record<string, string> = {
+  failure: 'var(--breach)',
+  warning: 'var(--caution)',
+  notice: 'var(--text-secondary)',
+};
 
 function Parts({ parts }: { parts: ReadonlyArray<{ text: string; mono?: boolean; strong?: boolean }> }) {
   return (
@@ -141,185 +160,285 @@ function BlockedBanner() {
   );
 }
 
-export function PrCheck() {
+/** what the check actually posts, verbatim: the api payload, not a mock of it. */
+function Artifact() {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+      <div className="card">
+        <span className="eyebrow">{pr.budgetCheck}</span>
+        <div className="mono" style={{ marginTop: 8, fontSize: 10.5 }}>
+          conclusion:{' '}
+          <span style={{ color: checkFailed() ? 'var(--breach)' : 'var(--conforme)' }}>{output.conclusion}</span>
+        </div>
+        <div className="mono" style={{ marginTop: 3, fontSize: 10.5 }}>title: {output.title}</div>
+        <p style={{ margin: '10px 0 0', fontSize: 10.5, lineHeight: 1.6, color: 'var(--text-secondary)', maxWidth: '64ch' }}>
+          {t.prCheck.artifactNote}
+        </p>
+      </div>
+
+      {/* wrapped rather than scrolled: the sentence about the noise floor is
+          the point of the comment and must not run off the edge. */}
+      <div className="code-block" style={{ whiteSpace: 'pre-wrap' }}>
+        {output.summary}
+      </div>
+      <div className="code-block" style={{ whiteSpace: 'pre-wrap' }}>
+        {output.text}
+      </div>
+
+      <div className="card" style={{ padding: 0 }}>
+        <div
+          className="mono"
+          style={{
+            padding: '10px 16px',
+            fontWeight: 500,
+            fontSize: 9.5,
+            letterSpacing: '.08em',
+            color: 'var(--text-secondary)',
+            borderBottom: '1px solid var(--divider-cell)',
+          }}
+        >
+          annotations · {output.annotations.length}
+        </div>
+        {output.annotations.map((annotation) => (
+          <div
+            key={`${annotation.level}-${annotation.startLine}-${annotation.title}`}
+            style={{ padding: '9px 16px', borderBottom: '1px solid var(--divider-row)' }}
+          >
+            <span
+              className="mono"
+              style={{ fontSize: 9.5, fontWeight: 500, letterSpacing: '.05em', color: ANNOTATION_COLOR[annotation.level] }}
+            >
+              {annotation.level}
+            </span>{' '}
+            <span className="mono" style={{ fontSize: 10 }}>
+              {annotation.path}:{annotation.startLine}
+            </span>
+            <div style={{ marginTop: 3, fontSize: 11, lineHeight: 1.55, color: 'var(--text-secondary)' }}>
+              {annotation.message}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/** the same check as github renders it, which is where a developer meets it. */
+function Rendered() {
   return (
     <>
-      <h1 className="screen-title">{t.prCheck.title}</h1>
-      <div className="screen-subtitle">{t.prCheck.subtitle}</div>
-
-      <div style={{ maxWidth: 1020, marginTop: 16, display: 'flex', flexDirection: 'column', gap: 14 }}>
-        <div className="gh-card">
-          <div style={{ padding: '14px 16px 12px' }}>
-            <div style={{ fontSize: 14, fontWeight: 600 }}>
-              {pr.title} <span style={{ color: 'var(--text-tertiary)', fontWeight: 400 }}>{pr.number}</span>
-            </div>
-            <div style={{ marginTop: 5, fontSize: 11, color: 'var(--text-secondary)' }}>
-              <span className="mono" style={{ fontSize: 10 }}>{pr.author}</span> {t.prCheck.merge1} {pr.commits}{' '}
-              {t.prCheck.merge2} <span className="mono" style={{ fontSize: 10 }}>{pr.into}</span> {t.prCheck.merge3}{' '}
-              <span className="mono" style={{ fontSize: 10 }}>{pr.from}</span>
-            </div>
+      <div className="gh-card">
+        <div style={{ padding: '14px 16px 12px' }}>
+          <div style={{ fontSize: 14, fontWeight: 600 }}>
+            {pr.title} <span style={{ color: 'var(--text-tertiary)', fontWeight: 400 }}>{pr.number}</span>
           </div>
+          <div style={{ marginTop: 5, fontSize: 11, color: 'var(--text-secondary)' }}>
+            <span className="mono" style={{ fontSize: 10 }}>{pr.author}</span> {t.prCheck.merge1} {pr.commits}{' '}
+            {t.prCheck.merge2} <span className="mono" style={{ fontSize: 10 }}>{pr.into}</span> {t.prCheck.merge3}{' '}
+            <span className="mono" style={{ fontSize: 10 }}>{pr.from}</span>
+          </div>
+        </div>
 
-          {failed ? <BlockedBanner /> : null}
+        {failed ? <BlockedBanner /> : null}
 
-          <div>
-            {[{ name: pr.budgetCheck, state: failed ? 'fail' : 'pass', text: statusText }, ...pr.statuses].map((status) => (
-              <div
-                key={status.name}
+        <div>
+          {[{ name: pr.budgetCheck, state: failed ? 'fail' : 'pass', text: statusText }, ...pr.statuses].map((status) => (
+            <div
+              key={status.name}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 10,
+                padding: '9px 16px',
+                borderTop: '1px solid var(--divider-row)',
+              }}
+            >
+              <span className="gh-dot" style={{ background: status.state === 'fail' ? 'var(--breach)' : 'var(--conforme)' }} />
+              <span style={{ fontSize: 11.5, fontWeight: 600 }}>{status.name}</span>
+              <span style={{ fontSize: 11.5, color: 'var(--text-secondary)' }}>· {status.text}</span>
+              <a href="#details" style={{ marginLeft: 'auto', fontSize: 11 }}>
+                {t.prCheck.details}
+              </a>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="gh-card">
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 8,
+            padding: '8px 14px',
+            background: 'var(--paper)',
+            borderBottom: '1px solid var(--divider-cell)',
+          }}
+        >
+          <Wordmark size={14} onDark={false} />
+          <span style={{ fontSize: 11.5, fontWeight: 600 }}>balise</span>
+          <span style={{ fontSize: 11, color: 'var(--text-secondary)' }}>
+            {t.prCheck.commented} {fill(t.appBar.minutesAgo, { minutes: pr.commentedMinutesAgo })}
+          </span>
+        </div>
+
+        <div style={{ padding: '12px 0 0' }}>
+          <div style={{ padding: '0 14px', fontSize: 11.5 }}>
+            <strong>{fill(t.prCheck.measurementLine, { runs: pr.runsPerScenario }).split(' · ')[0]}</strong>
+            <span style={{ color: 'var(--text-secondary)' }}>
+              {' · '}
+              {fill(t.prCheck.measurementLine, { runs: pr.runsPerScenario }).split(' · ').slice(1).join(' · ')}
+            </span>
+          </div>
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: GRID,
+              gap: '0 12px',
+              padding: '10px 14px 7px',
+              borderBottom: '1px solid rgba(21,24,27,.14)',
+            }}
+          >
+            {[
+              t.prCheck.headers.route,
+              t.prCheck.headers.base,
+              t.prCheck.headers.head,
+              t.prCheck.headers.delta,
+              t.prCheck.headers.vsNoise,
+              t.prCheck.headers.verdict,
+            ].map((header, index) => (
+              <span
+                key={header}
+                className="mono"
                 style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 10,
-                  padding: '9px 16px',
-                  borderTop: '1px solid var(--divider-row)',
+                  fontWeight: 500,
+                  fontSize: 9,
+                  letterSpacing: '.08em',
+                  color: 'var(--text-tertiary)',
+                  textAlign: index === 0 || index === 4 ? 'left' : 'right',
                 }}
               >
-                <span className="gh-dot" style={{ background: status.state === 'fail' ? 'var(--breach)' : 'var(--conforme)' }} />
-                <span style={{ fontSize: 11.5, fontWeight: 600 }}>{status.name}</span>
-                <span style={{ fontSize: 11.5, color: 'var(--text-secondary)' }}>· {status.text}</span>
-                <a href="#details" style={{ marginLeft: 'auto', fontSize: 11 }}>
-                  {t.prCheck.details}
-                </a>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="gh-card">
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 8,
-              padding: '8px 14px',
-              background: 'var(--paper)',
-              borderBottom: '1px solid var(--divider-cell)',
-            }}
-          >
-            <Wordmark size={14} onDark={false} />
-            <span style={{ fontSize: 11.5, fontWeight: 600 }}>balise</span>
-            <span style={{ fontSize: 11, color: 'var(--text-secondary)' }}>
-              {t.prCheck.commented} {fill(t.appBar.minutesAgo, { minutes: pr.commentedMinutesAgo })}
-            </span>
-          </div>
-
-          <div style={{ padding: '12px 0 0' }}>
-            <div style={{ padding: '0 14px', fontSize: 11.5 }}>
-              <strong>{fill(t.prCheck.measurementLine, { runs: pr.runsPerScenario }).split(' · ')[0]}</strong>
-              <span style={{ color: 'var(--text-secondary)' }}>
-                {' · '}
-                {fill(t.prCheck.measurementLine, { runs: pr.runsPerScenario }).split(' · ').slice(1).join(' · ')}
+                {header}
               </span>
-            </div>
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: GRID,
-                gap: '0 12px',
-                padding: '10px 14px 7px',
-                borderBottom: '1px solid rgba(21,24,27,.14)',
-              }}
-            >
-              {[
-                t.prCheck.headers.route,
-                t.prCheck.headers.base,
-                t.prCheck.headers.head,
-                t.prCheck.headers.delta,
-                t.prCheck.headers.vsNoise,
-                t.prCheck.headers.verdict,
-              ].map((header, index) => (
-                <span
-                  key={header}
-                  className="mono"
-                  style={{
-                    fontWeight: 500,
-                    fontSize: 9,
-                    letterSpacing: '.08em',
-                    color: 'var(--text-tertiary)',
-                    textAlign: index === 0 || index === 4 ? 'left' : 'right',
-                  }}
-                >
-                  {header}
-                </span>
-              ))}
-            </div>
-            {rows.map((row) => (
-              <MeasurementRow key={row.scenarioId} row={row} />
             ))}
-
-            <div style={{ padding: '12px 14px 0' }}>
-              <div style={{ fontSize: 11.5, fontWeight: 600 }}>{t.prCheck.attributionHeading}</div>
-              <p style={{ margin: '6px 0 0', fontSize: 11.5, lineHeight: 1.6, maxWidth: '72ch' }}>
-                <Parts
-                  parts={lead.map((part) => ({ text: part.text, mono: part.token, strong: part.measure }))}
-                />
-              </p>
-              <p style={{ margin: '8px 0 0', fontSize: 11.5, lineHeight: 1.6, maxWidth: '72ch', color: 'var(--text-secondary)' }}>
-                {attributionCoverage()}
-              </p>
-            </div>
-
-            <div
-              style={{
-                margin: '12px 14px 0',
-                padding: '10px 0 12px',
-                borderTop: '1px solid var(--divider-cell)',
-                fontSize: 10,
-                lineHeight: 1.7,
-                color: 'var(--text-secondary)',
-              }}
-            >
-              {t.prCheck.provenanceMethodology} {pr.provenance.methodology} · {t.prCheck.provenanceModels}{' '}
-              <span className="mono" style={{ fontSize: 9.5 }}>{pr.provenance.models}</span> · {t.prCheck.provenanceRun}{' '}
-              <span className="mono" style={{ fontSize: 9.5 }}>{pr.provenance.run}</span> · {t.prCheck.provenanceLedger}{' '}
-              <Link to={`/v/${pr.provenance.ledger}`} className="mono" style={{ fontSize: 9.5 }}>
-                {pr.provenance.ledger}
-              </Link>{' '}
-              ·{' '}
-              <a href="#override">{t.prCheck.overrideLink}</a> {t.prCheck.overrideNote}
-            </div>
           </div>
-        </div>
+          {rows.map((row) => (
+            <MeasurementRow key={row.scenarioId} row={row} />
+          ))}
 
-        <div className="gh-card">
+          <div style={{ padding: '12px 14px 0' }}>
+            <div style={{ fontSize: 11.5, fontWeight: 600 }}>{t.prCheck.attributionHeading}</div>
+            <p style={{ margin: '6px 0 0', fontSize: 11.5, lineHeight: 1.6, maxWidth: '72ch' }}>
+              <Parts
+                parts={lead.map((part) => ({ text: part.text, mono: part.token, strong: part.measure }))}
+              />
+            </p>
+            <p style={{ margin: '8px 0 0', fontSize: 11.5, lineHeight: 1.6, maxWidth: '72ch', color: 'var(--text-secondary)' }}>
+              {attributionCoverage()}
+            </p>
+          </div>
+
           <div
-            className="mono"
             style={{
-              padding: '10px 14px',
-              fontWeight: 500,
-              fontSize: 9.5,
-              letterSpacing: '.08em',
+              margin: '12px 14px 0',
+              padding: '10px 0 12px',
+              borderTop: '1px solid var(--divider-cell)',
+              fontSize: 10,
+              lineHeight: 1.7,
               color: 'var(--text-secondary)',
-              borderBottom: '1px solid var(--divider-cell)',
             }}
           >
-            {fill(t.prCheck.annotationTitle, { file: pr.annotation.file })}
-          </div>
-          <div style={{ padding: '10px 14px 0' }}>
-            {pr.annotation.lines.map((line) => (
-              <div key={line.no} className={line.added ? 'diff-line added' : 'diff-line'}>
-                <span className="no">{line.no}</span>
-                <span className="code">{line.text}</span>
-              </div>
-            ))}
-          </div>
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'baseline',
-              gap: 12,
-              margin: '10px 14px 12px',
-              padding: '9px 12px',
-              borderLeft: '2px solid var(--breach)',
-              background: 'var(--inset-panel)',
-            }}
-          >
-            <span className="mono" style={{ fontWeight: 500, fontSize: 10.5, color: 'var(--breach)', flex: 'none' }}>
-              {introduced === null ? '' : formatByteDelta(introduced.delta)}
-            </span>
-            <span style={{ fontSize: 11, lineHeight: 1.55, color: 'var(--text-secondary)' }}>{pr.annotation.note}</span>
+            {/* the same provenance the posted comment carries, from one place. */}
+            {t.prCheck.provenanceMethodology} {provenance.methodologyVersion} · {t.prCheck.provenanceModels}{' '}
+            <span className="mono" style={{ fontSize: 9.5 }}>{provenance.models.join(' ')}</span> ·{' '}
+            {t.prCheck.provenanceRun}{' '}
+            <span className="mono" style={{ fontSize: 9.5 }}>{provenance.runId}</span> · {t.prCheck.provenanceLedger}{' '}
+            <Link to={`/v/${provenance.ledgerRef}`} className="mono" style={{ fontSize: 9.5 }}>
+              {provenance.ledgerRef}
+            </Link>{' '}
+            ·{' '}
+            <a href="#override">{t.prCheck.overrideLink}</a> {t.prCheck.overrideNote}
           </div>
         </div>
+      </div>
+
+      <div className="gh-card">
+        <div
+          className="mono"
+          style={{
+            padding: '10px 14px',
+            fontWeight: 500,
+            fontSize: 9.5,
+            letterSpacing: '.08em',
+            color: 'var(--text-secondary)',
+            borderBottom: '1px solid var(--divider-cell)',
+          }}
+        >
+          {fill(t.prCheck.annotationTitle, { file: pr.annotation.file })}
+        </div>
+        <div style={{ padding: '10px 14px 0' }}>
+          {pr.annotation.lines.map((line) => (
+            <div key={line.no} className={line.added ? 'diff-line added' : 'diff-line'}>
+              <span className="no">{line.no}</span>
+              <span className="code">{line.text}</span>
+            </div>
+          ))}
+        </div>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'baseline',
+            gap: 12,
+            margin: '10px 14px 12px',
+            padding: '9px 12px',
+            borderLeft: '2px solid var(--breach)',
+            background: 'var(--inset-panel)',
+          }}
+        >
+          <span className="mono" style={{ fontWeight: 500, fontSize: 10.5, color: 'var(--breach)', flex: 'none' }}>
+            {introduced === null ? '' : formatByteDelta(introduced.delta)}
+          </span>
+          <span style={{ fontSize: 11, lineHeight: 1.55, color: 'var(--text-secondary)' }}>{pr.annotation.note}</span>
+        </div>
+      </div>
+    </>
+  );
+}
+
+export function PrCheck() {
+  const [mode, setMode] = useState<'rendered' | 'markdown'>('rendered');
+
+  return (
+    <>
+      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 14 }}>
+        <div>
+          <h1 className="screen-title">{t.prCheck.title}</h1>
+          <div className="screen-subtitle">{t.prCheck.subtitle}</div>
+        </div>
+        <div className="segmented" style={{ marginLeft: 'auto' }} role="tablist">
+          <button
+            type="button"
+            role="tab"
+            aria-selected={mode === 'rendered'}
+            className={mode === 'rendered' ? 'active' : undefined}
+            onClick={() => setMode('rendered')}
+          >
+            {t.prCheck.toggleRendered}
+          </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={mode === 'markdown'}
+            className={mode === 'markdown' ? 'active' : undefined}
+            onClick={() => setMode('markdown')}
+          >
+            {t.prCheck.toggleMarkdown}
+          </button>
+        </div>
+      </div>
+
+      <div style={{ maxWidth: 1020, marginTop: 16, display: 'flex', flexDirection: 'column', gap: 14 }}>
+        {mode === 'markdown' ? <Artifact /> : <Rendered />}
       </div>
     </>
   );

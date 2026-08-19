@@ -1,7 +1,15 @@
 import { describe, expect, it } from 'vitest';
 import { NARROW_NBSP } from '@balise/ui';
 import { budgetCanon } from '../fixtures/budget-canon';
-import { budgetRows, checkRows, checkStatusText, formatHeadroom, formatMeasured, overrideCard } from './budget-view';
+import {
+  budgetRows,
+  checkRows,
+  checkRunOutput,
+  checkStatusText,
+  formatHeadroom,
+  formatMeasured,
+  overrideCard,
+} from './budget-view';
 
 describe('formatting a measured value', () => {
   it('shows bytes in kilobytes, and small ones in bytes', () => {
@@ -96,7 +104,7 @@ describe('the check rows', () => {
 
 describe('the check summary line', () => {
   it('counts what the engine found, and counts a scenario once', () => {
-    expect(checkStatusText()).toBe('1 route over budget, 2 significant regressions');
+    expect(checkStatusText()).toBe('1 budget over its limit, 2 significant regressions');
   });
 });
 
@@ -109,5 +117,35 @@ describe('the override card', () => {
       past: '340 KB',
       by: 'm. carbonne',
     });
+  });
+});
+
+describe('the artifact the check posts', () => {
+  const output = checkRunOutput();
+
+  it('reports the same verdict as the screen, from the same summary', () => {
+    expect(output.conclusion).toBe('failure');
+    expect(output.title).toBe(checkStatusText());
+  });
+
+  it('carries the same figures as the rendered rows', () => {
+    const journey = checkRows().find((row) => row.scenarioId === 'demande-acte');
+    expect(output.text).toContain(`1${NARROW_NBSP}442 KB`);
+    expect(journey).toMatchObject({ headKb: 1_442, verdict: 'fail' });
+  });
+
+  it('carries the attribution sentence the comparison screen shows', () => {
+    expect(output.text).toContain('date-fns');
+  });
+
+  it('links the ledger entry the footer of every document links to', () => {
+    expect(output.text).toContain(budgetCanon.provenance.verificationUrl);
+  });
+
+  it('annotates the line of balise.yml that decided', () => {
+    const line = budgetCanon.config.rules.find(
+      (rule) => rule.scope.kind === 'journey' && rule.metricId === 'transferred_bytes',
+    )?.fail?.line;
+    expect(output.annotations[0]).toMatchObject({ path: 'balise.yml', level: 'failure', startLine: line });
   });
 });
