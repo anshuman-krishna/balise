@@ -174,7 +174,7 @@ function side(build: Build, extras: readonly Named[], requests: number, transfer
   };
 }
 
-const BASELINE_SIDE = side(
+export const BASELINE_SIDE = side(
   BASELINE_BUILD,
   [
     { url: BASELINE_BUNDLE, transferredBytes: 96_000, decodedBytes: 286_000 },
@@ -184,7 +184,7 @@ const BASELINE_SIDE = side(
   BASELINE_TRANSFERRED,
 );
 
-const CANDIDATE_SIDE = side(
+export const CANDIDATE_SIDE = side(
   CANDIDATE_BUILD,
   [
     { url: CANDIDATE_BUNDLE, transferredBytes: 157_000, decodedBytes: 470_000 },

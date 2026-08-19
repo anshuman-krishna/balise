@@ -26,12 +26,15 @@ export type YamlResult =
   | { status: 'invalid'; issues: YamlIssue[] };
 
 class YamlRefusal extends Error {
-  constructor(
-    readonly line: number,
-    readonly path: string,
-    message: string,
-  ) {
+  readonly line: number;
+  readonly path: string;
+
+  // fields are assigned rather than declared as parameter properties: node
+  // strips types without transforming, and this file is read that way.
+  constructor(line: number, path: string, message: string) {
     super(message);
+    this.line = line;
+    this.path = path;
   }
 }
 
@@ -296,8 +299,11 @@ function readFlowSequence(cursor: FlowCursor): YamlValue {
 class BlockReader {
   private index = 0;
   readonly lines = new Map<string, number>();
+  private readonly source: PhysicalLine[];
 
-  constructor(private readonly source: PhysicalLine[]) {}
+  constructor(source: PhysicalLine[]) {
+    this.source = source;
+  }
 
   read(): YamlValue {
     if (this.source.length === 0) return null;

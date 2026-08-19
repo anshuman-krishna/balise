@@ -1,22 +1,35 @@
 import { formatInt, formatSigned, ToleranceBand } from '@balise/ui';
 import { Link } from 'react-router';
 import { fill, t } from '../i18n';
-import { canon, prCheckFixture as pr, type PrCheckRow, type PrVerdict } from '../fixtures/canon';
+import { canon, prCheckFixture as pr } from '../fixtures/canon';
+import { attributionCanon } from '../fixtures/attribution-canon';
+import { attributionCoverage, attributionLead, formatByteDelta } from '../lib/attribution-view';
+import { checkFailed, checkRows, checkStatusText, type CheckRow, type CheckVerdict } from '../lib/budget-view';
 import { Wordmark } from '../components/Wordmark';
 
 const GRID = 'minmax(190px,1.5fr) 82px 82px 82px 132px 76px';
 
-const VERDICT_LABEL: Record<PrVerdict, () => string> = {
+const VERDICT_LABEL: Record<CheckVerdict, () => string> = {
   fail: () => t.verdicts.fail,
   warn: () => t.verdicts.warn,
   noSig: () => t.verdicts.noSig,
+  pass: () => t.verdicts.pass,
 };
 
-const VERDICT_COLOR: Record<PrVerdict, string> = {
+const VERDICT_COLOR: Record<CheckVerdict, string> = {
   fail: 'var(--breach)',
   warn: 'var(--caution)',
   noSig: 'var(--text-secondary)',
+  pass: 'var(--conforme)',
 };
+
+// the budget verdicts, the attribution sentence and the annotation cost are all
+// computed: see budget-canon.ts and attribution-canon.ts, both generated.
+const rows = checkRows();
+const failed = checkFailed();
+const statusText = checkStatusText();
+const lead = attributionLead();
+const introduced = attributionCanon.packages.find((entry) => entry.delta > 0) ?? null;
 
 function Parts({ parts }: { parts: ReadonlyArray<{ text: string; mono?: boolean; strong?: boolean }> }) {
   return (
@@ -36,7 +49,7 @@ function Parts({ parts }: { parts: ReadonlyArray<{ text: string; mono?: boolean;
   );
 }
 
-function MeasurementRow({ row }: { row: PrCheckRow }) {
+function MeasurementRow({ row }: { row: CheckRow }) {
   // the delta band shows the delta against the noise field, centred on zero
   const spread = Math.max(row.deltaKb + row.madKb, row.floorKb * 2);
   return (
@@ -52,7 +65,7 @@ function MeasurementRow({ row }: { row: PrCheckRow }) {
       }}
     >
       <span className="mono" style={{ fontSize: 10.5, color: row.verdict === 'fail' ? 'var(--breach)' : 'var(--ink)' }}>
-        {row.route}
+        {row.label}
       </span>
       <span className="mono" style={{ fontSize: 10.5, textAlign: 'right' }}>{formatInt(row.baseKb)}</span>
       <span
@@ -80,7 +93,7 @@ function MeasurementRow({ row }: { row: PrCheckRow }) {
         referenceModel={canon.referenceModel}
         confidence="high"
         state={row.verdict === 'fail' ? 'breach' : row.verdict === 'warn' ? 'caution' : 'normal'}
-        deltaClassification={row.verdict === 'noSig' ? 'no-significant-change' : 'regression'}
+        deltaClassification={row.classification}
         unitLabel={t.prCheck.headers.delta}
       />
       <span
@@ -88,6 +101,41 @@ function MeasurementRow({ row }: { row: PrCheckRow }) {
         style={{ fontWeight: 500, fontSize: 9.5, letterSpacing: '.05em', textAlign: 'right', color: VERDICT_COLOR[row.verdict] }}
       >
         {VERDICT_LABEL[row.verdict]()}
+      </span>
+    </div>
+  );
+}
+
+/** the merge block, shown only when the check actually concluded failure. */
+function BlockedBanner() {
+  return (
+    <div className="gh-banner">
+      <span
+        aria-hidden="true"
+        style={{
+          width: 14,
+          height: 14,
+          borderRadius: '50%',
+          background: 'var(--breach)',
+          color: '#fff',
+          display: 'inline-flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontSize: 9,
+          fontWeight: 700,
+          flex: 'none',
+          marginTop: 1,
+        }}
+      >
+        !
+      </span>
+      <span style={{ fontSize: 11.5, lineHeight: 1.5 }}>
+        <strong style={{ color: 'var(--breach)' }}>{t.prCheck.blockedTitle}</strong>
+        <br />
+        <span style={{ color: 'var(--text-secondary)' }}>
+          {t.prCheck.blockedBody1} <span className="mono" style={{ fontSize: 10 }}>{pr.requiredCheck}</span>{' '}
+          {t.prCheck.blockedBody2} <span className="mono" style={{ fontSize: 10 }}>{pr.into}</span>.
+        </span>
       </span>
     </div>
   );
@@ -112,38 +160,10 @@ export function PrCheck() {
             </div>
           </div>
 
-          <div className="gh-banner">
-            <span
-              aria-hidden="true"
-              style={{
-                width: 14,
-                height: 14,
-                borderRadius: '50%',
-                background: 'var(--breach)',
-                color: '#fff',
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: 9,
-                fontWeight: 700,
-                flex: 'none',
-                marginTop: 1,
-              }}
-            >
-              !
-            </span>
-            <span style={{ fontSize: 11.5, lineHeight: 1.5 }}>
-              <strong style={{ color: 'var(--breach)' }}>{t.prCheck.blockedTitle}</strong>
-              <br />
-              <span style={{ color: 'var(--text-secondary)' }}>
-                {t.prCheck.blockedBody1} <span className="mono" style={{ fontSize: 10 }}>{pr.requiredCheck}</span>{' '}
-                {t.prCheck.blockedBody2} <span className="mono" style={{ fontSize: 10 }}>{pr.into}</span>.
-              </span>
-            </span>
-          </div>
+          {failed ? <BlockedBanner /> : null}
 
           <div>
-            {pr.statuses.map((status) => (
+            {[{ name: pr.budgetCheck, state: failed ? 'fail' : 'pass', text: statusText }, ...pr.statuses].map((status) => (
               <div
                 key={status.name}
                 style={{
@@ -223,17 +243,19 @@ export function PrCheck() {
                 </span>
               ))}
             </div>
-            {pr.rows.map((row) => (
-              <MeasurementRow key={row.route} row={row} />
+            {rows.map((row) => (
+              <MeasurementRow key={row.scenarioId} row={row} />
             ))}
 
             <div style={{ padding: '12px 14px 0' }}>
               <div style={{ fontSize: 11.5, fontWeight: 600 }}>{t.prCheck.attributionHeading}</div>
               <p style={{ margin: '6px 0 0', fontSize: 11.5, lineHeight: 1.6, maxWidth: '72ch' }}>
-                <Parts parts={pr.attributionParts} />
+                <Parts
+                  parts={lead.map((part) => ({ text: part.text, mono: part.token, strong: part.measure }))}
+                />
               </p>
               <p style={{ margin: '8px 0 0', fontSize: 11.5, lineHeight: 1.6, maxWidth: '72ch', color: 'var(--text-secondary)' }}>
-                {t.prCheck.fixLabel} <Parts parts={pr.fixParts} />
+                {attributionCoverage()}
               </p>
             </div>
 
@@ -293,7 +315,7 @@ export function PrCheck() {
             }}
           >
             <span className="mono" style={{ fontWeight: 500, fontSize: 10.5, color: 'var(--breach)', flex: 'none' }}>
-              +{pr.annotation.costKb} KB
+              {introduced === null ? '' : formatByteDelta(introduced.delta)}
             </span>
             <span style={{ fontSize: 11, lineHeight: 1.55, color: 'var(--text-secondary)' }}>{pr.annotation.note}</span>
           </div>

@@ -10,10 +10,16 @@ import { fileURLToPath, URL } from 'node:url';
 registerHooks({
   resolve(specifier, context, nextResolve) {
     const relative = specifier.startsWith('./') || specifier.startsWith('../');
-    if (relative && specifier.endsWith('.js') && context.parentURL !== undefined) {
-      const asTypeScript = specifier.replace(/\.js$/, '.ts');
-      if (existsSync(fileURLToPath(new URL(asTypeScript, context.parentURL)))) {
-        return nextResolve(asTypeScript, context);
+    if (relative && context.parentURL !== undefined) {
+      // .js because nodenext writes it that way, no extension because the web
+      // app is bundled by vite and writes it that way.
+      const candidate = specifier.endsWith('.js')
+        ? specifier.replace(/\.js$/, '.ts')
+        : /\.[a-z]+$/.test(specifier)
+          ? null
+          : `${specifier}.ts`;
+      if (candidate !== null && existsSync(fileURLToPath(new URL(candidate, context.parentURL)))) {
+        return nextResolve(candidate, context);
       }
     }
     return nextResolve(specifier, context);

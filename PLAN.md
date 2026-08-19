@@ -16,29 +16,26 @@ screenshots, the fidelity source).
 
 ## Current status
 
-**Phase: the comparison screen is engine output (2026-08-19).** `packages/attribution`
-diffs two runs and names what grew, and the comparison screen now renders what it
-computes rather than a sentence typed into a fixture. The canon's regression is two
-actual builds with actual source maps: `pnpm gen:attribution-canon` runs the engine
-over them and writes the result, and a test recomputes the whole thing and holds the
-checked-in copy to it. The two resource lists sum to the transferred medians the
-comparison fixture already published, so the attribution card and the metric table
-above it describe the same two runs.
+**Phase: the check is engine output (2026-08-19).** `packages/budgets` reads
+`balise.yml`, evaluates every rule against every scenario it names, and decides what
+that does to a pull request. The Budgets screen and the pull request check now render
+what it computes. `pnpm gen:budget-canon` runs a real config over the same runs the
+attribution canon explains, and a test recomputes the whole evaluation, so the budget
+table, the check rows and the attribution card describe one set of measurements.
 
-The diff is taken at **module** level, not file level: bundle names carry a content
-hash and rotate on every build, so pairing files would mean matching on a name
-pattern, while module identity comes from the source map and survives the rotation.
-Every byte of a bundle is either credited to a source file or counted as
-unattributed, and blame is the commits touching a file between the baseline and
-candidate commits rather than whoever last edited it.
+One rule shapes the package. A budget is checked only on a scenario whose noise floor
+is established; until then every verdict is `non_evalue`, the check reports neutral,
+and no merge is blocked. Growth limits go through `classifyDelta` before anything
+else, so a change the kernel does not call a change cannot break one whatever the
+percentage says. An override lifts the merge block and never the breach: the breach is
+still counted, still shown, still bound for the execution report, and it expires. The
+override the canon runs on is the ledger entry, read from the recorded payload.
 
-The honest paths are the tested ones. A bundle with no map, an unreadable map or a
-map that does not describe the file it was given is reported by name; if a bundle is
-readable on one side and not on the other the module changes are withheld entirely,
-because emitting them would report every module of that bundle as removed. A
-dependency's bytes are never blamed on whoever touched the lockfile. Reconciliation
-compares against decoded bytes, never transferred ones, and the card states in words
-what the modules explain and what is left over. 388 tests pass across eleven packages.
+`balise.yml` is read by a parser written in the package over a documented subset of
+yaml, refusing anything outside it by name and line, and refusing an unknown key
+outright. The repository now carries its own `balise.yml` with the budgets the
+operating manual sets for our screens, held to the reader by a test and not enforced
+until the runner measures us. 508 tests pass across twelve packages.
 
 ---
 
@@ -174,7 +171,10 @@ what the modules explain and what is left over. 388 tests pass across eleven pac
 - [x] ~~Our own `balise.yml` at the repo root, held to the reader by a test~~
       (the manual's budgets for the dashboard, the scan and the observatory; not
       enforced until the runner measures this app and the floors exist)
-- [ ] Wire the Budgets screen and the PR check screen to the engine
+- [x] ~~Wire the Budgets screen and the PR check screen to the engine~~
+      (`pnpm gen:budget-canon` evaluates a real balise.yml against the runs the
+      other canons publish and writes the result; a test recomputes it. The yaml
+      view renders the file the engine actually read)
 - [ ] The GitHub check itself: Octokit, check run, PR comment, annotations. Needs
       the api and a GitHub App, so it waits on V2
 - [ ] The PR comment SVG through `packages/ui` in a headless screenshot
@@ -607,3 +607,40 @@ Carried from operating manual section 31 and the design handoff. Do not build ah
   written down and a test holds the file to the reader. They are not enforced: no run
   has been taken against this app, so no scenario has a floor, and by the rule above a
   budget without a floor decides nothing. They go live the day the runner measures us.
+
+- **2026-08-19 · The budgets screen shows main and the check shows the head.** The
+  mockup's table mixes them: it puts the pull request's 1 298 KB on a screen labelled
+  `branch main` next to the journey's baseline figure. Wiring the engine forced the
+  question, because an evaluation runs against one set of aggregates or another. The
+  branch view carries no baseline, so the growth rule comes back `non_evalue` there,
+  which is also what the mockup's dash in that row was saying.
+- **2026-08-19 · The canon's pull request verdicts are the reverse of the mockup's
+  rows, and agree with the mockup's own summary line.** It labels the route `fail` and
+  the journey `warn` while its status line reads "1 route over budget, 1 real
+  regression". Against the file it publishes, the journey at 1 442 KB is the only
+  thing over a limit (1 400 KB) and the route at 1 298 KB is a warning sitting 2 KB
+  under its own. The status line is computed now and says two significant regressions,
+  because the journey walks through the same page.
+- **2026-08-19 · The canon gained `/actualites`, so the recorded override has
+  something to override.** 1 240 KB against a 900 KB budget is 340 KB over, which is
+  the video hero the override quotes. Its third-party share is where the service-wide
+  38 percent in the mockup comes from.
+- **2026-08-19 · An override on one metric does not cover another.** The video pushed
+  both the transferred bytes and the third-party share past their limits. The recorded
+  override lifts the block on the one it was asked for; the share breach still blocks
+  the merge and still shows. A visible escape hatch stays honest only while it is
+  narrow.
+- **2026-08-19 · The override the engine honours is the ledger entry.** Reason,
+  author, date and pull request are read from the recorded payload rather than typed
+  into a fixture, and the card links to `/v/<hash>`. A test fails if the two ever
+  disagree.
+- **2026-08-19 · The yaml view renders the file the engine read.** The highlighter is
+  presentational, never parses, and leaves a line it does not understand as plain
+  text; a test asserts it loses no character of the file. The threshold column shows
+  the limit in the unit of the value beside it, with the customer's own text on the
+  title attribute, so `1300KB` and `1 298 KB` do not sit next to each other pretending
+  to be comparable.
+- **2026-08-19 · The check comment carries the same attribution sentence as the
+  comparison screen.** Both call `attributionLead`. The mockup's "suggested fix" line
+  is replaced by the coverage statement for the reason already recorded: a remediation
+  estimate is not measurable from a source map.

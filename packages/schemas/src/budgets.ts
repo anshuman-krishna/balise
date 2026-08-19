@@ -150,6 +150,8 @@ export const BudgetOverride = z.object({
   by: z.string().min(1),
   recordedAt: z.string().datetime({ offset: true }),
   expiresAt: z.string().datetime({ offset: true }).optional(),
+  /** where it was asked for: a pull request or an issue reference. */
+  requestedIn: z.string().optional(),
   /** the ledger entry that carries it. */
   ledgerRef: z.string().optional(),
 });
