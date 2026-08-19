@@ -3,35 +3,130 @@
 Evidence infrastructure for the environmental criterion in French public procurement,
 applied to digital services.
 
-Balise continuously measures a web service (bytes, requests, DOM, CPU, third parties),
-does it reproducibly enough to survive a hostile audit, and converts those measurements
-into the documents that decide public contracts:
+Balise measures a web service continuously (bytes, requests, DOM, CPU, third parties),
+does it reproducibly enough to survive a hostile audit, and turns those measurements into
+the documents that decide public contracts:
 
 1. The tender annex (annexe environnementale du mémoire technique) that wins the contract.
 2. The execution report (rapport de suivi de la clause d'exécution) that keeps it.
 3. The ecodesign declaration (déclaration d'écoconception RGESN) that the customer
    publishes on their own site.
 
-Everything else in this repository exists to make those three documents credible.
+Everything else in this repository exists to make those three documents credible. The
+pull request check, the dashboard, the attribution engine, the ledger: all of it is
+machinery underneath the documents.
 
 ## Why now
 
 From 21 August 2026, article 35 of the loi Climat et Résilience requires every French
 public buyer to include at least one environmental criterion in the scoring of offers,
-and at least one environmental clause in the execution conditions of the contract. The
-law names no standard form of proof. Balise is built to be that proof: reproducible,
-multi-model, uncertainty-explicit, and chained to tamper-evident evidence.
+and at least one environmental clause in the execution conditions of the contract.
+
+The law names no standard form of proof. Buyers have to score something with no accepted
+yardstick, and suppliers have to prove something with no accepted artifact. Balise is
+built to be that artifact: reproducible, multi-model, explicit about uncertainty, and
+chained to evidence you can check without asking us.
+
+## What it is not
+
+Not a carbon calculator. Not a CSR reporting tool. Not an organisation-wide IT footprint
+platform. There is no employee carbon module, no CSRD export, no AI-generated remediation
+patch. Those are all defensible products and none of them is this one.
+
+We are also not the most accurate measurement on the market. Measuring on real hardware
+beats a headless browser and always will. We are the most **defensible** measurement:
+reproducible, multi-model, uncertainty-explicit, and chained to tamper-evident evidence.
+Every engineering decision in here protects that position.
 
 ## Principles
 
+These are enforced in code and tested, not aspirational.
+
 - **Uncertainty is drawn, never written.** Every figure ships with its spread across
-  estimation models and its run-to-run noise floor. There is no bare-number mode.
+  estimation models and its run-to-run noise floor. There is no bare-number mode, in the
+  app, in a PDF, in a PR comment, in a badge or in a CSV.
 - **A delta below the noise floor is not a change.** It is reported as no significant
-  change, even when the sign looks favourable.
-- **Median and MAD, never mean.** Robust statistics only; five runs per scenario minimum.
-- **Models disagree; that is the point.** They are never averaged into a headline number.
-- **Honest degradation.** Missing source maps, insufficient history, unstable runners:
-  each is stated plainly, never guessed around.
+  change, even when the sign looks favourable. One function decides this, and everything
+  else calls it.
+- **Median and MAD, never mean.** Page load distributions have long right tails. Five runs
+  per scenario minimum, and cold and warm passes are never averaged together.
+- **Models disagree, and that is the point.** They are never averaged into a headline
+  number, and no outlier is quietly dropped.
+- **Honest degradation.** A missing source map, thin history, an unstable runner: each is
+  stated plainly and named, never guessed around. Attribution that cannot resolve says so
+  rather than picking the largest new import.
+- **The register is measurement, not campaign.** No leaves, no globes, no gradients from
+  teal to lime. Green appears as a pass state and never as a brand colour.
+
+## How it fits together
+
+**Measure.** `apps/runner` drives a pinned Chromium through named throttle profiles, with
+a fresh browser context per run so a cold pass stays cold. Every run records a complete
+environment fingerprint, and two runs with different fingerprints are not compared without
+a flag that goes on the record.
+
+**Reduce.** `packages/measure-core` is pure functions over raw captures: median and MAD,
+the per-metric noise floor from rolling history, confidence grading, and `classifyDelta`,
+which is the mechanical form of the rule that nothing fails on noise. It has no IO and the
+heaviest test suite in the repository.
+
+**Estimate.** `packages/carbon-models` runs every configured model on every run. Each one
+declares its assumptions as data, and those assumptions render wherever its output
+appears. What you get back is a band across models with your reference model marked, never
+a single figure.
+
+**Explain.** `packages/attribution` diffs the resource graph, reads source maps, credits
+decoded bytes to modules, and names the commits that touched a first-party file between
+two runs. It refuses in four places rather than guess: no map, an unreadable map, a
+dependency (whose growth is a manifest change and a different question), and a path that
+leaves the repository.
+
+**Enforce.** `packages/budgets` reads `balise.yml`, evaluates each rule through
+`classifyDelta` first, and builds the check run: the line beside the check name, the
+markdown body, and the annotations. A budget on a scenario with no established noise floor
+is not active and says so. An override lifts the merge block, never the finding, and lands
+in the ledger.
+
+**Assess.** `packages/criteria-engine` evaluates a rule pack without knowing anything about
+which referential it is. Every criterion is Automated, Assisted or Declarative, and the
+tier is enforced in code: an assisted answer is a proposal that counts for nothing until a
+person confirms it, a declarative criterion is never touched by a machine, and a human
+attestation always overrules measurement.
+
+**Record.** `packages/ledger` is an append-only, per-tenant hash chain with Merkle
+anchoring. There is no update, no delete and no repair utility. If the chain is broken,
+that fact is the finding and it gets surfaced.
+
+## The tolerance band
+
+One component carries the product's whole argument, so it lives in `packages/ui` and gets
+the design boldness that everything around it does without.
+
+`ToleranceBand` draws a measured value with the band of disagreement across estimation
+models, overlaid with a lighter region marking the measurement noise floor. A regression
+draws as a regression only once it clears the noise region, which makes the rule visible
+instead of asking anyone to trust it.
+
+It renders identically in the browser, as a standalone SVG for the pull request comment
+and the embeddable badge, and in the document pipeline, because all three go through the
+same component rather than three drawings of it.
+
+## Vocabulary
+
+The product is French-market and the codebase is English. Domain nouns with no good
+English equivalent stay French in the interface and get an English identifier in code.
+
+| Term | What it means |
+| --- | --- |
+| RGESN | Référentiel général d'écoconception de services numériques. 78 criteria in 9 families, published 2024 by Arcep and Arcom with ADEME, DINUM, CNIL and INRIA. Our primary rule pack. |
+| Déclaration d'écoconception | The page the service owner publishes stating conformity criterion by criterion, modelled on the RGAA accessibility declaration. |
+| Mémoire technique | The technical response a bidder submits. The tender annex attaches to it. |
+| Critère d'attribution | Award criterion. Used to score and rank offers. |
+| Clause d'exécution | Execution clause. A contractual obligation carried for the life of the contract, with reporting the buyer can demand. |
+| Acheteur | The public buyer, who writes the tender and scores the offers. |
+| Parcours utilisateur | User journey. RGESN audits are scoped to journeys as well as pages, so journeys are first class here, not a special case. |
+| Noise floor | Our term. The measured dispersion below which a delta is not a change. |
+| Tolerance band | Our term. The spread across models plus measurement noise, drawn rather than described. |
 
 ## Repository layout
 
@@ -47,7 +142,7 @@ packages/
   criteria-engine/      Referential-agnostic rule evaluation, tiers and blocking findings
   rule-packs/           Versioned referentials. RGESN 2024 v2, statements verbatim
   attribution/          Bundle diff, source maps, blame, and honest unavailability
-  budgets/              balise.yml, budget evaluation, and what it does to a check
+  budgets/              balise.yml, budget evaluation, and what the check posts
   ledger/               Append-only hash chain, Merkle anchoring, verification
   i18n/                 Every user-facing string, fr + en
   ui/                   Design tokens and shared components, including ToleranceBand
@@ -56,36 +151,73 @@ docs/
   METHODOLOGY.md        The public measurement contract, versioned
 ```
 
-`measure-core`, `carbon-models`, `criteria-engine`, `rule-packs` and `schemas` are Apache-2.0 and intended for standalone
-publication: audit evidence cannot come from a black box. The platform around them
-(history, documents, multi-tenancy, workflow) is the proprietary part.
+`schemas`, `measure-core`, `carbon-models`, `criteria-engine` and `rule-packs` are
+Apache-2.0 and meant for standalone publication. Nobody should trust a black box that
+claims to produce audit evidence, so the parts that produce it are open and their
+dependency surface is kept deliberately small: a dependency is one more thing a sceptical
+auditor gets to question. The platform around them (history, documents, multi-tenancy,
+workflow) is the proprietary part, and that is the right way round.
 
 ## Getting started
 
-Requirements: Node 22+ and pnpm.
+Requirements: Node 22 or newer, and pnpm.
 
 ```bash
 pnpm install
-pnpm dev          # run the web app
-pnpm test         # all test suites
-pnpm test:repro   # the reproducibility suite, slow, needs a pinned browser
+pnpm dev              # run the web app
+pnpm test             # every suite
 pnpm typecheck
 pnpm lint
 pnpm build
 ```
 
+Measurement and evidence:
+
+```bash
+pnpm test:repro       # the reproducibility suite, slow, needs the pinned browser
+pnpm runner:local     # measure a url locally with the pinned profile
+```
+
+The generated fixtures the application screens read are rebuilt from their engines, never
+edited by hand. Each has a test that recomputes it and fails if the checked-in copy and the
+generator ever disagree.
+
+```bash
+pnpm gen:attribution-canon
+pnpm gen:budget-canon
+pnpm gen:ledger-canon
+pnpm gen:criteria-canon
+```
+
 ## Status
 
-Early build. The measurement kernel, the carbon models with golden fixtures pinned to
-published reference implementations, and the first application screens are in place; the
-measurement runner, API, ledger and document generation are next. `PLAN.md` holds the
-living roadmap, the to-do lists and the decisions log.
+Early build, and honest about which parts are real.
+
+Real and tested: the measurement kernel, the carbon models with golden fixtures pinned to
+published reference implementations, the RGESN 2024 v2 pack with all 78 statements
+verbatim from the official evaluation spreadsheet, the criteria engine, the attribution
+package, the budget and check engine, the ledger, and the application screens, which read
+generated fixtures rather than typed numbers.
+
+Not yet real: the API and its database, document rendering, multi-tenancy and billing. The
+runner exists but has never executed its reproducibility suite in anger, and says so rather
+than implying otherwise.
+
+Waiting on a decision rather than on code: `docs/METHODOLOGY.md` is a v1.0 draft and not in
+force, the RGESN tier split ships as a proposal that nothing is answered automatically
+from, and the evaluation thresholds are ours to set because the referential sets almost
+none. Those gates are stated in the interface, not buried in a to-do list.
+
+`PLAN.md` holds the living roadmap, the to-do lists and the decisions log.
 
 ## Carbon model provenance
 
-Model constants and formulas are taken from their published sources: EcoIndex quantile
+Model constants and formulas come from their published sources: the EcoIndex quantile
 tables and formula from the published CNUMR method (ecoindex.fr), Sustainable Web Design
-v4 constants from sustainablewebdesign.org, and the 1byte model constants as carried by
-the Green Web Foundation's co2.js. Golden fixture tests fail on any drift from those
-references. Each model declares its assumptions as data, rendered wherever its output
-appears.
+v4 constants from sustainablewebdesign.org, and the 1byte model constants as carried by the
+Green Web Foundation's co2.js. Golden fixture tests fail on any drift from those
+references.
+
+Each model declares its assumptions as data rather than as documentation, and those
+assumptions are rendered on every surface where the model's output appears. If an
+assumption is not in that array, we are hiding it.
