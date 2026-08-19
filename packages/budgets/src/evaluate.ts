@@ -70,7 +70,7 @@ function skip(base: Skeleton, reason: BudgetSkipReason): BudgetAssessment {
 }
 
 /** the threshold a headroom is measured against: the failing one if there is one. */
-function decidingThreshold(rule: BudgetRule): Threshold | null {
+export function decidingThreshold(rule: BudgetRule): Threshold | null {
   return rule.fail ?? rule.warn;
 }
 

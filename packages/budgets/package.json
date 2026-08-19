@@ -12,6 +12,7 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@balise/i18n": "workspace:*",
     "@balise/measure-core": "workspace:*",
     "@balise/schemas": "workspace:*"
   },

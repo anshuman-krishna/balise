@@ -70,7 +70,10 @@ export function ToleranceBand(props: ToleranceBandProps) {
     budget,
     budgetLabel,
     unitLabel,
-    formatTick = (value) => String(value),
+    // axis ticks are derived positions, not measurements: the default drops
+    // binary floating point noise so an evenly spaced axis does not read
+    // 2.4000000000000004. a measured value is never passed through here.
+    formatTick = (value) => String(Number(value.toPrecision(12))),
   } = props;
 
   const patternId = useId();

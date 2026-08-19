@@ -24,4 +24,11 @@ export {
   type BandLayout,
   type LinearScale,
 } from './geometry.js';
-export { formatInt, formatNumber, formatSigned, NARROW_NBSP } from './format.js';
+export {
+  formatInt,
+  formatMeasured,
+  formatMeasuredSigned,
+  formatNumber,
+  formatSigned,
+  NARROW_NBSP,
+} from './format.js';

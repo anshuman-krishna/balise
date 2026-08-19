@@ -92,3 +92,47 @@ aggregate could hold while a single route breached it.
 
 Byte units are decimal by default, since a kilobyte on the wire is a thousand
 bytes. `KiB` and `MiB` are read as binary when they are asked for by name.
+
+## What the check posts
+
+`buildCheckRun` turns the assessments into the check run itself: the one line
+shown beside the check name, the markdown body, and the annotations.
+
+```ts
+const output = buildCheckRun({
+  config,
+  scenarios,
+  assessments,
+  summary,
+  strings: catalogs.fr.checkRun,
+  metricLabels: catalogs.fr.metrics,
+  provenance: { methodologyVersion, models, runId, ledgerRef, verificationUrl, fingerprintMatched },
+  configPath: 'balise.yml',
+  attribution: sentence,   // advisory, and absent rather than guessed
+});
+```
+
+Nothing in it is decided here. Every status comes from the assessments, every
+per-scenario verdict comes from `classifyDelta`, and every string comes from the
+catalog the interface renders, so a mock of the comment and the comment cannot
+say different things.
+
+Three things it always does:
+
+- It states the rule that nothing fails on noise, on every comment, whether or
+  not anything was found.
+- It writes each measured value beside its dispersion, never alone.
+- It carries the provenance the report is checkable from: the methodology
+  version, the models that ran, the run, and the ledger entry with its
+  verification url.
+
+Annotations land on the budget file, at the line of the limit that decided. The
+yaml reader records a line per threshold for exactly this. One annotation per
+rule, not per rule and scenario, because an annotation marks a line and the same
+line noted four times is noise. A source file is not annotated at all: attribution
+resolves bytes to a file and not yet to a line, and pointing at line 1 would be an
+invention.
+
+An overridden breach annotates as a warning and still reads as a breach. A budget
+with no established noise floor annotates as a notice, because a developer has to
+know which budget is not protecting them yet.

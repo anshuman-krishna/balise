@@ -200,3 +200,45 @@ export const CheckSummary = z.object({
   overridden: z.array(BudgetAssessment),
 });
 export type CheckSummary = z.infer<typeof CheckSummary>;
+
+// ---------------------------------------------------------------------------
+// what the check posts
+// ---------------------------------------------------------------------------
+
+/**
+ * failure is the only level that holds a merge. a breach a recorded override
+ * covers is a warning here and stays a breach everywhere else: what the
+ * override lifts is the block, never the finding.
+ */
+export const CheckAnnotationLevel = z.enum(['failure', 'warning', 'notice']);
+export type CheckAnnotationLevel = z.infer<typeof CheckAnnotationLevel>;
+
+/**
+ * a note attached to a line of a file in the diff view. every annotation names
+ * a line we actually read: the budget file records a line per threshold, so an
+ * annotation points at the rule that decided, not at a guess. nothing is
+ * annotated on a source file until attribution can place a line in it.
+ */
+export const CheckAnnotation = z.object({
+  path: z.string().min(1),
+  startLine: z.number().int().positive(),
+  endLine: z.number().int().positive(),
+  level: CheckAnnotationLevel,
+  title: z.string().min(1),
+  message: z.string().min(1),
+});
+export type CheckAnnotation = z.infer<typeof CheckAnnotation>;
+
+export const CheckRunOutput = z.object({
+  conclusion: CheckConclusion,
+  /** the one line shown beside the check name. */
+  title: z.string().min(1),
+  /** markdown, above the fold: the verdict and what caused it. */
+  summary: z.string().min(1),
+  /** markdown: the measurements, the budgets, the attribution, the provenance. */
+  text: z.string().min(1),
+  annotations: z.array(CheckAnnotation),
+  /** annotations dropped to stay under the api limit, reported not hidden. */
+  annotationsOmitted: z.number().int().nonnegative(),
+});
+export type CheckRunOutput = z.infer<typeof CheckRunOutput>;
