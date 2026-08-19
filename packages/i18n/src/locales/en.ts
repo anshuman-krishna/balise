@@ -371,6 +371,18 @@ export const en = {
       automatedDesc: 'Machine-verifiable. Re-evaluated on every run.',
       assistedDesc: 'Evidence gathered, answer proposed, human confirms.',
       declarativeDesc: 'Human attestation, artifact and named person required.',
+      proposed: 'PROPOSED',
+      answeredBy: '{answered} of {total} answered',
+    },
+    // the pack ships its tier split as a proposal. saying so is the whole
+    // point of the split: an answer a person wrote is not an automated one.
+    signOff: {
+      title: 'Tier split not signed off',
+      body:
+        'The {pack} pack proposes {automated} automated, {assisted} assisted and {declarative} declarative. Until that is reviewed no criterion is answered from measurement, and {withEvaluation} of {criteria} carries an evaluation rule this engine can run.',
+      sourceMeasured: '{count} answered from measurement',
+      sourceAttested: '{count} attested by a named person',
+      sourceUnevaluated: '{count} not looked at',
     },
     filter: {
       tier: 'TIER',
@@ -399,9 +411,17 @@ export const en = {
       nonApplicable: 'Non applicable',
     },
     footnote:
-      'Showing a representative slice. Every non-conforme row requires justification text before the declaration can publish.',
+      'Every criterion in the pack, in its order. Anything not conforme requires justification text before the declaration can publish.',
+    attestedOn: '{who} · {date}',
+    notLookedAt: 'not looked at',
   },
   declaration: {
+    blockingReasons: {
+      'missing-justification': 'Status with no justification text',
+      'unassessed-criterion': 'Criterion not assessed',
+      'unconfirmed-proposal': 'Proposed answer awaiting confirmation',
+      'missing-evidence': 'Required evidence not attached',
+    },
     subtitle: 'Draft {draft} · last published {published} on {publishedDate} · next review due {reviewDate}',
     diffVs: 'Diff vs {version}',
     previewPage: 'Preview page',
@@ -539,6 +559,8 @@ export const en = {
   // the three documents are french legal artifacts; their content renders in
   // french in every locale, like the declaration preview.
   docDeclaration: {
+    // the document is french in both locales: it is what the customer publishes.
+    justificationMissing: "Aucun texte de justification. La déclaration ne peut pas être publiée en l'état.",
     intro1: "Cette déclaration s'applique au",
     intro2:
       "({domain}). Elle est établie au regard du référentiel général d'écoconception de services numériques, version 2 (2024), et sera revue au plus tard le {reviewDate}.",

@@ -1,9 +1,22 @@
 import { fill, t } from '../i18n';
 import { canon, documentsFixture } from '../fixtures/canon';
+import { criteriaCanon } from '../fixtures/criteria-canon';
+import { conformityPct, nonConformeRows } from '../lib/criteria-view';
 import { DocumentRegister } from '../components/DocumentRegister';
 import { VerificationUrl } from '../components/VerificationUrl';
 
 const doc = documentsFixture.declaration;
+// the published document counts the same assessments the editor does. a
+// declaration that named a criterion the referential does not have would not
+// survive one reading by an auditor.
+const stats = {
+  taux: conformityPct(),
+  conformes: criteriaCanon.completion.conforme,
+  applicables: criteriaCanon.completion.applicable,
+  partiels: criteriaCanon.byStatus.partiellement_conforme,
+  nonConformes: criteriaCanon.byStatus.non_conforme,
+};
+const nonConformes = nonConformeRows();
 
 export function DocDeclaration() {
   return (
@@ -44,15 +57,15 @@ export function DocDeclaration() {
         >
           <div style={{ padding: '18px 18px 18px 0', borderRight: '1px solid var(--border-card)' }}>
             <div className="mono" style={{ fontSize: 8.5, color: 'var(--text-secondary)' }}>{t.docDeclaration.stats.taux}</div>
-            <div className="mono" style={{ marginTop: 6, fontSize: 30, letterSpacing: '-.03em' }}>{doc.stats.taux}%</div>
+            <div className="mono" style={{ marginTop: 6, fontSize: 30, letterSpacing: '-.03em' }}>{stats.taux}%</div>
             <div className="mono" style={{ marginTop: 3, fontSize: 9, color: 'var(--text-secondary)' }}>
-              {fill(t.docDeclaration.stats.tauxSub, { conformes: doc.stats.conformes, applicables: doc.stats.applicables })}
+              {fill(t.docDeclaration.stats.tauxSub, { conformes: stats.conformes, applicables: stats.applicables })}
             </div>
           </div>
           <div style={{ padding: 18, borderRight: '1px solid var(--border-card)' }}>
             <div className="mono" style={{ fontSize: 8.5, color: 'var(--text-secondary)' }}>{t.docDeclaration.stats.partiels}</div>
             <div className="mono" style={{ marginTop: 6, fontSize: 30, letterSpacing: '-.03em', color: 'var(--caution)' }}>
-              {doc.stats.partiels}
+              {stats.partiels}
             </div>
             <div className="mono" style={{ marginTop: 3, fontSize: 9, color: 'var(--text-secondary)' }}>
               {t.docDeclaration.stats.partielsSub}
@@ -61,7 +74,7 @@ export function DocDeclaration() {
           <div style={{ padding: '18px 0 18px 18px' }}>
             <div className="mono" style={{ fontSize: 8.5, color: 'var(--text-secondary)' }}>{t.docDeclaration.stats.nonConformes}</div>
             <div className="mono" style={{ marginTop: 6, fontSize: 30, letterSpacing: '-.03em', color: 'var(--breach)' }}>
-              {doc.stats.nonConformes}
+              {stats.nonConformes}
             </div>
             <div className="mono" style={{ marginTop: 3, fontSize: 9, color: 'var(--text-secondary)' }}>
               {t.docDeclaration.stats.nonConformesSub}
@@ -91,7 +104,7 @@ export function DocDeclaration() {
             <span>{t.docDeclaration.headers.criterion}</span>
             <span>{t.docDeclaration.headers.justification}</span>
           </div>
-          {doc.nonConformes.map((row, index) => (
+          {nonConformes.map((row, index) => (
             <div
               key={row.id}
               style={{
@@ -99,14 +112,16 @@ export function DocDeclaration() {
                 gridTemplateColumns: '50px 1.9fr 1.4fr',
                 gap: '0 16px',
                 padding: '10px 0',
-                borderBottom: index < doc.nonConformes.length - 1 ? '1px solid rgba(21,24,27,.12)' : undefined,
+                borderBottom: index < nonConformes.length - 1 ? '1px solid rgba(21,24,27,.12)' : undefined,
                 fontSize: 11,
                 lineHeight: 1.6,
               }}
             >
               <span className="mono" style={{ fontSize: 10 }}>{row.id}</span>
-              <span>{row.criterion}</span>
-              <span style={{ color: 'var(--text-secondary)' }}>{row.justification}</span>
+              <span>{row.statementFr}</span>
+              <span style={{ color: row.justification === null ? 'var(--breach)' : 'var(--text-secondary)' }}>
+                {row.justification ?? t.docDeclaration.justificationMissing}
+              </span>
             </div>
           ))}
         </div>

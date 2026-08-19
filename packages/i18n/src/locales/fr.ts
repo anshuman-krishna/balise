@@ -375,6 +375,19 @@ export const fr: Catalog = {
       automatedDesc: 'Vérifiable par la machine. Réévalué à chaque relevé.',
       assistedDesc: 'Preuves collectées, réponse proposée, confirmation humaine.',
       declarativeDesc: 'Attestation humaine, artefact et responsable désigné requis.',
+      proposed: 'PROPOSÉ',
+      answeredBy: '{answered} sur {total} répondus',
+    },
+    // le référentiel propose une répartition par niveau, il ne la valide pas.
+    // c'est tout l'objet de la répartition : une réponse écrite par une
+    // personne n'est pas une réponse automatique.
+    signOff: {
+      title: 'Répartition par niveau non validée',
+      body:
+        'Le référentiel {pack} propose {automated} automatisés, {assisted} assistés et {declarative} déclaratifs. Tant que cette répartition n\'est pas validée, aucun critère n\'est répondu par la mesure, et {withEvaluation} critère sur {criteria} porte une règle d\'évaluation que ce moteur sait exécuter.',
+      sourceMeasured: '{count} répondus par la mesure',
+      sourceAttested: '{count} attestés par une personne nommée',
+      sourceUnevaluated: '{count} non examinés',
     },
     filter: {
       tier: 'TIER',
@@ -401,9 +414,17 @@ export const fr: Catalog = {
       nonApplicable: 'Non applicable',
     },
     footnote:
-      'Extrait représentatif. Chaque ligne non conforme exige un texte de justification avant publication de la déclaration.',
+      "Tous les critères du référentiel, dans son ordre. Tout ce qui n'est pas conforme exige un texte de justification avant publication de la déclaration.",
+    attestedOn: '{who} · {date}',
+    notLookedAt: 'non examiné',
   },
   declaration: {
+    blockingReasons: {
+      'missing-justification': 'Statut sans texte de justification',
+      'unassessed-criterion': 'Critère non évalué',
+      'unconfirmed-proposal': 'Réponse proposée en attente de confirmation',
+      'missing-evidence': 'Preuve requise non jointe',
+    },
     subtitle: 'Brouillon {draft} · dernière publication {published} le {publishedDate} · prochaine revue le {reviewDate}',
     diffVs: 'Diff vs {version}',
     previewPage: 'Prévisualiser la page',
@@ -539,6 +560,7 @@ export const fr: Catalog = {
     draft: 'brouillon {version}',
   },
   docDeclaration: {
+    justificationMissing: "Aucun texte de justification. La déclaration ne peut pas être publiée en l'état.",
     intro1: "Cette déclaration s'applique au",
     intro2:
       "({domain}). Elle est établie au regard du référentiel général d'écoconception de services numériques, version 2 (2024), et sera revue au plus tard le {reviewDate}.",

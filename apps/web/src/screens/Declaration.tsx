@@ -1,30 +1,21 @@
 import { fill, t } from '../i18n';
-import { canon, criteriaFixture, declarationFixture as decl } from '../fixtures/canon';
+import { canon, declarationFixture as decl } from '../fixtures/canon';
+import { criteriaCanon } from '../fixtures/criteria-canon';
+import { blockingRows, conformityPct, familyBars } from '../lib/criteria-view';
 
-// the published page repeats the workspace summary; one source of numbers
-const summary = criteriaFixture.summary;
+// the published page repeats the workspace figures, and reads them where the
+// workspace does: the assessments the engine answered.
+const summary = criteriaCanon.byStatus;
+const completion = criteriaCanon.completion;
+const blocking = blockingRows();
+const families = familyBars();
+const conformity = conformityPct();
 
 // the light chrome tones of the preview frame come from the handoff and have
 // no token; they appear only on this grey panel
 const FRAME_TEXT = '#e7e8e4';
 
-function Parts({ parts }: { parts: ReadonlyArray<{ text: string; mono?: boolean }> }) {
-  return (
-    <>
-      {parts.map((part, index) =>
-        part.mono === true ? (
-          <span key={index} className="mono" style={{ fontSize: 10.5 }}>
-            {part.text}
-          </span>
-        ) : (
-          <span key={index}>{part.text}</span>
-        ),
-      )}
-    </>
-  );
-}
-
-function FamilyBar({ family }: { family: (typeof decl.preview.families)[number] }) {
+function FamilyBar({ family }: { family: (typeof families)[number] }) {
   return (
     <div style={{ display: 'grid', gridTemplateColumns: '118px 1fr 52px', gap: 11, alignItems: 'center' }}>
       <span style={{ fontSize: 10.5 }}>{family.name}</span>
@@ -89,15 +80,17 @@ export function Declaration() {
         <div className="stack">
           <div className="card">
             <span className="eyebrow" style={{ color: 'var(--breach)' }}>
-              {fill(t.declaration.blockingTitle, { count: decl.blocking.length })}
+              {fill(t.declaration.blockingTitle, { count: blocking.length })}
             </span>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 11, marginTop: 13 }}>
-              {decl.blocking.map((item, index) => (
-                <div key={index} className="left-rule breach">
+              {blocking.map((item) => (
+                <div key={item.key} className="left-rule breach">
                   <div style={{ fontSize: 11.5, lineHeight: 1.5 }}>
-                    <Parts parts={item.parts} />
+                    <span className="mono" style={{ fontSize: 10.5 }}>{item.criterionId}</span> {item.reason}
                   </div>
-                  <div style={{ marginTop: 3, fontSize: 10.5, color: 'var(--text-secondary)' }}>{item.note}</div>
+                  <div style={{ marginTop: 3, fontSize: 10.5, lineHeight: 1.5, color: 'var(--text-secondary)' }}>
+                    {item.detailFr}
+                  </div>
                 </div>
               ))}
             </div>
@@ -183,13 +176,13 @@ export function Declaration() {
             >
               <div style={{ flex: 1, padding: '13px 0' }}>
                 <div className="mono" style={{ fontSize: 9, color: 'var(--text-secondary)' }}>{t.declaration.preview.taux}</div>
-                <div className="mono" style={{ fontSize: 26, letterSpacing: '-.03em' }}>{summary.tauxPct}%</div>
+                <div className="mono" style={{ fontSize: 26, letterSpacing: '-.03em' }}>{conformity}%</div>
               </div>
               <div style={{ flex: 1, padding: '13px 0' }}>
                 <div className="mono" style={{ fontSize: 9, color: 'var(--text-secondary)' }}>{t.declaration.preview.conformes}</div>
                 <div className="mono" style={{ fontSize: 26, letterSpacing: '-.03em' }}>
-                  {summary.tauxDone}
-                  <span style={{ fontSize: 13, color: 'var(--text-secondary)' }}>/{summary.tauxTotal}</span>
+                  {completion.conforme}
+                  <span style={{ fontSize: 13, color: 'var(--text-secondary)' }}>/{completion.applicable}</span>
                 </div>
               </div>
               <div style={{ flex: 1, padding: '13px 0' }}>
@@ -197,7 +190,7 @@ export function Declaration() {
                   {t.declaration.preview.nonConformes}
                 </div>
                 <div className="mono" style={{ fontSize: 26, letterSpacing: '-.03em', color: 'var(--breach)' }}>
-                  {summary.nonConforme}
+                  {summary.non_conforme}
                 </div>
               </div>
             </div>
@@ -216,7 +209,7 @@ export function Declaration() {
               {t.declaration.preview.familyTitle}
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginTop: 11 }}>
-              {decl.preview.families.map((family) => (
+              {families.map((family) => (
                 <FamilyBar key={family.name} family={family} />
               ))}
             </div>
@@ -259,7 +252,7 @@ export function Declaration() {
                 BALISE
               </span>
               <span style={{ padding: '5px 9px', fontSize: 9.5 }}>
-                {t.declaration.preview.badgeName} <span className="mono">{summary.tauxPct}%</span> · {decl.preview.badgeDate}
+                {t.declaration.preview.badgeName} <span className="mono">{conformity}%</span> · {decl.preview.badgeDate}
               </span>
             </span>
           </div>

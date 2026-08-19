@@ -1,10 +1,16 @@
 import { ToleranceBand } from '@balise/ui';
 import { fill, t } from '../i18n';
 import { canon, documentsFixture, tenderFixture } from '../fixtures/canon';
+import { conformityPct } from '../lib/criteria-view';
 import { DocumentRegister } from '../components/DocumentRegister';
 import { VerificationUrl } from '../components/VerificationUrl';
 
 const doc = documentsFixture.annexe;
+// the conformity figure on the cover is the one the declaration prints, read
+// from the same assessments rather than typed twice.
+const coverStats = doc.coverStats.map((stat) =>
+  stat.value === '%' ? { value: `${conformityPct()}%` } : stat,
+);
 
 const STAT_LABELS = [
   () => t.docAnnexe.stats.since,
@@ -107,7 +113,7 @@ export function DocAnnexe() {
             borderBottom: '1px solid rgba(21,24,27,.2)',
           }}
         >
-          {doc.coverStats.map((stat, index) => (
+          {coverStats.map((stat, index) => (
             <div
               key={STAT_LABELS[index]!()}
               style={{

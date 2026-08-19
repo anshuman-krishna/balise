@@ -78,6 +78,9 @@ importers:
       '@balise/budgets':
         specifier: workspace:*
         version: link:../../packages/budgets
+      '@balise/criteria-engine':
+        specifier: workspace:*
+        version: link:../../packages/criteria-engine
       '@balise/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
@@ -87,6 +90,9 @@ importers:
       '@balise/measure-core':
         specifier: workspace:*
         version: link:../../packages/measure-core
+      '@balise/rule-packs':
+        specifier: workspace:*
+        version: link:../../packages/rule-packs
       '@balise/schemas':
         specifier: workspace:*
         version: link:../../packages/schemas

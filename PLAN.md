@@ -16,30 +16,31 @@ screenshots, the fidelity source).
 
 ## Current status
 
-**Phase: attribution places a line (2026-08-20).** `attributeBundle` no longer throws
-away the original positions in a source map. Every source it credits now carries the
-first and last line of its own file the bundle took a byte from, and `ModuleChange`
-carries the candidate's. That is a span and not a point: it says where the bundle takes
-a module from, never where inside it the growth happened, because line numbers from two
-builds of one file describe two files. A module the build shook down to two exports
-spans the lines that survived, which is the case worth seeing.
+**Phase: the criteria workspace answers the pack (2026-08-20).** The workspace ran
+on fourteen hand-written rows whose tier split, 31 automated, the pack it named
+contradicts at 9. It now runs on the pack itself: `pnpm gen:criteria-canon` hands
+`@balise/criteria-engine` the measured metrics and the two reviewers' attestations
+and writes back all 78 assessments, the completion by tier, the per-family rollup
+and the blocking findings. Choosing what the reviewers answered is the fixture's
+job. Every status, count, bar and finding after that is derived, and a test answers
+the pack again and holds the checked-in copy to it.
 
-`placeGrowth` is the only thing allowed to say a file may be annotated, and it refuses
-in three places: a module the map gave no position for, a dependency whose file the pull
-request does not contain, and a path that leaves the repository. `packages/budgets` takes
-what it is handed and checks none of it, so the rule lives once. What comes back is a
-notice on the source file across the lines that were measured, and nothing at all where
-nothing was measured. Notices sort last, so the fifty per request cap drops an
-explanation before it drops a finding.
+Four surfaces carried a conformity number and now carry one number: the workspace,
+the dashboard completeness card, the declaration editor and the published
+declaration. The document's non-conformity table used to list short paraphrases,
+one of them for criterion 6.9, which the referential does not have; it now prints
+the referential's own wording verbatim beside the reviewer's justification, and
+prints in breach red where a justification is missing, which is what the official
+grid requires and what stops the declaration publishing.
 
-The check screen's inline annotation card used to be a mockup: a hand-written sentence,
-a hand-picked line 14, and date-fns's +160 KB printed beside `src/lib/dates.ts`, a file
-the module diff puts at +120 B. It now renders what `buildCheckRun` produced. The diff
-hunk stays, because it is the customer's own code that github renders and we never
-fetch. The canon's two builds gained one mapping segment per original line, which is
-what a real map carries; without it every span would have been `1..1` and the first
-thing the feature rendered would have been the default it exists to refuse.
-573 tests pass across twelve packages.
+The pack's gate is now on the screen rather than in a to-do list. It ships
+`tiersSignedOff: false`, so the engine answers nothing from measurement and every
+answer is one a named person put their name to. The card that says AUTOMATED 9/9
+would read as nine automatic answers, so the source breakdown sits beside it: 0
+from measurement, 73 attested, 5 not looked at. The notice above says what signing
+off would buy, and that one criterion in seventy-eight carries an evaluation rule
+this engine can run, which is the second sign-off and the real bottleneck.
+601 tests pass across twelve packages.
 
 ---
 
@@ -144,9 +145,14 @@ thing the feature rendered would have been the default it exists to refuse.
 - [x] ~~Decide the pack authoring format~~ (typescript module generated from the official
       spreadsheet, with the yaml emitted from it as the readable copy; inverts the workflow
       in section 21 and avoids a yaml parser in an OSS package)
-- [ ] Wire the criteria workspace and the declaration editor's blocking list to the
-      engine. Waits on the pack: feeding fourteen fixture criteria through it would produce
-      totals that contradict the canon's 78.
+- [x] ~~Wire the criteria workspace and the declaration editor's blocking list to the
+      engine~~ (`pnpm gen:criteria-canon` answers all 78 criteria through
+      `@balise/criteria-engine` and writes the result; a test answers them again and holds
+      the checked-in copy to it. The workspace, the dashboard completeness card, the
+      declaration editor and the published declaration all read it, so the four places that
+      carried a conformity number now carry one number)
+- [ ] Wire the fleet's declaration column and the execution report's criteria figures.
+      Both still carry their own counts
 - [ ] Evaluation types beyond `metric_threshold`, once the pack says which are needed
 
 ## To-do: attribution (V4)
@@ -232,6 +238,27 @@ Later versions: see roadmap; detailed to-dos are appended when the version start
 
 ## Decisions log
 
+- **2026-08-20 · The criteria canon answers the pack; it does not describe an answer.**
+  The workspace ran on fourteen hand-written rows whose tier split (31 automated) the real
+  pack contradicts (9). The generator now hands the engine a measured metric set and the
+  two reviewers' attestations and writes what comes back. Choosing the inputs is the
+  fixture's job; every status, count, family bar and blocking finding is derived.
+- **2026-08-20 · Answered is reported beside where the answer came from.** With
+  `tiersSignedOff: false` the engine answers nothing from measurement, so a criterion the
+  pack proposes as automated and a person attested reads 9/9 on the tier card. That is true
+  and it is misleading alone, so the screen carries `bySource` next to it: 0 from
+  measurement, 73 attested, 5 not looked at.
+- **2026-08-20 · The sign-off gate is on the screen, not in a comment.** The workspace and
+  the dashboard state that the tier split is a proposal and that one criterion in
+  seventy-eight carries a rule the engine could run. It is the decision the product is
+  waiting on, and it belongs where it is read rather than in a to-do list.
+- **2026-08-20 · A published declaration quotes the referential, never a label we wrote.**
+  The document's non-conformity table listed short paraphrases, one of them for criterion
+  6.9, which the referential does not have. It now prints `statementFr` verbatim beside the
+  reviewer's justification, and prints in breach red where a justification is missing.
+- **2026-08-20 · A family entirely out of scope reads N/A, not 0/0.** Algorithmie is seven
+  criteria about model training and this service trains nothing, so its applicable count is
+  zero. An empty bar beside 0/0 reads as a failure.
 - **2026-08-20 · A source span is two line numbers and nothing else.** `SourceBytes.span`
   carries the first and last original line the bundle took a byte from, and no per-line
   weight. A heaviest-line figure was drafted and dropped: it would have pointed a developer

@@ -2,7 +2,13 @@ import { Link } from 'react-router';
 import { formatInt, formatNumber, formatSigned, ToleranceTrend } from '@balise/ui';
 import { fill, t } from '../i18n';
 import { canon } from '../fixtures/canon';
+import { criteriaCanon } from '../fixtures/criteria-canon';
+import { pendingDeclarative, sourceLine, tierCards } from '../lib/criteria-view';
 import { MetricTile } from '../components/MetricTile';
+
+// the completeness card reads the engine's answers, in the pack's tier order.
+const completenessRows = tierCards();
+const answeredTotal = completenessRows.reduce((total, row) => total + row.answered, 0);
 
 function TierRow({ label, done, total, color }: { label: string; done: number; total: number; color: string }) {
   const overColor = done < total && color === 'var(--conforme)' ? 'var(--measured)' : color;
@@ -231,32 +237,20 @@ export function Dashboard() {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
               <span className="eyebrow">{d.completeness.title}</span>
               <span className="mono" style={{ fontSize: 10 }}>
-                {canon.completeness.automated.done +
-                  canon.completeness.assisted.done +
-                  canon.completeness.declarative.done}
-                /78
+                {answeredTotal}/{criteriaCanon.pack.criteriaCount}
               </span>
             </div>
-            <TierRow
-              label={d.completeness.automated}
-              done={canon.completeness.automated.done}
-              total={canon.completeness.automated.total}
-              color="var(--conforme)"
-            />
-            <TierRow
-              label={d.completeness.assisted}
-              done={canon.completeness.assisted.done}
-              total={canon.completeness.assisted.total}
-              color="var(--measured)"
-            />
-            <TierRow
-              label={d.completeness.declarative}
-              done={canon.completeness.declarative.done}
-              total={canon.completeness.declarative.total}
-              color="var(--caution)"
-            />
+            {completenessRows.map((row) => (
+              <TierRow key={row.tier} label={row.label} done={row.answered} total={row.total} color={row.color} />
+            ))}
             <p style={{ margin: '12px 0 0', fontSize: 10.5, lineHeight: 1.55, color: 'var(--text-secondary)', maxWidth: '52ch' }}>
-              {fill(d.completeness.declarativeNote, { count: canon.completeness.pendingDeclarative })}
+              {fill(d.completeness.declarativeNote, { count: pendingDeclarative() })}
+            </p>
+            <p
+              className="mono"
+              style={{ margin: '8px 0 0', fontSize: 9.5, lineHeight: 1.5, color: 'var(--text-tertiary)', maxWidth: '52ch' }}
+            >
+              {sourceLine()}
             </p>
           </div>
 

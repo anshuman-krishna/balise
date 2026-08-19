@@ -13,9 +13,11 @@
   "dependencies": {
     "@balise/attribution": "workspace:*",
     "@balise/budgets": "workspace:*",
+    "@balise/criteria-engine": "workspace:*",
     "@balise/i18n": "workspace:*",
     "@balise/ledger": "workspace:*",
     "@balise/measure-core": "workspace:*",
+    "@balise/rule-packs": "workspace:*",
     "@balise/schemas": "workspace:*",
     "@balise/ui": "workspace:*",
     "@fontsource-variable/archivo": "^5.2.0",
