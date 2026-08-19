@@ -1,10 +1,24 @@
 import { formatInt } from '@balise/ui';
 import { fill, t } from '../i18n';
 import { canon, documentsFixture, type DocEventPart } from '../fixtures/canon';
+import { conformityPct } from '../lib/criteria-view';
 import { DocumentRegister } from '../components/DocumentRegister';
 import { VerificationUrl } from '../components/VerificationUrl';
 
 const doc = documentsFixture.rapport;
+
+// the rgesn engagement is reported at the rate the declaration prints, and its
+// gauge fills against the contractual target rather than against a number
+// typed beside it.
+const rows = doc.rows.map((row) =>
+  row.t3 !== null || row.targetPct === undefined
+    ? row
+    : {
+        ...row,
+        t3: `${conformityPct()}%`,
+        gauge: { ...row.gauge, fillPct: Math.min(100, (conformityPct() / row.targetPct) * 100) },
+      },
+);
 
 const GRID = '1.8fr 84px 84px 1fr 92px';
 
@@ -124,7 +138,7 @@ export function DocRapport() {
             <span>{t.docRapport.headers.marge}</span>
             <span style={{ textAlign: 'right' }}>{t.docRapport.headers.etat}</span>
           </div>
-          {doc.rows.map((row, index) => (
+          {rows.map((row, index) => (
             <div
               key={row.label}
               style={{
@@ -132,7 +146,7 @@ export function DocRapport() {
                 gridTemplateColumns: GRID,
                 gap: '0 14px',
                 padding: '11px 0',
-                borderBottom: index < doc.rows.length - 1 ? '1px solid rgba(21,24,27,.12)' : undefined,
+                borderBottom: index < rows.length - 1 ? '1px solid rgba(21,24,27,.12)' : undefined,
                 alignItems: 'center',
                 fontSize: 11,
               }}

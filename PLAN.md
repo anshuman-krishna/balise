@@ -151,8 +151,9 @@ this engine can run, which is the second sign-off and the real bottleneck.
       the checked-in copy to it. The workspace, the dashboard completeness card, the
       declaration editor and the published declaration all read it, so the four places that
       carried a conformity number now carry one number)
-- [ ] Wire the fleet's declaration column and the execution report's criteria figures.
-      Both still carry their own counts
+- [x] ~~Wire the fleet's rate and the execution report's rgesn engagement~~ (both read
+      `conformityPct()`; the report's gauge fills against the contractual target rather
+      than a number typed beside it. six surfaces, one figure)
 - [ ] Evaluation types beyond `metric_threshold`, once the pack says which are needed
 
 ## To-do: attribution (V4)

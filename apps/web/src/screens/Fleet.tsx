@@ -1,6 +1,7 @@
 import { ToleranceBand } from '@balise/ui';
 import { fill, t } from '../i18n';
 import { canon, fleetFixture as fleet, type FleetRow } from '../fixtures/canon';
+import { conformityPct } from '../lib/criteria-view';
 
 const GRID = 'minmax(190px,1.5fr) 128px 82px 100px 128px 128px minmax(150px,1fr)';
 
@@ -61,7 +62,9 @@ function ServiceRow({ row }: { row: FleetRow }) {
       >
         {row.conf === 'low' ? t.confidence.low : t.confidence.high}
       </span>
-      <span className="mono" style={{ fontSize: 11, textAlign: 'right' }}>{row.rgesnPct}%</span>
+      <span className="mono" style={{ fontSize: 11, textAlign: 'right' }}>
+        {row.rgesnPct ?? conformityPct()}%
+      </span>
       <span className="mono" style={{ fontSize: 10, color: TONE_COLOR[row.declaration.tone] }}>{row.declaration.text}</span>
       <span className="mono" style={{ fontSize: 10, color: 'var(--text-secondary)' }}>{row.contract}</span>
       <span className="mono" style={{ fontSize: 10, textAlign: 'right', color: TONE_COLOR[row.alert.tone] }}>

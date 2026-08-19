@@ -551,7 +551,10 @@ export const fleetFixture = {
       domain: 'sevre-et-loire.fr',
       band: { median: 0.42, low: 0.31, high: 0.58, noiseLow: 0.39, noiseHigh: 0.45, state: 'normal', confidence: 'high' },
       conf: 'high',
-      rgesnPct: 59,
+      // null is the audited service: its rate is read off the assessments the
+      // criteria workspace answers, not repeated here. the other rows are
+      // other clients, whose services this build does not assess.
+      rgesnPct: null as number | null,
       declaration: { text: 'v2 · 156 d', tone: 'muted' },
       contract: '0417 · Q3 due',
       alert: { text: 'budget breach', tone: 'breach' },
@@ -719,7 +722,10 @@ export const documentsFixture = {
       {
         label: 'Taux de conformité RGESN (cible 12 mois)',
         seuil: '75%',
-        t3: '59%',
+        // the achieved rate and the gauge are read off the assessments, so the
+        // report and the declaration cannot state two different rates.
+        t3: null as string | null,
+        targetPct: 75,
         gauge: { fillPct: 78, tone: 'caution' },
         etat: 'enCours',
       },
@@ -734,7 +740,10 @@ export const documentsFixture = {
     ] as ReadonlyArray<{
       label: string;
       seuil: string;
-      t3: string;
+      /** null when the figure is read off the assessments rather than typed. */
+      t3: string | null;
+      /** the contractual target the gauge fills against, for a derived row. */
+      targetPct?: number;
       t3Tone?: 'breach';
       gauge: { fillPct: number; tone: 'held' | 'caution' | 'breach' };
       etat: 'tenu' | 'enCours' | 'nonTenu';

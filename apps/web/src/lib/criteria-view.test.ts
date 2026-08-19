@@ -118,3 +118,13 @@ describe('the figures the documents share with the screens', () => {
     expect(blockingRows()[0]!.detailFr).toBe(criteriaCanon.blocking[0]!.detailFr);
   });
 });
+
+describe('the surfaces outside the workspace', () => {
+  it('gives the fleet and the execution report the rate the declaration prints', () => {
+    // one number, four places. the fleet row for the audited service and the
+    // rgesn engagement in the report both read this rather than repeat it.
+    expect(conformityPct()).toBe(59);
+    expect(criteriaCanon.completion.conforme).toBe(41);
+    expect(criteriaCanon.completion.applicable).toBe(70);
+  });
+});
