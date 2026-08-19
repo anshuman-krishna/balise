@@ -1,0 +1,33 @@
+# balise.yml · the web app measures itself
+#
+# these are the budgets the operating manual sets for our own screens. they are
+# not enforced yet: no run has been taken against this app, so no scenario has a
+# noise floor, and a budget without a floor decides nothing. they go live the day
+# the runner measures us, which is the only honest way round.
+
+version: 1
+service: balise-web
+runs: 5
+profiles: [desktop-fibre, mobile-4g]
+reference_model: swd@4.0
+noise_floor: auto
+
+budgets:
+  - scope: /
+    bytes: { fail: 350KB }
+    requests: { fail: 60 }
+    dom_nodes: { fail: 1500 }
+
+  - scope: /public/scan
+    bytes: { fail: 120KB }
+    requests: { fail: 15 }
+    dom_nodes: { fail: 400 }
+
+  - scope: /public/observatory
+    bytes: { fail: 200KB }
+    requests: { fail: 25 }
+    dom_nodes: { fail: 1200 }
+
+check:
+  block_merge_on: fail
+  annotate_files: true

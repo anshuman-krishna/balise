@@ -163,6 +163,23 @@ what the modules explain and what is left over. 388 tests pass across eleven pac
       quantities, so the clause order stays the translator's)
 - [ ] Index maps (`sections`), once a customer build produces one
 
+## To-do: budgets and the check (V3)
+
+- [x] ~~`packages/budgets`: balise.yml reader, budget evaluation, check summary~~ (80 tests)
+- [x] ~~A yaml subset reader with no dependency, refusing everything outside it by
+      name and line~~
+- [x] ~~Nothing fails on a scenario with no established noise floor, and a growth
+      limit goes through `classifyDelta` before anything else~~
+- [x] ~~Overrides that lift the merge block and never the breach, with expiry~~
+- [x] ~~Our own `balise.yml` at the repo root, held to the reader by a test~~
+      (the manual's budgets for the dashboard, the scan and the observatory; not
+      enforced until the runner measures this app and the floors exist)
+- [ ] Wire the Budgets screen and the PR check screen to the engine
+- [ ] The GitHub check itself: Octokit, check run, PR comment, annotations. Needs
+      the api and a GitHub App, so it waits on V2
+- [ ] The PR comment SVG through `packages/ui` in a headless screenshot
+- [ ] Record an override as a ledger entry when the api can write one
+
 ## To-do: ledger (brought forward from V5)
 
 - [x] ~~`packages/ledger`: canonical json, entry hashing, per-tenant chain, append-only~~
@@ -543,3 +560,50 @@ Carried from operating manual section 31 and the design handoff. Do not build ah
 6. Reference model default (swd@4.0 today): may the customer change it, is the change ledgered?
 7. Noise floor scaling factor final value (see decisions log).
 8. Observatory consent: what may be published without opt-in?
+
+- **2026-08-19 · Budgets were built before the api, for the same reason as the
+  ledger and the criteria engine.** Evaluation is pure, so it can be built and fully
+  verified here, while the api needs a database container and the github check needs
+  an app registration. Nothing in the roadmap was reordered otherwise.
+- **2026-08-19 · balise.yml is read by a parser written in the package**, over a
+  documented subset of yaml: comments, mappings, sequences, single-line flow
+  collections, plain and quoted scalars. Anchors, aliases, tags, block scalars, merge
+  keys, several documents and tab indentation are refused by name with their line.
+  This avoided a parser dependency and, more importantly, made the failure mode a
+  refusal rather than a misreading. A file that decides whether a build fails is not
+  a place for a parser to guess. Swapping in a full parser later is one file behind
+  the same interface.
+- **2026-08-19 · An unknown key in balise.yml is an error, not a shrug.** A typo in
+  a budget key would otherwise switch a limit off in silence, which is the worst
+  thing this package could do.
+- **2026-08-19 · No budget is decided on a scenario whose noise floor is not
+  established.** The statistics rules say budgets activate once the floor exists; the
+  engine returns `non_evalue` with the reason, and the check reports neutral rather
+  than green or red. A budget that fails on measurement noise gets switched off
+  within a week, and a check nobody trusts is worse than no check.
+- **2026-08-19 · A growth limit is passed through `classifyDelta` first.** If the
+  kernel does not call the change a change, the limit cannot have been broken by it,
+  whatever the percentage says. There is no second implementation of that decision in
+  this package.
+- **2026-08-19 · `withinNoise` reports, it does not decide.** When the distance to
+  the deciding threshold is smaller than the noise floor, the assessment says so and
+  the verdict is unchanged. Moving the verdict instead would have meant a route could
+  park just past a threshold forever; saying nothing would have meant presenting a
+  coin toss as a result.
+- **2026-08-19 · An override lifts the merge block and never the breach.** The
+  breach is still counted, still shown and still goes to the execution report. The
+  override expires, and an expired one stops applying on its own.
+- **2026-08-19 · A `service` scope is checked on every scenario measured.** Checking
+  it against a service-wide aggregate would let it hold while a single route breached
+  it, and would also mean inventing an aggregation rule the methodology does not have.
+- **2026-08-19 · `noise_floor` accepts only `auto`.** A written floor would be a
+  hand-chosen number, which is exactly what a derived floor exists to avoid.
+- **2026-08-19 · The budget engine emits reason codes, not sentences.** Unlike the
+  criteria engine, whose french text is domain content quoted from the referential,
+  nothing a budget reports is domain text: the strings live in `packages/i18n` and the
+  engine stays free of the interface language.
+- **2026-08-19 · The repository carries its own balise.yml.** The operating manual
+  sets budgets for the dashboard, the free scan and the observatory; they are now
+  written down and a test holds the file to the reader. They are not enforced: no run
+  has been taken against this app, so no scenario has a floor, and by the rule above a
+  budget without a floor decides nothing. They go live the day the runner measures us.

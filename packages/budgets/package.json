@@ -1,0 +1,23 @@
+{
+  "name": "@balise/budgets",
+  "version": "0.1.0",
+  "description": "Reads balise.yml and decides what a measurement does to a check, without ever failing a build on noise.",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@balise/measure-core": "workspace:*",
+    "@balise/schemas": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^24.5.0",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

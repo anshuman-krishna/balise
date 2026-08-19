@@ -75,6 +75,9 @@ importers:
       '@balise/attribution':
         specifier: workspace:*
         version: link:../../packages/attribution
+      '@balise/budgets':
+        specifier: workspace:*
+        version: link:../../packages/budgets
       '@balise/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
@@ -130,6 +133,25 @@ importers:
 
   packages/attribution:
     dependencies:
+      '@balise/schemas':
+        specifier: workspace:*
+        version: link:../schemas
+    devDependencies:
+      '@types/node':
+        specifier: ^24.5.0
+        version: 24.13.3
+      typescript:
+        specifier: 'catalog:'
+        version: 5.9.3
+      vitest:
+        specifier: 'catalog:'
+        version: 3.2.7(@types/node@24.13.3)(supports-color@7.2.0)
+
+  packages/budgets:
+    dependencies:
+      '@balise/measure-core':
+        specifier: workspace:*
+        version: link:../measure-core
       '@balise/schemas':
         specifier: workspace:*
         version: link:../schemas

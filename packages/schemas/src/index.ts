@@ -8,3 +8,4 @@ export * from './carbon.js';
 export * from './criteria.js';
 export * from './ledger.js';
 export * from './attribution.js';
+export * from './budgets.js';
