@@ -16,31 +16,30 @@ screenshots, the fidelity source).
 
 ## Current status
 
-**Phase: the check is an artifact (2026-08-19).** `packages/budgets` no longer
-stops at a verdict. `buildCheckRun` returns what the check posts: the line beside
-its name, the markdown body, and the annotations, all from the assessments the
-engine already produced. Nothing in it is decided at that stage. Every status
-comes from the assessments, every per-scenario verdict comes from `classifyDelta`,
-and every string comes from the catalog the screens render, so the mock of the
-comment and the comment cannot say different things.
+**Phase: attribution places a line (2026-08-20).** `attributeBundle` no longer throws
+away the original positions in a source map. Every source it credits now carries the
+first and last line of its own file the bundle took a byte from, and `ModuleChange`
+carries the candidate's. That is a span and not a point: it says where the bundle takes
+a module from, never where inside it the growth happened, because line numbers from two
+builds of one file describe two files. A module the build shook down to two exports
+spans the lines that survived, which is the case worth seeing.
 
-Three things the comment always does: it states the rule that nothing fails on
-noise whether or not anything was found, it writes every measured value beside its
-dispersion, and it carries the provenance the report is checkable from, down to
-the ledger entry and its verification url. Annotations land on the line of
-`balise.yml` that decided, which is what the yaml reader has been recording a line
-per threshold for. One annotation per rule, never one per rule and scenario. No
-source file is annotated at all, because attribution resolves bytes to a file and
-not yet to a line.
+`placeGrowth` is the only thing allowed to say a file may be annotated, and it refuses
+in three places: a module the map gave no position for, a dependency whose file the pull
+request does not contain, and a path that leaves the repository. `packages/budgets` takes
+what it is handed and checks none of it, so the rule lives once. What comes back is a
+notice on the source file across the lines that were measured, and nothing at all where
+nothing was measured. Notices sort last, so the fifty per request cap drops an
+explanation before it drops a finding.
 
-The band now renders as a standalone svg document through `@balise/ui/svg`, for
-the comment image, the embeddable badge and the typst pipeline. It renders the
-component itself rather than redrawing it, so the three surfaces are the same
-code, and there is no headless browser in the path: a screenshot would add a
-second renderer, a font race and a timestamped png, none of which a document whose
-hash goes in the ledger can afford. The check screen gained a Markdown view beside
-the rendered one, showing the artifact verbatim. 548 tests pass across twelve
-packages.
+The check screen's inline annotation card used to be a mockup: a hand-written sentence,
+a hand-picked line 14, and date-fns's +160 KB printed beside `src/lib/dates.ts`, a file
+the module diff puts at +120 B. It now renders what `buildCheckRun` produced. The diff
+hunk stays, because it is the customer's own code that github renders and we never
+fetch. The canon's two builds gained one mapping segment per original line, which is
+what a real map carries; without it every span would have been `1..1` and the first
+thing the feature rendered would have been the default it exists to refuse.
+573 tests pass across twelve packages.
 
 ---
 
@@ -165,6 +164,9 @@ packages.
 - [x] ~~Phrase the plain-language sentence in `packages/i18n`~~ (`fillParts` keeps
       the sentence one translatable string while still marking its identifiers and
       quantities, so the clause order stays the translator's)
+- [x] ~~Place attributed bytes at a line of the original file~~ (`SourceBytes.span` and
+      `ModuleChange.span` from the candidate map; `placeGrowth` returns only what may be
+      annotated)
 - [ ] Index maps (`sections`), once a customer build produces one
 
 ## To-do: budgets and the check (V3)
@@ -192,12 +194,15 @@ packages.
       rendered one, built from the same assessments and in the interface locale)
 - [ ] Post it: Octokit, check run creation, comment upsert, annotation batches.
       Needs the api and a GitHub App, so it waits on V2
+- [ ] Decide how a measured value under 10 KB is written. `formatMeasured` rounds to whole
+      kilobytes above 1 000 B, so a 4 240 B module reads `4 KB`. Fine at page weights,
+      coarse at module weights, and the placed annotation is the first surface to show one
 - [ ] Serve the band svg from the api, so the comment can embed one
       (`bandImageUrl` is already an input and is omitted while nothing serves it)
 - [ ] Record an override as a ledger entry when the api can write one
-- [ ] Annotate a source file once attribution can place a line in it. The source
-      map carries original positions; `attributeBundle` credits bytes per file and
-      discards them. Pointing an annotation at line 1 would be an invention
+- [x] ~~Annotate a source file once attribution can place a line in it~~ (`sourceGrowth`
+      on `CheckReportInput`, fed by `placeGrowth`; a notice across the lines the candidate
+      map named, and nothing at all for a file it could not place)
 
 ## To-do: ledger (brought forward from V5)
 
@@ -227,6 +232,32 @@ Later versions: see roadmap; detailed to-dos are appended when the version start
 
 ## Decisions log
 
+- **2026-08-20 · A source span is two line numbers and nothing else.** `SourceBytes.span`
+  carries the first and last original line the bundle took a byte from, and no per-line
+  weight. A heaviest-line figure was drafted and dropped: it would have pointed a developer
+  at the line that produced the most output, which is not the line that grew, and it does
+  not merge exactly when one module is split across two chunks. Min and max do.
+- **2026-08-20 · A span is read from the candidate side alone.** Line numbers from two
+  builds of one file describe two files, so nothing is compared across versions. A module
+  the candidate dropped is left unplaced rather than placed where it used to be.
+- **2026-08-20 · A segment carrying no byte does not widen a span.** Bundlers emit
+  zero-width segments; a position the bundle took nothing from is not a line it uses. A
+  source whose every segment is empty comes back `span: null`, not `1..1`.
+- **2026-08-20 · `placeGrowth` is the only thing allowed to say a file can be annotated.**
+  Three refusals, each where a guess would fit: no position from the map, a dependency, a
+  path that leaves the repository. `@balise/budgets` takes what it is given and checks none
+  of it, so the honesty rule lives in one place.
+- **2026-08-20 · A placed source file annotates as a notice, never higher.** Attribution
+  explains a breach and the budget file decides it. Notices also sort last, so the fifty per
+  request cap drops an explanation before it drops a finding.
+- **2026-08-20 · The check screen's inline annotation card is now the real annotation.**
+  It was a mockup: a hand-written sentence, a hand-picked line 14, and date-fns's +160 KB
+  printed beside `src/lib/dates.ts`, which the module diff puts at +120 B. The diff hunk
+  stays, because it is the customer's own code that github renders and we never fetch; the
+  note beside it is what `buildCheckRun` produced.
+- **2026-08-20 · The canon's source maps now carry one segment per original line.** They
+  mapped every module to line 0, so every span would have been `1..1` and the first thing
+  the placement rendered would have been the default it exists to refuse.
 - **2026-08-17 · Context files live in `testing/`, gitignored.** All handoff material moved
   there. Nothing deleted, per instruction that there are no losses.
 - **2026-08-17 · No em dashes in any user-facing surface or repo doc.** User instruction.

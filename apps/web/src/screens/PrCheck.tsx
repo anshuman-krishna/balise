@@ -4,8 +4,7 @@ import { Link } from 'react-router';
 import { fill, t } from '../i18n';
 import { canon, prCheckFixture as pr } from '../fixtures/canon';
 import { budgetCanon } from '../fixtures/budget-canon';
-import { attributionCanon } from '../fixtures/attribution-canon';
-import { attributionCoverage, attributionLead, formatByteDelta } from '../lib/attribution-view';
+import { attributionCoverage, attributionLead } from '../lib/attribution-view';
 import {
   checkFailed,
   checkRows,
@@ -38,11 +37,14 @@ const rows = checkRows();
 const failed = checkFailed();
 const statusText = checkStatusText();
 const lead = attributionLead();
-const introduced = attributionCanon.packages.find((entry) => entry.delta > 0) ?? null;
 // the artifact itself, built by @balise/budgets from the same assessments the
 // rendered view above is drawn from.
 const output = checkRunOutput();
 const provenance = budgetCanon.provenance;
+// the annotation the check would attach to a source file, as the check built
+// it. the diff lines beside it are the customer's own code, which github
+// renders and we never produce.
+const placed = output.annotations.find((annotation) => annotation.path !== budgetCanon.file) ?? null;
 
 const ANNOTATION_COLOR: Record<string, string> = {
   failure: 'var(--breach)',
@@ -201,7 +203,7 @@ function Artifact() {
         </div>
         {output.annotations.map((annotation) => (
           <div
-            key={`${annotation.level}-${annotation.startLine}-${annotation.title}`}
+            key={`${annotation.path}-${annotation.level}-${annotation.startLine}-${annotation.title}`}
             style={{ padding: '9px 16px', borderBottom: '1px solid var(--divider-row)' }}
           >
             <span
@@ -212,6 +214,7 @@ function Artifact() {
             </span>{' '}
             <span className="mono" style={{ fontSize: 10 }}>
               {annotation.path}:{annotation.startLine}
+              {annotation.endLine === annotation.startLine ? '' : `-${annotation.endLine}`}
             </span>
             <div style={{ marginTop: 3, fontSize: 11, lineHeight: 1.55, color: 'var(--text-secondary)' }}>
               {annotation.message}
@@ -374,7 +377,11 @@ function Rendered() {
             borderBottom: '1px solid var(--divider-cell)',
           }}
         >
-          {fill(t.prCheck.annotationTitle, { file: pr.annotation.file })}
+          {placed === null
+            ? fill(t.prCheck.annotationTitle, { file: pr.annotation.file })
+            : fill(t.prCheck.annotationTitle, {
+                file: `${placed.path}:${placed.startLine}-${placed.endLine}`,
+              })}
         </div>
         <div style={{ padding: '10px 14px 0' }}>
           {pr.annotation.lines.map((line) => (
@@ -384,22 +391,26 @@ function Rendered() {
             </div>
           ))}
         </div>
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'baseline',
-            gap: 12,
-            margin: '10px 14px 12px',
-            padding: '9px 12px',
-            borderLeft: '2px solid var(--breach)',
-            background: 'var(--inset-panel)',
-          }}
-        >
-          <span className="mono" style={{ fontWeight: 500, fontSize: 10.5, color: 'var(--breach)', flex: 'none' }}>
-            {introduced === null ? '' : formatByteDelta(introduced.delta)}
-          </span>
-          <span style={{ fontSize: 11, lineHeight: 1.55, color: 'var(--text-secondary)' }}>{pr.annotation.note}</span>
-        </div>
+        {placed === null ? null : (
+          <div
+            style={{
+              margin: '10px 14px 12px',
+              padding: '9px 12px',
+              borderLeft: `2px solid ${ANNOTATION_COLOR[placed.level]}`,
+              background: 'var(--inset-panel)',
+            }}
+          >
+            <span
+              className="mono"
+              style={{ fontWeight: 500, fontSize: 10.5, color: ANNOTATION_COLOR[placed.level] }}
+            >
+              {placed.title}
+            </span>
+            <div style={{ marginTop: 3, fontSize: 11, lineHeight: 1.55, color: 'var(--text-secondary)' }}>
+              {placed.message}
+            </div>
+          </div>
+        )}
       </div>
     </>
   );

@@ -129,6 +129,22 @@ export const AttributionUnavailableReason = z.enum([
 ]);
 export type AttributionUnavailableReason = z.infer<typeof AttributionUnavailableReason>;
 
+/**
+ * where in the original file the bytes came from, in 1-based lines as an
+ * editor counts them. both ends are lines a mapping segment named and that
+ * carried at least one byte, so the span is measured and not inferred.
+ *
+ * it says what the bundle takes of the file, which is not what the file
+ * contains: a module the build shook down to two exports spans only the lines
+ * that survived. nothing here is ever compared across two versions of a file,
+ * because an edit above a line moves it without changing it.
+ */
+export const SourceSpan = z.object({
+  firstLine: z.number().int().positive(),
+  lastLine: z.number().int().positive(),
+});
+export type SourceSpan = z.infer<typeof SourceSpan>;
+
 export const SourceBytes = z.object({
   // normalised path, with any bundler scheme removed and . and .. resolved.
   path: z.string(),
@@ -136,6 +152,9 @@ export const SourceBytes = z.object({
   rawPath: z.string(),
   packageName: z.string().nullable(),
   bytes: z.number().nonnegative(),
+  // null when the map names the file and attributes no byte to it, which is
+  // a map naming a file the bundle did not take anything from.
+  span: SourceSpan.nullable(),
 });
 export type SourceBytes = z.infer<typeof SourceBytes>;
 
@@ -170,6 +189,13 @@ export const ModuleChange = z.object({
   afterBytes: z.number().nonnegative(),
   delta: z.number(),
   status: ChangeStatus,
+  /**
+   * where the candidate bundles take the module from. read from the candidate
+   * maps alone: line numbers from two builds of one file describe two files,
+   * and subtracting them would report every line below an edit as changed.
+   * null for a module the candidate does not carry.
+   */
+  span: SourceSpan.nullable(),
 });
 export type ModuleChange = z.infer<typeof ModuleChange>;
 

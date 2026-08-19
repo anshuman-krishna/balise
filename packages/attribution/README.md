@@ -12,6 +12,7 @@ diffResources(before, after)   what the network saw: urls, origins, transferred 
 attributeBundle(bundle)        decoded bytes of one bundle, credited to source files
 diffModules(before, after)     which modules grew, shrank, appeared or went
 blameModules(modules, range)   the commits that touched a first-party module
+placeGrowth(modules)           grown repository files, at lines the map named
 attribute(before, after)       all of the above, with a reconciliation
 ```
 
@@ -50,6 +51,10 @@ which is what actually happened on the wire. The module diff explains it.
 - **No naming a vendor we are not sure of.** Third-party origins are matched
   against a maintained list, exactly or on a dot boundary. An unmatched origin is
   reported by its hostname with its measured cost.
+- **No placing a file at a default line.** `placeGrowth` returns only the grown
+  modules the candidate map gave a position for. A module with no position, a
+  dependency, and a path that leaves the repository are all left unplaced, and a
+  caller that wanted to annotate one gets nothing to annotate.
 
 ## Decoded bytes, not transferred bytes
 
@@ -60,6 +65,22 @@ separately. They are never substituted for one another, in either direction.
 
 The reconciliation states three numbers: what was measured, what the modules
 explain, and what is left over. The remainder is reported, not absorbed.
+
+## Where a module comes from in its own file
+
+Every source in `attributeBundle` carries a `span`: the first and last original
+line the bundle took a byte from, counted from one as an editor counts. It is
+read off the map's own positions, so a module the build shook down to two exports
+spans the lines that survived and not the whole file.
+
+`ModuleChange.span` is the candidate's span alone. Line numbers from two builds
+of one file describe two files, and subtracting them would report every line
+below an edit as changed. Nothing here is ever compared across versions: the span
+says where the bundle takes the module from, never where inside it the growth
+happened.
+
+A module split across two chunks is widened to the outer bounds of both, because
+min and max are the only merge that stays exact.
 
 ## Blame is a range, not a last-touch
 

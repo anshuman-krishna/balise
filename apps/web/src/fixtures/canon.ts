@@ -909,6 +909,9 @@ export const prCheckFixture = {
   // sentence from @balise/attribution: see budget-canon.ts and
   // attribution-canon.ts, both generated. the provenance line comes from the
   // same place the posted comment reads it, budgetCanon.provenance.
+  // the diff hunk github renders around an annotation. it is the customer's own
+  // code, which we never fetch, never store and never produce; the note beside
+  // it is the annotation the check built, and is not written here.
   annotation: {
     file: 'src/lib/dates.ts',
     lines: [
@@ -916,7 +919,6 @@ export const prCheckFixture = {
       { no: 14, text: "+ import * as locales from 'date-fns/locale'", added: true },
       { no: 15, text: "const fmt = (d, l) => format(d, 'PPP', { locale: locales[l] })", added: false },
     ] as ReadonlyArray<{ no: number; text: string; added: boolean }>,
-    note: 'Namespace import pulls all 96 locales into the route bundle. Two are used at runtime.',
   },
 } as const;
 

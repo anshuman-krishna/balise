@@ -109,6 +109,7 @@ const output = buildCheckRun({
   provenance: { methodologyVersion, models, runId, ledgerRef, verificationUrl, fingerprintMatched },
   configPath: 'balise.yml',
   attribution: sentence,   // advisory, and absent rather than guessed
+  sourceGrowth: placed,    // files attribution placed at a line, or nothing
 });
 ```
 
@@ -129,10 +130,17 @@ Three things it always does:
 Annotations land on the budget file, at the line of the limit that decided. The
 yaml reader records a line per threshold for exactly this. One annotation per
 rule, not per rule and scenario, because an annotation marks a line and the same
-line noted four times is noise. A source file is not annotated at all: attribution
-resolves bytes to a file and not yet to a line, and pointing at line 1 would be an
-invention.
+line noted four times is noise.
 
 An overridden breach annotates as a warning and still reads as a breach. A budget
 with no established noise floor annotates as a notice, because a developer has to
 know which budget is not protecting them yet.
+
+A source file is annotated only across lines something measured. This package
+does not decide that: `sourceGrowth` carries files `placeGrowth` in
+`@balise/attribution` already placed, from the candidate build's own source map,
+and a file it could not place is simply absent. Those annotations are notices and
+never more: attribution explains a breach, the budget file decides it. The lines
+say where the bundle takes the file from, never where inside it the growth
+happened, because that would mean subtracting line numbers between two builds of
+one file.

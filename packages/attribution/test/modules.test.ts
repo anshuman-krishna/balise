@@ -2,16 +2,21 @@ import { describe, expect, it } from 'vitest';
 import type { BundleAttribution } from '@balise/schemas';
 import { diffModules, normaliseSourcePath, packageNameOf } from '../src/modules.js';
 
-function resolved(url: string, sources: [string, number][], unattributed = 0): BundleAttribution {
+function resolved(
+  url: string,
+  sources: ([string, number] | [string, number, number, number])[],
+  unattributed = 0,
+): BundleAttribution {
   return {
     status: 'resolved',
     url,
     totalBytes: sources.reduce((total, [, bytes]) => total + bytes, unattributed),
-    sources: sources.map(([path, bytes]) => ({
+    sources: sources.map(([path, bytes, firstLine, lastLine]) => ({
       path,
       rawPath: path,
       packageName: packageNameOf(path),
       bytes,
+      span: firstLine === undefined || lastLine === undefined ? null : { firstLine, lastLine },
     })),
     unattributedBytes: unattributed,
   };
@@ -151,5 +156,32 @@ describe('diffModules', () => {
     ];
     const diff = diffModules([], split);
     expect(diff.modules.find((row) => row.path === 'src/shared.ts')?.afterBytes).toBe(700);
+  });
+});
+
+describe('diffModules source spans', () => {
+  it('places a module at the candidate positions, never at the baseline ones', () => {
+    const before = resolved('https://selo.fr/a.1.js', [['src/a.ts', 4_000, 1, 96]]);
+    const after = resolved('https://selo.fr/a.2.js', [['src/a.ts', 4_240, 1, 104]]);
+    const diff = diffModules([before], [after]);
+    expect(diff.modules[0]!.span).toEqual({ firstLine: 1, lastLine: 104 });
+  });
+
+  it('leaves a module the candidate dropped unplaced', () => {
+    const before = resolved('https://selo.fr/a.1.js', [['src/gone.ts', 4_000, 1, 96]]);
+    const after = resolved('https://selo.fr/a.2.js', [['src/kept.ts', 4_000, 1, 12]]);
+    const diff = diffModules([before], [after]);
+    expect(diff.modules.find((module) => module.path === 'src/gone.ts')?.span).toBeNull();
+  });
+
+  it('widens a span over the chunks a split module is taken from', () => {
+    const before = resolved('https://selo.fr/a.1.js', [['src/a.ts', 100, 10, 20]]);
+    const after = [
+      resolved('https://selo.fr/a.2.js', [['src/a.ts', 100, 10, 20]]),
+      resolved('https://selo.fr/b.2.js', [['src/a.ts', 200, 60, 80]]),
+    ];
+    const diff = diffModules([before], after);
+    expect(diff.modules[0]!.span).toEqual({ firstLine: 10, lastLine: 80 });
+    expect(diff.modules[0]!.afterBytes).toBe(300);
   });
 });

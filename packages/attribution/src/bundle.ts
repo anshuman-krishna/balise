@@ -49,6 +49,9 @@ function unavailable(url: string, reason: AttributionUnavailableReason, detail?:
 interface Accumulated {
   bytes: number;
   rawPath: string;
+  /** 1-based, and null until a segment attributes a byte to this source. */
+  firstLine: number | null;
+  lastLine: number | null;
 }
 
 /**
@@ -124,14 +127,22 @@ export function attributeBundle(input: BundleInput): BundleAttribution {
 
       const rawPath = applySourceRoot(sourceRoot, named);
       const { path } = normaliseSourcePath(rawPath);
+      // source maps count original lines from zero; an editor counts from one.
+      // a segment that carries no byte is a position the bundle took nothing
+      // from, so it does not widen the span.
+      const originalLine = bytes > 0 ? segment.source.line + 1 : null;
       const entry = accumulated.get(path);
       if (entry === undefined) {
-        accumulated.set(path, { bytes, rawPath });
+        accumulated.set(path, { bytes, rawPath, firstLine: originalLine, lastLine: originalLine });
       } else {
         entry.bytes += bytes;
         // two raw spellings can normalise to one module. the smallest is kept
         // so the reported raw path does not depend on walk order.
         if (rawPath < entry.rawPath) entry.rawPath = rawPath;
+        if (originalLine !== null) {
+          entry.firstLine = entry.firstLine === null ? originalLine : Math.min(entry.firstLine, originalLine);
+          entry.lastLine = entry.lastLine === null ? originalLine : Math.max(entry.lastLine, originalLine);
+        }
       }
       attributedBytes += bytes;
     }
@@ -143,6 +154,10 @@ export function attributeBundle(input: BundleInput): BundleAttribution {
       rawPath: entry.rawPath,
       packageName: normaliseSourcePath(path).packageName,
       bytes: entry.bytes,
+      span:
+        entry.firstLine === null || entry.lastLine === null
+          ? null
+          : { firstLine: entry.firstLine, lastLine: entry.lastLine },
     }))
     .sort((a, b) => (b.bytes !== a.bytes ? b.bytes - a.bytes : a.path.localeCompare(b.path)));
 

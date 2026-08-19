@@ -46,7 +46,11 @@ export const attributionCanon = {
     "beforeBytes": 0,
     "afterBytes": 62000,
     "delta": 62000,
-    "status": "added"
+    "status": "added",
+    "span": {
+      "firstLine": 1,
+      "lastLine": 340
+    }
   },
   {
     "path": "node_modules/date-fns/locale/br/index.js",
@@ -54,7 +58,11 @@ export const attributionCanon = {
     "beforeBytes": 0,
     "afterBytes": 58000,
     "delta": 58000,
-    "status": "added"
+    "status": "added",
+    "span": {
+      "firstLine": 1,
+      "lastLine": 320
+    }
   },
   {
     "path": "node_modules/date-fns/locale/index.js",
@@ -62,7 +70,11 @@ export const attributionCanon = {
     "beforeBytes": 0,
     "afterBytes": 40000,
     "delta": 40000,
-    "status": "added"
+    "status": "added",
+    "span": {
+      "firstLine": 1,
+      "lastLine": 210
+    }
   },
   {
     "path": "src/lib/dates.ts",
@@ -70,7 +82,11 @@ export const attributionCanon = {
     "beforeBytes": 4120,
     "afterBytes": 4240,
     "delta": 120,
-    "status": "grown"
+    "status": "grown",
+    "span": {
+      "firstLine": 1,
+      "lastLine": 104
+    }
   }
 ],
   packages: [
@@ -122,6 +138,17 @@ export const attributionCanon = {
         "subject": "feat(dates): formats d'acte localisés (#412)"
       }
     ]
+  }
+],
+  // the grown repository files the candidate map placed at a line, which is
+  // what the check may annotate. a dependency never appears here.
+  placed: [
+  {
+    "path": "src/lib/dates.ts",
+    "startLine": 1,
+    "endLine": 104,
+    "deltaBytes": 120,
+    "afterBytes": 4240
   }
 ],
   origins: [

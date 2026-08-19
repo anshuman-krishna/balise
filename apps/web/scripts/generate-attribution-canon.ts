@@ -38,6 +38,9 @@ export const attributionCanon = {
   },
   reconciliation: ${JSON.stringify(report.reconciliation)},
   blame: ${JSON.stringify(canon.blame, null, 2)},
+  // the grown repository files the candidate map placed at a line, which is
+  // what the check may annotate. a dependency never appears here.
+  placed: ${JSON.stringify(canon.placed, null, 2)},
   origins: ${JSON.stringify(thirdParty, null, 2)},
   // the embedded player ships no source map. the origin diff sizes it; this is
   // why nothing further is said about it.

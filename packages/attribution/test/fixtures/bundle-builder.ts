@@ -26,6 +26,8 @@ export function byteLength(text: string): number {
 export interface FixtureModule {
   source: string;
   code: string;
+  /** the original line this piece came from, counted from zero as a map does. */
+  originalLine?: number;
 }
 
 export interface FixtureBundle {
@@ -67,16 +69,19 @@ export function buildBundle(
 
   let previousColumn = 0;
   let previousSource = 0;
-  const segments = modules.map((_, index) => {
+  let previousLine = 0;
+  const segments = modules.map((module, index) => {
     const column = columns[index]!;
+    const line = module.originalLine ?? 0;
     const fields = [
       encodeVlq(column - previousColumn),
       encodeVlq(index - previousSource),
-      encodeVlq(0),
+      encodeVlq(line - previousLine),
       encodeVlq(0),
     ].join('');
     previousColumn = column;
     previousSource = index;
+    previousLine = line;
     return fields;
   });
 

@@ -16,6 +16,7 @@ describe('the generated attribution canon', () => {
     expect(attributionCanon.reconciliation).toEqual(canon.report.reconciliation);
     expect(attributionCanon.unattributed).toEqual(canon.report.modules.unattributed);
     expect(attributionCanon.blame).toEqual(canon.blame);
+    expect(attributionCanon.placed).toEqual(canon.placed);
     expect(attributionCanon.origins).toEqual(canon.report.origins.changes.filter((row) => row.party === 'third'));
     expect(attributionCanon.thirdPartyBundle).toEqual(canon.thirdPartyBundle);
   });
@@ -47,6 +48,22 @@ describe('the canon regression', () => {
   it('names the first-party file that pulled it in', () => {
     const file = attributionCanon.modules.find((row) => row.path === 'src/lib/dates.ts');
     expect(file).toMatchObject({ status: 'grown', delta: 120, packageName: null });
+  });
+
+  it('places the first-party file at the lines the candidate map named', () => {
+    expect(attributionCanon.placed).toEqual([
+      { path: 'src/lib/dates.ts', startLine: 1, endLine: 104, deltaBytes: 120, afterBytes: 4_240 },
+    ]);
+  });
+
+  it('places no dependency, whose file the pull request does not contain', () => {
+    // three date-fns modules are in the diff and every one of them carries a
+    // span. none of them can be annotated on a pull request.
+    const dependencies = attributionCanon.modules.filter((module) => module.packageName !== null);
+    expect(dependencies.length).toBeGreaterThan(0);
+    expect(dependencies.every((module) => module.span !== null)).toBe(true);
+    const placedPaths = new Set<string>(attributionCanon.placed.map((row) => row.path));
+    expect(dependencies.some((module) => placedPaths.has(module.path))).toBe(false);
   });
 
   it('blames a person for the first-party file and nobody for the dependency', () => {

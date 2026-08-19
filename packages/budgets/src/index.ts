@@ -14,5 +14,6 @@ export {
   type CheckMeasurementRow,
   type CheckProvenance,
   type CheckReportInput,
+  type CheckSourceGrowth,
   type CheckStrings,
 } from './report.js';

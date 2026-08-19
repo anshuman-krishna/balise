@@ -334,6 +334,10 @@ export const fr: Catalog = {
 
     attributionHeading: 'Attribution',
     attributionAdvisory: "L'attribution explique un dépassement, elle n'en décide aucun.",
+    sourceGrowthLine: 'Fichiers du dépôt que le build candidat alourdit :',
+    sourceGrowthItem: '`{path}`, lignes {first} à {last} : {bytes}',
+    sourceGrowthCaveat:
+      "Les lignes sont celles que le build candidat reprend du fichier. Aucune position n'est comparée entre deux versions d'un fichier.",
 
     provenanceHeading: 'Provenance',
     provenanceMethodology: 'Méthodologie {version}',
@@ -353,6 +357,9 @@ export const fr: Catalog = {
     annotationOverriddenBody:
       "{scope} · {metric} : {observed} pour un seuil de {threshold}. Dérogation de {by}, motif : {reason}",
     annotationUndecidedBody: '{scope} · {metric} : {reason}',
+    annotationSourceTitle: 'Module alourdi',
+    annotationSourceBody:
+      '{bytes} sur ce fichier, pour {total} dans le build candidat. Le bundle en reprend les lignes {first} à {last}.',
     annotationsOmitted: '{count} annotations non envoyées : la limite est de {limit} par requête.',
   },
   criteria: {

@@ -330,6 +330,10 @@ export const en = {
 
     attributionHeading: 'Attribution',
     attributionAdvisory: 'Attribution explains a breach. It never decides one.',
+    sourceGrowthLine: 'Repository files the candidate build makes heavier:',
+    sourceGrowthItem: '`{path}`, lines {first} to {last}: {bytes}',
+    sourceGrowthCaveat:
+      'The lines are the ones the candidate build takes from the file. No position is compared between two versions of a file.',
 
     provenanceHeading: 'Provenance',
     provenanceMethodology: 'Methodology {version}',
@@ -349,6 +353,9 @@ export const en = {
     annotationOverriddenBody:
       '{scope} · {metric}: {observed} against a limit of {threshold}. Override by {by}, reason: {reason}',
     annotationUndecidedBody: '{scope} · {metric}: {reason}',
+    annotationSourceTitle: 'Module grown',
+    annotationSourceBody:
+      '{bytes} on this file, {total} in the candidate build. The bundle takes lines {first} to {last} of it.',
     annotationsOmitted: '{count} annotations were not sent: the limit is {limit} per request.',
   },
   criteria: {

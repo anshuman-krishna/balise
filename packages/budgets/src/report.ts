@@ -269,6 +269,24 @@ export interface CheckProvenance {
   fingerprintMatched: boolean;
 }
 
+/**
+ * a file the candidate build made heavier, at lines from the candidate's own
+ * source map. the span says where the bundle takes the file from, never where
+ * inside it the growth happened: line numbers from two builds of one file
+ * describe two files.
+ */
+export interface CheckSourceGrowth {
+  /** relative to the repository root, as the pull request spells it. */
+  path: string;
+  /** 1-based and inclusive. */
+  startLine: number;
+  endLine: number;
+  /** decoded bytes the candidate added to this file. */
+  deltaBytes: number;
+  /** what the file weighs in the candidate build. */
+  afterBytes: number;
+}
+
 export interface CheckReportInput {
   config: BudgetConfig;
   /** the scenarios the evaluation ran on. */
@@ -289,6 +307,13 @@ export interface CheckReportInput {
    * guessed when attribution could not resolve.
    */
   attribution?: string | null;
+  /**
+   * repository files the candidate build made heavier, each already placed at
+   * lines something measured. budgets neither computes nor checks these:
+   * attribution decides whether a file can be placed at all, and passes one
+   * only when the candidate map named a position for it.
+   */
+  sourceGrowth?: readonly CheckSourceGrowth[];
   /** a served rendering of the delta bands, when the api is serving one. */
   bandImageUrl?: string;
 }
@@ -439,10 +464,40 @@ function budgetsSection(input: CheckReportInput): string[] {
   ];
 }
 
+/** largest first, so a cap keeps what matters and the body reads in order. */
+function placedGrowth(input: CheckReportInput): CheckSourceGrowth[] {
+  return [...(input.sourceGrowth ?? [])].sort((a, b) =>
+    b.deltaBytes !== a.deltaBytes ? b.deltaBytes - a.deltaBytes : a.path.localeCompare(b.path),
+  );
+}
+
 function attributionSection(input: CheckReportInput): string[] {
+  const { strings } = input;
   const sentence = input.attribution;
-  if (sentence === undefined || sentence === null || sentence.length === 0) return [];
-  return [`### ${input.strings.attributionHeading}`, '', sentence, '', input.strings.attributionAdvisory];
+  const hasSentence = sentence !== undefined && sentence !== null && sentence.length > 0;
+  const placed = placedGrowth(input);
+  if (!hasSentence && placed.length === 0) return [];
+
+  const out = [`### ${strings.attributionHeading}`, ''];
+  if (hasSentence) out.push(sentence, '');
+
+  if (placed.length > 0) {
+    out.push(strings.sourceGrowthLine, '');
+    for (const row of placed) {
+      out.push(
+        `- ${fill(strings.sourceGrowthItem, {
+          path: row.path,
+          first: row.startLine,
+          last: row.endLine,
+          bytes: formatMeasuredSigned(row.deltaBytes, 'bytes'),
+        })}`,
+      );
+    }
+    out.push('', strings.sourceGrowthCaveat, '');
+  }
+
+  out.push(strings.attributionAdvisory);
+  return out;
 }
 
 function provenanceSection(input: CheckReportInput): string[] {
@@ -535,11 +590,13 @@ function annotationFor(
 }
 
 /**
- * annotations on the budget file, at the line of the limit that decided. the
- * yaml reader records a line per threshold for exactly this: an annotation
- * points at the rule, never at a guessed position. a source file is not
- * annotated at all, because attribution resolves bytes to a file and not yet
- * to a line, and pointing at line 1 would be an invention.
+ * annotations on the budget file, at the line of the limit that decided, and
+ * on the source files attribution placed.
+ *
+ * the yaml reader records a line per threshold for exactly this: an annotation
+ * points at the rule, never at a guessed position. a source file is annotated
+ * only across the lines the candidate map named, and nothing is annotated at
+ * line 1 by default, because a default is not a measurement.
  */
 export function checkAnnotations(input: CheckReportInput): {
   annotations: CheckAnnotation[];
@@ -578,6 +635,24 @@ export function checkAnnotations(input: CheckReportInput): {
       const annotation = annotationFor(outcome, 'notice', path, input);
       if (annotation !== null) notices.push(annotation);
     }
+  }
+
+  // notice and never higher: attribution explains a breach, the budget file
+  // decides it. a file annotated here has held no merge and never will.
+  for (const row of placedGrowth(input)) {
+    notices.push({
+      path: row.path,
+      startLine: row.startLine,
+      endLine: row.endLine,
+      level: 'notice',
+      title: input.strings.annotationSourceTitle,
+      message: fill(input.strings.annotationSourceBody, {
+        bytes: formatMeasuredSigned(row.deltaBytes, 'bytes'),
+        total: formatMeasured(row.afterBytes, 'bytes'),
+        first: row.startLine,
+        last: row.endLine,
+      }),
+    });
   }
 
   const ordered = [...failures, ...warnings, ...notices];

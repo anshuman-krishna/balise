@@ -11,7 +11,7 @@ const COMMIT: CommitInfo = {
 };
 
 function module(path: string, packageName: string | null = null): ModuleChange {
-  return { path, packageName, beforeBytes: 0, afterBytes: 4_000, delta: 4_000, status: 'added' };
+  return { path, packageName, beforeBytes: 0, afterBytes: 4_000, delta: 4_000, status: 'added', span: null };
 }
 
 function port(answer: (path: string) => GitLookup): GitPort {

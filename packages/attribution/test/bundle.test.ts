@@ -141,3 +141,59 @@ describe('utf8Length', () => {
     expect(utf8Length('\ud800')).toBe(3);
   });
 });
+
+describe('attributeBundle source spans', () => {
+  it('reports the original lines the bundle takes a module from, counted from one', () => {
+    const fixture = buildBundle('https://selo.fr/a.js', [
+      { source: 'src/a.ts', code: 'const a=1;', originalLine: 0 },
+      { source: 'src/b.ts', code: 'const b=2;', originalLine: 40 },
+    ]);
+    const result = attributeBundle({ url: fixture.url, content: fixture.content, sourceMap: fixture.sourceMap });
+    if (result.status !== 'resolved') throw new Error('expected resolved');
+
+    expect(result.sources.find((source) => source.path === 'src/a.ts')?.span).toEqual({ firstLine: 1, lastLine: 1 });
+    // the map says line 40, which an editor calls line 41.
+    expect(result.sources.find((source) => source.path === 'src/b.ts')?.span).toEqual({ firstLine: 41, lastLine: 41 });
+  });
+
+  it('spans only the lines that survived, not the whole file', () => {
+    // one module, two pieces: a build that kept two exports out of a long file.
+    const fixture = buildBundle('https://selo.fr/a.js', [
+      { source: 'src/util.ts', code: 'export const one=1;', originalLine: 411 },
+      { source: 'src/util.ts', code: 'export const two=2;', originalLine: 469 },
+    ]);
+    const result = attributeBundle({ url: fixture.url, content: fixture.content, sourceMap: fixture.sourceMap });
+    if (result.status !== 'resolved') throw new Error('expected resolved');
+
+    const util = result.sources.find((source) => source.path === 'src/util.ts');
+    expect(util?.span).toEqual({ firstLine: 412, lastLine: 470 });
+    expect(util?.bytes).toBe(fixture.expectedBytes['src/util.ts']);
+  });
+
+  it('does not widen a span with a position the bundle took no byte from', () => {
+    // two segments at the same column: the first owns nothing.
+    const fixture = buildBundle('https://selo.fr/a.js', [
+      { source: 'src/a.ts', code: '', originalLine: 900 },
+      { source: 'src/a.ts', code: 'const a=1;', originalLine: 4 },
+    ]);
+    const result = attributeBundle({ url: fixture.url, content: fixture.content, sourceMap: fixture.sourceMap });
+    if (result.status !== 'resolved') throw new Error('expected resolved');
+    expect(result.sources.find((source) => source.path === 'src/a.ts')?.span).toEqual({
+      firstLine: 5,
+      lastLine: 5,
+    });
+  });
+
+  it('leaves a source unplaced when the map names it and gives it no byte', () => {
+    const fixture = buildBundle('https://selo.fr/a.js', [
+      { source: 'src/empty.ts', code: '', originalLine: 12 },
+      { source: 'src/a.ts', code: 'const a=1;', originalLine: 0 },
+    ]);
+    const result = attributeBundle({ url: fixture.url, content: fixture.content, sourceMap: fixture.sourceMap });
+    if (result.status !== 'resolved') throw new Error('expected resolved');
+
+    const empty = result.sources.find((source) => source.path === 'src/empty.ts');
+    expect(empty?.bytes).toBe(0);
+    expect(empty?.span).toBeNull();
+  });
+});

@@ -17,6 +17,7 @@ export {
 } from './resources.js';
 export { VENDORS, identifyVendor } from './vendors.js';
 export { attribute, reconcile, type AttributionSide } from './report.js';
+export { placeGrowth, type PlacedGrowth } from './place.js';
 export {
   blameModules,
   isRepositoryPath,

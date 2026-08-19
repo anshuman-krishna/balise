@@ -273,3 +273,80 @@ describe('a summary that reached the renderer through json', () => {
     expect(output.conclusion).toBe('failure');
   });
 });
+
+describe('a source file attribution placed', () => {
+  const GROWTH = [
+    { path: 'src/lib/dates.ts', startLine: 1, endLine: 104, deltaBytes: 120, afterBytes: 4_240 },
+    { path: 'src/lib/format-acte.ts', startLine: 12, endLine: 60, deltaBytes: 9_400, afterBytes: 21_880 },
+  ];
+
+  it('annotates the lines the candidate map named, and no others', () => {
+    const { annotations } = checkAnnotations(report({ sourceGrowth: GROWTH }));
+    const placed = annotations.filter((annotation) => annotation.path !== 'balise.yml');
+    expect(placed).toHaveLength(2);
+    expect(placed[0]).toMatchObject({
+      path: 'src/lib/format-acte.ts',
+      startLine: 12,
+      endLine: 60,
+      level: 'notice',
+      title: 'Module grown',
+    });
+    expect(placed[0]!.message).toContain('lines 12 to 60');
+  });
+
+  it('never raises a placed file above a notice, whatever the budget did', () => {
+    const { annotations } = checkAnnotations(report({ sourceGrowth: GROWTH }));
+    expect(annotations.find((annotation) => annotation.path === 'balise.yml')?.level).toBe('failure');
+    for (const annotation of annotations) {
+      if (annotation.path !== 'balise.yml') expect(annotation.level).toBe('notice');
+    }
+  });
+
+  it('orders the budget file first, so a cap drops an explanation before a finding', () => {
+    const { annotations } = checkAnnotations(report({ sourceGrowth: GROWTH }));
+    expect(annotations[0]!.path).toBe('balise.yml');
+  });
+
+  it('says nothing at all when attribution placed nothing', () => {
+    const { annotations } = checkAnnotations(report());
+    expect(annotations.every((annotation) => annotation.path === 'balise.yml')).toBe(true);
+    expect(buildCheckRun(report()).text).not.toContain('Repository files');
+  });
+
+  it('lists the placed files in the body, largest first, with the caveat on the lines', () => {
+    const text = buildCheckRun(report({ sourceGrowth: GROWTH })).text;
+    const first = text.indexOf('src/lib/format-acte.ts');
+    const second = text.indexOf('src/lib/dates.ts');
+    expect(first).toBeGreaterThan(-1);
+    expect(second).toBeGreaterThan(first);
+    expect(text).toContain('lines 12 to 60');
+    expect(text).toContain('No position is compared between two versions of a file.');
+  });
+
+  it('holds the body to attribution being advisory', () => {
+    const text = buildCheckRun(report({ sourceGrowth: GROWTH })).text;
+    expect(text).toContain('Attribution explains a breach. It never decides one.');
+  });
+
+  it('annotates no file at all when the budget file says not to', () => {
+    const quiet = config(
+      [
+        'budgets:',
+        '  - scope: /actualites',
+        '    bytes: { fail: 900KB }',
+        '',
+        'check:',
+        '  annotate_files: false',
+      ].join('\n'),
+    );
+    const { annotations } = checkAnnotations(report({ config: quiet, sourceGrowth: GROWTH }));
+    expect(annotations).toEqual([]);
+    // the file is still explained in the body: what the setting governs is
+    // where a note is attached, not whether the check says what it found.
+    expect(buildCheckRun(report({ config: quiet, sourceGrowth: GROWTH })).text).toContain('src/lib/dates.ts');
+  });
+
+  it('is still a valid check run output', () => {
+    expect(() => CheckRunOutput.parse(buildCheckRun(report({ sourceGrowth: GROWTH })))).not.toThrow();
+  });
+});

@@ -3,6 +3,7 @@ import { buildCheckRun, checkTitle, measurementRows, outcomesByRule } from '@bal
 import { formatMeasured, formatSigned } from '@balise/ui';
 import { t } from '../i18n';
 import { budgetCanon } from '../fixtures/budget-canon';
+import { attributionCanon } from '../fixtures/attribution-canon';
 import { attributionCoverage, attributionLead } from './attribution-view';
 
 /**
@@ -184,6 +185,9 @@ export function checkRunOutput(): CheckRunOutput {
     provenance: budgetCanon.provenance,
     configPath: budgetCanon.file,
     attribution: `${lead} ${attributionCoverage()}`,
+    // the files attribution placed at a line, from the same two builds the
+    // comparison screen explains. nothing here decides anything.
+    sourceGrowth: attributionCanon.placed,
   });
 }
 

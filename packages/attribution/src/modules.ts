@@ -5,6 +5,7 @@ import type {
   ModuleChange,
   ModuleDiff,
   PackageChange,
+  SourceSpan,
 } from '@balise/schemas';
 
 const SCHEME = /^([a-zA-Z][a-zA-Z0-9+.-]*):\/\/([^/]*)(\/.*)?$/;
@@ -79,12 +80,28 @@ export function changeStatus(before: number, after: number): ChangeStatus {
 interface SideTotals {
   bytesByPath: Map<string, number>;
   packageByPath: Map<string, string | null>;
+  spanByPath: Map<string, SourceSpan>;
   coverage: BundleCoverage;
+}
+
+/**
+ * a module split across two chunks is one module taken from two ranges of one
+ * file, so the side's span is the outer bounds of both. min and max are the
+ * only merge that stays exact: anything counted per line would double count
+ * the lines the two chunks share.
+ */
+function widen(current: SourceSpan | undefined, next: SourceSpan): SourceSpan {
+  if (current === undefined) return next;
+  return {
+    firstLine: Math.min(current.firstLine, next.firstLine),
+    lastLine: Math.max(current.lastLine, next.lastLine),
+  };
 }
 
 function foldSide(bundles: readonly BundleAttribution[]): SideTotals {
   const bytesByPath = new Map<string, number>();
   const packageByPath = new Map<string, string | null>();
+  const spanByPath = new Map<string, SourceSpan>();
   const unavailable: { url: string; reason: BundleCoverage['unavailable'][number]['reason'] }[] = [];
   let resolvedBundles = 0;
   let attributedBytes = 0;
@@ -100,6 +117,7 @@ function foldSide(bundles: readonly BundleAttribution[]): SideTotals {
     for (const source of bundle.sources) {
       bytesByPath.set(source.path, (bytesByPath.get(source.path) ?? 0) + source.bytes);
       packageByPath.set(source.path, source.packageName);
+      if (source.span !== null) spanByPath.set(source.path, widen(spanByPath.get(source.path), source.span));
       attributedBytes += source.bytes;
     }
   }
@@ -107,6 +125,7 @@ function foldSide(bundles: readonly BundleAttribution[]): SideTotals {
   return {
     bytesByPath,
     packageByPath,
+    spanByPath,
     coverage: { resolvedBundles, attributedBytes, unattributedBytes, unavailable },
   };
 }
@@ -157,6 +176,10 @@ export function diffModules(
       afterBytes,
       delta: afterBytes - beforeBytes,
       status: changeStatus(beforeBytes, afterBytes),
+      // the candidate's own positions, never the baseline's. a module the
+      // candidate dropped is not placed anywhere: the lines it used to occupy
+      // describe a file that is no longer being built.
+      span: right.spanByPath.get(path) ?? null,
     });
   }
   modules.sort(byImpact<ModuleChange>((row) => row.path));

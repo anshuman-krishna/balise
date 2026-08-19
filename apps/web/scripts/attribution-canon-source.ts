@@ -1,5 +1,12 @@
 import type { AttributedResource } from '@balise/schemas';
-import { attribute, attributeBundle, blameModules, type AttributionSide, type GitPort } from '@balise/attribution';
+import {
+  attribute,
+  attributeBundle,
+  blameModules,
+  placeGrowth,
+  type AttributionSide,
+  type GitPort,
+} from '@balise/attribution';
 
 /**
  * the canon's regression, as an actual pair of bundles with actual source maps
@@ -41,6 +48,8 @@ interface Module {
   source: string;
   /** attributed bytes this module must come out at, newline included. */
   bytes: number;
+  /** original lines the bundle takes from it, as a real map would name them. */
+  lines: number;
 }
 
 /** ascii filler, so one character is one byte and the totals are exact. */
@@ -59,6 +68,10 @@ interface Build {
  * one unmapped prelude line, every module end to end on one line, one unmapped
  * epilogue line. the epilogue is where a bundler's own output lives, which is
  * what grows when tree shaking gives up.
+ *
+ * each module gets one segment per original line it is taken from, which is
+ * what a real map carries and what lets a source file be placed at a line
+ * rather than at a default.
  */
 function build(url: string, modules: readonly Module[], preludeBytes: number, epilogueBytes: number): Build {
   let code = '';
@@ -72,11 +85,27 @@ function build(url: string, modules: readonly Module[], preludeBytes: number, ep
 
   let previousColumn = 0;
   let previousSource = 0;
-  const segments = modules.map((_, index) => {
-    const column = columns[index]!;
-    const fields = [encodeVlq(column - previousColumn), encodeVlq(index - previousSource), 'A', 'A'].join('');
-    previousColumn = column;
-    previousSource = index;
+  let previousLine = 0;
+  const segments = modules.flatMap((module, index) => {
+    const start = columns[index]!;
+    const terminator = index === modules.length - 1 ? 1 : 0;
+    const width = module.bytes - terminator;
+    const fields: string[] = [];
+
+    for (let line = 0; line < module.lines; line += 1) {
+      const column = start + Math.floor((line * width) / module.lines);
+      fields.push(
+        [
+          encodeVlq(column - previousColumn),
+          encodeVlq(index - previousSource),
+          encodeVlq(line - previousLine),
+          'A',
+        ].join(''),
+      );
+      previousColumn = column;
+      previousSource = index;
+      previousLine = line;
+    }
     return fields;
   });
 
@@ -97,23 +126,23 @@ const PRELUDE_BYTES = 12_000;
 
 // the baseline: date-fns core, and the two files that use it.
 const BASELINE_MODULES: readonly Module[] = [
-  { source: 'webpack://selo/./node_modules/date-fns/index.js', bytes: 68_000 },
-  { source: 'webpack://selo/./node_modules/date-fns/format/index.js', bytes: 94_000 },
-  { source: 'webpack://selo/./node_modules/date-fns/parse/index.js', bytes: 80_000 },
-  { source: 'webpack://selo/./src/lib/dates.ts', bytes: 4_120 },
-  { source: 'webpack://selo/./src/lib/format-acte.ts', bytes: 21_880 },
+  { source: 'webpack://selo/./node_modules/date-fns/index.js', bytes: 68_000, lines: 640 },
+  { source: 'webpack://selo/./node_modules/date-fns/format/index.js', bytes: 94_000, lines: 780 },
+  { source: 'webpack://selo/./node_modules/date-fns/parse/index.js', bytes: 80_000, lines: 720 },
+  { source: 'webpack://selo/./src/lib/dates.ts', bytes: 4_120, lines: 96 },
+  { source: 'webpack://selo/./src/lib/format-acte.ts', bytes: 21_880, lines: 318 },
 ];
 
 // the candidate: one line changed in dates.ts pulled the whole locale index in.
 const CANDIDATE_MODULES: readonly Module[] = [
-  { source: 'webpack://selo/./node_modules/date-fns/index.js', bytes: 68_000 },
-  { source: 'webpack://selo/./node_modules/date-fns/format/index.js', bytes: 94_000 },
-  { source: 'webpack://selo/./node_modules/date-fns/parse/index.js', bytes: 80_000 },
-  { source: 'webpack://selo/./node_modules/date-fns/locale/index.js', bytes: 40_000 },
-  { source: 'webpack://selo/./node_modules/date-fns/locale/fr/index.js', bytes: 62_000 },
-  { source: 'webpack://selo/./node_modules/date-fns/locale/br/index.js', bytes: 58_000 },
-  { source: 'webpack://selo/./src/lib/dates.ts', bytes: 4_240 },
-  { source: 'webpack://selo/./src/lib/format-acte.ts', bytes: 21_880 },
+  { source: 'webpack://selo/./node_modules/date-fns/index.js', bytes: 68_000, lines: 640 },
+  { source: 'webpack://selo/./node_modules/date-fns/format/index.js', bytes: 94_000, lines: 780 },
+  { source: 'webpack://selo/./node_modules/date-fns/parse/index.js', bytes: 80_000, lines: 720 },
+  { source: 'webpack://selo/./node_modules/date-fns/locale/index.js', bytes: 40_000, lines: 210 },
+  { source: 'webpack://selo/./node_modules/date-fns/locale/fr/index.js', bytes: 62_000, lines: 340 },
+  { source: 'webpack://selo/./node_modules/date-fns/locale/br/index.js', bytes: 58_000, lines: 320 },
+  { source: 'webpack://selo/./src/lib/dates.ts', bytes: 4_240, lines: 104 },
+  { source: 'webpack://selo/./src/lib/format-acte.ts', bytes: 21_880, lines: 318 },
 ];
 
 export const BASELINE_BUILD = build(BASELINE_BUNDLE, BASELINE_MODULES, PRELUDE_BYTES, 5_999);
@@ -230,12 +259,17 @@ export async function buildAttributionCanon() {
   // more can be said about it.
   const thirdPartyBundle = attributeBundle({ url: DAILYMOTION, content: 'window.DM=(function(){}());' });
 
+  // what the check may annotate: grown repository files the candidate map
+  // placed. every dependency in the diff drops out here, which is the point.
+  const placed = placeGrowth(changed);
+
   return {
     route: ROUTE,
     baselineBundleUrl: BASELINE_BUNDLE,
     candidateBundleUrl: CANDIDATE_BUNDLE,
     report,
     blame,
+    placed,
     thirdPartyBundle,
   };
 }

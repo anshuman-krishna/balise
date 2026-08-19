@@ -148,4 +148,21 @@ describe('the artifact the check posts', () => {
     )?.fail?.line;
     expect(output.annotations[0]).toMatchObject({ path: 'balise.yml', level: 'failure', startLine: line });
   });
+
+  it('annotates the source file attribution placed, at the lines it measured', () => {
+    const placed = output.annotations.filter((annotation) => annotation.path !== 'balise.yml');
+    expect(placed).toEqual([
+      expect.objectContaining({
+        path: 'src/lib/dates.ts',
+        startLine: 1,
+        endLine: 104,
+        level: 'notice',
+      }),
+    ]);
+  });
+
+  it('annotates no dependency, though three of them are in the diff', () => {
+    const paths = output.annotations.map((annotation) => annotation.path);
+    expect(paths.some((path) => path.includes('node_modules'))).toBe(false);
+  });
 });
