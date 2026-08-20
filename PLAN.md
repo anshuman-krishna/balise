@@ -40,7 +40,13 @@ would read as nine automatic answers, so the source breakdown sits beside it: 0
 from measurement, 73 attested, 5 not looked at. The notice above says what signing
 off would buy, and that one criterion in seventy-eight carries an evaluation rule
 this engine can run, which is the second sign-off and the real bottleneck.
-601 tests pass across twelve packages.
+The fleet, the execution report and the contract tracker read that rate too, so
+six surfaces now share one figure. The tracker's early warning used to claim
+conformity was rising at 1.9 pt per month, extrapolated from history nothing
+holds. It states a ceiling instead: what answering the five open criteria can
+reach at best, and how far short of the contractual target that leaves you. The
+90-day trend cell on that row reads no history rather than drawing a line.
+606 tests pass across twelve packages.
 
 ---
 
@@ -631,6 +637,45 @@ Later versions: see roadmap; detailed to-dos are appended when the version start
   "introduced by PR #412". Blame returns commits, so the card names the commit and its
   author; the pull request number survives in the commit subject where a squash merge
   puts it. Nothing is invented to match the mockup's wording.
+
+## Open: the carbon band the models actually produce
+
+Blocking a real slice, and a decision rather than a bug.
+
+Every carbon figure in the application still comes from the design canon, which was
+drawn before `packages/carbon-models` existed. It shows four models spanning 0.31 to
+0.58 gCO2e per visit, one of them ADEME Base Empreinte, which this build does not
+implement. Run the three models we do have over the canon's own measurements and they
+say something else entirely:
+
+| Page | EcoIndex | SWD v4 | 1byte | Spread |
+| --- | --: | --: | --: | --: |
+| Dashboard route | 2.436 | 0.078 | 0.301 | 31x |
+| Free scan page | 2.280 | 0.059 | 0.227 | 39x |
+| Baseline before PR #412 | 2.407 | 0.067 | 0.258 | 36x |
+
+The gap is structural, not a bug. EcoIndex returns 2.436 for that page on a French grid,
+on a European grid, and on grey hosting: it is a score-to-carbon lookup and is blind to
+both. SWD v4 and 1byte both respond to grid intensity and to green hosting, which is why
+they land an order of magnitude lower on France's grid.
+
+Three ways to go, and the choice changes what the signature component looks like:
+
+1. **Render it.** The band spans 0.08 to 2.44 and needs a log scale. This is section 10
+   of the operating manual taken literally, and it makes the disagreement the first thing
+   anyone sees. Every carbon figure in the app, the documents and the fleet changes.
+2. **Report EcoIndex as its grade, and band the two grid-sensitive models.** The band
+   becomes 0.078 to 0.301, a 3.9x spread that reads on a linear scale, with the EcoIndex
+   grade beside it as the referential's own output. Defensible on the grounds that a
+   grid-blind figure and a grid-sensitive one are not the same quantity. It is a
+   `METHODOLOGY.md` decision and needs sign-off.
+3. **Defer.** The screens keep the design canon's numbers and the models stay unwired.
+   Cheapest today, and it leaves the product's central claim on a fixture.
+
+Nothing here is decided. Recommendation is 2, with the reasoning written into
+`METHODOLOGY.md` rather than into a code comment.
+
+---
 
 ## Open questions (product, not engineering)
 
