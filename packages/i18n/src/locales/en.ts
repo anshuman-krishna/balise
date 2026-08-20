@@ -659,6 +659,43 @@ export const en = {
   // the public surfaces are french public pages, like the three documents:
   // their content renders in french in every locale. only the app chrome
   // around them (nav rail labels) follows the interface locale.
+  findings: {
+    title: '{count} findings',
+    titleOne: '1 finding',
+    none: 'Nothing above the published thresholds.',
+    note: 'Every line is a quantity measured on this page. No saving is projected.',
+    sentences: {
+      'image-weight': 'Images: {count} requests, {share} of the page weight.',
+      'font-weight': 'Fonts: {count} files, {share} of the page weight.',
+      'third-party-weight': 'Third parties: {count} distinct origins, {share} of the page weight.',
+      'heaviest-resource': 'One response carries {share} of the page weight.',
+      'unused-script-bytes':
+        'Scripts: {share} of the decoded bytes measured were not executed during the load.',
+      'unused-stylesheet-bytes':
+        'Stylesheets: {share} of the decoded bytes measured were not applied during the load.',
+      'reference-dom-node-count':
+        'DOM nodes: past {percentile} of the pages in the reference distribution EcoIndex publishes.',
+      'reference-request-count':
+        'Requests: past {percentile} of the pages in the reference distribution EcoIndex publishes.',
+      'reference-transferred-bytes':
+        'Page weight: past {percentile} of the pages in the reference distribution EcoIndex publishes.',
+    },
+    unavailable: '{count} files carry no coverage measurement and are not counted in this total.',
+    withheldTitle: 'Not measured on this run',
+    withheld: {
+      'unused-script-bytes':
+        'Unexecuted script bytes: coverage not instrumented, {count} files. It moves script execution time and is off by default.',
+      'unused-stylesheet-bytes':
+        'Unapplied stylesheet bytes: coverage not instrumented, {count} files.',
+      'image-weight': 'Images: not measured on this run.',
+      'font-weight': 'Fonts: not measured on this run.',
+      'third-party-weight': 'Third parties: not measured on this run.',
+      'heaviest-resource': 'Heaviest response: not measured on this run.',
+      'reference-dom-node-count': 'DOM nodes: no reference position.',
+      'reference-request-count': 'Requests: no reference position.',
+      'reference-transferred-bytes': 'Page weight: no reference position.',
+    },
+  },
   publicScan: {
     navObservatory: 'Observatoire',
     navMethodology: 'Méthodologie',
@@ -682,7 +719,6 @@ export const en = {
     // the public surfaces are french in both locales.
     provenance: 'médiane {model} · étendue sur {count} modèles · réseau {grid} gCO2e/kWh ({zone})',
     provenanceNoFloor: 'un seul relevé à froid : aucun plancher de bruit établi, aucune tendance affichée',
-    findingsTitle: "Trois points d'attention",
     declarationTitle: "Déclaration d'écoconception",
     declarationNone: 'Aucune déclaration trouvée',
     declarationBody:

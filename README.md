@@ -54,7 +54,11 @@ These are enforced in code and tested, not aspirational.
   number, and no outlier is quietly dropped.
 - **Honest degradation.** A missing source map, thin history, an unstable runner: each is
   stated plainly and named, never guessed around. Attribution that cannot resolve says so
-  rather than picking the largest new import.
+  rather than picking the largest new import, and a finding coverage could not see is
+  withheld rather than reported as zero.
+- **No saving is ever projected.** A finding states a quantity measured on the page and
+  what it is a share of. What the page would weigh in another format is a statement about a
+  page nobody loaded, and one projection in a report makes the whole report a projection.
 - **The register is measurement, not campaign.** No leaves, no globes, no gradients from
   teal to lime. Green appears as a pass state and never as a brand colour.
 
@@ -70,10 +74,17 @@ fields, because instrumenting execution changes the execution time it reports.
 
 **Reduce.** `packages/measure-core` is pure functions over raw captures: median and MAD,
 the per-metric noise floor from rolling history, confidence grading, and `classifyDelta`,
-which is the mechanical form of the rule that nothing fails on noise. It also holds the two
-reductions of a capture, the six metrics and the resource inventory, so a screen's totals and
-the figures above them cannot come from different arithmetic. It has no IO and the heaviest
-test suite in the repository.
+which is the mechanical form of the rule that nothing fails on noise. It also holds the three
+reductions of a capture, the six metrics, the resource inventory and the findings, so a
+screen's totals and the figures above them cannot come from different arithmetic. It has no
+IO and the heaviest test suite in the repository.
+
+A finding is what the capture shows about itself: images are 66 % of the page, one response
+is a quarter of it, 442 KB of a bundle's decoded bytes never executed. Each carries the basis
+it is a share of, because unexecuted bytes are a share of what decompressed and not of what
+crossed the wire. None of them is a projected saving, and the only comparison to other
+services is a position in the quantile tables EcoIndex publishes, with the source and its
+version printed beside the number.
 
 **Estimate.** `packages/carbon-models` runs every configured model on every run. Each one
 declares its assumptions as data, and those assumptions render wherever its output
@@ -142,7 +153,7 @@ apps/
 
 packages/
   schemas/              Zod contracts, single source of truth for every shape
-  measure-core/         Metric extraction, statistics, noise floor, delta classification
+  measure-core/         Metric extraction, statistics, noise floor, delta classification, findings
   carbon-models/        Pluggable estimation models (ecoindex, swd v4, onebyte)
   criteria-engine/      Referential-agnostic rule evaluation, tiers and blocking findings
   rule-packs/           Versioned referentials. RGESN 2024 v2, statements verbatim
@@ -192,19 +203,20 @@ pnpm gen:attribution-canon
 pnpm gen:budget-canon
 pnpm gen:carbon-canon
 pnpm gen:criteria-canon
+pnpm gen:findings-canon
 pnpm gen:ledger-canon
 pnpm gen:measurement-canon
 ```
 
-`gen:measurement-canon` sits underneath the other four. It is the one place a median, a
+`gen:measurement-canon` sits underneath the other five. It is the one place a median, a
 dispersion, a noise floor or a confidence grade is produced, and the carbon, budget and
 ledger canons read their byte counts and floors from it rather than restating them, so the
 estimate, the verdict and the register all describe the same run.
 
 Underneath that again is one capture per run: a real list of responses that the metrics are
-extracted from, the inventory is grouped from, and the attribution and budget engines are run
-over. Nothing sums a resource list of its own, which is how a page stops weighing one thing in
-its metric row and another in its resource table.
+extracted from, the inventory is grouped from, the findings are raised from, and the
+attribution and budget engines are run over. Nothing sums a resource list of its own, which is
+how a page stops weighing one thing in its metric row and another in its resource table.
 
 ## Status
 
@@ -222,8 +234,9 @@ than implying otherwise.
 
 Waiting on a decision rather than on code: `docs/METHODOLOGY.md` is a v1.0 draft and not in
 force, the RGESN tier split ships as a proposal that nothing is answered automatically
-from, and the evaluation thresholds are ours to set because the referential sets almost
-none. Those gates are stated in the interface, not buried in a to-do list.
+from, the evaluation thresholds are ours to set because the referential sets almost none,
+and the finding thresholds decide what a public surface calls a problem on a service whose
+owner never asked to be measured. Those gates are stated in the interface, not buried in a to-do list.
 
 `PLAN.md` holds the living roadmap, the to-do lists and the decisions log.
 

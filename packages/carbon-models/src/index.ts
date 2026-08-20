@@ -5,7 +5,12 @@ import { swdModel } from './models/swd.js';
 import { onebyteModel } from './models/onebyte.js';
 
 export type { CarbonModel, ModelMethod, ModelSensitivity } from './types.js';
-export { ecoindexModel, computeEcoIndexScore, ecoIndexGrade } from './models/ecoindex.js';
+export {
+  ecoindexModel,
+  computeEcoIndexScore,
+  ecoIndexGrade,
+  ecoIndexPercentile,
+} from './models/ecoindex.js';
 export { swdModel } from './models/swd.js';
 export { onebyteModel } from './models/onebyte.js';
 

@@ -1,11 +1,13 @@
 import { useState, type FormEvent } from 'react';
 import { useNavigate } from 'react-router';
 import { ToleranceBand } from '@balise/ui';
-import { fill, t } from '../i18n';
+import { fill, t, tFr } from '../i18n';
 import { scanFixture as scan } from '../fixtures/canon';
 import { carbonCanon } from '../fixtures/carbon-canon';
 import { carbonPage, carbonScale, formatCarbon, referenceModelRef } from '../lib/carbon-view';
 import { PublicHeader } from '../components/PublicHeader';
+import { FindingsList } from '../components/FindingsList';
+import { findingsView } from '../lib/findings-view';
 import { lookupScan } from '../lib/scan-lookup';
 
 // the scan's grade and band are estimated by @balise/carbon-models from the
@@ -17,27 +19,19 @@ const scanGrade = scanPage.aside.find((output) => output.grade !== null) ?? null
 
 const REFERENCE = `${referenceModelRef().id}@${referenceModelRef().version}`;
 
+// the findings @balise/measure-core raised from this scan's own capture. the
+// surface is french whatever the app locale is, so it reads the french catalog
+// rather than the interface one.
+const scanFindings = findingsView('scan', tFr);
+
 function Findings() {
   return (
     <div style={{ padding: '20px 26px', borderRight: '1px solid var(--divider-cell)' }}>
       <span className="eyebrow" style={{ fontSize: 9 }}>
-        {t.publicScan.findingsTitle}
+        {scanFindings.title}
       </span>
-      <div style={{ marginTop: 13, display: 'flex', flexDirection: 'column', gap: 11 }}>
-        {scan.findings.map((finding) => (
-          <div
-            key={finding.text}
-            style={{ display: 'grid', gridTemplateColumns: '64px 1fr', gap: 12, alignItems: 'baseline' }}
-          >
-            <span
-              className="mono"
-              style={{ fontSize: 11, color: finding.tone === 'breach' ? 'var(--breach)' : 'var(--caution)' }}
-            >
-              {finding.amount}
-            </span>
-            <span style={{ fontSize: 11.5, lineHeight: 1.5 }}>{finding.text}</span>
-          </div>
-        ))}
+      <div style={{ marginTop: 13 }}>
+        <FindingsList view={scanFindings} />
       </div>
     </div>
   );

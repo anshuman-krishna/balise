@@ -16,7 +16,7 @@ import {
   NOISE_FLOOR_MIN_HISTORY,
   PROVISIONAL_NOISE_FLOOR_SCALING_FACTOR,
 } from '@balise/measure-core';
-import { BASELINE_CAPTURE, CANDIDATE_CAPTURE } from './capture-canon-source';
+import { BASELINE_CAPTURE, CANDIDATE_CAPTURE, SCAN_CAPTURE } from './capture-canon-source';
 
 /**
  * every median, dispersion, noise floor and confidence grade the application
@@ -382,18 +382,27 @@ const SCENARIOS: readonly ScenarioSpec[] = [
   },
   {
     // the free scan: one cold pass on a page entered by a stranger. no history,
-    // so no floor, and every figure it shows is low confidence.
+    // so no floor, and every figure it shows is low confidence. one page and
+    // one run, so the capture is the measurement and there is no centre to
+    // author: the findings, the grade and the weight are all this list of
+    // resources, read three ways.
     id: 'scan',
     label: 'bibliotheques-selo.fr',
     pass: 'cold',
     historyCount: 0,
-    metrics: {
-      transferred_bytes: { centre: 980_000, spread: 0 },
-      request_count: { centre: 61, spread: 0, integral: true },
-      dom_node_count: { centre: 1_830, spread: 0, integral: true },
-    },
+    metrics: fromCapture(SCAN_CAPTURE, {
+      transferred_bytes: 0,
+      request_count: 0,
+      dom_node_count: 0,
+    }),
     aggregations: [
-      { id: 'scan', label: 'bibliotheques-selo.fr', runCount: 1, fingerprintStable: true },
+      {
+        id: 'scan',
+        label: 'bibliotheques-selo.fr',
+        runCount: 1,
+        fingerprintStable: true,
+        capture: SCAN_CAPTURE,
+      },
     ],
   },
 ];

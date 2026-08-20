@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { ModelInput } from '@balise/schemas';
-import { ecoindexModel } from '../src/models/ecoindex.js';
+import { ecoindexModel, ecoIndexPercentile } from '../src/models/ecoindex.js';
 
 // golden fixtures. expected values computed by running the cnumr reference
 // implementation (GreenIT-Analysis ecoIndex.js, quantiles from the published
@@ -50,5 +50,37 @@ describe('ecoindex golden fixtures', () => {
       expect(assumption.textFr.length).toBeGreaterThan(0);
       expect(assumption.textEn.length).toBeGreaterThan(0);
     }
+  });
+});
+
+describe('the published reference distribution', () => {
+  // the quantile tables are twenty ventiles, so a value landing on the
+  // eighteenth boundary is the ninetieth percentile of the distribution
+  // ecoindex publishes. these are read off the same tables the score uses.
+  it('places a value at its percentile of the published table', () => {
+    expect(ecoIndexPercentile('dom_node_count', 1801)).toBeCloseTo(90, 6);
+    expect(ecoIndexPercentile('request_count', 205)).toBeCloseTo(90, 6);
+    expect(ecoIndexPercentile('transferred_bytes', 5_400_080)).toBeCloseTo(90, 6);
+  });
+
+  it('interpolates inside a ventile rather than rounding to it', () => {
+    // 1830 sits just above the 90th percentile boundary of 1801.
+    const percentile = ecoIndexPercentile('dom_node_count', 1_830)!;
+    expect(percentile).toBeGreaterThan(90);
+    expect(percentile).toBeLessThan(90.5);
+  });
+
+  it('reads page weight in decimal kilobytes, as the model does', () => {
+    expect(ecoIndexPercentile('transferred_bytes', 144_700)).toBeCloseTo(10, 6);
+  });
+
+  it('bounds the ends of the table', () => {
+    expect(ecoIndexPercentile('dom_node_count', 0)).toBe(0);
+    expect(ecoIndexPercentile('dom_node_count', 10_000_000)).toBe(100);
+  });
+
+  it('answers nothing for a metric ecoindex publishes no table for', () => {
+    expect(ecoIndexPercentile('js_execution_ms', 548)).toBeNull();
+    expect(ecoIndexPercentile('third_party_bytes', 478_000)).toBeNull();
   });
 });

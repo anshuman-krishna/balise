@@ -803,15 +803,13 @@ export const prCheckFixture = {
 
 // ---- public surfaces ----
 
-export interface ScanFinding {
-  amount: string;
-  tone: 'breach' | 'caution';
-  text: string;
-}
-
 export const scanFixture = {
   domain: 'bibliotheques-selo.fr',
   profile: 'mobile-4g',
+  // the findings are raised by @balise/measure-core from this page's capture
+  // and live in findings-canon.ts. the three that used to sit here were
+  // authored sentences with authored savings, two of them describing things a
+  // capture does not hold.
   // the grade, the score and the carbon band are estimated by
   // @balise/carbon-models from this page's held capture: see carbon-canon.ts.
   //
@@ -820,24 +818,6 @@ export const scanFixture = {
   // beside a single run was the clearest case in the app of a screen grading
   // its own measurement.
   confidence: SCAN_DOM.confidence,
-  // findings are engine output, kept as data like the attribution parts
-  findings: [
-    {
-      amount: '−214 KB',
-      tone: 'breach',
-      text: "Quatre images en PNG non redimensionnées sur la page d'accueil.",
-    },
-    {
-      amount: '−96 KB',
-      tone: 'breach',
-      text: 'Deux familles de polices chargées, six graisses, aucune sous-classée.',
-    },
-    {
-      amount: formatInt(SCAN_DOM.median),
-      tone: 'caution',
-      text: 'Nœuds DOM : le seuil EcoIndex à partir duquel la note décroche.',
-    },
-  ] as readonly ScanFinding[],
 } as const;
 
 export type ObservatorySector = 'epci' | 'communes' | 'etat' | 'sante' | 'transport' | 'departements';

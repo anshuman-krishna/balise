@@ -37,7 +37,7 @@ export function capture(aggregationId: string): RawCapture {
 }
 
 /** last path segment, or the path itself for the document the run navigated to. */
-function displayName(url: string, resourceType: ResourceType): string {
+export function displayName(url: string, resourceType: ResourceType): string {
   let parsed: URL;
   try {
     parsed = new URL(url);

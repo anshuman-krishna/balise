@@ -8,6 +8,22 @@ export {
   type ResourceSummary,
 } from './resources.js';
 export {
+  findings,
+  PROVISIONAL_FINDING_THRESHOLDS,
+  type Finding,
+  type FindingEvidence,
+  type FindingId,
+  type FindingSeverity,
+  type FindingShare,
+  type FindingThreshold,
+  type FindingThresholds,
+  type FindingsInput,
+  type FindingsResult,
+  type ReferencePosition,
+  type ShareBasis,
+  type WithheldFinding,
+} from './findings.js';
+export {
   executedRanges,
   unusedBytes,
   unusedBytesFromCoverage,

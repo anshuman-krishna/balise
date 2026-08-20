@@ -665,8 +665,8 @@ export const measurementCanon = {
         {
           "url": "https://sevre-et-loire.fr/assets/media/vignette-01.webp",
           "resourceType": "image",
-          "transferredBytes": 2000,
-          "decodedBytes": 2000,
+          "transferredBytes": 1775,
+          "decodedBytes": 1775,
           "unusedDecodedBytes": null,
           "startMs": 620,
           "durationMs": 120
@@ -674,8 +674,8 @@ export const measurementCanon = {
         {
           "url": "https://sevre-et-loire.fr/assets/media/vignette-02.webp",
           "resourceType": "image",
-          "transferredBytes": 2137,
-          "decodedBytes": 2137,
+          "transferredBytes": 2650,
+          "decodedBytes": 2650,
           "unusedDecodedBytes": null,
           "startMs": 642,
           "durationMs": 173
@@ -683,8 +683,8 @@ export const measurementCanon = {
         {
           "url": "https://sevre-et-loire.fr/assets/media/vignette-03.webp",
           "resourceType": "image",
-          "transferredBytes": 2274,
-          "decodedBytes": 2274,
+          "transferredBytes": 3526,
+          "decodedBytes": 3526,
           "unusedDecodedBytes": null,
           "startMs": 664,
           "durationMs": 226
@@ -692,8 +692,8 @@ export const measurementCanon = {
         {
           "url": "https://sevre-et-loire.fr/assets/media/vignette-04.webp",
           "resourceType": "image",
-          "transferredBytes": 2411,
-          "decodedBytes": 2411,
+          "transferredBytes": 2035,
+          "decodedBytes": 2035,
           "unusedDecodedBytes": null,
           "startMs": 686,
           "durationMs": 139
@@ -701,8 +701,8 @@ export const measurementCanon = {
         {
           "url": "https://sevre-et-loire.fr/assets/media/vignette-05.webp",
           "resourceType": "image",
-          "transferredBytes": 2548,
-          "decodedBytes": 2548,
+          "transferredBytes": 2910,
+          "decodedBytes": 2910,
           "unusedDecodedBytes": null,
           "startMs": 708,
           "durationMs": 192
@@ -710,8 +710,8 @@ export const measurementCanon = {
         {
           "url": "https://sevre-et-loire.fr/assets/media/vignette-06.webp",
           "resourceType": "image",
-          "transferredBytes": 2685,
-          "decodedBytes": 2685,
+          "transferredBytes": 3786,
+          "decodedBytes": 3786,
           "unusedDecodedBytes": null,
           "startMs": 730,
           "durationMs": 245
@@ -719,8 +719,8 @@ export const measurementCanon = {
         {
           "url": "https://sevre-et-loire.fr/assets/media/vignette-07.webp",
           "resourceType": "image",
-          "transferredBytes": 2822,
-          "decodedBytes": 2822,
+          "transferredBytes": 2295,
+          "decodedBytes": 2295,
           "unusedDecodedBytes": null,
           "startMs": 752,
           "durationMs": 158
@@ -728,8 +728,8 @@ export const measurementCanon = {
         {
           "url": "https://sevre-et-loire.fr/assets/media/vignette-08.webp",
           "resourceType": "image",
-          "transferredBytes": 2959,
-          "decodedBytes": 2959,
+          "transferredBytes": 3171,
+          "decodedBytes": 3171,
           "unusedDecodedBytes": null,
           "startMs": 774,
           "durationMs": 211
@@ -737,8 +737,8 @@ export const measurementCanon = {
         {
           "url": "https://sevre-et-loire.fr/assets/media/vignette-09.webp",
           "resourceType": "image",
-          "transferredBytes": 3096,
-          "decodedBytes": 3096,
+          "transferredBytes": 4046,
+          "decodedBytes": 4046,
           "unusedDecodedBytes": null,
           "startMs": 796,
           "durationMs": 124
@@ -746,8 +746,8 @@ export const measurementCanon = {
         {
           "url": "https://sevre-et-loire.fr/assets/media/vignette-10.webp",
           "resourceType": "image",
-          "transferredBytes": 3233,
-          "decodedBytes": 3233,
+          "transferredBytes": 2555,
+          "decodedBytes": 2555,
           "unusedDecodedBytes": null,
           "startMs": 818,
           "durationMs": 177
@@ -755,8 +755,8 @@ export const measurementCanon = {
         {
           "url": "https://sevre-et-loire.fr/assets/media/vignette-11.webp",
           "resourceType": "image",
-          "transferredBytes": 3370,
-          "decodedBytes": 3370,
+          "transferredBytes": 3431,
+          "decodedBytes": 3431,
           "unusedDecodedBytes": null,
           "startMs": 840,
           "durationMs": 230
@@ -764,8 +764,8 @@ export const measurementCanon = {
         {
           "url": "https://sevre-et-loire.fr/assets/media/vignette-12.webp",
           "resourceType": "image",
-          "transferredBytes": 3507,
-          "decodedBytes": 3507,
+          "transferredBytes": 1940,
+          "decodedBytes": 1940,
           "unusedDecodedBytes": null,
           "startMs": 862,
           "durationMs": 143
@@ -773,8 +773,8 @@ export const measurementCanon = {
         {
           "url": "https://sevre-et-loire.fr/assets/media/vignette-13.webp",
           "resourceType": "image",
-          "transferredBytes": 3644,
-          "decodedBytes": 3644,
+          "transferredBytes": 2816,
+          "decodedBytes": 2816,
           "unusedDecodedBytes": null,
           "startMs": 884,
           "durationMs": 196
@@ -782,8 +782,8 @@ export const measurementCanon = {
         {
           "url": "https://sevre-et-loire.fr/assets/media/vignette-14.webp",
           "resourceType": "image",
-          "transferredBytes": 3781,
-          "decodedBytes": 3781,
+          "transferredBytes": 3691,
+          "decodedBytes": 3691,
           "unusedDecodedBytes": null,
           "startMs": 906,
           "durationMs": 249
@@ -791,8 +791,8 @@ export const measurementCanon = {
         {
           "url": "https://sevre-et-loire.fr/assets/media/vignette-15.webp",
           "resourceType": "image",
-          "transferredBytes": 2118,
-          "decodedBytes": 2118,
+          "transferredBytes": 2201,
+          "decodedBytes": 2201,
           "unusedDecodedBytes": null,
           "startMs": 928,
           "durationMs": 162
@@ -800,8 +800,8 @@ export const measurementCanon = {
         {
           "url": "https://sevre-et-loire.fr/assets/media/vignette-16.webp",
           "resourceType": "image",
-          "transferredBytes": 2255,
-          "decodedBytes": 2255,
+          "transferredBytes": 3076,
+          "decodedBytes": 3076,
           "unusedDecodedBytes": null,
           "startMs": 950,
           "durationMs": 215
@@ -809,8 +809,8 @@ export const measurementCanon = {
         {
           "url": "https://sevre-et-loire.fr/assets/media/vignette-17.webp",
           "resourceType": "image",
-          "transferredBytes": 2392,
-          "decodedBytes": 2392,
+          "transferredBytes": 3952,
+          "decodedBytes": 3952,
           "unusedDecodedBytes": null,
           "startMs": 972,
           "durationMs": 128
@@ -818,8 +818,8 @@ export const measurementCanon = {
         {
           "url": "https://sevre-et-loire.fr/assets/media/vignette-18.webp",
           "resourceType": "image",
-          "transferredBytes": 2529,
-          "decodedBytes": 2529,
+          "transferredBytes": 2461,
+          "decodedBytes": 2461,
           "unusedDecodedBytes": null,
           "startMs": 994,
           "durationMs": 181
@@ -827,8 +827,8 @@ export const measurementCanon = {
         {
           "url": "https://sevre-et-loire.fr/assets/media/vignette-19.webp",
           "resourceType": "image",
-          "transferredBytes": 2666,
-          "decodedBytes": 2666,
+          "transferredBytes": 3336,
+          "decodedBytes": 3336,
           "unusedDecodedBytes": null,
           "startMs": 1016,
           "durationMs": 234
@@ -836,8 +836,8 @@ export const measurementCanon = {
         {
           "url": "https://sevre-et-loire.fr/assets/media/vignette-20.webp",
           "resourceType": "image",
-          "transferredBytes": 2803,
-          "decodedBytes": 2803,
+          "transferredBytes": 1846,
+          "decodedBytes": 1846,
           "unusedDecodedBytes": null,
           "startMs": 1038,
           "durationMs": 147
@@ -845,8 +845,8 @@ export const measurementCanon = {
         {
           "url": "https://sevre-et-loire.fr/assets/media/vignette-21.webp",
           "resourceType": "image",
-          "transferredBytes": 2940,
-          "decodedBytes": 2940,
+          "transferredBytes": 2721,
+          "decodedBytes": 2721,
           "unusedDecodedBytes": null,
           "startMs": 1060,
           "durationMs": 200
@@ -854,8 +854,8 @@ export const measurementCanon = {
         {
           "url": "https://sevre-et-loire.fr/assets/media/vignette-22.webp",
           "resourceType": "image",
-          "transferredBytes": 3077,
-          "decodedBytes": 3077,
+          "transferredBytes": 3597,
+          "decodedBytes": 3597,
           "unusedDecodedBytes": null,
           "startMs": 1082,
           "durationMs": 253
@@ -863,8 +863,8 @@ export const measurementCanon = {
         {
           "url": "https://sevre-et-loire.fr/assets/media/vignette-23.webp",
           "resourceType": "image",
-          "transferredBytes": 3214,
-          "decodedBytes": 3214,
+          "transferredBytes": 2106,
+          "decodedBytes": 2106,
           "unusedDecodedBytes": null,
           "startMs": 1104,
           "durationMs": 166
@@ -872,8 +872,8 @@ export const measurementCanon = {
         {
           "url": "https://sevre-et-loire.fr/assets/media/vignette-24.webp",
           "resourceType": "image",
-          "transferredBytes": 3351,
-          "decodedBytes": 3351,
+          "transferredBytes": 2981,
+          "decodedBytes": 2981,
           "unusedDecodedBytes": null,
           "startMs": 1126,
           "durationMs": 219
@@ -881,8 +881,8 @@ export const measurementCanon = {
         {
           "url": "https://sevre-et-loire.fr/assets/media/vignette-25.webp",
           "resourceType": "image",
-          "transferredBytes": 3488,
-          "decodedBytes": 3488,
+          "transferredBytes": 3857,
+          "decodedBytes": 3857,
           "unusedDecodedBytes": null,
           "startMs": 1148,
           "durationMs": 132
@@ -890,8 +890,8 @@ export const measurementCanon = {
         {
           "url": "https://sevre-et-loire.fr/assets/media/vignette-26.webp",
           "resourceType": "image",
-          "transferredBytes": 3625,
-          "decodedBytes": 3625,
+          "transferredBytes": 2366,
+          "decodedBytes": 2366,
           "unusedDecodedBytes": null,
           "startMs": 1170,
           "durationMs": 185
@@ -899,8 +899,8 @@ export const measurementCanon = {
         {
           "url": "https://sevre-et-loire.fr/assets/media/vignette-27.webp",
           "resourceType": "image",
-          "transferredBytes": 3762,
-          "decodedBytes": 3762,
+          "transferredBytes": 3242,
+          "decodedBytes": 3242,
           "unusedDecodedBytes": null,
           "startMs": 1192,
           "durationMs": 238
@@ -908,8 +908,8 @@ export const measurementCanon = {
         {
           "url": "https://sevre-et-loire.fr/assets/media/vignette-28.webp",
           "resourceType": "image",
-          "transferredBytes": 2099,
-          "decodedBytes": 2099,
+          "transferredBytes": 4117,
+          "decodedBytes": 4117,
           "unusedDecodedBytes": null,
           "startMs": 1214,
           "durationMs": 151
@@ -917,8 +917,8 @@ export const measurementCanon = {
         {
           "url": "https://sevre-et-loire.fr/assets/media/vignette-29.webp",
           "resourceType": "image",
-          "transferredBytes": 2236,
-          "decodedBytes": 2236,
+          "transferredBytes": 2626,
+          "decodedBytes": 2626,
           "unusedDecodedBytes": null,
           "startMs": 1236,
           "durationMs": 204
@@ -926,8 +926,8 @@ export const measurementCanon = {
         {
           "url": "https://sevre-et-loire.fr/assets/media/vignette-30.webp",
           "resourceType": "image",
-          "transferredBytes": 2373,
-          "decodedBytes": 2373,
+          "transferredBytes": 3502,
+          "decodedBytes": 3502,
           "unusedDecodedBytes": null,
           "startMs": 1258,
           "durationMs": 257
@@ -935,8 +935,8 @@ export const measurementCanon = {
         {
           "url": "https://sevre-et-loire.fr/assets/media/vignette-31.webp",
           "resourceType": "image",
-          "transferredBytes": 2510,
-          "decodedBytes": 2510,
+          "transferredBytes": 2011,
+          "decodedBytes": 2011,
           "unusedDecodedBytes": null,
           "startMs": 1280,
           "durationMs": 170
@@ -944,8 +944,8 @@ export const measurementCanon = {
         {
           "url": "https://sevre-et-loire.fr/assets/media/vignette-32.webp",
           "resourceType": "image",
-          "transferredBytes": 2647,
-          "decodedBytes": 2647,
+          "transferredBytes": 2887,
+          "decodedBytes": 2887,
           "unusedDecodedBytes": null,
           "startMs": 1302,
           "durationMs": 223
@@ -953,8 +953,8 @@ export const measurementCanon = {
         {
           "url": "https://sevre-et-loire.fr/assets/media/vignette-33.webp",
           "resourceType": "image",
-          "transferredBytes": 2784,
-          "decodedBytes": 2784,
+          "transferredBytes": 3762,
+          "decodedBytes": 3762,
           "unusedDecodedBytes": null,
           "startMs": 1324,
           "durationMs": 136
@@ -962,8 +962,8 @@ export const measurementCanon = {
         {
           "url": "https://sevre-et-loire.fr/assets/media/vignette-34.webp",
           "resourceType": "image",
-          "transferredBytes": 2921,
-          "decodedBytes": 2921,
+          "transferredBytes": 2272,
+          "decodedBytes": 2272,
           "unusedDecodedBytes": null,
           "startMs": 1346,
           "durationMs": 189
@@ -971,8 +971,8 @@ export const measurementCanon = {
         {
           "url": "https://sevre-et-loire.fr/assets/media/vignette-35.webp",
           "resourceType": "image",
-          "transferredBytes": 3058,
-          "decodedBytes": 3058,
+          "transferredBytes": 3147,
+          "decodedBytes": 3147,
           "unusedDecodedBytes": null,
           "startMs": 1368,
           "durationMs": 242
@@ -980,8 +980,8 @@ export const measurementCanon = {
         {
           "url": "https://sevre-et-loire.fr/assets/media/vignette-36.webp",
           "resourceType": "image",
-          "transferredBytes": 3195,
-          "decodedBytes": 3195,
+          "transferredBytes": 4023,
+          "decodedBytes": 4023,
           "unusedDecodedBytes": null,
           "startMs": 1390,
           "durationMs": 155
@@ -989,8 +989,8 @@ export const measurementCanon = {
         {
           "url": "https://sevre-et-loire.fr/assets/media/vignette-37.webp",
           "resourceType": "image",
-          "transferredBytes": 3332,
-          "decodedBytes": 3332,
+          "transferredBytes": 2532,
+          "decodedBytes": 2532,
           "unusedDecodedBytes": null,
           "startMs": 1412,
           "durationMs": 208
@@ -998,8 +998,8 @@ export const measurementCanon = {
         {
           "url": "https://sevre-et-loire.fr/assets/media/vignette-38.webp",
           "resourceType": "image",
-          "transferredBytes": 3469,
-          "decodedBytes": 3469,
+          "transferredBytes": 3407,
+          "decodedBytes": 3407,
           "unusedDecodedBytes": null,
           "startMs": 1434,
           "durationMs": 121
@@ -1007,8 +1007,8 @@ export const measurementCanon = {
         {
           "url": "https://sevre-et-loire.fr/assets/media/vignette-39.webp",
           "resourceType": "image",
-          "transferredBytes": 3606,
-          "decodedBytes": 3606,
+          "transferredBytes": 1917,
+          "decodedBytes": 1917,
           "unusedDecodedBytes": null,
           "startMs": 1456,
           "durationMs": 174
@@ -1016,8 +1016,8 @@ export const measurementCanon = {
         {
           "url": "https://sevre-et-loire.fr/assets/media/vignette-40.webp",
           "resourceType": "image",
-          "transferredBytes": 3743,
-          "decodedBytes": 3743,
+          "transferredBytes": 2792,
+          "decodedBytes": 2792,
           "unusedDecodedBytes": null,
           "startMs": 1478,
           "durationMs": 227
@@ -1025,8 +1025,8 @@ export const measurementCanon = {
         {
           "url": "https://sevre-et-loire.fr/assets/media/vignette-41.webp",
           "resourceType": "image",
-          "transferredBytes": 2080,
-          "decodedBytes": 2080,
+          "transferredBytes": 3668,
+          "decodedBytes": 3668,
           "unusedDecodedBytes": null,
           "startMs": 1500,
           "durationMs": 140
@@ -1034,8 +1034,8 @@ export const measurementCanon = {
         {
           "url": "https://sevre-et-loire.fr/assets/media/vignette-42.webp",
           "resourceType": "image",
-          "transferredBytes": 2217,
-          "decodedBytes": 2217,
+          "transferredBytes": 2177,
+          "decodedBytes": 2177,
           "unusedDecodedBytes": null,
           "startMs": 1522,
           "durationMs": 193
@@ -1043,8 +1043,8 @@ export const measurementCanon = {
         {
           "url": "https://sevre-et-loire.fr/assets/media/vignette-43.webp",
           "resourceType": "image",
-          "transferredBytes": 2354,
-          "decodedBytes": 2354,
+          "transferredBytes": 3052,
+          "decodedBytes": 3052,
           "unusedDecodedBytes": null,
           "startMs": 1544,
           "durationMs": 246
@@ -1052,8 +1052,8 @@ export const measurementCanon = {
         {
           "url": "https://sevre-et-loire.fr/assets/media/vignette-44.webp",
           "resourceType": "image",
-          "transferredBytes": 2491,
-          "decodedBytes": 2491,
+          "transferredBytes": 3928,
+          "decodedBytes": 3928,
           "unusedDecodedBytes": null,
           "startMs": 1566,
           "durationMs": 159
@@ -1061,8 +1061,8 @@ export const measurementCanon = {
         {
           "url": "https://sevre-et-loire.fr/assets/media/vignette-45.webp",
           "resourceType": "image",
-          "transferredBytes": 2628,
-          "decodedBytes": 2628,
+          "transferredBytes": 2437,
+          "decodedBytes": 2437,
           "unusedDecodedBytes": null,
           "startMs": 1588,
           "durationMs": 212
@@ -1070,8 +1070,8 @@ export const measurementCanon = {
         {
           "url": "https://sevre-et-loire.fr/assets/media/vignette-46.webp",
           "resourceType": "image",
-          "transferredBytes": 2765,
-          "decodedBytes": 2765,
+          "transferredBytes": 3313,
+          "decodedBytes": 3313,
           "unusedDecodedBytes": null,
           "startMs": 1610,
           "durationMs": 125
@@ -1079,8 +1079,8 @@ export const measurementCanon = {
         {
           "url": "https://sevre-et-loire.fr/assets/media/vignette-47.webp",
           "resourceType": "image",
-          "transferredBytes": 2902,
-          "decodedBytes": 2902,
+          "transferredBytes": 1822,
+          "decodedBytes": 1822,
           "unusedDecodedBytes": null,
           "startMs": 1632,
           "durationMs": 178
@@ -1088,8 +1088,8 @@ export const measurementCanon = {
         {
           "url": "https://sevre-et-loire.fr/assets/media/vignette-48.webp",
           "resourceType": "image",
-          "transferredBytes": 3039,
-          "decodedBytes": 3039,
+          "transferredBytes": 2697,
+          "decodedBytes": 2697,
           "unusedDecodedBytes": null,
           "startMs": 1654,
           "durationMs": 231
@@ -1097,8 +1097,8 @@ export const measurementCanon = {
         {
           "url": "https://sevre-et-loire.fr/assets/media/vignette-49.webp",
           "resourceType": "image",
-          "transferredBytes": 3176,
-          "decodedBytes": 3176,
+          "transferredBytes": 3573,
+          "decodedBytes": 3573,
           "unusedDecodedBytes": null,
           "startMs": 1676,
           "durationMs": 144
@@ -1106,8 +1106,8 @@ export const measurementCanon = {
         {
           "url": "https://sevre-et-loire.fr/assets/media/vignette-50.webp",
           "resourceType": "image",
-          "transferredBytes": 3313,
-          "decodedBytes": 3313,
+          "transferredBytes": 2082,
+          "decodedBytes": 2082,
           "unusedDecodedBytes": null,
           "startMs": 1698,
           "durationMs": 197
@@ -1115,8 +1115,8 @@ export const measurementCanon = {
         {
           "url": "https://sevre-et-loire.fr/assets/media/vignette-51.webp",
           "resourceType": "image",
-          "transferredBytes": 3450,
-          "decodedBytes": 3450,
+          "transferredBytes": 2958,
+          "decodedBytes": 2958,
           "unusedDecodedBytes": null,
           "startMs": 1720,
           "durationMs": 250
@@ -1124,8 +1124,8 @@ export const measurementCanon = {
         {
           "url": "https://sevre-et-loire.fr/assets/media/vignette-52.webp",
           "resourceType": "image",
-          "transferredBytes": 3587,
-          "decodedBytes": 3587,
+          "transferredBytes": 3833,
+          "decodedBytes": 3833,
           "unusedDecodedBytes": null,
           "startMs": 1742,
           "durationMs": 163
@@ -1133,8 +1133,8 @@ export const measurementCanon = {
         {
           "url": "https://sevre-et-loire.fr/assets/media/vignette-53.webp",
           "resourceType": "image",
-          "transferredBytes": 3724,
-          "decodedBytes": 3724,
+          "transferredBytes": 2343,
+          "decodedBytes": 2343,
           "unusedDecodedBytes": null,
           "startMs": 1764,
           "durationMs": 216
@@ -1142,8 +1142,8 @@ export const measurementCanon = {
         {
           "url": "https://sevre-et-loire.fr/assets/media/vignette-54.webp",
           "resourceType": "image",
-          "transferredBytes": 2061,
-          "decodedBytes": 2061,
+          "transferredBytes": 3218,
+          "decodedBytes": 3218,
           "unusedDecodedBytes": null,
           "startMs": 1786,
           "durationMs": 129
@@ -1151,8 +1151,8 @@ export const measurementCanon = {
         {
           "url": "https://sevre-et-loire.fr/assets/media/vignette-55.webp",
           "resourceType": "image",
-          "transferredBytes": 2198,
-          "decodedBytes": 2198,
+          "transferredBytes": 4094,
+          "decodedBytes": 4094,
           "unusedDecodedBytes": null,
           "startMs": 1808,
           "durationMs": 182
@@ -1160,8 +1160,8 @@ export const measurementCanon = {
         {
           "url": "https://sevre-et-loire.fr/assets/media/vignette-56.webp",
           "resourceType": "image",
-          "transferredBytes": 2335,
-          "decodedBytes": 2335,
+          "transferredBytes": 2603,
+          "decodedBytes": 2603,
           "unusedDecodedBytes": null,
           "startMs": 1830,
           "durationMs": 235
@@ -1169,8 +1169,8 @@ export const measurementCanon = {
         {
           "url": "https://sevre-et-loire.fr/assets/media/vignette-57.webp",
           "resourceType": "image",
-          "transferredBytes": 2472,
-          "decodedBytes": 2472,
+          "transferredBytes": 3478,
+          "decodedBytes": 3478,
           "unusedDecodedBytes": null,
           "startMs": 1852,
           "durationMs": 148
@@ -1178,8 +1178,8 @@ export const measurementCanon = {
         {
           "url": "https://sevre-et-loire.fr/assets/media/vignette-58.webp",
           "resourceType": "image",
-          "transferredBytes": 2609,
-          "decodedBytes": 2609,
+          "transferredBytes": 1988,
+          "decodedBytes": 1988,
           "unusedDecodedBytes": null,
           "startMs": 1874,
           "durationMs": 201
@@ -1187,8 +1187,8 @@ export const measurementCanon = {
         {
           "url": "https://sevre-et-loire.fr/assets/media/vignette-59.webp",
           "resourceType": "image",
-          "transferredBytes": 2746,
-          "decodedBytes": 2746,
+          "transferredBytes": 2863,
+          "decodedBytes": 2863,
           "unusedDecodedBytes": null,
           "startMs": 1896,
           "durationMs": 254
@@ -1196,8 +1196,8 @@ export const measurementCanon = {
         {
           "url": "https://sevre-et-loire.fr/assets/media/vignette-60.webp",
           "resourceType": "image",
-          "transferredBytes": 2883,
-          "decodedBytes": 2883,
+          "transferredBytes": 3739,
+          "decodedBytes": 3739,
           "unusedDecodedBytes": null,
           "startMs": 1918,
           "durationMs": 167
@@ -1205,8 +1205,8 @@ export const measurementCanon = {
         {
           "url": "https://sevre-et-loire.fr/assets/media/vignette-61.webp",
           "resourceType": "image",
-          "transferredBytes": 3020,
-          "decodedBytes": 3020,
+          "transferredBytes": 2248,
+          "decodedBytes": 2248,
           "unusedDecodedBytes": null,
           "startMs": 1940,
           "durationMs": 220
@@ -1214,8 +1214,8 @@ export const measurementCanon = {
         {
           "url": "https://sevre-et-loire.fr/assets/media/vignette-62.webp",
           "resourceType": "image",
-          "transferredBytes": 3157,
-          "decodedBytes": 3157,
+          "transferredBytes": 3123,
+          "decodedBytes": 3123,
           "unusedDecodedBytes": null,
           "startMs": 1962,
           "durationMs": 133
@@ -1223,8 +1223,8 @@ export const measurementCanon = {
         {
           "url": "https://sevre-et-loire.fr/assets/media/vignette-63.webp",
           "resourceType": "image",
-          "transferredBytes": 3294,
-          "decodedBytes": 3294,
+          "transferredBytes": 3999,
+          "decodedBytes": 3999,
           "unusedDecodedBytes": null,
           "startMs": 1984,
           "durationMs": 186
@@ -1232,8 +1232,8 @@ export const measurementCanon = {
         {
           "url": "https://sevre-et-loire.fr/assets/media/vignette-64.webp",
           "resourceType": "image",
-          "transferredBytes": 3431,
-          "decodedBytes": 3431,
+          "transferredBytes": 2508,
+          "decodedBytes": 2508,
           "unusedDecodedBytes": null,
           "startMs": 2006,
           "durationMs": 239
@@ -1241,8 +1241,8 @@ export const measurementCanon = {
         {
           "url": "https://sevre-et-loire.fr/assets/media/vignette-65.webp",
           "resourceType": "image",
-          "transferredBytes": 3568,
-          "decodedBytes": 3568,
+          "transferredBytes": 3384,
+          "decodedBytes": 3384,
           "unusedDecodedBytes": null,
           "startMs": 2028,
           "durationMs": 152
@@ -1250,8 +1250,8 @@ export const measurementCanon = {
         {
           "url": "https://sevre-et-loire.fr/assets/media/vignette-66.webp",
           "resourceType": "image",
-          "transferredBytes": 3705,
-          "decodedBytes": 3705,
+          "transferredBytes": 1893,
+          "decodedBytes": 1893,
           "unusedDecodedBytes": null,
           "startMs": 2050,
           "durationMs": 205
@@ -1259,8 +1259,8 @@ export const measurementCanon = {
         {
           "url": "https://sevre-et-loire.fr/assets/media/vignette-67.webp",
           "resourceType": "image",
-          "transferredBytes": 2042,
-          "decodedBytes": 2042,
+          "transferredBytes": 2768,
+          "decodedBytes": 2768,
           "unusedDecodedBytes": null,
           "startMs": 2072,
           "durationMs": 258
@@ -1268,8 +1268,8 @@ export const measurementCanon = {
         {
           "url": "https://sevre-et-loire.fr/assets/media/vignette-68.webp",
           "resourceType": "image",
-          "transferredBytes": 2179,
-          "decodedBytes": 2179,
+          "transferredBytes": 3644,
+          "decodedBytes": 3644,
           "unusedDecodedBytes": null,
           "startMs": 2094,
           "durationMs": 171
@@ -1277,8 +1277,8 @@ export const measurementCanon = {
         {
           "url": "https://sevre-et-loire.fr/assets/media/vignette-69.webp",
           "resourceType": "image",
-          "transferredBytes": 2316,
-          "decodedBytes": 2316,
+          "transferredBytes": 2153,
+          "decodedBytes": 2153,
           "unusedDecodedBytes": null,
           "startMs": 2116,
           "durationMs": 224
@@ -1286,8 +1286,8 @@ export const measurementCanon = {
         {
           "url": "https://sevre-et-loire.fr/assets/media/vignette-70.webp",
           "resourceType": "image",
-          "transferredBytes": 2453,
-          "decodedBytes": 2453,
+          "transferredBytes": 3029,
+          "decodedBytes": 3029,
           "unusedDecodedBytes": null,
           "startMs": 2138,
           "durationMs": 137
@@ -1295,8 +1295,8 @@ export const measurementCanon = {
         {
           "url": "https://sevre-et-loire.fr/assets/media/vignette-71.webp",
           "resourceType": "image",
-          "transferredBytes": 9145,
-          "decodedBytes": 9145,
+          "transferredBytes": 4021,
+          "decodedBytes": 4021,
           "unusedDecodedBytes": null,
           "startMs": 2160,
           "durationMs": 190
@@ -1654,7 +1654,566 @@ export const measurementCanon = {
         },
         "confidence": "low"
       }
-    ]
+    ],
+    "capture": {
+      "serviceOrigin": "https://bibliotheques-selo.fr",
+      "pass": "cold",
+      "resources": [
+        {
+          "url": "https://bibliotheques-selo.fr/",
+          "resourceType": "document",
+          "transferredBytes": 24000,
+          "decodedBytes": 138000,
+          "unusedDecodedBytes": null,
+          "startMs": 0,
+          "durationMs": 310
+        },
+        {
+          "url": "https://bibliotheques-selo.fr/wp-content/themes/selo/style.css",
+          "resourceType": "stylesheet",
+          "transferredBytes": 38000,
+          "decodedBytes": 196000,
+          "unusedDecodedBytes": null,
+          "startMs": 322,
+          "durationMs": 210
+        },
+        {
+          "url": "https://bibliotheques-selo.fr/wp-content/plugins/diaporama/slider.css",
+          "resourceType": "stylesheet",
+          "transferredBytes": 8000,
+          "decodedBytes": 34000,
+          "unusedDecodedBytes": null,
+          "startMs": 330,
+          "durationMs": 150
+        },
+        {
+          "url": "https://bibliotheques-selo.fr/wp-content/themes/selo/print.css",
+          "resourceType": "stylesheet",
+          "transferredBytes": 6000,
+          "decodedBytes": 21000,
+          "unusedDecodedBytes": null,
+          "startMs": 338,
+          "durationMs": 140
+        },
+        {
+          "url": "https://bibliotheques-selo.fr/wp-includes/js/jquery/jquery.min.js",
+          "resourceType": "script",
+          "transferredBytes": 62000,
+          "decodedBytes": 288000,
+          "unusedDecodedBytes": null,
+          "startMs": 348,
+          "durationMs": 260
+        },
+        {
+          "url": "https://bibliotheques-selo.fr/wp-content/plugins/diaporama/slider.js",
+          "resourceType": "script",
+          "transferredBytes": 22000,
+          "decodedBytes": 78000,
+          "unusedDecodedBytes": null,
+          "startMs": 360,
+          "durationMs": 220
+        },
+        {
+          "url": "https://bibliotheques-selo.fr/wp-content/themes/selo/tarteaucitron.js",
+          "resourceType": "script",
+          "transferredBytes": 18000,
+          "decodedBytes": 64000,
+          "unusedDecodedBytes": null,
+          "startMs": 372,
+          "durationMs": 200
+        },
+        {
+          "url": "https://www.googletagmanager.com/gtag/js?id=G-4KX2QN",
+          "resourceType": "script",
+          "transferredBytes": 46000,
+          "decodedBytes": 152000,
+          "unusedDecodedBytes": null,
+          "startMs": 1180,
+          "durationMs": 330
+        },
+        {
+          "url": "https://www.google-analytics.com/analytics.js",
+          "resourceType": "script",
+          "transferredBytes": 4000,
+          "decodedBytes": 12000,
+          "unusedDecodedBytes": null,
+          "startMs": 1520,
+          "durationMs": 180
+        },
+        {
+          "url": "https://bibliotheques-selo.fr/wp-content/themes/selo/fonts/opensans-regular.woff",
+          "resourceType": "font",
+          "transferredBytes": 17000,
+          "decodedBytes": 17000,
+          "unusedDecodedBytes": null,
+          "startMs": 396,
+          "durationMs": 180
+        },
+        {
+          "url": "https://bibliotheques-selo.fr/wp-content/themes/selo/fonts/opensans-bold.woff",
+          "resourceType": "font",
+          "transferredBytes": 17000,
+          "decodedBytes": 17000,
+          "unusedDecodedBytes": null,
+          "startMs": 410,
+          "durationMs": 188
+        },
+        {
+          "url": "https://bibliotheques-selo.fr/wp-content/themes/selo/fonts/opensans-italic.woff",
+          "resourceType": "font",
+          "transferredBytes": 17000,
+          "decodedBytes": 17000,
+          "unusedDecodedBytes": null,
+          "startMs": 424,
+          "durationMs": 196
+        },
+        {
+          "url": "https://bibliotheques-selo.fr/wp-content/themes/selo/fonts/merriweather-regular.woff",
+          "resourceType": "font",
+          "transferredBytes": 17000,
+          "decodedBytes": 17000,
+          "unusedDecodedBytes": null,
+          "startMs": 438,
+          "durationMs": 204
+        },
+        {
+          "url": "https://bibliotheques-selo.fr/wp-content/themes/selo/fonts/merriweather-bold.woff",
+          "resourceType": "font",
+          "transferredBytes": 17000,
+          "decodedBytes": 17000,
+          "unusedDecodedBytes": null,
+          "startMs": 452,
+          "durationMs": 212
+        },
+        {
+          "url": "https://bibliotheques-selo.fr/wp-content/themes/selo/fonts/merriweather-light.woff",
+          "resourceType": "font",
+          "transferredBytes": 17000,
+          "decodedBytes": 17000,
+          "unusedDecodedBytes": null,
+          "startMs": 466,
+          "durationMs": 220
+        },
+        {
+          "url": "https://bibliotheques-selo.fr/wp-content/uploads/2019/04/bandeau-bibliotheque.png",
+          "resourceType": "image",
+          "transferredBytes": 258000,
+          "decodedBytes": 258000,
+          "unusedDecodedBytes": null,
+          "startMs": 440,
+          "durationMs": 980
+        },
+        {
+          "url": "https://bibliotheques-selo.fr/wp-content/uploads/2026/08/actualite-rentree.png",
+          "resourceType": "image",
+          "transferredBytes": 92000,
+          "decodedBytes": 92000,
+          "unusedDecodedBytes": null,
+          "startMs": 512,
+          "durationMs": 540
+        },
+        {
+          "url": "https://bibliotheques-selo.fr/wp-content/uploads/2026/08/actualite-club-lecture.png",
+          "resourceType": "image",
+          "transferredBytes": 84000,
+          "decodedBytes": 84000,
+          "unusedDecodedBytes": null,
+          "startMs": 528,
+          "durationMs": 510
+        },
+        {
+          "url": "https://bibliotheques-selo.fr/wp-content/themes/selo/logo-reseau.png",
+          "resourceType": "image",
+          "transferredBytes": 12000,
+          "decodedBytes": 12000,
+          "unusedDecodedBytes": null,
+          "startMs": 300,
+          "durationMs": 160
+        },
+        {
+          "url": "https://bibliotheques-selo.fr/wp-content/uploads/2026/08/vignette-01.jpg",
+          "resourceType": "image",
+          "transferredBytes": 2914,
+          "decodedBytes": 2914,
+          "unusedDecodedBytes": null,
+          "startMs": 560,
+          "durationMs": 120
+        },
+        {
+          "url": "https://bibliotheques-selo.fr/wp-content/uploads/2026/08/vignette-02.jpg",
+          "resourceType": "image",
+          "transferredBytes": 4352,
+          "decodedBytes": 4352,
+          "unusedDecodedBytes": null,
+          "startMs": 582,
+          "durationMs": 173
+        },
+        {
+          "url": "https://bibliotheques-selo.fr/wp-content/uploads/2026/08/vignette-03.jpg",
+          "resourceType": "image",
+          "transferredBytes": 5790,
+          "decodedBytes": 5790,
+          "unusedDecodedBytes": null,
+          "startMs": 604,
+          "durationMs": 226
+        },
+        {
+          "url": "https://bibliotheques-selo.fr/wp-content/uploads/2026/08/vignette-04.jpg",
+          "resourceType": "image",
+          "transferredBytes": 3342,
+          "decodedBytes": 3342,
+          "unusedDecodedBytes": null,
+          "startMs": 626,
+          "durationMs": 139
+        },
+        {
+          "url": "https://bibliotheques-selo.fr/wp-content/uploads/2026/08/vignette-05.jpg",
+          "resourceType": "image",
+          "transferredBytes": 4779,
+          "decodedBytes": 4779,
+          "unusedDecodedBytes": null,
+          "startMs": 648,
+          "durationMs": 192
+        },
+        {
+          "url": "https://bibliotheques-selo.fr/wp-content/uploads/2026/08/vignette-06.jpg",
+          "resourceType": "image",
+          "transferredBytes": 6217,
+          "decodedBytes": 6217,
+          "unusedDecodedBytes": null,
+          "startMs": 670,
+          "durationMs": 245
+        },
+        {
+          "url": "https://bibliotheques-selo.fr/wp-content/uploads/2026/08/vignette-07.jpg",
+          "resourceType": "image",
+          "transferredBytes": 3769,
+          "decodedBytes": 3769,
+          "unusedDecodedBytes": null,
+          "startMs": 692,
+          "durationMs": 158
+        },
+        {
+          "url": "https://bibliotheques-selo.fr/wp-content/uploads/2026/08/vignette-08.jpg",
+          "resourceType": "image",
+          "transferredBytes": 5207,
+          "decodedBytes": 5207,
+          "unusedDecodedBytes": null,
+          "startMs": 714,
+          "durationMs": 211
+        },
+        {
+          "url": "https://bibliotheques-selo.fr/wp-content/uploads/2026/08/vignette-09.jpg",
+          "resourceType": "image",
+          "transferredBytes": 6645,
+          "decodedBytes": 6645,
+          "unusedDecodedBytes": null,
+          "startMs": 736,
+          "durationMs": 124
+        },
+        {
+          "url": "https://bibliotheques-selo.fr/wp-content/uploads/2026/08/vignette-10.jpg",
+          "resourceType": "image",
+          "transferredBytes": 4197,
+          "decodedBytes": 4197,
+          "unusedDecodedBytes": null,
+          "startMs": 758,
+          "durationMs": 177
+        },
+        {
+          "url": "https://bibliotheques-selo.fr/wp-content/uploads/2026/08/vignette-11.jpg",
+          "resourceType": "image",
+          "transferredBytes": 5634,
+          "decodedBytes": 5634,
+          "unusedDecodedBytes": null,
+          "startMs": 780,
+          "durationMs": 230
+        },
+        {
+          "url": "https://bibliotheques-selo.fr/wp-content/uploads/2026/08/vignette-12.jpg",
+          "resourceType": "image",
+          "transferredBytes": 3186,
+          "decodedBytes": 3186,
+          "unusedDecodedBytes": null,
+          "startMs": 802,
+          "durationMs": 143
+        },
+        {
+          "url": "https://bibliotheques-selo.fr/wp-content/uploads/2026/08/vignette-13.jpg",
+          "resourceType": "image",
+          "transferredBytes": 4624,
+          "decodedBytes": 4624,
+          "unusedDecodedBytes": null,
+          "startMs": 824,
+          "durationMs": 196
+        },
+        {
+          "url": "https://bibliotheques-selo.fr/wp-content/uploads/2026/08/vignette-14.jpg",
+          "resourceType": "image",
+          "transferredBytes": 6062,
+          "decodedBytes": 6062,
+          "unusedDecodedBytes": null,
+          "startMs": 846,
+          "durationMs": 249
+        },
+        {
+          "url": "https://bibliotheques-selo.fr/wp-content/uploads/2026/08/vignette-15.jpg",
+          "resourceType": "image",
+          "transferredBytes": 3614,
+          "decodedBytes": 3614,
+          "unusedDecodedBytes": null,
+          "startMs": 868,
+          "durationMs": 162
+        },
+        {
+          "url": "https://bibliotheques-selo.fr/wp-content/uploads/2026/08/vignette-16.jpg",
+          "resourceType": "image",
+          "transferredBytes": 5051,
+          "decodedBytes": 5051,
+          "unusedDecodedBytes": null,
+          "startMs": 890,
+          "durationMs": 215
+        },
+        {
+          "url": "https://bibliotheques-selo.fr/wp-content/uploads/2026/08/vignette-17.jpg",
+          "resourceType": "image",
+          "transferredBytes": 6489,
+          "decodedBytes": 6489,
+          "unusedDecodedBytes": null,
+          "startMs": 912,
+          "durationMs": 128
+        },
+        {
+          "url": "https://bibliotheques-selo.fr/wp-content/uploads/2026/08/vignette-18.jpg",
+          "resourceType": "image",
+          "transferredBytes": 4041,
+          "decodedBytes": 4041,
+          "unusedDecodedBytes": null,
+          "startMs": 934,
+          "durationMs": 181
+        },
+        {
+          "url": "https://bibliotheques-selo.fr/wp-content/uploads/2026/08/vignette-19.jpg",
+          "resourceType": "image",
+          "transferredBytes": 5479,
+          "decodedBytes": 5479,
+          "unusedDecodedBytes": null,
+          "startMs": 956,
+          "durationMs": 234
+        },
+        {
+          "url": "https://bibliotheques-selo.fr/wp-content/uploads/2026/08/vignette-20.jpg",
+          "resourceType": "image",
+          "transferredBytes": 3031,
+          "decodedBytes": 3031,
+          "unusedDecodedBytes": null,
+          "startMs": 978,
+          "durationMs": 147
+        },
+        {
+          "url": "https://bibliotheques-selo.fr/wp-content/uploads/2026/08/vignette-21.jpg",
+          "resourceType": "image",
+          "transferredBytes": 4469,
+          "decodedBytes": 4469,
+          "unusedDecodedBytes": null,
+          "startMs": 1000,
+          "durationMs": 200
+        },
+        {
+          "url": "https://bibliotheques-selo.fr/wp-content/uploads/2026/08/vignette-22.jpg",
+          "resourceType": "image",
+          "transferredBytes": 5906,
+          "decodedBytes": 5906,
+          "unusedDecodedBytes": null,
+          "startMs": 1022,
+          "durationMs": 253
+        },
+        {
+          "url": "https://bibliotheques-selo.fr/wp-content/uploads/2026/08/vignette-23.jpg",
+          "resourceType": "image",
+          "transferredBytes": 3458,
+          "decodedBytes": 3458,
+          "unusedDecodedBytes": null,
+          "startMs": 1044,
+          "durationMs": 166
+        },
+        {
+          "url": "https://bibliotheques-selo.fr/wp-content/uploads/2026/08/vignette-24.jpg",
+          "resourceType": "image",
+          "transferredBytes": 4896,
+          "decodedBytes": 4896,
+          "unusedDecodedBytes": null,
+          "startMs": 1066,
+          "durationMs": 219
+        },
+        {
+          "url": "https://bibliotheques-selo.fr/wp-content/uploads/2026/08/vignette-25.jpg",
+          "resourceType": "image",
+          "transferredBytes": 6334,
+          "decodedBytes": 6334,
+          "unusedDecodedBytes": null,
+          "startMs": 1088,
+          "durationMs": 132
+        },
+        {
+          "url": "https://bibliotheques-selo.fr/wp-content/uploads/2026/08/vignette-26.jpg",
+          "resourceType": "image",
+          "transferredBytes": 3886,
+          "decodedBytes": 3886,
+          "unusedDecodedBytes": null,
+          "startMs": 1110,
+          "durationMs": 185
+        },
+        {
+          "url": "https://bibliotheques-selo.fr/wp-content/uploads/2026/08/vignette-27.jpg",
+          "resourceType": "image",
+          "transferredBytes": 5323,
+          "decodedBytes": 5323,
+          "unusedDecodedBytes": null,
+          "startMs": 1132,
+          "durationMs": 238
+        },
+        {
+          "url": "https://bibliotheques-selo.fr/wp-content/uploads/2026/08/vignette-28.jpg",
+          "resourceType": "image",
+          "transferredBytes": 6761,
+          "decodedBytes": 6761,
+          "unusedDecodedBytes": null,
+          "startMs": 1154,
+          "durationMs": 151
+        },
+        {
+          "url": "https://bibliotheques-selo.fr/wp-content/uploads/2026/08/vignette-29.jpg",
+          "resourceType": "image",
+          "transferredBytes": 4313,
+          "decodedBytes": 4313,
+          "unusedDecodedBytes": null,
+          "startMs": 1176,
+          "durationMs": 204
+        },
+        {
+          "url": "https://bibliotheques-selo.fr/wp-content/uploads/2026/08/vignette-30.jpg",
+          "resourceType": "image",
+          "transferredBytes": 5751,
+          "decodedBytes": 5751,
+          "unusedDecodedBytes": null,
+          "startMs": 1198,
+          "durationMs": 257
+        },
+        {
+          "url": "https://bibliotheques-selo.fr/wp-content/uploads/2026/08/vignette-31.jpg",
+          "resourceType": "image",
+          "transferredBytes": 3303,
+          "decodedBytes": 3303,
+          "unusedDecodedBytes": null,
+          "startMs": 1220,
+          "durationMs": 170
+        },
+        {
+          "url": "https://bibliotheques-selo.fr/wp-content/uploads/2026/08/vignette-32.jpg",
+          "resourceType": "image",
+          "transferredBytes": 4741,
+          "decodedBytes": 4741,
+          "unusedDecodedBytes": null,
+          "startMs": 1242,
+          "durationMs": 223
+        },
+        {
+          "url": "https://bibliotheques-selo.fr/wp-content/uploads/2026/08/vignette-33.jpg",
+          "resourceType": "image",
+          "transferredBytes": 6178,
+          "decodedBytes": 6178,
+          "unusedDecodedBytes": null,
+          "startMs": 1264,
+          "durationMs": 136
+        },
+        {
+          "url": "https://bibliotheques-selo.fr/wp-content/uploads/2026/08/vignette-34.jpg",
+          "resourceType": "image",
+          "transferredBytes": 3730,
+          "decodedBytes": 3730,
+          "unusedDecodedBytes": null,
+          "startMs": 1286,
+          "durationMs": 189
+        },
+        {
+          "url": "https://bibliotheques-selo.fr/wp-content/uploads/2026/08/vignette-35.jpg",
+          "resourceType": "image",
+          "transferredBytes": 5168,
+          "decodedBytes": 5168,
+          "unusedDecodedBytes": null,
+          "startMs": 1308,
+          "durationMs": 242
+        },
+        {
+          "url": "https://bibliotheques-selo.fr/wp-content/uploads/2026/08/vignette-36.jpg",
+          "resourceType": "image",
+          "transferredBytes": 6606,
+          "decodedBytes": 6606,
+          "unusedDecodedBytes": null,
+          "startMs": 1330,
+          "durationMs": 155
+        },
+        {
+          "url": "https://bibliotheques-selo.fr/wp-content/uploads/2026/08/vignette-37.jpg",
+          "resourceType": "image",
+          "transferredBytes": 4158,
+          "decodedBytes": 4158,
+          "unusedDecodedBytes": null,
+          "startMs": 1352,
+          "durationMs": 208
+        },
+        {
+          "url": "https://bibliotheques-selo.fr/wp-content/uploads/2026/08/vignette-38.jpg",
+          "resourceType": "image",
+          "transferredBytes": 5595,
+          "decodedBytes": 5595,
+          "unusedDecodedBytes": null,
+          "startMs": 1374,
+          "durationMs": 121
+        },
+        {
+          "url": "https://bibliotheques-selo.fr/wp-content/uploads/2026/08/vignette-39.jpg",
+          "resourceType": "image",
+          "transferredBytes": 3147,
+          "decodedBytes": 3147,
+          "unusedDecodedBytes": null,
+          "startMs": 1396,
+          "durationMs": 174
+        },
+        {
+          "url": "https://bibliotheques-selo.fr/wp-content/uploads/2026/08/vignette-40.jpg",
+          "resourceType": "image",
+          "transferredBytes": 4585,
+          "decodedBytes": 4585,
+          "unusedDecodedBytes": null,
+          "startMs": 1418,
+          "durationMs": 227
+        },
+        {
+          "url": "https://bibliotheques-selo.fr/wp-content/uploads/2026/08/vignette-41.jpg",
+          "resourceType": "image",
+          "transferredBytes": 6023,
+          "decodedBytes": 6023,
+          "unusedDecodedBytes": null,
+          "startMs": 1440,
+          "durationMs": 140
+        },
+        {
+          "url": "https://bibliotheques-selo.fr/wp-content/uploads/2026/08/vignette-42.jpg",
+          "resourceType": "image",
+          "transferredBytes": 5246,
+          "decodedBytes": 5246,
+          "unusedDecodedBytes": null,
+          "startMs": 1462,
+          "durationMs": 193
+        }
+      ],
+      "requestCount": 61,
+      "domNodeCountAtLoad": 1762,
+      "domNodeCountAtNetworkIdle": 1830,
+      "jsExecutionMs": 812
+    }
   }
 ] as ReadonlyArray<{
     id: string;

@@ -1,4 +1,4 @@
-import type { ModelInput, ModelOutput } from '@balise/schemas';
+import type { MetricId, ModelInput, ModelOutput } from '@balise/schemas';
 import type { CarbonModel } from '../types.js';
 
 // ecoindex, the published french scoring model (www.ecoindex.fr).
@@ -46,6 +46,30 @@ export function ecoIndexGrade(score: number): string {
   if (score > 10) return 'F';
   return 'G';
 }
+
+/**
+ * where a measured value sits in the reference distribution ecoindex
+ * publishes, as a percentile: the share of that distribution at or below this
+ * page. null for a metric ecoindex publishes no table for.
+ *
+ * this is the only comparison to other services the product makes, and it is
+ * made against someone else's published table rather than a corpus of our own
+ * that nobody can inspect. the quantiles are twenty ventiles, so a rank of 18
+ * is the 90th percentile.
+ */
+export function ecoIndexPercentile(metricId: MetricId, value: number): number | null {
+  const table = REFERENCE_TABLE[metricId];
+  if (table === undefined) return null;
+  const measured = metricId === 'transferred_bytes' ? value / 1000 : value;
+  const rank = computeQuantileRank(table, measured);
+  return (rank / (table.length - 1)) * 100;
+}
+
+const REFERENCE_TABLE: Partial<Record<MetricId, readonly number[]>> = {
+  dom_node_count: QUANTILES_DOM,
+  request_count: QUANTILES_REQUESTS,
+  transferred_bytes: QUANTILES_SIZE_KB,
+};
 
 export const ecoindexModel: CarbonModel = {
   id: 'ecoindex',

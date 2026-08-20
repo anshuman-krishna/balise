@@ -655,6 +655,53 @@ export const fr: Catalog = {
   // the public surfaces are french public pages, like the three documents:
   // their content renders in french in every locale. only the app chrome
   // around them (nav rail labels) follows the interface locale.
+  // ---------------------------------------------------------------------------
+  // findings: what a capture shows about itself
+  // ---------------------------------------------------------------------------
+  //
+  // every sentence here is filled from a quantity @balise/measure-core read off
+  // the capture. none of them states a saving. the three these replaced said
+  // "quatre images en PNG non redimensionnées, -214 KB" and "deux familles de
+  // polices, six graisses, aucune sous-classée, -96 KB": a capture holds
+  // neither a format decision, nor a rendered size, nor what another format
+  // would have weighed.
+  findings: {
+    title: '{count} points d\'attention',
+    titleOne: '1 point d\'attention',
+    none: 'Aucun point d\'attention au-dessus des seuils publiés.',
+    note: 'Chaque ligne est une quantité relevée sur cette page. Aucune économie n\'est projetée.',
+    sentences: {
+      'image-weight': 'Images : {count} requêtes, {share} du poids de la page.',
+      'font-weight': 'Polices : {count} fichiers, {share} du poids de la page.',
+      'third-party-weight': 'Tiers : {count} origines distinctes, {share} du poids de la page.',
+      'heaviest-resource': 'Une seule réponse pèse {share} du poids de la page.',
+      'unused-script-bytes':
+        'Scripts : {share} des octets décodés mesurés n\'ont pas été exécutés pendant le chargement.',
+      'unused-stylesheet-bytes':
+        'Feuilles de style : {share} des octets décodés mesurés n\'ont pas été appliqués pendant le chargement.',
+      'reference-dom-node-count':
+        'Nœuds DOM : au-delà de {percentile} des pages de la distribution de référence publiée par EcoIndex.',
+      'reference-request-count':
+        'Requêtes : au-delà de {percentile} des pages de la distribution de référence publiée par EcoIndex.',
+      'reference-transferred-bytes':
+        'Poids de page : au-delà de {percentile} des pages de la distribution de référence publiée par EcoIndex.',
+    },
+    unavailable: '{count} fichiers sans mesure de couverture ne sont pas comptés dans ce total.',
+    withheldTitle: 'Non mesuré sur ce relevé',
+    withheld: {
+      'unused-script-bytes':
+        'Octets de script non exécutés : couverture non instrumentée, {count} fichiers. Elle déplace le temps d\'exécution et n\'est pas active par défaut.',
+      'unused-stylesheet-bytes':
+        'Octets de style non appliqués : couverture non instrumentée, {count} fichiers.',
+      'image-weight': 'Images : non mesurées sur ce relevé.',
+      'font-weight': 'Polices : non mesurées sur ce relevé.',
+      'third-party-weight': 'Tiers : non mesurés sur ce relevé.',
+      'heaviest-resource': 'Réponse la plus lourde : non mesurée sur ce relevé.',
+      'reference-dom-node-count': 'Nœuds DOM : aucune position de référence.',
+      'reference-request-count': 'Requêtes : aucune position de référence.',
+      'reference-transferred-bytes': 'Poids de page : aucune position de référence.',
+    },
+  },
   publicScan: {
     navObservatory: 'Observatoire',
     navMethodology: 'Méthodologie',
@@ -678,7 +725,6 @@ export const fr: Catalog = {
     // the public surfaces are french in both locales.
     provenance: 'médiane {model} · étendue sur {count} modèles · réseau {grid} gCO2e/kWh ({zone})',
     provenanceNoFloor: 'un seul relevé à froid : aucun plancher de bruit établi, aucune tendance affichée',
-    findingsTitle: "Trois points d'attention",
     declarationTitle: "Déclaration d'écoconception",
     declarationNone: 'Aucune déclaration trouvée',
     declarationBody:

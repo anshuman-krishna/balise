@@ -16,6 +16,8 @@ import {
   formatCarbon,
   modelsRan,
 } from '../lib/carbon-view';
+import { FindingsList } from '../components/FindingsList';
+import { findingsView } from '../lib/findings-view';
 import { ResourceTable } from '../components/ResourceTable';
 import { ResourceTypeSummary } from '../components/ResourceTypeSummary';
 import { capture, inventory, resourceRows, waterfall } from '../lib/capture-view';
@@ -33,6 +35,8 @@ const runCapture = capture('candidate');
 const rows = resourceRows(runCapture);
 const waterfallRows = waterfall(rows, 12);
 const resourceSummary = inventory(runCapture);
+
+const runFindings = findingsView('candidate', t);
 
 type Tab = 'waterfall' | 'resources' | 'dispersion' | 'models' | 'environment';
 
@@ -257,6 +261,15 @@ export function RunDetail() {
             </p>
           </div>
           <div className="stack">
+            {/* the same engine, the same capture, one screen further in. this
+                run was measured with coverage on, so the unexecuted bytes are
+                findings here and are withheld on the free scan. */}
+            <div className="card">
+              <span className="eyebrow">{runFindings.title}</span>
+              <div style={{ marginTop: 13 }}>
+                <FindingsList view={runFindings} amountWidth={66} />
+              </div>
+            </div>
             <ResourceTypeSummary summary={resourceSummary} />
             {resourceSummary.decodedUnavailableCount +
               resourceSummary.coverageUnavailableCount ===

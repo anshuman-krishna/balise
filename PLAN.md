@@ -16,7 +16,48 @@ screenshots, the fidelity source).
 
 ## Current status
 
-**Phase: one run, one capture (2026-08-20).** Run #4812 had two resource lists and they
+**Phase: a finding is a measurement (2026-08-20).** The free scan carried three findings
+and all three were written by hand: "-214 KB, quatre images en PNG non redimensionnées",
+"-96 KB, deux familles de polices, six graisses, aucune sous-classée", and a DOM figure.
+The first two stated things a capture does not hold, since nothing in a capture says an
+image is a PNG at the wrong size or that a font file is one of six unsubset weights, and
+both put a saving in the measurement column, which is a counterfactual about a page nobody
+measured. The third was a real number with no sentence behind it. On the one public surface
+the product has, that is the whole claim to measure rather than to estimate, spent for
+three lines of copy.
+
+`findings` in `measure-core` raises them now, from the capture the same run publishes. Six
+findings are quantities the capture holds: image weight, font weight, third-party weight
+counted by distinct origin, the heaviest single response, and the decoded bytes coverage
+found unexecuted for scripts and for stylesheets. Each carries what it is a share of, named
+in the data rather than implied, because a share basis nobody states is a rumour: the
+unexecuted bytes are a share of the decoded bytes coverage measured, never of the page.
+
+The seventh is a position rather than a weight. EcoIndex publishes quantile tables for DOM
+nodes, requests and page weight, so `ecoIndexPercentile` places a measured value in that
+published distribution and the finding reads "au-delà de 90,2 % des pages de la distribution
+de référence publiée par EcoIndex". It is the only comparison the product makes between one
+service and others, it is made against a table anyone can read, and the source and its
+version travel with the number. The kernel holds no corpus and takes the position as an
+input, which is also why `measure-core` still depends on nothing.
+
+Two things the engine refuses. Coverage is off by default on a measured run, so the scan's
+unexecuted-byte findings are withheld with the count of files they would have covered
+rather than reported as zero unused bytes; the scan prints that, which makes open decision
+14 visible on a public surface instead of buried in a document. And where coverage was
+captured for some files of a type and not others, the finding is raised over what was
+measured and states what it could not see, so the quantity reads as a floor.
+
+The scan needed a capture, so it has one: 61 requests, 980 KB, a WordPress library site
+whose home page is 66 % images. Its medians are what they were, because a capture that
+reduces to the same three numbers is the same page described properly. The tail generator
+learned to spread around its own mean and to throw rather than emit a response below a
+kilobyte, which is the bug from the previous slice caught in code instead of by reading.
+
+Two surfaces read it, and they demonstrate opposite paths: the free scan, where coverage
+was not captured, and the run detail's resources tab, where it was. 776 tests.
+
+**Then: one run, one capture (2026-08-20).** Run #4812 had two resource lists and they
 described different pages. The run detail held eight resources plus a tail of seventy-six
 weighing two kilobytes between them, which is twenty-six bytes each and is not a thing a
 browser can fetch. The attribution canon held eighty-four real ones, with different bundle
@@ -165,10 +206,16 @@ from the carbon tile; both render now and a test asserts it. 646 tests.
 - `classifyDelta`: the one implementation of "is this change real". Exhaustive tests.
 - Confidence grading (high / medium / low) from dispersion, sample count, fingerprint stability.
 - Metric extraction from raw captures (resources, DOM counts, JS time, third-party share).
+- Resource inventory and coverage: unexecuted decoded bytes from v8's nested ranges,
+  measured over the text the offsets cut or refused entirely.
+- `findings`: what a capture shows about itself, as measured quantities with the basis of
+  every share named. no projected savings, and a position in a published reference
+  distribution only when the caller supplies one.
 
 ### Carbon models (packages/carbon-models) [OSS]
 - One `CarbonModel` interface; adding a model never touches engine code.
-- `ecoindex` (CNUMR reference: quantile tables, score, grade A-G, GES gCO2e).
+- `ecoindex` (CNUMR reference: quantile tables, score, grade A-G, GES gCO2e). The same
+  tables place a measured value in the published distribution, for findings.
 - `swd` v4 (Sustainable Web Design: published segment constants, grid intensity input).
 - `onebyte` (Shift Project via co2.js reference constants).
 - `ademe` (Base Empreinte factors): planned, needs verified factor data first.
@@ -236,8 +283,11 @@ from the carbon tile; both render now and a test asserts it. 646 tests.
       (`extractMetrics` and `summariseResources` over one `RawCapture`; all 84 records, the
       waterfall drawn from the timings the capture records, the regression marked from the
       bundle attribution named)
-- [ ] The free scan's findings are still three authored sentences with authored savings. They
-      need a findings engine reading the scan's capture, which does not exist yet
+- [x] ~~The free scan's findings are still three authored sentences with authored savings~~
+      (`findings` in `measure-core`, `pnpm gen:findings-canon`; six weight findings from the
+      capture plus a position in EcoIndex's published distribution, no saving anywhere, and
+      the coverage findings withheld rather than zeroed. read by the free scan and the run
+      detail's resources tab)
 - [ ] ToleranceBand print register for trend and dispersion (the handoff specifies print for the canonical band only; needed when the Typst pipeline lands)
 - [ ] Confidence renders in the pass colour on the metric tiles. Green is a pass state and
       a confidence grade is not one; the tokens say so and the tiles predate the rule
@@ -265,6 +315,9 @@ from the carbon tile; both render now and a test asserts it. 646 tests.
       `conformityPct()`; the report's gauge fills against the contractual target rather
       than a number typed beside it. six surfaces, one figure)
 - [ ] Evaluation types beyond `metric_threshold`, once the pack says which are needed
+- [ ] Do findings and criteria meet? Several RGESN criteria ask questions a finding already
+      answers (unused code shipped, third-party weight, image weight). Wiring a finding to a
+      criterion is an evidence question and waits on the tier sign-off
 
 ## To-do: attribution (V4)
 
@@ -343,11 +396,15 @@ from the carbon tile; both render now and a test asserts it. 646 tests.
       and a size, which is what the resource inventory renders; the full har and the trace
       are still not persisted and need object storage
 - [x] ~~EnvironmentFingerprint recorded on every run~~ (V1.0, every field compared for invariant 3, with a test that fails if a field is ever left out of the comparison)
-- [~] METHODOLOGY.md v1 **drafted**, not published and not in force. Thirteen open decisions in its section 12 need sign-off (operating manual section 29)
+- [~] METHODOLOGY.md v1 **drafted**, not published and not in force. Fifteen open decisions in its section 12 need sign-off (operating manual section 29)
 - [ ] Sign off the noise floor scaling factor, the throttle profile parameters and the confidence thresholds
 - [ ] **Measure what coverage instrumentation costs**, then decide whether it is on for a
       measured run. It is written, off by default, and on the fingerprint; METHODOLOGY.md open
-      decision 14
+      decision 14. The free scan now shows what the off case looks like: two findings
+      withheld, which is honest and is also two findings a prospect does not see
+- [ ] **Sign off the finding thresholds** (METHODOLOGY.md open decision 15). They decide
+      what a public surface calls a problem on a service whose owner never asked to be
+      measured
 - [x] ~~The reproducibility test: twenty runs, same verdict, in CI~~ (V1.1, `pnpm test:repro`, its own vitest config so it stays out of the normal loop, plus a CI job that installs the browser)
 - [ ] Run the reproducibility suite for real and record what it says; it has never executed
 
@@ -356,6 +413,59 @@ Later versions: see roadmap; detailed to-dos are appended when the version start
 ---
 
 ## Decisions log
+
+- **2026-08-20 · A finding states a measured quantity, never a projected saving.** The
+  free scan's findings were "-214 KB" and "-96 KB": what the page would weigh if someone
+  did something we did not measure. A saving is a claim about a page that was never
+  loaded, and a report carrying one measurement and one projection has to be read as a
+  projection throughout. `findings` in `measure-core` has nowhere to put one: every
+  finding carries a value read off the capture and the basis it is a share of, and a test
+  asserts the published canon contains neither the word nor the shape.
+- **2026-08-20 · A share names its basis in the data.** Unexecuted script bytes are a
+  share of the decoded bytes coverage measured, not of the page, and the two differ by a
+  factor of four on a compressed bundle. `FindingShare` carries `basis`, so a surface
+  cannot pair "55.6 %" with the wrong denominator, and the sentences in `packages/i18n`
+  say which one they mean.
+- **2026-08-20 · The only comparison to other services is against a table someone else
+  published.** EcoIndex's quantile tables are part of its published method and already in
+  `carbon-models` for the score; `ecoIndexPercentile` reads a position off them. The
+  alternative, a Balise corpus of scanned public-sector sites, would be a benchmark no
+  buyer can audit and a privacy question we have not answered. The kernel takes the
+  position as an input and holds no corpus at all, which also keeps `measure-core`
+  dependency-free.
+- **2026-08-20 · Findings live in `measure-core`, which is open source.** A finding a
+  customer cannot check is marketing. Putting the rule in the OSS kernel means an auditor
+  reads the function that raised it and the capture it read, and the two agree or they do
+  not. Nothing was added to the dependency surface to do it.
+- **2026-08-20 · A finding coverage could not see is withheld, not zeroed.** Coverage is
+  off by default on a measured run, so the scan's scripts carry no coverage. Reporting
+  zero unexecuted bytes would be a claim about execution nobody instrumented. The engine
+  returns the finding as withheld with the count of files, and the scan prints it, which
+  puts open decision 14 on a public surface rather than in a document. Where coverage
+  covered some files of a type and not others, the finding is raised over what was
+  measured and states the rest, so the number reads as a floor.
+- **2026-08-20 · The finding thresholds are provisional and are one constant.** What
+  share of a page in images is worth saying out loud is a methodology decision, not an
+  engineering one, and it decides what a public surface calls a problem on a service whose
+  owner never asked to be measured. `PROVISIONAL_FINDING_THRESHOLDS` sits beside the noise
+  floor scaling factor in the same posture: named, in one place, overridable by the
+  caller, and METHODOLOGY.md open decision 15.
+- **2026-08-20 · Weight findings sort before reference positions, and a percentile is
+  never sorted against a share.** Inside one severity the engine orders by what the page
+  is made of, then by where the page sits among other people's pages. Sorting 0.902 (a
+  percentile) above 0.663 (a share) would have led the public scan with a statistic about
+  other services rather than with a fact about this one, and the two quantities are not
+  comparable in the first place.
+- **2026-08-20 · The public surfaces read the french catalog explicitly.** They were
+  french-in-both-locales by writing french into `en.ts`, which works until a string is
+  shared with an interface surface: the finding sentences are on the free scan and on the
+  run detail. `tFr` in the app's i18n module names the intent instead, and the finding
+  strings are translated normally. Existing blocks are left as they are.
+- **2026-08-20 · The tail generator spreads around its own mean and refuses a response
+  under a kilobyte.** The previous slice found a fixture tail of seventy-six requests at
+  twenty-six bytes each by reading it. A fixed base size produces that again the moment a
+  tail's mean changes, so the size is drawn from the mean and the floor is asserted in
+  code, with the origin named in the error.
 
 - **2026-08-20 · A capture is authored once and everything else reduces it.** Run #4812 had
   two resource lists describing different pages, and they disagreed about the run's third

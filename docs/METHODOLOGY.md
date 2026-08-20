@@ -80,6 +80,51 @@ the source text rather than byte offsets, so the unused share is measured over
 the text those offsets cut. A coverage report that does not describe the text it
 arrived with yields no figure at all rather than an approximate one.
 
+### 1.2 Findings
+
+A finding is a quantity read off the capture, stated with what it is a share of.
+It is never a projected saving. "Convert these images and save 214 KB" is a
+statement about a page nobody measured, and a report that mixes one measurement
+with one projection has to be read as a projection throughout.
+
+Seven findings are defined. Six are quantities the capture holds:
+
+| Finding | The quantity | Its share is of |
+| --- | --- | --- |
+| Image weight | Transferred bytes of every image response | The page's transferred bytes |
+| Font weight | Transferred bytes of every font response | The page's transferred bytes |
+| Third-party weight | Transferred bytes from origins other than the service's, counted by distinct origin | The page's transferred bytes |
+| Heaviest response | Transferred bytes of the single largest response | The page's transferred bytes |
+| Unexecuted script bytes | Decoded script bytes coverage found unexecuted | The decoded bytes of the scripts coverage measured |
+| Unapplied stylesheet bytes | Decoded stylesheet bytes coverage found unapplied | The decoded bytes of the stylesheets coverage measured |
+
+The seventh is a position rather than a weight. EcoIndex publishes quantile
+tables for DOM node count, request count and page weight, and a measured value
+can be placed in that published distribution: "past the 90th percentile of the
+pages EcoIndex's reference distribution covers". This is the only comparison
+Balise makes between one service and others, it is made against a table anyone
+can read, and the source and its version are printed with the number. Balise
+maintains no corpus of its own and states no position against one.
+
+Three rules govern how findings degrade:
+
+**A finding coverage could not see is withheld, not zeroed.** Coverage is off by
+default on a measured run (open decision 14), so on most runs the unexecuted-byte
+findings are reported as not measured, with the number of files they would have
+covered. Reporting zero unused bytes would be a claim; withholding is what
+happened.
+
+**Partial data is counted, not dropped.** Where coverage was captured for some
+files of a type and not others, the finding is raised over the files it measured
+and states how many it could not see, so the quantity reads as a floor rather
+than as the whole.
+
+**Nothing is raised below a minimum weight.** On a 40 KB page the fonts are most
+of the page and saying so is arithmetic. The minimum is 50 KB.
+
+The thresholds that decide whether a share is raised at all, and whether it is
+raised as a caution or as a breach, are provisional: see open decision 15.
+
 ## 2. What is not measured
 
 Balise measures a web service loaded in a browser. It does not measure server
@@ -391,3 +436,12 @@ settled. This section must be empty before version 1.0 is in force.
     instrumented script-execution figure, leave it off and lose the resource
     inventory's coverage column, or take it on a separate pass that is not the
     measured one. Measuring the overhead on the fixture site comes first.
+15. **The finding thresholds.** A finding is raised as a caution at 40% of a
+    type's covered decoded bytes unexecuted, 20% of the page in third parties,
+    50% in images, 10% in fonts, 15% in one response, or the 50th percentile of
+    EcoIndex's published distribution; each rises to a breach at 60%, 35%, 65%,
+    20%, 25% and the 75th percentile respectively. Nothing is raised below 50 KB. These
+    decide what a public surface calls a problem on a service whose owner never
+    asked to be measured, which makes them a methodology decision rather than an
+    engineering one. They are held in one place, `PROVISIONAL_FINDING_THRESHOLDS`
+    in `measure-core`, and a caller may supply its own.
