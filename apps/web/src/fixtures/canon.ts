@@ -57,15 +57,6 @@ const carbonBarPct = 100 - carbonHeadroomPct;
 const carbonMedianText = formatNumber(carbonMedianG, 3);
 const carbonCeilingText = formatNumber(CARBON_CEILING_G, 3);
 
-// the fleet and the observatory carry carbon figures for services this build
-// does not measure. the design canon put the audited service at the figure
-// below, so those figures are read as ratios to it and multiplied back by what
-// the models estimated. the audited service reads the same on every surface,
-// and the fictional ones keep the shape the design gave them.
-const DESIGN_CARBON_ANCHOR_G = 0.42;
-const designCarbon = (value: number): number =>
-  Math.round((value / DESIGN_CARBON_ANCHOR_G) * carbonMedianG * 10_000) / 10_000;
-
 /** documents are french, and french decimals take a comma. */
 const fr = (text: string): string => text.replace('.', ',');
 
@@ -482,118 +473,15 @@ export const contractFixture = {
 
 // ---- fleet ----
 
-export interface FleetRow {
-  domain: string;
-  // carbon per visit on the shared 0 to 1.6 gco2e scale
-  band: {
-    median: number;
-    low: number;
-    high: number;
-    noiseLow: number;
-    noiseHigh: number;
-    state: 'normal' | 'breach';
-    confidence: 'high' | 'low';
-  };
-  conf: 'high' | 'low';
-  rgesnPct: number;
-  declaration: { text: string; tone: 'ok' | 'muted' | 'caution' | 'breach' };
-  contract: string;
-  alert: { text: string; tone: 'none' | 'caution' | 'breach' };
-}
-
+/**
+ * the fleet's frame. its rows, its shared scale and its distribution come from
+ * the corpus, which is measured; what stays here is what the agency holds
+ * rather than what the runner found.
+ */
 export const fleetFixture = {
-  services: 6,
   activeContracts: 2,
   openTenders: 1,
-  summary: { breaches: 3, staleDeclarations: 2, deadlines30d: 1 },
-  scale: { min: 0, max: designCarbon(1.6) },
-  rows: [
-    {
-      domain: 'sevre-et-loire.fr',
-      band: { median: designCarbon(0.42), low: designCarbon(0.31), high: designCarbon(0.58), noiseLow: designCarbon(0.39), noiseHigh: designCarbon(0.45), state: 'normal', confidence: 'high' },
-      conf: 'high',
-      // null is the audited service: its rate is read off the assessments the
-      // criteria workspace answers, not repeated here. the other rows are
-      // other clients, whose services this build does not assess.
-      rgesnPct: null as number | null,
-      declaration: { text: 'v2 · 156 d', tone: 'muted' },
-      contract: '0417 · Q3 due',
-      alert: { text: 'budget breach', tone: 'breach' },
-    },
-    {
-      domain: 'transports-selo.fr',
-      band: { median: designCarbon(0.86), low: designCarbon(0.6), high: designCarbon(1.35), noiseLow: designCarbon(0.78), noiseHigh: designCarbon(0.95), state: 'breach', confidence: 'high' },
-      conf: 'high',
-      rgesnPct: 44,
-      declaration: { text: 'v1 · 248 d', tone: 'caution' },
-      contract: '0392 · active',
-      alert: { text: 'declaration stale', tone: 'caution' },
-    },
-    {
-      domain: 'bibliotheques-selo.fr',
-      band: { median: designCarbon(0.24), low: designCarbon(0.1), high: designCarbon(0.52), noiseLow: designCarbon(0.18), noiseHigh: designCarbon(0.3), state: 'normal', confidence: 'high' },
-      conf: 'high',
-      rgesnPct: 71,
-      declaration: { text: 'none', tone: 'breach' },
-      contract: '–',
-      alert: { text: 'obligated · not published', tone: 'breach' },
-    },
-    {
-      domain: 'chu-armorique.fr',
-      band: { median: designCarbon(1.2), low: designCarbon(0.88), high: designCarbon(1.53), noiseLow: designCarbon(1.05), noiseHigh: designCarbon(1.43), state: 'normal', confidence: 'low' },
-      conf: 'low',
-      rgesnPct: 38,
-      declaration: { text: 'v1 · 426 d', tone: 'caution' },
-      contract: '–',
-      alert: { text: 'runner unstable 3 d', tone: 'caution' },
-    },
-    {
-      domain: 'craonnais.fr',
-      band: { median: designCarbon(0.14), low: designCarbon(0.05), high: designCarbon(0.32), noiseLow: designCarbon(0.1), noiseHigh: designCarbon(0.2), state: 'normal', confidence: 'high' },
-      conf: 'high',
-      rgesnPct: 82,
-      declaration: { text: 'v4 · 21 d', tone: 'ok' },
-      contract: '–',
-      alert: { text: 'none', tone: 'none' },
-    },
-    {
-      domain: 'eau-selo.fr',
-      band: { median: designCarbon(0.58), low: designCarbon(0.38), high: designCarbon(0.98), noiseLow: designCarbon(0.5), noiseHigh: designCarbon(0.65), state: 'normal', confidence: 'high' },
-      conf: 'high',
-      rgesnPct: 64,
-      declaration: { text: 'v2 · 88 d', tone: 'muted' },
-      contract: '–',
-      alert: { text: '3p share 41%', tone: 'breach' },
-    },
-  ] as readonly FleetRow[],
-  benchmark: {
-    n: 112,
-    bestPct: 38,
-    // histogram bar geometry on the 380 by 92 viewbox, from the handoff
-    bars: [
-      { x: 24, y: 46, h: 20 },
-      { x: 46, y: 38, h: 28 },
-      { x: 68, y: 26, h: 40 },
-      { x: 90, y: 18, h: 48 },
-      { x: 112, y: 24, h: 42 },
-      { x: 134, y: 34, h: 32 },
-      { x: 156, y: 42, h: 24 },
-      { x: 178, y: 50, h: 16 },
-      { x: 200, y: 54, h: 12 },
-      { x: 222, y: 58, h: 8 },
-      { x: 244, y: 60, h: 6 },
-      { x: 266, y: 62, h: 4 },
-    ],
-    markerX: 99,
-    markerLabel: `sevre-et-loire · ${carbonMedianText} · P38`,
-    medianX: 200,
-    medianValue: formatNumber(designCarbon(0.71), 3),
-    axis: [
-      formatNumber(designCarbon(0.2), 3),
-      formatNumber(designCarbon(0.8), 3),
-      `${formatNumber(designCarbon(1.6), 3)} gCO₂e`,
-    ],
-  },
+  deadlines30d: 1,
   clientAccess: {
     viewers: [
       { email: 'dsi@sevre-et-loire.fr', services: 1 },
@@ -820,121 +708,13 @@ export const scanFixture = {
   confidence: SCAN_DOM.confidence,
 } as const;
 
-export type ObservatorySector = 'epci' | 'communes' | 'etat' | 'sante' | 'transport' | 'departements';
-
-export interface ObservatoryRow {
-  rank: number;
-  domain: string;
-  organisme: string;
-  sector: ObservatorySector;
-  band: {
-    median: number;
-    low: number;
-    high: number;
-    noiseLow: number;
-    noiseHigh: number;
-    state: 'normal' | 'breach';
-    confidence: 'high' | 'low';
-  };
-  grade: string;
-  gradeTone?: 'caution' | 'breach';
-  kb: number;
-  kbTone?: 'caution' | 'breach';
-  // null where 90 days of stable history do not exist; significance is the
-  // noise floor rule, so a sub-floor movement is never coloured as a change
-  trend: { pct: number; significant: boolean } | null;
-  declaration: { text: string; tone: 'ok' | 'muted' | 'caution' | 'breach' } | null;
-  agency: string | null;
-  highlighted?: boolean;
-}
-
+/**
+ * the public index's frame. the rows, the size of the corpus, the shared scale
+ * and every position in it are the corpus canon's, computed from captures.
+ * what remains here is the date of the sweep and the profile it ran on.
+ */
 export const observatoryFixture = {
-  total: 412,
-  withoutDeclaration: 287,
   measuredOn: '15 août 2026',
   profile: 'mobile-4g',
   methodology: 'v1.2',
-  // the band spans the models that ran, and says how many.
-  modelCount: carbonService.band.modelCount,
-  // shared scale across every row, so the bands are comparable by eye
-  scale: { min: 0, max: designCarbon(1.6) },
-  rows: [
-    {
-      rank: 1,
-      domain: 'craonnais.fr',
-      organisme: 'Ville de Craonnais',
-      sector: 'communes',
-      band: { median: designCarbon(0.14), low: designCarbon(0.05), high: designCarbon(0.32), noiseLow: designCarbon(0.1), noiseHigh: designCarbon(0.2), state: 'normal', confidence: 'high' },
-      grade: 'A',
-      kb: 318,
-      trend: { pct: -14, significant: true },
-      declaration: { text: 'v4 · 21 j', tone: 'ok' },
-      agency: 'Sextant',
-    },
-    {
-      rank: 2,
-      domain: 'ville-de-plessac.fr',
-      organisme: 'Commune de Plessac',
-      sector: 'communes',
-      band: { median: designCarbon(0.18), low: designCarbon(0.08), high: designCarbon(0.34), noiseLow: designCarbon(0.14), noiseHigh: designCarbon(0.22), state: 'normal', confidence: 'high' },
-      grade: 'A',
-      kb: 402,
-      trend: { pct: -2, significant: false },
-      declaration: { text: 'v1 · 311 j', tone: 'caution' },
-      agency: null,
-    },
-    {
-      rank: 14,
-      domain: 'sevre-et-loire.fr',
-      organisme: 'Métropole de Sèvre-et-Loire',
-      sector: 'epci',
-      band: { median: designCarbon(0.42), low: designCarbon(0.31), high: designCarbon(0.58), noiseLow: designCarbon(0.39), noiseHigh: designCarbon(0.45), state: 'normal', confidence: 'high' },
-      grade: 'B',
-      kb: 842,
-      trend: { pct: -9, significant: true },
-      declaration: { text: 'v2 · 156 j', tone: 'muted' },
-      agency: 'Sextant',
-      highlighted: true,
-    },
-    {
-      rank: 96,
-      domain: 'transports-selo.fr',
-      organisme: 'Réseau Naïade',
-      sector: 'transport',
-      band: { median: designCarbon(0.86), low: designCarbon(0.6), high: designCarbon(1.35), noiseLow: designCarbon(0.78), noiseHigh: designCarbon(0.95), state: 'breach', confidence: 'high' },
-      grade: 'D',
-      kb: 2184,
-      trend: { pct: 21, significant: true },
-      declaration: { text: 'v1 · 248 j', tone: 'caution' },
-      agency: 'Sextant',
-    },
-    {
-      rank: 188,
-      domain: 'chu-armorique.fr',
-      organisme: "CHU d'Armorique",
-      sector: 'sante',
-      band: { median: designCarbon(1.2), low: designCarbon(0.88), high: designCarbon(1.53), noiseLow: designCarbon(1.05), noiseHigh: designCarbon(1.43), state: 'normal', confidence: 'low' },
-      grade: 'E',
-      gradeTone: 'caution',
-      kb: 3062,
-      kbTone: 'caution',
-      trend: null,
-      declaration: { text: 'v1 · 426 j', tone: 'caution' },
-      agency: 'Sextant',
-    },
-    {
-      rank: 371,
-      domain: 'portail-arvor.fr',
-      organisme: "Département d'Arvor",
-      sector: 'departements',
-      band: { median: designCarbon(1.42), low: designCarbon(1.1), high: designCarbon(1.58), noiseLow: designCarbon(1.32), noiseHigh: designCarbon(1.52), state: 'breach', confidence: 'high' },
-      grade: 'F',
-      gradeTone: 'breach',
-      kb: 4418,
-      kbTone: 'breach',
-      trend: { pct: 34, significant: true },
-      declaration: null,
-      agency: null,
-    },
-  ] as readonly ObservatoryRow[],
 } as const;

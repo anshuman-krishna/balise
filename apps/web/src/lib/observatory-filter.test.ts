@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { observatoryFixture } from '../fixtures/canon';
+import { corpusRows } from './corpus-view';
 import {
   filterObservatory,
   isFiltered,
@@ -7,17 +7,22 @@ import {
   toggleSector,
 } from './observatory-filter';
 
-const rows = observatoryFixture.rows;
+const rows = corpusRows();
 
 describe('filterObservatory', () => {
-  it('returns the whole extract when nothing is selected', () => {
+  it('returns the whole corpus when nothing is selected', () => {
     expect(filterObservatory(rows, NO_FILTER)).toHaveLength(rows.length);
     expect(isFiltered(NO_FILTER)).toBe(false);
   });
 
   it('narrows to one sector', () => {
     const communes = filterObservatory(rows, { sector: 'communes', withoutDeclaration: false });
-    expect(communes.map((row) => row.domain)).toEqual(['craonnais.fr', 'ville-de-plessac.fr']);
+    expect(communes.map((row) => row.domain)).toEqual([
+      'craonnais.fr',
+      'mairie-lanvaux.fr',
+      'ville-de-plessac.fr',
+      'bibliotheques-selo.fr',
+    ]);
   });
 
   it('keeps rows whose sector has no chip out of every sector filter', () => {
@@ -30,12 +35,12 @@ describe('filterObservatory', () => {
 
   it('narrows to services with no published declaration', () => {
     const none = filterObservatory(rows, { sector: null, withoutDeclaration: true });
-    expect(none.map((row) => row.domain)).toEqual(['portail-arvor.fr']);
+    expect(none.map((row) => row.domain)).toEqual(['bibliotheques-selo.fr', 'portail-arvor.fr']);
   });
 
   it('combines sector and declaration filters', () => {
     const combined = filterObservatory(rows, { sector: 'communes', withoutDeclaration: true });
-    expect(combined).toHaveLength(0);
+    expect(combined.map((row) => row.domain)).toEqual(['bibliotheques-selo.fr']);
   });
 });
 

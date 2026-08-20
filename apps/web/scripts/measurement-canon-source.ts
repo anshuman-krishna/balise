@@ -17,6 +17,7 @@ import {
   PROVISIONAL_NOISE_FLOOR_SCALING_FACTOR,
 } from '@balise/measure-core';
 import { BASELINE_CAPTURE, CANDIDATE_CAPTURE, SCAN_CAPTURE } from './capture-canon-source';
+import { CORPUS_SERVICES, corpusPriorId, corpusScenarioId, type CorpusService } from './corpus-services';
 
 /**
  * every median, dispersion, noise floor and confidence grade the application
@@ -261,7 +262,10 @@ function buildScenario(spec: ScenarioSpec) {
           (run) => run.values.find((value) => value.metricId === metric.metricId)!.value,
         ),
         floor: floors.get(metric.metricId) ?? computeNoiseFloor(history, metric.metricId),
-        confidence: gradeConfidence(metric, { fingerprintStable: aggregation.fingerprintStable }),
+        confidence: gradeConfidence(metric, {
+          fingerprintStable: aggregation.fingerprintStable,
+          noiseFloor: floors.get(metric.metricId) ?? null,
+        }),
         ...(kept
           ? {
               history: history.map((past) => {
@@ -407,8 +411,78 @@ const SCENARIOS: readonly ScenarioSpec[] = [
   },
 ];
 
+/**
+ * how far a corpus service's runs move between them, as a share of what the
+ * page settles at.
+ *
+ * one figure for the whole corpus rather than a spread authored per service:
+ * they are measured by one runner on one profile, so a heavier page moves more
+ * in bytes and no more in proportion. it is also what makes the floors
+ * comparable, and a floor that is not comparable makes a trend column a set of
+ * unrelated verdicts printed in one column.
+ */
+const CORPUS_RUN_SPREAD = 0.014;
+
+/**
+ * one corpus service: one page, two aggregations ninety days apart, and one
+ * floor from its own history that both are read against.
+ *
+ * no capture is published with them. the index renders no inventory, and
+ * carrying twelve resource lists into this file to render nothing would be
+ * twelve chances for a copy to drift from the original.
+ */
+function corpusScenario(service: CorpusService): ScenarioSpec {
+  const measured = extractMetrics(service.capture);
+  const at = (metricId: MetricId): number => {
+    const found = measured.values.find((value) => value.metricId === metricId);
+    if (found === undefined) throw new Error(`${service.domain} yields no ${metricId}`);
+    return found.value;
+  };
+
+  const metrics: Spreads = {
+    transferred_bytes: {
+      centre: at('transferred_bytes'),
+      spread: at('transferred_bytes') * CORPUS_RUN_SPREAD,
+    },
+    request_count: { centre: at('request_count'), spread: 1, integral: true },
+    dom_node_count: {
+      centre: at('dom_node_count'),
+      spread: Math.round(at('dom_node_count') * CORPUS_RUN_SPREAD),
+      integral: true,
+    },
+    third_party_bytes: {
+      centre: at('third_party_bytes'),
+      spread: at('third_party_bytes') * CORPUS_RUN_SPREAD,
+    },
+  };
+
+  return {
+    id: corpusScenarioId(service.domain),
+    label: service.domain,
+    pass: 'cold',
+    historyCount: service.historyCount,
+    metrics,
+    aggregations: [
+      {
+        id: corpusPriorId(service.domain),
+        label: `${service.domain} · j-90`,
+        runCount: 5,
+        fingerprintStable: true,
+        metrics: {
+          ...metrics,
+          transferred_bytes: {
+            centre: service.priorTransferredBytes,
+            spread: service.priorTransferredBytes * CORPUS_RUN_SPREAD,
+          },
+        },
+      },
+      { id: corpusScenarioId(service.domain), label: service.domain, runCount: 5, fingerprintStable: true },
+    ],
+  };
+}
+
 export function buildMeasurementCanon() {
-  const built = SCENARIOS.map(buildScenario);
+  const built = [...SCENARIOS, ...CORPUS_SERVICES.map(corpusScenario)].map(buildScenario);
   return {
     scalingFactor: PROVISIONAL_NOISE_FLOOR_SCALING_FACTOR,
     minHistory: NOISE_FLOOR_MIN_HISTORY,

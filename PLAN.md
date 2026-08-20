@@ -16,7 +16,60 @@ screenshots, the fidelity source).
 
 ## Current status
 
-**Phase: a finding is a measurement (2026-08-20).** The free scan carried three findings
+**Phase: a comparison is a position in a corpus (2026-08-20).** Two surfaces in the
+product compare services with each other, and on both of them almost every figure is a
+position rather than a quantity. All of them were authored. The public index printed a
+rank of 14 out of a total of 412; the fleet printed a percentile of 38 against an n of 112
+and drew the distribution behind it as twelve x/y/height triples copied out of a mockup,
+with the marker at x=99 and the median line at x=200. Four claims about three
+distributions, none of which existed and none of which could have agreed with each other
+if they had.
+
+The grades were the same kind of thing. Every row on the index carried a letter and the
+table carried no DOM count and no request count, so no grade on it could have come from
+the model that produces grades. The audited service was printed at B on the public page
+while the model this build ships grades it E, which is a contradiction a buyer finds by
+opening two tabs. And "n=112 services mesurés. Votre client se situe dans les meilleurs
+38%. Citable dans l'annexe avec la taille d'échantillon indiquée." invited a customer to
+put that number in a tender response.
+
+There is a corpus now: twelve services, each one a capture, in `capture-canon-source.ts`
+with the rest. A `site()` builder takes a compact description of a page and expands it to
+a real resource list, so each is about twelve authored lines and still reduces through
+`extractMetrics` like every other capture. The measurement canon builds a scenario per
+service with two aggregations ninety days apart and its own history, and `corpus-canon-source.ts`
+reads the result back. The rank is the position when the corpus is ordered on measured
+page weight. The grade is `computeEcoIndexScore` over the three metrics printed beside it.
+The trend is `classifyDelta` over the two aggregations against that scenario's floor. The
+histogram is the corpus's own distribution in eight buckets, emitted as counts and edges,
+with the screen turning fractions into pixels rather than a fixture carrying coordinates.
+
+Four things the corpus refuses. **It states the size it holds**: twelve, not four hundred
+and twelve, because a rank against a corpus nobody measured is not a rank. **It ranks on a
+measurement**, transferred page weight, not on the reference model's estimate: the bands
+of adjacent services overlap, so ordering by them asserts a precision the bands themselves
+deny, and the footer says so. **It gives a position and not a percentile**, "6e sur 12",
+because a percentile over twelve services is a rank wearing a statistic's clothes. And
+**it applies green hosting per service and only where the check was made**: an unverified
+host gets a factor of zero rather than the one the whole canon used to share, four of the
+twelve have never been checked, and the index prints how many.
+
+One kernel bug fell out of building it. METHODOLOGY.md section 7 says a scenario with no
+established floor is low confidence, and `classifyDelta` and the budget engine both
+implement their half of that rule, but `gradeConfidence` was never given the floor and so
+graded a hospital's home page high confidence on eleven weeks of history, while the same
+scenario could not say whether anything on it had changed. `ConfidenceContext` now carries
+`noiseFloor` as a required field, so a caller has to answer the question rather than
+inherit a default, and section 9's table carries the condition section 7 already stated.
+
+Also derived rather than typed: the declaration tone, which used to draw a declaration 426
+days old in caution where the referential asks for republication once a year; the fleet's
+alert column, which held "runner unstable 3 d" and "3p share 41%" beside rows carrying
+neither figure; and the summary strip above it. A sub-floor trend prints "non sig." rather
+than a signed percentage in a quieter grey, because a number in a column headed "tendance"
+reports a change whatever colour it is in. 799 tests.
+
+**Then: a finding is a measurement (2026-08-20).** The free scan carried three findings
 and all three were written by hand: "-214 KB, quatre images en PNG non redimensionnées",
 "-96 KB, deux familles de polices, six graisses, aucune sous-classée", and a DOM figure.
 The first two stated things a capture does not hold, since nothing in a capture says an
@@ -211,6 +264,8 @@ from the carbon tile; both render now and a test asserts it. 646 tests.
 - `findings`: what a capture shows about itself, as measured quantities with the basis of
   every share named. no projected savings, and a position in a published reference
   distribution only when the caller supplies one.
+- Confidence takes the scenario's floor, so a figure nothing can be detected against is
+  low confidence however tight its runs were.
 
 ### Carbon models (packages/carbon-models) [OSS]
 - One `CarbonModel` interface; adding a model never touches engine code.
@@ -223,6 +278,13 @@ from the carbon tile; both render now and a test asserts it. 646 tests.
 
 ### Schemas (packages/schemas)
 - Zod as single source of truth, branded IDs, inferred types, closed error-code enum (V2).
+
+### Comparison surfaces (apps/web)
+- One corpus of measured services behind the fleet and the public index, with the rank,
+  the grade, the trend, the histogram and the summary strip all computed from it.
+- The corpus states its own size, ranks on a measured quantity, gives a position rather
+  than a percentile, measures every row identically, and credits green hosting only where
+  the check was made.
 
 ### UI (packages/ui + apps/web)
 - Design tokens per the brief: ink/paper/surface palette, Archivo + Public Sans + Martian Mono,
@@ -288,10 +350,21 @@ from the carbon tile; both render now and a test asserts it. 646 tests.
       capture plus a position in EcoIndex's published distribution, no saving anywhere, and
       the coverage findings withheld rather than zeroed. read by the free scan and the run
       detail's resources tab)
+- [x] ~~The fleet and the public index compare services against corpora that do not
+      exist~~ (`pnpm gen:corpus-canon`; twelve services, each one a capture, with the rank
+      from measured page weight, the grade from `computeEcoIndexScore`, the trend from
+      `classifyDelta` and the histogram from the corpus's own distribution. the index
+      states the twelve it holds instead of the 412 it claimed)
+- [x] ~~Confidence renders in the pass colour on the metric tiles~~ (green is a pass state
+      and a confidence grade is not one; `--text-secondary` on high, asserted by a
+      rendering test, and the two new comparison surfaces obey the same rule through
+      `confidenceTone`)
 - [ ] ToleranceBand print register for trend and dispersion (the handoff specifies print for the canonical band only; needed when the Typst pipeline lands)
-- [ ] Confidence renders in the pass colour on the metric tiles. Green is a pass state and
-      a confidence grade is not one; the tokens say so and the tiles predate the rule
 - [ ] Self-hosted font subsetting check (weight budget)
+- [ ] The fleet's other clients still carry an authored RGESN rate. Only the audited
+      service is assessed by the engine, which is honest, but five numbers on that column
+      are backed by nothing. Either assess them or say the column is the agency's own
+      record
 
 ## To-do: criteria (brought forward from V5)
 
@@ -396,7 +469,7 @@ from the carbon tile; both render now and a test asserts it. 646 tests.
       and a size, which is what the resource inventory renders; the full har and the trace
       are still not persisted and need object storage
 - [x] ~~EnvironmentFingerprint recorded on every run~~ (V1.0, every field compared for invariant 3, with a test that fails if a field is ever left out of the comparison)
-- [~] METHODOLOGY.md v1 **drafted**, not published and not in force. Fifteen open decisions in its section 12 need sign-off (operating manual section 29)
+- [~] METHODOLOGY.md v1 **drafted**, not published and not in force. Sixteen open decisions in its section 12 need sign-off (operating manual section 29)
 - [ ] Sign off the noise floor scaling factor, the throttle profile parameters and the confidence thresholds
 - [ ] **Measure what coverage instrumentation costs**, then decide whether it is on for a
       measured run. It is written, off by default, and on the fingerprint; METHODOLOGY.md open
@@ -405,6 +478,15 @@ from the carbon tile; both render now and a test asserts it. 646 tests.
 - [ ] **Sign off the finding thresholds** (METHODOLOGY.md open decision 15). They decide
       what a public surface calls a problem on a service whose owner never asked to be
       measured
+- [ ] **Sign off what a comparison surface compares** (METHODOLOGY.md open decision 16 and
+      section 10.2). The rank is taken on transferred page weight, which is one metric
+      standing in for a page's cost; the reference model's estimate and the EcoIndex score
+      are the alternatives and each says something different about what an index is for.
+      The 270 days at which a declaration is flagged as due is ours too; the 365 is the
+      referential's
+- [ ] Crawl a real corpus. The index is twelve authored captures and says so. It needs the
+      public-sector allowlist, `robots.txt` compliance and the rate limit in the operating
+      manual section 8 before it measures anything nobody asked us to measure
 - [x] ~~The reproducibility test: twenty runs, same verdict, in CI~~ (V1.1, `pnpm test:repro`, its own vitest config so it stays out of the normal loop, plus a CI job that installs the browser)
 - [ ] Run the reproducibility suite for real and record what it says; it has never executed
 
@@ -413,6 +495,62 @@ Later versions: see roadmap; detailed to-dos are appended when the version start
 ---
 
 ## Decisions log
+
+- **2026-08-20 · The index states the corpus it holds.** The observatory said "412
+  services mesurés en continu" and held six rows. Nothing had measured 412 services, and
+  every position on the surface, the rank especially, counted against that number. The
+  fiction is cheap and the claim is not: the whole proposition of a public index is that
+  the field was measured and here is where you stand. It now holds twelve captures and
+  says twelve. When a crawler exists the number becomes real, and until then a small
+  honest corpus reads better to a buyer than a large invented one.
+- **2026-08-20 · A rank is taken on a measurement, not on an estimate.** Ordering by the
+  reference model's gCO2e was the design's rule and is the wrong one: adjacent rows' bands
+  overlap, so an ordering by them claims a precision the bands deny on the same screen.
+  Transferred page weight orders almost identically here, is a measured quantity, and can
+  be checked against the row beside it. The consequence is visible and kept: rank 8 scores
+  better on EcoIndex than rank 7, because a rank on one metric and a composite score are
+  different questions. METHODOLOGY.md 10.2, open decision 16.
+- **2026-08-20 · A position is stated as a position.** "6e sur 12", never "P38". A
+  percentile computed over twelve services is a rank wearing a statistic's clothes, and
+  the fleet's caption used to invite the customer to cite it in a tender annex. The
+  caption now says how many services the corpus holds, twice.
+- **2026-08-20 · This does not reopen the kernel's rule about corpora.** The decision of
+  the previous slice stands: `measure-core` holds no corpus, and the only comparison a
+  finding makes is against EcoIndex's published tables. The corpus here is application
+  data, it is a set of captures anyone can read, and the surfaces that use it state its
+  size. The kernel still takes a position as an input and depends on nothing.
+- **2026-08-20 · Every row in a comparison is measured identically.** One page per service,
+  cold, `mobile-4g`, five runs. The audited service therefore has two measurements: the
+  service median over fourteen scenarios on desktop that the workspace shows, and the home
+  page on mobile that the index ranks. They are different questions and they sit on
+  different screens. A shared axis across rows measured differently is invariant 3 with
+  the fingerprint quietly dropped out of the argument, which is what an index does by
+  accident the moment two rows come from different profiles.
+- **2026-08-20 · Green hosting is credited per service and only where checked.** The canon
+  ran every model with `greenHostingFactor: 1`, which zeroes SWD's data centre term. Fine
+  for the audited service, whose host was checked; applied to twelve services in a public
+  index it flatters eleven of them on a fact nobody looked up. An unchecked host now gets
+  zero, the check date travels with the ones that have it, and the index prints how many
+  were never checked and what that does to their estimate.
+- **2026-08-20 · `gradeConfidence` takes the noise floor, and the field is required.**
+  METHODOLOGY.md section 7 already said a scenario without a floor is low confidence.
+  `classifyDelta` returns `indeterminate` for it and the budget engine refuses to fail on
+  it, but the confidence grade was computed from dispersion alone, so eleven weeks of
+  tight runs graded high. Optional with a default would have left every existing call site
+  silently wrong; required makes each one answer. Section 9's table now carries the
+  condition, which is a correction to the document, not a change to the method.
+- **2026-08-20 · A histogram is emitted as counts and edges.** The generator publishes
+  buckets, a median and a corpus size; the screen turns fractions into pixels. The version
+  this replaced put x, y and height in the fixture, which meant the bars, the marker and
+  the median line were three independent authored numbers that never had to agree.
+- **2026-08-20 · A sub-floor movement prints no percentage.** The trend column drew "+0.6%"
+  in a quieter grey. Rule 2 says a delta below the floor is not a change, and a signed
+  number in a column headed "tendance" reports one whatever colour it is in. It reads
+  "non sig." now, and a scenario with no floor reads "n/a".
+- **2026-08-20 · A declaration's state is its age against the referential's year.** The
+  tone was typed beside the age, which is how 426 days came to be drawn in caution. Over
+  365 days is expired, which is the RGESN republication rule and not our choice; the 270
+  days at which one is flagged as due is ours, and is open decision 16.
 
 - **2026-08-20 · A finding states a measured quantity, never a projected saving.** The
   free scan's findings were "-214 KB" and "-96 KB": what the page would weigh if someone

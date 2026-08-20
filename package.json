@@ -19,7 +19,8 @@
     "gen:budget-canon": "node --experimental-strip-types --import ./scripts/ts-loader.mjs apps/web/scripts/generate-budget-canon.ts",
     "gen:carbon-canon": "node --experimental-strip-types --import ./scripts/ts-loader.mjs apps/web/scripts/generate-carbon-canon.ts",
     "gen:findings-canon": "node --experimental-strip-types --import ./scripts/ts-loader.mjs apps/web/scripts/generate-findings-canon.ts",
-    "gen:criteria-canon": "node --experimental-strip-types --import ./scripts/ts-loader.mjs apps/web/scripts/generate-criteria-canon.ts"
+    "gen:criteria-canon": "node --experimental-strip-types --import ./scripts/ts-loader.mjs apps/web/scripts/generate-criteria-canon.ts",
+    "gen:corpus-canon": "node --experimental-strip-types --import ./scripts/ts-loader.mjs apps/web/scripts/generate-corpus-canon.ts"
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",

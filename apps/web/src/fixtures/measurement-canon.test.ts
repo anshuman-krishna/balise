@@ -89,7 +89,7 @@ describe('every statistic is the one its runs produce', () => {
             max: metric.max,
             sampleCount: metric.sampleCount,
           },
-          { fingerprintStable: aggregation.fingerprintStable },
+          { fingerprintStable: aggregation.fingerprintStable, noiseFloor: metric.floor },
         );
         expect(metric.confidence).toBe(graded);
       }

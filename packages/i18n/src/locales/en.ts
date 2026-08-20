@@ -557,16 +557,29 @@ export const en = {
     },
     headers: {
       service: 'SERVICE',
-      carbonVisit: 'CARBON / VISIT',
+      carbonVisit: 'FOOTPRINT / VISIT',
       conf: 'CONF.',
       rgesn: 'RGESN',
       declaration: 'DECLARATION',
       contract: 'CONTRACT',
       alert: 'ALERT',
     },
-    benchmarkTitle: 'SECTOR BENCHMARK · ANONYMISED · MÉTROPOLES & EPCI',
+    measuredNote:
+      'One home page per service, cold cache, {profile} profile, median of five runs. Measuring the rows identically is what makes the shared scale readable.',
+    declarationNone: 'none',
+    declarationCell: 'v{version} · {days} d',
+    alerts: {
+      none: 'none',
+      budget: 'budget breached',
+      declarationMissing: 'no declaration',
+      declarationExpired: 'declaration expired · {days} d',
+      declarationDue: 'declaration due · {days} d',
+      thirdParty: 'third parties · {share} of weight',
+      noFloor: 'no noise floor',
+    },
+    benchmarkTitle: 'CORPUS DISTRIBUTION · MEASURED PAGE WEIGHT',
     benchmarkCaption:
-      'n={n} measured services. Your client sits in the best {pct}%. Quotable in the annex with the sample size stated.',
+      '{n} measured services. {domain} is {rank} of {n}. A position in this corpus, not a percentile: {n} services are not a national distribution.',
     medianLabel: 'median {value}',
     clientAccessTitle: 'CLIENT ACCESS',
     clientAccessBody:
@@ -738,8 +751,8 @@ export const en = {
     navMethodology: 'Méthodologie',
     title: 'Observatoire des services numériques publics',
     introBefore:
-      '{count} services mesurés en continu · relevés du {date} · registre public, mis à jour chaque semaine. Les valeurs sont des médianes de cinq exécutions sur profil ',
-    introAfter: ', cache froid. Méthodologie identique pour tous.',
+      "{count} services mesurés · une page d'accueil par service · relevés du {date} · registre public. Les valeurs sont des médianes de cinq exécutions sur profil ",
+    introAfter: ", cache froid. Méthodologie identique pour tous, et le corpus est celui qui a été mesuré : aucun rang ci-dessous ne compte contre autre chose.",
     filtersLabel: 'FILTRES',
     sectors: {
       epci: 'Métropoles & EPCI',
@@ -757,20 +770,32 @@ export const en = {
       grade: 'NOTE',
       kb: 'KB',
       trend: 'TEND. 90J',
+      hosting: 'HÉBERG.',
       declaration: 'DÉCLARATION',
       agency: 'AGENCE',
     },
+    hosting: {
+      verified: 'vert',
+      standard: 'standard',
+      unchecked: 'non vérifié',
+    },
     trendNa: 'n/a',
+    trendFlat: 'non sig.',
     declarationNone: 'aucune',
+    declarationCell: 'v{version} · {days} j',
     noAgency: '–',
     footer:
-      'Extrait de {total} entrées · classement par empreinte croissante · chaque ligne a un permalien et un historique public.',
+      'Classement par poids de page transféré, croissant, qui est une quantité mesurée : les bandes se chevauchent et ne rangeraient pas ces services. Chaque ligne a un permalien et un historique public.',
     footerModel:
       'Bandes : étendue inter-modèles sur {models} modèles, médiane au modèle de référence {model}. Méthodologie {methodology}.',
-    filteredFooter: '{shown} entrées de cet extrait correspondent au filtre.',
-    emptyTitle: 'Aucune entrée de cet extrait ne correspond',
+    footerHosting:
+      "Hébergement vérifié auprès de la Green Web Foundation pour {verified} services sur {total} ; {unchecked} n'ont jamais été vérifiés et leur estimation ne porte aucun crédit d'hébergement.",
+    footerTrend:
+      "La tendance compare deux mesures à quatre-vingt-dix jours d'écart, lues contre le plancher de bruit du scénario. Sous le plancher, aucun mouvement n'est une évolution.",
+    filteredFooter: '{shown} services sur {total} correspondent au filtre.',
+    emptyTitle: 'Aucun service ne correspond',
     emptyBody:
-      "L'extrait public compte {shown} lignes sur {total} entrées mesurées. Retirez le filtre pour voir l'extrait complet.",
+      'Le registre compte {total} services mesurés. Retirez le filtre pour les voir tous.',
     emptyAction: 'Retirer le filtre',
   },
   ledger: {

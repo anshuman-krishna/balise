@@ -32,6 +32,14 @@ function render(stateMessage?: { text: string; tone: 'breach' | 'caution' }) {
 }
 
 describe('a metric tile', () => {
+  // the tokens say green is a pass state and nothing else. a confidence grade
+  // is not a pass: high confidence in a heavy page is a well-measured heavy
+  // page, and drawing it in the conformity colour reads as approval of the
+  // figure beside it.
+  it('never draws a confidence grade in the pass colour', () => {
+    expect(render()).not.toContain('var(--conforme)');
+  });
+
   it('names the model and version under the figure', () => {
     expect(render()).toContain('swd@0.1.0');
   });

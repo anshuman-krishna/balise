@@ -15,8 +15,11 @@ export interface MetricTileProps {
   stateMessage?: { text: string; tone: 'breach' | 'caution' };
 }
 
+// a confidence grade is not a pass state, and green is only ever a pass state.
+// high confidence in a heavy page is a well-measured heavy page; drawing the
+// grade in the conformity colour reads as approval of the figure beside it.
 const CONFIDENCE_COLOR: Record<Confidence, string> = {
-  high: 'var(--conforme)',
+  high: 'var(--text-secondary)',
   medium: 'var(--caution)',
   low: 'var(--caution)',
 };

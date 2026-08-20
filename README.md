@@ -59,6 +59,11 @@ These are enforced in code and tested, not aspirational.
 - **No saving is ever projected.** A finding states a quantity measured on the page and
   what it is a share of. What the page would weigh in another format is a statement about a
   page nobody loaded, and one projection in a report makes the whole report a projection.
+- **A comparison is a position in a corpus that exists.** The public index ranks services
+  against the ones actually measured, states how many that is, orders on a measured
+  quantity rather than on an estimate whose bands overlap, and gives a rank rather than a
+  percentile. Every row in it is measured on the same page, the same pass and the same
+  profile.
 - **The register is measurement, not campaign.** No leaves, no globes, no gradients from
   teal to lime. Green appears as a pass state and never as a brand colour.
 
@@ -112,6 +117,14 @@ attestation always overrules measurement.
 **Record.** `packages/ledger` is an append-only, per-tenant hash chain with Merkle
 anchoring. There is no update, no delete and no repair utility. If the chain is broken,
 that fact is the finding and it gets surfaced.
+
+**Compare.** The fleet view and the public index set services against each other, which
+makes almost every figure on them a position rather than a quantity. Each one is computed
+from the corpus of services actually measured: the rank from their measured page weights,
+the grade from the metrics printed beside it, the trend from two measurements read against
+that scenario's own floor, the histogram from the corpus's own distribution. Green hosting
+credit is applied per service and only where the check was made, so an unverified host is
+not quietly credited with a data centre it may not have.
 
 ## The tolerance band
 
@@ -202,13 +215,14 @@ generator ever disagree.
 pnpm gen:attribution-canon
 pnpm gen:budget-canon
 pnpm gen:carbon-canon
+pnpm gen:corpus-canon
 pnpm gen:criteria-canon
 pnpm gen:findings-canon
 pnpm gen:ledger-canon
 pnpm gen:measurement-canon
 ```
 
-`gen:measurement-canon` sits underneath the other five. It is the one place a median, a
+`gen:measurement-canon` sits underneath the other six. It is the one place a median, a
 dispersion, a noise floor or a confidence grade is produced, and the carbon, budget and
 ledger canons read their byte counts and floors from it rather than restating them, so the
 estimate, the verdict and the register all describe the same run.
@@ -235,8 +249,10 @@ than implying otherwise.
 Waiting on a decision rather than on code: `docs/METHODOLOGY.md` is a v1.0 draft and not in
 force, the RGESN tier split ships as a proposal that nothing is answered automatically
 from, the evaluation thresholds are ours to set because the referential sets almost none,
-and the finding thresholds decide what a public surface calls a problem on a service whose
-owner never asked to be measured. Those gates are stated in the interface, not buried in a to-do list.
+the finding thresholds decide what a public surface calls a problem on a service whose
+owner never asked to be measured, and what a comparison surface is allowed to compare is
+a question about what an index is for. Those gates are stated in the interface, not buried
+in a to-do list.
 
 `PLAN.md` holds the living roadmap, the to-do lists and the decisions log.
 

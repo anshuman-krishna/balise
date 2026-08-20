@@ -70,18 +70,45 @@ const PAGES: readonly Page[] = [
   fromMeasured('scan', 'bibliotheques-selo.fr', 'scan'),
 ];
 
-function inputFor(page: Page): ModelInput {
-  return {
+/** the three metrics every model in this build reads. */
+export interface MeasuredPage {
+  transferredBytes: number;
+  requestCount: number;
+  domNodeCount: number;
+}
+
+export interface EstimateOptions {
+  /**
+   * the share of the service's hosting verified green, from the green web
+   * foundation check. zero where no check was made: a hosting claim nobody
+   * made is not a hosting claim, and defaulting it to one would credit every
+   * unchecked service in the index with a data centre it may not have.
+   */
+  greenHostingFactor: number;
+  /**
+   * the established floor on transferred bytes. the carbon noise band is the
+   * reference model run at the floor's two edges, which is measurement noise
+   * carried into the estimate rather than a second uncertainty invented for
+   * the chart. undefined where no floor is established.
+   */
+  floorBytes?: number;
+}
+
+/**
+ * one page through every model, split into the band and what sits beside it.
+ *
+ * the corpus reads this too, so a service in the public index and the service
+ * in the workspace are estimated by the same code under the same declared
+ * grid, and the only thing that differs between them is what was measured.
+ */
+export function estimateMeasured(page: MeasuredPage, options: EstimateOptions) {
+  const input: ModelInput = {
     transferredBytes: page.transferredBytes,
     requestCount: page.requestCount,
     domNodeCount: page.domNodeCount,
     gridIntensity: GRID,
-    greenHostingFactor: GREEN_HOSTING,
+    greenHostingFactor: options.greenHostingFactor,
   };
-}
-
-function estimatePage(page: Page) {
-  const input = inputFor(page);
 
   const outputs = carbonModels.map((model) => {
     assertModelInputs(model, input);
@@ -113,30 +140,23 @@ function estimatePage(page: Page) {
     throw new Error(`the reference model ${REFERENCE_MODEL_ID} is not in the band`);
   }
 
-  // measurement noise carried into the estimate: the reference model run at
-  // the two edges of the floor, and null when no floor is established.
+  const floorBytes = options.floorBytes;
   const noise =
-    page.transferredFloorBytes === undefined
+    floorBytes === undefined
       ? null
       : (() => {
           const model = carbonModels.find((candidate) => candidate.id === REFERENCE_MODEL_ID)!;
           const at = (bytes: number) =>
             model.estimate({ ...input, transferredBytes: Math.max(0, bytes) }).value;
           return {
-            low: at(page.transferredBytes - page.transferredFloorBytes),
-            high: at(page.transferredBytes + page.transferredFloorBytes),
-            floorBytes: page.transferredFloorBytes,
+            low: at(page.transferredBytes - floorBytes),
+            high: at(page.transferredBytes + floorBytes),
+            floorBytes,
           };
         })();
 
   return {
-    id: page.id,
-    label: page.label,
-    metrics: {
-      transferredBytes: page.transferredBytes,
-      requestCount: page.requestCount,
-      domNodeCount: page.domNodeCount,
-    },
+    metrics: page,
     band: {
       low: Math.min(...values),
       high: Math.max(...values),
@@ -148,6 +168,21 @@ function estimatePage(page: Page) {
     inBand,
     aside,
   };
+}
+
+function estimatePage(page: Page) {
+  const estimate = estimateMeasured(
+    {
+      transferredBytes: page.transferredBytes,
+      requestCount: page.requestCount,
+      domNodeCount: page.domNodeCount,
+    },
+    {
+      greenHostingFactor: GREEN_HOSTING,
+      ...(page.transferredFloorBytes === undefined ? {} : { floorBytes: page.transferredFloorBytes }),
+    },
+  );
+  return { id: page.id, label: page.label, ...estimate };
 }
 
 export function buildCarbonCanon() {

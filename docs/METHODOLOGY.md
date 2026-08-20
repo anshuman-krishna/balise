@@ -273,12 +273,18 @@ and fingerprint stability:
 
 | Grade | Condition |
 | --- | --- |
-| **Low** | Fingerprints differed between runs, or fewer than 3 runs, or MAD above 15% of the median |
+| **Low** | Fingerprints differed between runs, or the scenario has no established noise floor, or fewer than 3 runs, or MAD above 15% of the median |
 | **Medium** | MAD at or below 15% of the median |
 | **High** | At least 5 runs and MAD at or below 5% of the median |
 
 A median of zero with any dispersion is unstable by definition and grades low; a
 median of zero with no dispersion is perfectly stable.
+
+The floor condition is section 7's rule, stated here because it belongs in this
+table. Dispersion says how repeatable five runs were; the floor says whether a
+change on that scenario could be detected at all. Five tight runs on a scenario
+with eleven aggregations of history are repeatable and undetectable, and calling
+that high confidence would say we know something we do not.
 
 Low confidence is shown wherever the figure is shown. It is never omitted to
 save space.
@@ -376,6 +382,38 @@ tests: a model that claims to respond to grid intensity, and does not, fails.
 This section's rule was written on the assumption that both energy models
 tracked the grid, and that test is what corrected it.
 
+### 10.2 Comparing one service with another
+
+Two comparisons appear in the product, and they are not the same kind of claim.
+
+**Against a published distribution.** A measured value is placed in the quantile
+tables EcoIndex publishes for DOM nodes, requests and page weight. The table is
+someone else's, it is public, and the source and its version travel with the
+number. This is what the free scan's seventh finding does (section 1.2).
+
+**Against the corpus.** The public index and the fleet view rank services
+against each other. Every position on those surfaces is computed from the
+services actually measured, and the size of that set is stated wherever a
+position is:
+
+1. **The corpus is what was measured.** The index states the number of services
+   it holds. It does not state a number of services someone intends to measure.
+2. **A rank is on a measured quantity**, transferred page weight, not on an
+   estimate. Adjacent services' gCO2e bands overlap, so ordering by them would
+   assert a precision the bands themselves deny.
+3. **A position is stated as a position**, "6th of 12", never as a percentile.
+   A percentile over twelve services is a rank wearing a statistic's clothes.
+4. **Every row in a comparison is measured identically**: one page per service,
+   one cache pass, one throttle profile, the same run count. A shared axis
+   across rows measured differently is invariant 3 with the fingerprint dropped
+   out of the argument.
+5. **Hosting is per service.** Green hosting credit is applied only where the
+   Green Web Foundation check was made, and the date is carried. An unchecked
+   host receives no credit, and the surface says how many were unchecked.
+6. **A trend is two measurements against the scenario's own floor**, classified
+   by the same function as every other delta. Where no floor is established
+   there is no trend, and the cell says so.
+
 ## 11. Reproducibility
 
 The exit test for this methodology is verdict stability, not numeric equality.
@@ -395,7 +433,8 @@ It is never to loosen the assertion.
 ## 12. Open decisions
 
 Every item here is a decision rather than a consequence, and none of them are
-settled. This section must be empty before version 1.0 is in force.
+settled. This section must be empty before version 1.0 is in force. Sixteen
+open.
 
 1. **Noise floor scaling factor**, currently 1.2. It sets how large a change has
    to be before the product will call it one. Too low produces false regressions
@@ -445,3 +484,11 @@ settled. This section must be empty before version 1.0 is in force.
     asked to be measured, which makes them a methodology decision rather than an
     engineering one. They are held in one place, `PROVISIONAL_FINDING_THRESHOLDS`
     in `measure-core`, and a caller may supply its own.
+16. **What a comparison surface is allowed to compare.** Section 10.2 sets the
+    rules; two of the numbers in them are ours. A declaration is treated as
+    expired past 365 days, which is the referential's annual republication rule
+    and not a choice, but the 270 days at which it is flagged as due is a choice.
+    And a rank is taken on transferred page weight, which is one metric standing
+    in for a page's cost. Ordering on the reference model's estimate, on the
+    EcoIndex score, or on nothing at all are the alternatives, and each says
+    something different about what an index is for.

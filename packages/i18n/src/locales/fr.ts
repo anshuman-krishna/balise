@@ -556,16 +556,29 @@ export const fr: Catalog = {
     },
     headers: {
       service: 'SERVICE',
-      carbonVisit: 'CARBONE / VISITE',
+      carbonVisit: 'EMPREINTE / VISITE',
       conf: 'CONF.',
       rgesn: 'RGESN',
       declaration: 'DÉCLARATION',
       contract: 'CONTRAT',
       alert: 'ALERTE',
     },
-    benchmarkTitle: 'RÉFÉRENTIEL SECTORIEL · ANONYMISÉ · MÉTROPOLES & EPCI',
+    measuredNote:
+      "Une page d'accueil par service, cache froid, profil {profile}, médiane de cinq exécutions. Mesurer les lignes à l'identique est ce qui rend l'échelle partagée lisible.",
+    declarationNone: 'aucune',
+    declarationCell: 'v{version} · {days} j',
+    alerts: {
+      none: 'aucune',
+      budget: 'budget dépassé',
+      declarationMissing: 'déclaration absente',
+      declarationExpired: 'déclaration périmée · {days} j',
+      declarationDue: 'déclaration à republier · {days} j',
+      thirdParty: 'tiers · {share} du poids',
+      noFloor: 'pas de plancher de bruit',
+    },
+    benchmarkTitle: 'DISTRIBUTION DU CORPUS · POIDS DE PAGE MESURÉ',
     benchmarkCaption:
-      "n={n} services mesurés. Votre client se situe dans les meilleurs {pct}%. Citable dans l'annexe avec la taille d'échantillon indiquée.",
+      '{n} services mesurés. {domain} est {rank}e sur {n}. Une position dans ce corpus, pas un centile : {n} services ne font pas une distribution nationale.',
     medianLabel: 'médiane {value}',
     clientAccessTitle: 'ACCÈS CLIENT',
     clientAccessBody:
@@ -744,8 +757,8 @@ export const fr: Catalog = {
     navMethodology: 'Méthodologie',
     title: 'Observatoire des services numériques publics',
     introBefore:
-      '{count} services mesurés en continu · relevés du {date} · registre public, mis à jour chaque semaine. Les valeurs sont des médianes de cinq exécutions sur profil ',
-    introAfter: ', cache froid. Méthodologie identique pour tous.',
+      "{count} services mesurés · une page d'accueil par service · relevés du {date} · registre public. Les valeurs sont des médianes de cinq exécutions sur profil ",
+    introAfter: ", cache froid. Méthodologie identique pour tous, et le corpus est celui qui a été mesuré : aucun rang ci-dessous ne compte contre autre chose.",
     filtersLabel: 'FILTRES',
     sectors: {
       epci: 'Métropoles & EPCI',
@@ -763,20 +776,32 @@ export const fr: Catalog = {
       grade: 'NOTE',
       kb: 'KB',
       trend: 'TEND. 90J',
+      hosting: 'HÉBERG.',
       declaration: 'DÉCLARATION',
       agency: 'AGENCE',
     },
+    hosting: {
+      verified: 'vert',
+      standard: 'standard',
+      unchecked: 'non vérifié',
+    },
     trendNa: 'n/a',
+    trendFlat: 'non sig.',
     declarationNone: 'aucune',
+    declarationCell: 'v{version} · {days} j',
     noAgency: '–',
     footer:
-      'Extrait de {total} entrées · classement par empreinte croissante · chaque ligne a un permalien et un historique public.',
+      'Classement par poids de page transféré, croissant, qui est une quantité mesurée : les bandes se chevauchent et ne rangeraient pas ces services. Chaque ligne a un permalien et un historique public.',
     footerModel:
       'Bandes : étendue inter-modèles sur {models} modèles, médiane au modèle de référence {model}. Méthodologie {methodology}.',
-    filteredFooter: '{shown} entrées de cet extrait correspondent au filtre.',
-    emptyTitle: 'Aucune entrée de cet extrait ne correspond',
+    footerHosting:
+      "Hébergement vérifié auprès de la Green Web Foundation pour {verified} services sur {total} ; {unchecked} n'ont jamais été vérifiés et leur estimation ne porte aucun crédit d'hébergement.",
+    footerTrend:
+      "La tendance compare deux mesures à quatre-vingt-dix jours d'écart, lues contre le plancher de bruit du scénario. Sous le plancher, aucun mouvement n'est une évolution.",
+    filteredFooter: '{shown} services sur {total} correspondent au filtre.',
+    emptyTitle: 'Aucun service ne correspond',
     emptyBody:
-      "L'extrait public compte {shown} lignes sur {total} entrées mesurées. Retirez le filtre pour voir l'extrait complet.",
+      'Le registre compte {total} services mesurés. Retirez le filtre pour les voir tous.',
     emptyAction: 'Retirer le filtre',
   },
   ledger: {

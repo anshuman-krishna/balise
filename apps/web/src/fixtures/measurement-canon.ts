@@ -52,6 +52,126 @@ export const measurementCanon = {
     "aggregationIds": [
       "scan"
     ]
+  },
+  {
+    "id": "corpus:craonnais.fr",
+    "label": "craonnais.fr",
+    "pass": "cold",
+    "historyCount": 24,
+    "aggregationIds": [
+      "corpus:craonnais.fr:prior",
+      "corpus:craonnais.fr"
+    ]
+  },
+  {
+    "id": "corpus:mairie-lanvaux.fr",
+    "label": "mairie-lanvaux.fr",
+    "pass": "cold",
+    "historyCount": 24,
+    "aggregationIds": [
+      "corpus:mairie-lanvaux.fr:prior",
+      "corpus:mairie-lanvaux.fr"
+    ]
+  },
+  {
+    "id": "corpus:ville-de-plessac.fr",
+    "label": "ville-de-plessac.fr",
+    "pass": "cold",
+    "historyCount": 24,
+    "aggregationIds": [
+      "corpus:ville-de-plessac.fr:prior",
+      "corpus:ville-de-plessac.fr"
+    ]
+  },
+  {
+    "id": "corpus:musees-selo.fr",
+    "label": "musees-selo.fr",
+    "pass": "cold",
+    "historyCount": 24,
+    "aggregationIds": [
+      "corpus:musees-selo.fr:prior",
+      "corpus:musees-selo.fr"
+    ]
+  },
+  {
+    "id": "corpus:prefecture-arvor.fr",
+    "label": "prefecture-arvor.fr",
+    "pass": "cold",
+    "historyCount": 24,
+    "aggregationIds": [
+      "corpus:prefecture-arvor.fr:prior",
+      "corpus:prefecture-arvor.fr"
+    ]
+  },
+  {
+    "id": "corpus:sevre-et-loire.fr",
+    "label": "sevre-et-loire.fr",
+    "pass": "cold",
+    "historyCount": 24,
+    "aggregationIds": [
+      "corpus:sevre-et-loire.fr:prior",
+      "corpus:sevre-et-loire.fr"
+    ]
+  },
+  {
+    "id": "corpus:bibliotheques-selo.fr",
+    "label": "bibliotheques-selo.fr",
+    "pass": "cold",
+    "historyCount": 24,
+    "aggregationIds": [
+      "corpus:bibliotheques-selo.fr:prior",
+      "corpus:bibliotheques-selo.fr"
+    ]
+  },
+  {
+    "id": "corpus:eau-selo.fr",
+    "label": "eau-selo.fr",
+    "pass": "cold",
+    "historyCount": 24,
+    "aggregationIds": [
+      "corpus:eau-selo.fr:prior",
+      "corpus:eau-selo.fr"
+    ]
+  },
+  {
+    "id": "corpus:ars-bretagne.fr",
+    "label": "ars-bretagne.fr",
+    "pass": "cold",
+    "historyCount": 24,
+    "aggregationIds": [
+      "corpus:ars-bretagne.fr:prior",
+      "corpus:ars-bretagne.fr"
+    ]
+  },
+  {
+    "id": "corpus:transports-selo.fr",
+    "label": "transports-selo.fr",
+    "pass": "cold",
+    "historyCount": 24,
+    "aggregationIds": [
+      "corpus:transports-selo.fr:prior",
+      "corpus:transports-selo.fr"
+    ]
+  },
+  {
+    "id": "corpus:chu-armorique.fr",
+    "label": "chu-armorique.fr",
+    "pass": "cold",
+    "historyCount": 11,
+    "aggregationIds": [
+      "corpus:chu-armorique.fr:prior",
+      "corpus:chu-armorique.fr"
+    ]
+  },
+  {
+    "id": "corpus:portail-arvor.fr",
+    "label": "portail-arvor.fr",
+    "pass": "cold",
+    "historyCount": 24,
+    "aggregationIds": [
+      "corpus:portail-arvor.fr:prior",
+      "corpus:portail-arvor.fr"
+    ]
   }
 ] as ReadonlyArray<{
     id: string;
@@ -2214,6 +2334,3226 @@ export const measurementCanon = {
       "domNodeCountAtNetworkIdle": 1830,
       "jsExecutionMs": 812
     }
+  },
+  {
+    "id": "corpus:craonnais.fr:prior",
+    "scenarioId": "corpus:craonnais.fr",
+    "label": "craonnais.fr · j-90",
+    "pass": "cold",
+    "sampleCount": 5,
+    "fingerprintStable": true,
+    "metrics": [
+      {
+        "metricId": "transferred_bytes",
+        "unit": "bytes",
+        "median": 244000,
+        "mad": 1708,
+        "min": 240584,
+        "max": 247416,
+        "sampleCount": 5,
+        "runValues": [
+          242462.8,
+          247416,
+          244000,
+          240584,
+          245708
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "transferred_bytes",
+          "unit": "bytes",
+          "value": 1808.1,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "request_count",
+        "unit": "count",
+        "median": 18,
+        "mad": 1,
+        "min": 17,
+        "max": 19,
+        "sampleCount": 5,
+        "runValues": [
+          18,
+          19,
+          18,
+          17,
+          19
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "request_count",
+          "unit": "count",
+          "value": 1.2,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "medium"
+      },
+      {
+        "metricId": "dom_node_count",
+        "unit": "count",
+        "median": 300,
+        "mad": 2,
+        "min": 296,
+        "max": 304,
+        "sampleCount": 5,
+        "runValues": [
+          298,
+          304,
+          300,
+          296,
+          302
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "dom_node_count",
+          "unit": "count",
+          "value": 2.4,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "third_party_bytes",
+        "unit": "bytes",
+        "median": 12000,
+        "mad": 84,
+        "min": 11832,
+        "max": 12168,
+        "sampleCount": 5,
+        "runValues": [
+          12084,
+          11832,
+          12000,
+          12168,
+          11924.4
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "third_party_bytes",
+          "unit": "bytes",
+          "value": 103.32000000000043,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "third_party_share_pct",
+        "unit": "pct",
+        "median": 4.918032786885246,
+        "mad": 0.0658245306084071,
+        "min": 4.782229120186245,
+        "max": 5.0576929471619065,
+        "sampleCount": 5,
+        "runValues": [
+          4.983857317493653,
+          4.782229120186245,
+          4.918032786885246,
+          5.0576929471619065,
+          4.85307763686978
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "third_party_share_pct",
+          "unit": "pct",
+          "value": 0.09408793663391198,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      }
+    ]
+  },
+  {
+    "id": "corpus:craonnais.fr",
+    "scenarioId": "corpus:craonnais.fr",
+    "label": "craonnais.fr",
+    "pass": "cold",
+    "sampleCount": 5,
+    "fingerprintStable": true,
+    "metrics": [
+      {
+        "metricId": "transferred_bytes",
+        "unit": "bytes",
+        "median": 210000,
+        "mad": 1470,
+        "min": 207060,
+        "max": 212940,
+        "sampleCount": 5,
+        "runValues": [
+          208677,
+          212940,
+          210000,
+          207060,
+          211470
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "transferred_bytes",
+          "unit": "bytes",
+          "value": 1808.1,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "request_count",
+        "unit": "count",
+        "median": 18,
+        "mad": 1,
+        "min": 17,
+        "max": 19,
+        "sampleCount": 5,
+        "runValues": [
+          18,
+          19,
+          18,
+          17,
+          19
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "request_count",
+          "unit": "count",
+          "value": 1.2,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "medium"
+      },
+      {
+        "metricId": "dom_node_count",
+        "unit": "count",
+        "median": 300,
+        "mad": 2,
+        "min": 296,
+        "max": 304,
+        "sampleCount": 5,
+        "runValues": [
+          298,
+          304,
+          300,
+          296,
+          302
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "dom_node_count",
+          "unit": "count",
+          "value": 2.4,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "third_party_bytes",
+        "unit": "bytes",
+        "median": 12000,
+        "mad": 84,
+        "min": 11832,
+        "max": 12168,
+        "sampleCount": 5,
+        "runValues": [
+          12084,
+          11832,
+          12000,
+          12168,
+          11924.4
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "third_party_bytes",
+          "unit": "bytes",
+          "value": 103.32000000000043,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "third_party_share_pct",
+        "unit": "pct",
+        "median": 5.714285714285714,
+        "mad": 0.07648183556405375,
+        "min": 5.556494787264018,
+        "max": 5.876557519559547,
+        "sampleCount": 5,
+        "runValues": [
+          5.790767549849768,
+          5.556494787264018,
+          5.714285714285714,
+          5.876557519559547,
+          5.638814016172507
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "third_party_share_pct",
+          "unit": "pct",
+          "value": 0.09408793663391198,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      }
+    ]
+  },
+  {
+    "id": "corpus:mairie-lanvaux.fr:prior",
+    "scenarioId": "corpus:mairie-lanvaux.fr",
+    "label": "mairie-lanvaux.fr · j-90",
+    "pass": "cold",
+    "sampleCount": 5,
+    "fingerprintStable": true,
+    "metrics": [
+      {
+        "metricId": "transferred_bytes",
+        "unit": "bytes",
+        "median": 316000,
+        "mad": 2212,
+        "min": 311576,
+        "max": 320424,
+        "sampleCount": 5,
+        "runValues": [
+          314009.2,
+          320424,
+          316000,
+          311576,
+          318212
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "transferred_bytes",
+          "unit": "bytes",
+          "value": 2737.9799999999927,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "request_count",
+        "unit": "count",
+        "median": 26,
+        "mad": 1,
+        "min": 25,
+        "max": 27,
+        "sampleCount": 5,
+        "runValues": [
+          26,
+          27,
+          26,
+          25,
+          27
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "request_count",
+          "unit": "count",
+          "value": 1.2,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "dom_node_count",
+        "unit": "count",
+        "median": 520,
+        "mad": 4,
+        "min": 513,
+        "max": 527,
+        "sampleCount": 5,
+        "runValues": [
+          517,
+          527,
+          520,
+          513,
+          524
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "dom_node_count",
+          "unit": "count",
+          "value": 4.8,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "third_party_bytes",
+        "unit": "bytes",
+        "median": 12000,
+        "mad": 84,
+        "min": 11832,
+        "max": 12168,
+        "sampleCount": 5,
+        "runValues": [
+          12084,
+          11832,
+          12000,
+          12168,
+          11924.4
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "third_party_bytes",
+          "unit": "bytes",
+          "value": 103.32000000000043,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "third_party_share_pct",
+        "unit": "pct",
+        "median": 3.79746835443038,
+        "mad": 0.050826536292566615,
+        "min": 3.692607295333683,
+        "max": 3.9053072123655226,
+        "sampleCount": 5,
+        "runValues": [
+          3.8482948907229466,
+          3.692607295333683,
+          3.79746835443038,
+          3.9053072123655226,
+          3.7473131120133742
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "third_party_share_pct",
+          "unit": "pct",
+          "value": 0.06213354306013077,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      }
+    ]
+  },
+  {
+    "id": "corpus:mairie-lanvaux.fr",
+    "scenarioId": "corpus:mairie-lanvaux.fr",
+    "label": "mairie-lanvaux.fr",
+    "pass": "cold",
+    "sampleCount": 5,
+    "fingerprintStable": true,
+    "metrics": [
+      {
+        "metricId": "transferred_bytes",
+        "unit": "bytes",
+        "median": 318000,
+        "mad": 2226,
+        "min": 313548,
+        "max": 322452,
+        "sampleCount": 5,
+        "runValues": [
+          315996.6,
+          322452,
+          318000,
+          313548,
+          320226
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "transferred_bytes",
+          "unit": "bytes",
+          "value": 2737.9799999999927,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "request_count",
+        "unit": "count",
+        "median": 26,
+        "mad": 1,
+        "min": 25,
+        "max": 27,
+        "sampleCount": 5,
+        "runValues": [
+          26,
+          27,
+          26,
+          25,
+          27
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "request_count",
+          "unit": "count",
+          "value": 1.2,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "dom_node_count",
+        "unit": "count",
+        "median": 520,
+        "mad": 4,
+        "min": 513,
+        "max": 527,
+        "sampleCount": 5,
+        "runValues": [
+          517,
+          527,
+          520,
+          513,
+          524
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "dom_node_count",
+          "unit": "count",
+          "value": 4.8,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "third_party_bytes",
+        "unit": "bytes",
+        "median": 12000,
+        "mad": 84,
+        "min": 11832,
+        "max": 12168,
+        "sampleCount": 5,
+        "runValues": [
+          12084,
+          11832,
+          12000,
+          12168,
+          11924.4
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "third_party_bytes",
+          "unit": "bytes",
+          "value": 103.32000000000043,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "third_party_share_pct",
+        "unit": "pct",
+        "median": 3.7735849056603774,
+        "mad": 0.050506872542299686,
+        "min": 3.669383350080012,
+        "max": 3.8807455317846076,
+        "sampleCount": 5,
+        "runValues": [
+          3.824091778202677,
+          3.669383350080012,
+          3.7735849056603774,
+          3.8807455317846076,
+          3.72374510501958
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "third_party_share_pct",
+          "unit": "pct",
+          "value": 0.06213354306013077,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      }
+    ]
+  },
+  {
+    "id": "corpus:ville-de-plessac.fr:prior",
+    "scenarioId": "corpus:ville-de-plessac.fr",
+    "label": "ville-de-plessac.fr · j-90",
+    "pass": "cold",
+    "sampleCount": 5,
+    "fingerprintStable": true,
+    "metrics": [
+      {
+        "metricId": "transferred_bytes",
+        "unit": "bytes",
+        "median": 404000,
+        "mad": 2828,
+        "min": 398344,
+        "max": 409656,
+        "sampleCount": 5,
+        "runValues": [
+          401454.8,
+          409656,
+          404000,
+          398344,
+          406828
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "transferred_bytes",
+          "unit": "bytes",
+          "value": 3461.220000000007,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "request_count",
+        "unit": "count",
+        "median": 34,
+        "mad": 1,
+        "min": 33,
+        "max": 35,
+        "sampleCount": 5,
+        "runValues": [
+          34,
+          35,
+          34,
+          33,
+          35
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "request_count",
+          "unit": "count",
+          "value": 1.2,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "dom_node_count",
+        "unit": "count",
+        "median": 780,
+        "mad": 6,
+        "min": 769,
+        "max": 791,
+        "sampleCount": 5,
+        "runValues": [
+          775,
+          791,
+          780,
+          769,
+          786
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "dom_node_count",
+          "unit": "count",
+          "value": 7.199999999999999,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "third_party_bytes",
+        "unit": "bytes",
+        "median": 44000,
+        "mad": 308,
+        "min": 43384,
+        "max": 44616,
+        "sampleCount": 5,
+        "runValues": [
+          44308,
+          43384,
+          44000,
+          44616,
+          43722.8
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "third_party_bytes",
+          "unit": "bytes",
+          "value": 378.8400000000009,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "third_party_share_pct",
+        "unit": "pct",
+        "median": 10.891089108910892,
+        "mad": 0.14576983510970543,
+        "min": 10.590348975725975,
+        "max": 11.200369529853592,
+        "sampleCount": 5,
+        "runValues": [
+          11.036858944020597,
+          10.590348975725975,
+          10.891089108910892,
+          11.200369529853592,
+          10.747244535774334
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "third_party_share_pct",
+          "unit": "pct",
+          "value": 0.18021818708485426,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      }
+    ]
+  },
+  {
+    "id": "corpus:ville-de-plessac.fr",
+    "scenarioId": "corpus:ville-de-plessac.fr",
+    "label": "ville-de-plessac.fr",
+    "pass": "cold",
+    "sampleCount": 5,
+    "fingerprintStable": true,
+    "metrics": [
+      {
+        "metricId": "transferred_bytes",
+        "unit": "bytes",
+        "median": 402000,
+        "mad": 2814,
+        "min": 396372,
+        "max": 407628,
+        "sampleCount": 5,
+        "runValues": [
+          399467.4,
+          407628,
+          402000,
+          396372,
+          404814
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "transferred_bytes",
+          "unit": "bytes",
+          "value": 3461.220000000007,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "request_count",
+        "unit": "count",
+        "median": 34,
+        "mad": 1,
+        "min": 33,
+        "max": 35,
+        "sampleCount": 5,
+        "runValues": [
+          34,
+          35,
+          34,
+          33,
+          35
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "request_count",
+          "unit": "count",
+          "value": 1.2,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "dom_node_count",
+        "unit": "count",
+        "median": 780,
+        "mad": 6,
+        "min": 769,
+        "max": 791,
+        "sampleCount": 5,
+        "runValues": [
+          775,
+          791,
+          780,
+          769,
+          786
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "dom_node_count",
+          "unit": "count",
+          "value": 7.199999999999999,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "third_party_bytes",
+        "unit": "bytes",
+        "median": 44000,
+        "mad": 308,
+        "min": 43384,
+        "max": 44616,
+        "sampleCount": 5,
+        "runValues": [
+          44308,
+          43384,
+          44000,
+          44616,
+          43722.8
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "third_party_bytes",
+          "unit": "bytes",
+          "value": 378.8400000000009,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "third_party_share_pct",
+        "unit": "pct",
+        "median": 10.945273631840797,
+        "mad": 0.14649505816995223,
+        "min": 10.643037279087796,
+        "max": 11.256092761345403,
+        "sampleCount": 5,
+        "runValues": [
+          11.091768690010749,
+          10.643037279087796,
+          10.945273631840797,
+          11.256092761345403,
+          10.800713414061768
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "third_party_share_pct",
+          "unit": "pct",
+          "value": 0.18021818708485426,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      }
+    ]
+  },
+  {
+    "id": "corpus:musees-selo.fr:prior",
+    "scenarioId": "corpus:musees-selo.fr",
+    "label": "musees-selo.fr · j-90",
+    "pass": "cold",
+    "sampleCount": 5,
+    "fingerprintStable": true,
+    "metrics": [
+      {
+        "metricId": "transferred_bytes",
+        "unit": "bytes",
+        "median": 588000,
+        "mad": 4116,
+        "min": 579768,
+        "max": 596232,
+        "sampleCount": 5,
+        "runValues": [
+          584295.6,
+          596232,
+          588000,
+          579768,
+          592116
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "transferred_bytes",
+          "unit": "bytes",
+          "value": 5200.440000000014,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "request_count",
+        "unit": "count",
+        "median": 44,
+        "mad": 1,
+        "min": 43,
+        "max": 45,
+        "sampleCount": 5,
+        "runValues": [
+          44,
+          45,
+          44,
+          43,
+          45
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "request_count",
+          "unit": "count",
+          "value": 1.2,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "dom_node_count",
+        "unit": "count",
+        "median": 1240,
+        "mad": 9,
+        "min": 1223,
+        "max": 1257,
+        "sampleCount": 5,
+        "runValues": [
+          1232,
+          1257,
+          1240,
+          1223,
+          1249
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "dom_node_count",
+          "unit": "count",
+          "value": 10.799999999999999,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "third_party_bytes",
+        "unit": "bytes",
+        "median": 54000,
+        "mad": 378,
+        "min": 53244,
+        "max": 54756,
+        "sampleCount": 5,
+        "runValues": [
+          54378,
+          53244,
+          54000,
+          54756,
+          53659.8
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "third_party_bytes",
+          "unit": "bytes",
+          "value": 464.94000000000085,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "third_party_share_pct",
+        "unit": "pct",
+        "median": 9.183673469387756,
+        "mad": 0.12291723572794311,
+        "min": 8.930080908102886,
+        "max": 9.444467442149273,
+        "sampleCount": 5,
+        "runValues": [
+          9.306590705115699,
+          8.930080908102886,
+          9.183673469387756,
+          9.444467442149273,
+          9.062379668848672
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "third_party_share_pct",
+          "unit": "pct",
+          "value": 0.1472071194023943,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      }
+    ]
+  },
+  {
+    "id": "corpus:musees-selo.fr",
+    "scenarioId": "corpus:musees-selo.fr",
+    "label": "musees-selo.fr",
+    "pass": "cold",
+    "sampleCount": 5,
+    "fingerprintStable": true,
+    "metrics": [
+      {
+        "metricId": "transferred_bytes",
+        "unit": "bytes",
+        "median": 604000,
+        "mad": 4228,
+        "min": 595544,
+        "max": 612456,
+        "sampleCount": 5,
+        "runValues": [
+          600194.8,
+          612456,
+          604000,
+          595544,
+          608228
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "transferred_bytes",
+          "unit": "bytes",
+          "value": 5200.440000000014,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "request_count",
+        "unit": "count",
+        "median": 44,
+        "mad": 1,
+        "min": 43,
+        "max": 45,
+        "sampleCount": 5,
+        "runValues": [
+          44,
+          45,
+          44,
+          43,
+          45
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "request_count",
+          "unit": "count",
+          "value": 1.2,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "dom_node_count",
+        "unit": "count",
+        "median": 1240,
+        "mad": 9,
+        "min": 1223,
+        "max": 1257,
+        "sampleCount": 5,
+        "runValues": [
+          1232,
+          1257,
+          1240,
+          1223,
+          1249
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "dom_node_count",
+          "unit": "count",
+          "value": 10.799999999999999,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "third_party_bytes",
+        "unit": "bytes",
+        "median": 54000,
+        "mad": 378,
+        "min": 53244,
+        "max": 54756,
+        "sampleCount": 5,
+        "runValues": [
+          54378,
+          53244,
+          54000,
+          54756,
+          53659.8
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "third_party_bytes",
+          "unit": "bytes",
+          "value": 464.94000000000085,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "third_party_share_pct",
+        "unit": "pct",
+        "median": 8.940397350993377,
+        "mad": 0.11966115001329491,
+        "min": 8.693522473451154,
+        "max": 9.194282874145319,
+        "sampleCount": 5,
+        "runValues": [
+          9.060058501006672,
+          8.693522473451154,
+          8.940397350993377,
+          9.194282874145319,
+          8.822316631263277
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "third_party_share_pct",
+          "unit": "pct",
+          "value": 0.1472071194023943,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      }
+    ]
+  },
+  {
+    "id": "corpus:prefecture-arvor.fr:prior",
+    "scenarioId": "corpus:prefecture-arvor.fr",
+    "label": "prefecture-arvor.fr · j-90",
+    "pass": "cold",
+    "sampleCount": 5,
+    "fingerprintStable": true,
+    "metrics": [
+      {
+        "metricId": "transferred_bytes",
+        "unit": "bytes",
+        "median": 716000,
+        "mad": 5012,
+        "min": 705976,
+        "max": 726024,
+        "sampleCount": 5,
+        "runValues": [
+          711489.2,
+          726024,
+          716000,
+          705976,
+          721012
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "transferred_bytes",
+          "unit": "bytes",
+          "value": 6130.3199999999715,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "request_count",
+        "unit": "count",
+        "median": 48,
+        "mad": 1,
+        "min": 47,
+        "max": 49,
+        "sampleCount": 5,
+        "runValues": [
+          48,
+          49,
+          48,
+          47,
+          49
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "request_count",
+          "unit": "count",
+          "value": 1.2,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "dom_node_count",
+        "unit": "count",
+        "median": 1486,
+        "mad": 11,
+        "min": 1465,
+        "max": 1507,
+        "sampleCount": 5,
+        "runValues": [
+          1477,
+          1507,
+          1486,
+          1465,
+          1497
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "dom_node_count",
+          "unit": "count",
+          "value": 13.2,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "third_party_bytes",
+        "unit": "bytes",
+        "median": 36000,
+        "mad": 252,
+        "min": 35496,
+        "max": 36504,
+        "sampleCount": 5,
+        "runValues": [
+          36252,
+          35496,
+          36000,
+          36504,
+          35773.2
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "third_party_bytes",
+          "unit": "bytes",
+          "value": 309.9599999999991,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "third_party_share_pct",
+        "unit": "pct",
+        "median": 5.027932960893855,
+        "mad": 0.06729546983987955,
+        "min": 4.889094575385937,
+        "max": 5.170714018606865,
+        "sampleCount": 5,
+        "runValues": [
+          5.0952284307337345,
+          4.889094575385937,
+          5.027932960893855,
+          5.170714018606865,
+          4.9615262991461995
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "third_party_share_pct",
+          "unit": "pct",
+          "value": 0.08325196640360204,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      }
+    ]
+  },
+  {
+    "id": "corpus:prefecture-arvor.fr",
+    "scenarioId": "corpus:prefecture-arvor.fr",
+    "label": "prefecture-arvor.fr",
+    "pass": "cold",
+    "sampleCount": 5,
+    "fingerprintStable": true,
+    "metrics": [
+      {
+        "metricId": "transferred_bytes",
+        "unit": "bytes",
+        "median": 712000,
+        "mad": 4984,
+        "min": 702032,
+        "max": 721968,
+        "sampleCount": 5,
+        "runValues": [
+          707514.4,
+          721968,
+          712000,
+          702032,
+          716984
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "transferred_bytes",
+          "unit": "bytes",
+          "value": 6130.3199999999715,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "request_count",
+        "unit": "count",
+        "median": 48,
+        "mad": 1,
+        "min": 47,
+        "max": 49,
+        "sampleCount": 5,
+        "runValues": [
+          48,
+          49,
+          48,
+          47,
+          49
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "request_count",
+          "unit": "count",
+          "value": 1.2,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "dom_node_count",
+        "unit": "count",
+        "median": 1486,
+        "mad": 11,
+        "min": 1465,
+        "max": 1507,
+        "sampleCount": 5,
+        "runValues": [
+          1477,
+          1507,
+          1486,
+          1465,
+          1497
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "dom_node_count",
+          "unit": "count",
+          "value": 13.2,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "third_party_bytes",
+        "unit": "bytes",
+        "median": 36000,
+        "mad": 252,
+        "min": 35496,
+        "max": 36504,
+        "sampleCount": 5,
+        "runValues": [
+          36252,
+          35496,
+          36000,
+          36504,
+          35773.2
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "third_party_bytes",
+          "unit": "bytes",
+          "value": 309.9599999999991,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "third_party_share_pct",
+        "unit": "pct",
+        "median": 5.056179775280898,
+        "mad": 0.06767353427718259,
+        "min": 4.916561398843162,
+        "max": 5.1997629737675775,
+        "sampleCount": 5,
+        "runValues": [
+          5.123853309558081,
+          4.916561398843162,
+          5.056179775280898,
+          5.1997629737675775,
+          4.98940004239983
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "third_party_share_pct",
+          "unit": "pct",
+          "value": 0.08325196640360204,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      }
+    ]
+  },
+  {
+    "id": "corpus:sevre-et-loire.fr:prior",
+    "scenarioId": "corpus:sevre-et-loire.fr",
+    "label": "sevre-et-loire.fr · j-90",
+    "pass": "cold",
+    "sampleCount": 5,
+    "fingerprintStable": true,
+    "metrics": [
+      {
+        "metricId": "transferred_bytes",
+        "unit": "bytes",
+        "median": 925000,
+        "mad": 6475,
+        "min": 912050,
+        "max": 937950,
+        "sampleCount": 5,
+        "runValues": [
+          919172.5,
+          937950,
+          925000,
+          912050,
+          931475
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "transferred_bytes",
+          "unit": "bytes",
+          "value": 7249.619999999972,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "request_count",
+        "unit": "count",
+        "median": 52,
+        "mad": 1,
+        "min": 51,
+        "max": 53,
+        "sampleCount": 5,
+        "runValues": [
+          52,
+          53,
+          52,
+          51,
+          53
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "request_count",
+          "unit": "count",
+          "value": 1.2,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "dom_node_count",
+        "unit": "count",
+        "median": 1620,
+        "mad": 12,
+        "min": 1597,
+        "max": 1643,
+        "sampleCount": 5,
+        "runValues": [
+          1610,
+          1643,
+          1620,
+          1597,
+          1632
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "dom_node_count",
+          "unit": "count",
+          "value": 14.399999999999999,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "third_party_bytes",
+        "unit": "bytes",
+        "median": 74000,
+        "mad": 518,
+        "min": 72964,
+        "max": 75036,
+        "sampleCount": 5,
+        "runValues": [
+          74518,
+          72964,
+          74000,
+          75036,
+          73533.8
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "third_party_bytes",
+          "unit": "bytes",
+          "value": 637.1399999999965,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "third_party_share_pct",
+        "unit": "pct",
+        "median": 8,
+        "mad": 0.10707456978967578,
+        "min": 7.779092702169625,
+        "max": 8.227180527383366,
+        "sampleCount": 5,
+        "runValues": [
+          8.107074569789676,
+          7.779092702169625,
+          8,
+          8.227180527383366,
+          7.8943396226415095
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "third_party_share_pct",
+          "unit": "pct",
+          "value": 0.1447076935165267,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      }
+    ]
+  },
+  {
+    "id": "corpus:sevre-et-loire.fr",
+    "scenarioId": "corpus:sevre-et-loire.fr",
+    "label": "sevre-et-loire.fr",
+    "pass": "cold",
+    "sampleCount": 5,
+    "fingerprintStable": true,
+    "metrics": [
+      {
+        "metricId": "transferred_bytes",
+        "unit": "bytes",
+        "median": 842000,
+        "mad": 5894,
+        "min": 830212,
+        "max": 853788,
+        "sampleCount": 5,
+        "runValues": [
+          836695.4,
+          853788,
+          842000,
+          830212,
+          847894
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "transferred_bytes",
+          "unit": "bytes",
+          "value": 7249.619999999972,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "request_count",
+        "unit": "count",
+        "median": 52,
+        "mad": 1,
+        "min": 51,
+        "max": 53,
+        "sampleCount": 5,
+        "runValues": [
+          52,
+          53,
+          52,
+          51,
+          53
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "request_count",
+          "unit": "count",
+          "value": 1.2,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "dom_node_count",
+        "unit": "count",
+        "median": 1620,
+        "mad": 12,
+        "min": 1597,
+        "max": 1643,
+        "sampleCount": 5,
+        "runValues": [
+          1610,
+          1643,
+          1620,
+          1597,
+          1632
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "dom_node_count",
+          "unit": "count",
+          "value": 14.399999999999999,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "third_party_bytes",
+        "unit": "bytes",
+        "median": 74000,
+        "mad": 518,
+        "min": 72964,
+        "max": 75036,
+        "sampleCount": 5,
+        "runValues": [
+          74518,
+          72964,
+          74000,
+          75036,
+          73533.8
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "third_party_bytes",
+          "unit": "bytes",
+          "value": 637.1399999999965,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "third_party_share_pct",
+        "unit": "pct",
+        "median": 8.788598574821853,
+        "mad": 0.11762942643164997,
+        "min": 8.545915379461881,
+        "max": 9.038173382220444,
+        "sampleCount": 5,
+        "runValues": [
+          8.906228001253503,
+          8.545915379461881,
+          8.788598574821853,
+          9.038173382220444,
+          8.672522744588356
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "third_party_share_pct",
+          "unit": "pct",
+          "value": 0.1447076935165267,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      }
+    ]
+  },
+  {
+    "id": "corpus:bibliotheques-selo.fr:prior",
+    "scenarioId": "corpus:bibliotheques-selo.fr",
+    "label": "bibliotheques-selo.fr · j-90",
+    "pass": "cold",
+    "sampleCount": 5,
+    "fingerprintStable": true,
+    "metrics": [
+      {
+        "metricId": "transferred_bytes",
+        "unit": "bytes",
+        "median": 962000,
+        "mad": 6734,
+        "min": 948532,
+        "max": 975468,
+        "sampleCount": 5,
+        "runValues": [
+          955939.4,
+          975468,
+          962000,
+          948532,
+          968734
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "transferred_bytes",
+          "unit": "bytes",
+          "value": 8437.8,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "request_count",
+        "unit": "count",
+        "median": 61,
+        "mad": 1,
+        "min": 60,
+        "max": 62,
+        "sampleCount": 5,
+        "runValues": [
+          61,
+          62,
+          61,
+          60,
+          62
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "request_count",
+          "unit": "count",
+          "value": 1.2,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "dom_node_count",
+        "unit": "count",
+        "median": 1830,
+        "mad": 13,
+        "min": 1804,
+        "max": 1856,
+        "sampleCount": 5,
+        "runValues": [
+          1818,
+          1856,
+          1830,
+          1804,
+          1843
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "dom_node_count",
+          "unit": "count",
+          "value": 16.2,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "third_party_bytes",
+        "unit": "bytes",
+        "median": 50000,
+        "mad": 350,
+        "min": 49300,
+        "max": 50700,
+        "sampleCount": 5,
+        "runValues": [
+          50350,
+          49300,
+          50000,
+          50700,
+          49685
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "third_party_bytes",
+          "unit": "bytes",
+          "value": 430.5,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "third_party_share_pct",
+        "unit": "pct",
+        "median": 5.197505197505198,
+        "mad": 0.06956507912530885,
+        "min": 5.053984343925173,
+        "max": 5.345101693986075,
+        "sampleCount": 5,
+        "runValues": [
+          5.267070276630506,
+          5.053984343925173,
+          5.197505197505198,
+          5.345101693986075,
+          5.128858902443808
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "third_party_share_pct",
+          "unit": "pct",
+          "value": 0.0840070862802781,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      }
+    ]
+  },
+  {
+    "id": "corpus:bibliotheques-selo.fr",
+    "scenarioId": "corpus:bibliotheques-selo.fr",
+    "label": "bibliotheques-selo.fr",
+    "pass": "cold",
+    "sampleCount": 5,
+    "fingerprintStable": true,
+    "metrics": [
+      {
+        "metricId": "transferred_bytes",
+        "unit": "bytes",
+        "median": 980000,
+        "mad": 6860,
+        "min": 966280,
+        "max": 993720,
+        "sampleCount": 5,
+        "runValues": [
+          973826,
+          993720,
+          980000,
+          966280,
+          986860
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "transferred_bytes",
+          "unit": "bytes",
+          "value": 8437.8,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "request_count",
+        "unit": "count",
+        "median": 61,
+        "mad": 1,
+        "min": 60,
+        "max": 62,
+        "sampleCount": 5,
+        "runValues": [
+          61,
+          62,
+          61,
+          60,
+          62
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "request_count",
+          "unit": "count",
+          "value": 1.2,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "dom_node_count",
+        "unit": "count",
+        "median": 1830,
+        "mad": 13,
+        "min": 1804,
+        "max": 1856,
+        "sampleCount": 5,
+        "runValues": [
+          1818,
+          1856,
+          1830,
+          1804,
+          1843
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "dom_node_count",
+          "unit": "count",
+          "value": 16.2,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "third_party_bytes",
+        "unit": "bytes",
+        "median": 50000,
+        "mad": 350,
+        "min": 49300,
+        "max": 50700,
+        "sampleCount": 5,
+        "runValues": [
+          50350,
+          49300,
+          50000,
+          50700,
+          49685
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "third_party_bytes",
+          "unit": "bytes",
+          "value": 430.5,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "third_party_share_pct",
+        "unit": "pct",
+        "median": 5.1020408163265305,
+        "mad": 0.06828735318219081,
+        "min": 4.961156060057159,
+        "max": 5.246926356749596,
+        "sampleCount": 5,
+        "runValues": [
+          5.170328169508721,
+          4.961156060057159,
+          5.1020408163265305,
+          5.246926356749596,
+          5.034655371582596
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "third_party_share_pct",
+          "unit": "pct",
+          "value": 0.0840070862802781,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      }
+    ]
+  },
+  {
+    "id": "corpus:eau-selo.fr:prior",
+    "scenarioId": "corpus:eau-selo.fr",
+    "label": "eau-selo.fr · j-90",
+    "pass": "cold",
+    "sampleCount": 5,
+    "fingerprintStable": true,
+    "metrics": [
+      {
+        "metricId": "transferred_bytes",
+        "unit": "bytes",
+        "median": 1088000,
+        "mad": 7616,
+        "min": 1072768,
+        "max": 1103232,
+        "sampleCount": 5,
+        "runValues": [
+          1081145.6,
+          1103232,
+          1088000,
+          1072768,
+          1095616
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "transferred_bytes",
+          "unit": "bytes",
+          "value": 10728.060000000056,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "request_count",
+        "unit": "count",
+        "median": 58,
+        "mad": 1,
+        "min": 57,
+        "max": 59,
+        "sampleCount": 5,
+        "runValues": [
+          58,
+          59,
+          58,
+          57,
+          59
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "request_count",
+          "unit": "count",
+          "value": 1.2,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "dom_node_count",
+        "unit": "count",
+        "median": 1410,
+        "mad": 10,
+        "min": 1390,
+        "max": 1430,
+        "sampleCount": 5,
+        "runValues": [
+          1401,
+          1430,
+          1410,
+          1390,
+          1420
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "dom_node_count",
+          "unit": "count",
+          "value": 12.6,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "third_party_bytes",
+        "unit": "bytes",
+        "median": 512000,
+        "mad": 3584,
+        "min": 504832,
+        "max": 519168,
+        "sampleCount": 5,
+        "runValues": [
+          515584,
+          504832,
+          512000,
+          519168,
+          508774.4
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "third_party_bytes",
+          "unit": "bytes",
+          "value": 4408.320000000007,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "third_party_share_pct",
+        "unit": "pct",
+        "median": 47.05882352941176,
+        "mad": 0.6298504105274958,
+        "min": 45.75936883629191,
+        "max": 48.39517957284334,
+        "sampleCount": 5,
+        "runValues": [
+          47.68867393993926,
+          45.75936883629191,
+          47.05882352941176,
+          48.39517957284334,
+          46.437291897891235
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "third_party_share_pct",
+          "unit": "pct",
+          "value": 0.6765874095022909,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      }
+    ]
+  },
+  {
+    "id": "corpus:eau-selo.fr",
+    "scenarioId": "corpus:eau-selo.fr",
+    "label": "eau-selo.fr",
+    "pass": "cold",
+    "sampleCount": 5,
+    "fingerprintStable": true,
+    "metrics": [
+      {
+        "metricId": "transferred_bytes",
+        "unit": "bytes",
+        "median": 1246000,
+        "mad": 8722,
+        "min": 1228556,
+        "max": 1263444,
+        "sampleCount": 5,
+        "runValues": [
+          1238150.2,
+          1263444,
+          1246000,
+          1228556,
+          1254722
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "transferred_bytes",
+          "unit": "bytes",
+          "value": 10728.060000000056,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "request_count",
+        "unit": "count",
+        "median": 58,
+        "mad": 1,
+        "min": 57,
+        "max": 59,
+        "sampleCount": 5,
+        "runValues": [
+          58,
+          59,
+          58,
+          57,
+          59
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "request_count",
+          "unit": "count",
+          "value": 1.2,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "dom_node_count",
+        "unit": "count",
+        "median": 1410,
+        "mad": 10,
+        "min": 1390,
+        "max": 1430,
+        "sampleCount": 5,
+        "runValues": [
+          1401,
+          1430,
+          1410,
+          1390,
+          1420
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "dom_node_count",
+          "unit": "count",
+          "value": 12.6,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "third_party_bytes",
+        "unit": "bytes",
+        "median": 512000,
+        "mad": 3584,
+        "min": 504832,
+        "max": 519168,
+        "sampleCount": 5,
+        "runValues": [
+          515584,
+          504832,
+          512000,
+          519168,
+          508774.4
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "third_party_bytes",
+          "unit": "bytes",
+          "value": 4408.320000000007,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "third_party_share_pct",
+        "unit": "pct",
+        "median": 41.091492776886035,
+        "mad": 0.5499817388875812,
+        "min": 39.956816447741254,
+        "max": 42.25839115188889,
+        "sampleCount": 5,
+        "runValues": [
+          41.641474515773616,
+          39.956816447741254,
+          41.091492776886035,
+          42.25839115188889,
+          40.54877494775735
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "third_party_share_pct",
+          "unit": "pct",
+          "value": 0.6765874095022909,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      }
+    ]
+  },
+  {
+    "id": "corpus:ars-bretagne.fr:prior",
+    "scenarioId": "corpus:ars-bretagne.fr",
+    "label": "ars-bretagne.fr · j-90",
+    "pass": "cold",
+    "sampleCount": 5,
+    "fingerprintStable": true,
+    "metrics": [
+      {
+        "metricId": "transferred_bytes",
+        "unit": "bytes",
+        "median": 1624000,
+        "mad": 11368,
+        "min": 1601264,
+        "max": 1646736,
+        "sampleCount": 5,
+        "runValues": [
+          1613768.8,
+          1646736,
+          1624000,
+          1601264,
+          1635368
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "transferred_bytes",
+          "unit": "bytes",
+          "value": 13672.680000000028,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "request_count",
+        "unit": "count",
+        "median": 74,
+        "mad": 1,
+        "min": 73,
+        "max": 75,
+        "sampleCount": 5,
+        "runValues": [
+          74,
+          75,
+          74,
+          73,
+          75
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "request_count",
+          "unit": "count",
+          "value": 1.2,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "dom_node_count",
+        "unit": "count",
+        "median": 2260,
+        "mad": 16,
+        "min": 2228,
+        "max": 2292,
+        "sampleCount": 5,
+        "runValues": [
+          2246,
+          2292,
+          2260,
+          2228,
+          2276
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "dom_node_count",
+          "unit": "count",
+          "value": 19.8,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "third_party_bytes",
+        "unit": "bytes",
+        "median": 84000,
+        "mad": 588,
+        "min": 82824,
+        "max": 85176,
+        "sampleCount": 5,
+        "runValues": [
+          84588,
+          82824,
+          84000,
+          85176,
+          83470.8
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "third_party_bytes",
+          "unit": "bytes",
+          "value": 723.2399999999965,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "third_party_share_pct",
+        "unit": "pct",
+        "median": 5.172413793103448,
+        "mad": 0.06922924770884098,
+        "min": 5.029585798816568,
+        "max": 5.319297754773729,
+        "sampleCount": 5,
+        "runValues": [
+          5.241643040812289,
+          5.029585798816568,
+          5.172413793103448,
+          5.319297754773729,
+          5.104098893949252
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "third_party_share_pct",
+          "unit": "pct",
+          "value": 0.08709651564978031,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      }
+    ]
+  },
+  {
+    "id": "corpus:ars-bretagne.fr",
+    "scenarioId": "corpus:ars-bretagne.fr",
+    "label": "ars-bretagne.fr",
+    "pass": "cold",
+    "sampleCount": 5,
+    "fingerprintStable": true,
+    "metrics": [
+      {
+        "metricId": "transferred_bytes",
+        "unit": "bytes",
+        "median": 1588000,
+        "mad": 11116,
+        "min": 1565768,
+        "max": 1610232,
+        "sampleCount": 5,
+        "runValues": [
+          1577995.6,
+          1610232,
+          1588000,
+          1565768,
+          1599116
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "transferred_bytes",
+          "unit": "bytes",
+          "value": 13672.680000000028,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "request_count",
+        "unit": "count",
+        "median": 74,
+        "mad": 1,
+        "min": 73,
+        "max": 75,
+        "sampleCount": 5,
+        "runValues": [
+          74,
+          75,
+          74,
+          73,
+          75
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "request_count",
+          "unit": "count",
+          "value": 1.2,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "dom_node_count",
+        "unit": "count",
+        "median": 2260,
+        "mad": 16,
+        "min": 2228,
+        "max": 2292,
+        "sampleCount": 5,
+        "runValues": [
+          2246,
+          2292,
+          2260,
+          2228,
+          2276
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "dom_node_count",
+          "unit": "count",
+          "value": 19.8,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "third_party_bytes",
+        "unit": "bytes",
+        "median": 84000,
+        "mad": 588,
+        "min": 82824,
+        "max": 85176,
+        "sampleCount": 5,
+        "runValues": [
+          84588,
+          82824,
+          84000,
+          85176,
+          83470.8
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "third_party_bytes",
+          "unit": "bytes",
+          "value": 723.2399999999965,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "third_party_share_pct",
+        "unit": "pct",
+        "median": 5.289672544080604,
+        "mad": 0.07079867649821114,
+        "min": 5.1436066355655585,
+        "max": 5.439886368861798,
+        "sampleCount": 5,
+        "runValues": [
+          5.360471220578815,
+          5.1436066355655585,
+          5.289672544080604,
+          5.439886368861798,
+          5.219808944441804
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "third_party_share_pct",
+          "unit": "pct",
+          "value": 0.08709651564978031,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      }
+    ]
+  },
+  {
+    "id": "corpus:transports-selo.fr:prior",
+    "scenarioId": "corpus:transports-selo.fr",
+    "label": "transports-selo.fr · j-90",
+    "pass": "cold",
+    "sampleCount": 5,
+    "fingerprintStable": true,
+    "metrics": [
+      {
+        "metricId": "transferred_bytes",
+        "unit": "bytes",
+        "median": 1805000,
+        "mad": 12635,
+        "min": 1779730,
+        "max": 1830270,
+        "sampleCount": 5,
+        "runValues": [
+          1793628.5,
+          1830270,
+          1805000,
+          1779730,
+          1817635
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "transferred_bytes",
+          "unit": "bytes",
+          "value": 18804.239999999943,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "request_count",
+        "unit": "count",
+        "median": 96,
+        "mad": 1,
+        "min": 95,
+        "max": 97,
+        "sampleCount": 5,
+        "runValues": [
+          96,
+          97,
+          96,
+          95,
+          97
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "request_count",
+          "unit": "count",
+          "value": 1.2,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "dom_node_count",
+        "unit": "count",
+        "median": 3140,
+        "mad": 22,
+        "min": 3096,
+        "max": 3184,
+        "sampleCount": 5,
+        "runValues": [
+          3120,
+          3184,
+          3140,
+          3096,
+          3162
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "dom_node_count",
+          "unit": "count",
+          "value": 27,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "third_party_bytes",
+        "unit": "bytes",
+        "median": 496000,
+        "mad": 3472,
+        "min": 489056,
+        "max": 502944,
+        "sampleCount": 5,
+        "runValues": [
+          499472,
+          489056,
+          496000,
+          502944,
+          492875.2
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "third_party_bytes",
+          "unit": "bytes",
+          "value": 4270.559999999986,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "third_party_share_pct",
+        "unit": "pct",
+        "median": 27.479224376731302,
+        "mad": 0.3677907660365527,
+        "min": 26.720429226289017,
+        "max": 28.259567462480263,
+        "sampleCount": 5,
+        "runValues": [
+          27.847015142767855,
+          26.720429226289017,
+          27.479224376731302,
+          28.259567462480263,
+          27.116291224585794
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "third_party_share_pct",
+          "unit": "pct",
+          "value": 0.37393923533990686,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      }
+    ]
+  },
+  {
+    "id": "corpus:transports-selo.fr",
+    "scenarioId": "corpus:transports-selo.fr",
+    "label": "transports-selo.fr",
+    "pass": "cold",
+    "sampleCount": 5,
+    "fingerprintStable": true,
+    "metrics": [
+      {
+        "metricId": "transferred_bytes",
+        "unit": "bytes",
+        "median": 2184000,
+        "mad": 15288,
+        "min": 2153424,
+        "max": 2214576,
+        "sampleCount": 5,
+        "runValues": [
+          2170240.8,
+          2214576,
+          2184000,
+          2153424,
+          2199288
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "transferred_bytes",
+          "unit": "bytes",
+          "value": 18804.239999999943,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "request_count",
+        "unit": "count",
+        "median": 96,
+        "mad": 1,
+        "min": 95,
+        "max": 97,
+        "sampleCount": 5,
+        "runValues": [
+          96,
+          97,
+          96,
+          95,
+          97
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "request_count",
+          "unit": "count",
+          "value": 1.2,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "dom_node_count",
+        "unit": "count",
+        "median": 3140,
+        "mad": 22,
+        "min": 3096,
+        "max": 3184,
+        "sampleCount": 5,
+        "runValues": [
+          3120,
+          3184,
+          3140,
+          3096,
+          3162
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "dom_node_count",
+          "unit": "count",
+          "value": 27,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "third_party_bytes",
+        "unit": "bytes",
+        "median": 496000,
+        "mad": 3472,
+        "min": 489056,
+        "max": 502944,
+        "sampleCount": 5,
+        "runValues": [
+          499472,
+          489056,
+          496000,
+          502944,
+          492875.2
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "third_party_bytes",
+          "unit": "bytes",
+          "value": 4270.559999999986,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "third_party_share_pct",
+        "unit": "pct",
+        "median": 22.71062271062271,
+        "mad": 0.30396626954944495,
+        "min": 22.08350492374161,
+        "max": 23.355549116198205,
+        "sampleCount": 5,
+        "runValues": [
+          23.014588980172157,
+          22.08350492374161,
+          22.71062271062271,
+          23.355549116198205,
+          22.410671089916374
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "third_party_share_pct",
+          "unit": "pct",
+          "value": 0.37393923533990686,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      }
+    ]
+  },
+  {
+    "id": "corpus:chu-armorique.fr:prior",
+    "scenarioId": "corpus:chu-armorique.fr",
+    "label": "chu-armorique.fr · j-90",
+    "pass": "cold",
+    "sampleCount": 5,
+    "fingerprintStable": true,
+    "metrics": [
+      {
+        "metricId": "transferred_bytes",
+        "unit": "bytes",
+        "median": 2980000,
+        "mad": 20860,
+        "min": 2938280,
+        "max": 3021720,
+        "sampleCount": 5,
+        "runValues": [
+          2961226,
+          3021720,
+          2980000,
+          2938280,
+          3000860
+        ],
+        "floor": {
+          "status": "insufficient-history",
+          "metricId": "transferred_bytes",
+          "sampleCount": 11,
+          "requiredCount": 20
+        },
+        "confidence": "low"
+      },
+      {
+        "metricId": "request_count",
+        "unit": "count",
+        "median": 118,
+        "mad": 1,
+        "min": 117,
+        "max": 119,
+        "sampleCount": 5,
+        "runValues": [
+          118,
+          119,
+          118,
+          117,
+          119
+        ],
+        "floor": {
+          "status": "insufficient-history",
+          "metricId": "request_count",
+          "sampleCount": 11,
+          "requiredCount": 20
+        },
+        "confidence": "low"
+      },
+      {
+        "metricId": "dom_node_count",
+        "unit": "count",
+        "median": 4620,
+        "mad": 33,
+        "min": 4555,
+        "max": 4685,
+        "sampleCount": 5,
+        "runValues": [
+          4591,
+          4685,
+          4620,
+          4555,
+          4653
+        ],
+        "floor": {
+          "status": "insufficient-history",
+          "metricId": "dom_node_count",
+          "sampleCount": 11,
+          "requiredCount": 20
+        },
+        "confidence": "low"
+      },
+      {
+        "metricId": "third_party_bytes",
+        "unit": "bytes",
+        "median": 222000,
+        "mad": 1554,
+        "min": 218892,
+        "max": 225108,
+        "sampleCount": 5,
+        "runValues": [
+          223554,
+          218892,
+          222000,
+          225108,
+          220601.4
+        ],
+        "floor": {
+          "status": "insufficient-history",
+          "metricId": "third_party_bytes",
+          "sampleCount": 11,
+          "requiredCount": 20
+        },
+        "confidence": "low"
+      },
+      {
+        "metricId": "third_party_share_pct",
+        "unit": "pct",
+        "median": 7.449664429530202,
+        "mad": 0.09970870173367352,
+        "min": 7.243953774671379,
+        "max": 7.661216766271424,
+        "sampleCount": 5,
+        "runValues": [
+          7.549373131263875,
+          7.243953774671379,
+          7.449664429530202,
+          7.661216766271424,
+          7.3512726351779145
+        ],
+        "floor": {
+          "status": "insufficient-history",
+          "metricId": "third_party_share_pct",
+          "sampleCount": 11,
+          "requiredCount": 20
+        },
+        "confidence": "low"
+      }
+    ]
+  },
+  {
+    "id": "corpus:chu-armorique.fr",
+    "scenarioId": "corpus:chu-armorique.fr",
+    "label": "chu-armorique.fr",
+    "pass": "cold",
+    "sampleCount": 5,
+    "fingerprintStable": true,
+    "metrics": [
+      {
+        "metricId": "transferred_bytes",
+        "unit": "bytes",
+        "median": 3062000,
+        "mad": 21434,
+        "min": 3019132,
+        "max": 3104868,
+        "sampleCount": 5,
+        "runValues": [
+          3042709.4,
+          3104868,
+          3062000,
+          3019132,
+          3083434
+        ],
+        "floor": {
+          "status": "insufficient-history",
+          "metricId": "transferred_bytes",
+          "sampleCount": 11,
+          "requiredCount": 20
+        },
+        "confidence": "low"
+      },
+      {
+        "metricId": "request_count",
+        "unit": "count",
+        "median": 118,
+        "mad": 1,
+        "min": 117,
+        "max": 119,
+        "sampleCount": 5,
+        "runValues": [
+          118,
+          119,
+          118,
+          117,
+          119
+        ],
+        "floor": {
+          "status": "insufficient-history",
+          "metricId": "request_count",
+          "sampleCount": 11,
+          "requiredCount": 20
+        },
+        "confidence": "low"
+      },
+      {
+        "metricId": "dom_node_count",
+        "unit": "count",
+        "median": 4620,
+        "mad": 33,
+        "min": 4555,
+        "max": 4685,
+        "sampleCount": 5,
+        "runValues": [
+          4591,
+          4685,
+          4620,
+          4555,
+          4653
+        ],
+        "floor": {
+          "status": "insufficient-history",
+          "metricId": "dom_node_count",
+          "sampleCount": 11,
+          "requiredCount": 20
+        },
+        "confidence": "low"
+      },
+      {
+        "metricId": "third_party_bytes",
+        "unit": "bytes",
+        "median": 222000,
+        "mad": 1554,
+        "min": 218892,
+        "max": 225108,
+        "sampleCount": 5,
+        "runValues": [
+          223554,
+          218892,
+          222000,
+          225108,
+          220601.4
+        ],
+        "floor": {
+          "status": "insufficient-history",
+          "metricId": "third_party_bytes",
+          "sampleCount": 11,
+          "requiredCount": 20
+        },
+        "confidence": "low"
+      },
+      {
+        "metricId": "third_party_share_pct",
+        "unit": "pct",
+        "median": 7.250163291966036,
+        "mad": 0.09703851442401934,
+        "min": 7.0499615442588865,
+        "max": 7.456050282001582,
+        "sampleCount": 5,
+        "runValues": [
+          7.347201806390055,
+          7.0499615442588865,
+          7.250163291966036,
+          7.456050282001582,
+          7.154406418298559
+        ],
+        "floor": {
+          "status": "insufficient-history",
+          "metricId": "third_party_share_pct",
+          "sampleCount": 11,
+          "requiredCount": 20
+        },
+        "confidence": "low"
+      }
+    ]
+  },
+  {
+    "id": "corpus:portail-arvor.fr:prior",
+    "scenarioId": "corpus:portail-arvor.fr",
+    "label": "portail-arvor.fr · j-90",
+    "pass": "cold",
+    "sampleCount": 5,
+    "fingerprintStable": true,
+    "metrics": [
+      {
+        "metricId": "transferred_bytes",
+        "unit": "bytes",
+        "median": 3297000,
+        "mad": 23079,
+        "min": 3250842,
+        "max": 3343158,
+        "sampleCount": 5,
+        "runValues": [
+          3276228.9,
+          3343158,
+          3297000,
+          3250842,
+          3320079
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "transferred_bytes",
+          "unit": "bytes",
+          "value": 38038.97999999989,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "request_count",
+        "unit": "count",
+        "median": 142,
+        "mad": 1,
+        "min": 141,
+        "max": 143,
+        "sampleCount": 5,
+        "runValues": [
+          142,
+          143,
+          142,
+          141,
+          143
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "request_count",
+          "unit": "count",
+          "value": 1.2,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "dom_node_count",
+        "unit": "count",
+        "median": 6180,
+        "mad": 44,
+        "min": 6093,
+        "max": 6267,
+        "sampleCount": 5,
+        "runValues": [
+          6141,
+          6267,
+          6180,
+          6093,
+          6224
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "dom_node_count",
+          "unit": "count",
+          "value": 54,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "third_party_bytes",
+        "unit": "bytes",
+        "median": 328000,
+        "mad": 2296,
+        "min": 323408,
+        "max": 332592,
+        "sampleCount": 5,
+        "runValues": [
+          330296,
+          323408,
+          328000,
+          332592,
+          325933.6
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "third_party_bytes",
+          "unit": "bytes",
+          "value": 2824.079999999993,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "third_party_share_pct",
+        "unit": "pct",
+        "median": 9.94843797391568,
+        "mad": 0.13315308951703564,
+        "min": 9.67372765510933,
+        "max": 10.230949397110042,
+        "sampleCount": 5,
+        "runValues": [
+          10.081591063432716,
+          9.67372765510933,
+          9.94843797391568,
+          10.230949397110042,
+          9.817043510109247
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "third_party_share_pct",
+          "unit": "pct",
+          "value": 0.12224190952436728,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      }
+    ]
+  },
+  {
+    "id": "corpus:portail-arvor.fr",
+    "scenarioId": "corpus:portail-arvor.fr",
+    "label": "portail-arvor.fr",
+    "pass": "cold",
+    "sampleCount": 5,
+    "fingerprintStable": true,
+    "metrics": [
+      {
+        "metricId": "transferred_bytes",
+        "unit": "bytes",
+        "median": 4418000,
+        "mad": 30926,
+        "min": 4356148,
+        "max": 4479852,
+        "sampleCount": 5,
+        "runValues": [
+          4390166.6,
+          4479852,
+          4418000,
+          4356148,
+          4448926
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "transferred_bytes",
+          "unit": "bytes",
+          "value": 38038.97999999989,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "request_count",
+        "unit": "count",
+        "median": 142,
+        "mad": 1,
+        "min": 141,
+        "max": 143,
+        "sampleCount": 5,
+        "runValues": [
+          142,
+          143,
+          142,
+          141,
+          143
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "request_count",
+          "unit": "count",
+          "value": 1.2,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "dom_node_count",
+        "unit": "count",
+        "median": 6180,
+        "mad": 44,
+        "min": 6093,
+        "max": 6267,
+        "sampleCount": 5,
+        "runValues": [
+          6141,
+          6267,
+          6180,
+          6093,
+          6224
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "dom_node_count",
+          "unit": "count",
+          "value": 54,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "third_party_bytes",
+        "unit": "bytes",
+        "median": 328000,
+        "mad": 2296,
+        "min": 323408,
+        "max": 332592,
+        "sampleCount": 5,
+        "runValues": [
+          330296,
+          323408,
+          328000,
+          332592,
+          325933.6
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "third_party_bytes",
+          "unit": "bytes",
+          "value": 2824.079999999993,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      },
+      {
+        "metricId": "third_party_share_pct",
+        "unit": "pct",
+        "median": 7.424173834314169,
+        "mad": 0.09936752741911992,
+        "min": 7.219167061769005,
+        "max": 7.63500230019733,
+        "sampleCount": 5,
+        "runValues": [
+          7.523541361733289,
+          7.219167061769005,
+          7.424173834314169,
+          7.63500230019733,
+          7.326118708200585
+        ],
+        "floor": {
+          "status": "established",
+          "metricId": "third_party_share_pct",
+          "unit": "pct",
+          "value": 0.12224190952436728,
+          "sampleCount": 24,
+          "scalingFactor": 1.2
+        },
+        "confidence": "high"
+      }
+    ]
   }
 ] as ReadonlyArray<{
     id: string;
