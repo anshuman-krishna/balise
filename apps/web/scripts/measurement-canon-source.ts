@@ -4,16 +4,19 @@ import type {
   MetricId,
   MetricSet,
   NoiseFloor,
+  RawCapture,
 } from '@balise/schemas';
 import { METRIC_UNIT } from '@balise/schemas';
 import type { CanonMetric } from '../src/fixtures/measurement-types';
 import {
   aggregateRuns,
   computeNoiseFloor,
+  extractMetrics,
   gradeConfidence,
   NOISE_FLOOR_MIN_HISTORY,
   PROVISIONAL_NOISE_FLOOR_SCALING_FACTOR,
 } from '@balise/measure-core';
+import { BASELINE_CAPTURE, CANDIDATE_CAPTURE } from './capture-canon-source';
 
 /**
  * every median, dispersion, noise floor and confidence grade the application
@@ -29,8 +32,13 @@ import {
  * where those five runs give 4, and marked a row low confidence where the
  * kernel grades it high.
  *
- * the runs are synthetic. they stand in for captures until the runner measures
- * a real service, and they are shaped rather than random so the file
+ * where a scenario is one page there is a capture, and then even the centre is
+ * not authored: the resource list is, and `extractMetrics` says what it weighs.
+ * an aggregate over several pages (the service median, a journey) has no single
+ * capture and states a centre, which is the honest difference between the two.
+ *
+ * the runs are synthetic. they stand in for repeated captures until the runner
+ * measures a real service, and they are shaped rather than random so the file
  * regenerates identically.
  */
 
@@ -65,6 +73,35 @@ export interface Spread {
 
 type Spreads = Partial<Record<MetricId, Spread>>;
 
+/** how far the runs of one aggregation move, per metric, in the metric's unit. */
+type SpreadWidths = Partial<Record<MetricId, number>>;
+
+/** counts are whole numbers between runs; bytes and milliseconds are not. */
+const INTEGRAL: ReadonlySet<MetricId> = new Set(['request_count', 'dom_node_count']);
+
+/**
+ * the metrics of a scenario that is one page, drawn around what its capture
+ * actually weighs. the caller names the metrics and how far they move; the
+ * centre is never a number typed beside a resource list that adds to something
+ * else, which is what the two lists for run #4812 used to be.
+ */
+function fromCapture(capture: RawCapture, widths: SpreadWidths): Spreads {
+  const measured = extractMetrics(capture);
+  const metrics: Spreads = {};
+  for (const [metricId, spread] of Object.entries(widths) as Array<[MetricId, number]>) {
+    const found = measured.values.find((value) => value.metricId === metricId);
+    if (found === undefined) {
+      throw new Error(`the capture yields no ${metricId}`);
+    }
+    metrics[metricId] = {
+      centre: found.value,
+      spread,
+      ...(INTEGRAL.has(metricId) ? { integral: true } : {}),
+    };
+  }
+  return metrics;
+}
+
 /** one measured point in time: n runs of a scenario at one commit. */
 export interface AggregationSpec {
   id: string;
@@ -74,6 +111,13 @@ export interface AggregationSpec {
   fingerprintStable: boolean;
   /** absent for the aggregation that sits where the scenario settled. */
   metrics?: Spreads;
+  /**
+   * the median run's capture, where a surface renders one. it is published
+   * with the aggregation so the inventory and the figures above it are the
+   * same measurement; an aggregation nothing shows an inventory for carries
+   * none rather than a copy nobody reads.
+   */
+  capture?: RawCapture;
 }
 
 export interface ScenarioSpec {
@@ -122,13 +166,18 @@ export function buildMetricSets(
 
   // a third party's bytes do not move with the service's own. drawing both from
   // the same offset would make every run's share identical and hand the share
-  // metric a dispersion no page has, so the third-party draw is rotated against
-  // the first-party one.
-  const rotated = [...offsets.slice(2), ...offsets.slice(0, 2)];
+  // metric a dispersion no page has, so the third-party draw runs backwards
+  // through the same offsets.
+  //
+  // reversed rather than rotated: the offsets are symmetric about the middle
+  // run, so reversing gives every other run a different share while leaving the
+  // middle one exactly on the centre. rotating moved it, and then the share the
+  // aggregation reported was not the share of the capture it publishes.
+  const reversed = [...offsets].reverse();
 
   const drawn = new Map<MetricId, number[]>();
   for (const [metricId, spec] of Object.entries(scaled) as Array<[MetricId, Spread]>) {
-    drawn.set(metricId, drawRuns(spec, metricId === 'third_party_bytes' ? rotated : offsets));
+    drawn.set(metricId, drawRuns(spec, metricId === 'third_party_bytes' ? reversed : offsets));
   }
 
   const transferred = drawn.get('transferred_bytes');
@@ -232,6 +281,7 @@ function buildScenario(spec: ScenarioSpec) {
       sampleCount: aggregate.sampleCount,
       fingerprintStable: aggregation.fingerprintStable,
       metrics,
+      ...(aggregation.capture === undefined ? {} : { capture: aggregation.capture }),
     };
   });
 
@@ -281,19 +331,20 @@ const SCENARIOS: readonly ScenarioSpec[] = [
     ],
   },
   {
-    // one route, two commits. the floor below is the route's, so the comparison
-    // reads both runs against the same number.
+    // one route, two commits, two captures. every centre below is what the
+    // capture weighs; only the spreads are authored. the floor is the route's,
+    // so the comparison reads both runs against the same number.
     id: 'route-acte-naissance',
     label: '/demarches/acte-naissance',
     pass: 'cold',
     historyCount: 24,
-    metrics: {
-      transferred_bytes: { centre: 1_114_000, spread: 12_000 },
-      request_count: { centre: 82, spread: 2, integral: true },
-      dom_node_count: { centre: 2_118, spread: 300, integral: true },
-      js_execution_ms: { centre: 548, spread: 24 },
-      third_party_bytes: { centre: 340_000, spread: 7_000 },
-    },
+    metrics: fromCapture(BASELINE_CAPTURE, {
+      transferred_bytes: 12_000,
+      request_count: 2,
+      dom_node_count: 300,
+      js_execution_ms: 24,
+      third_party_bytes: 4_000,
+    }),
     aggregations: [
       { id: 'baseline', label: '#4790 · main', runCount: 5, fingerprintStable: true },
       {
@@ -301,13 +352,14 @@ const SCENARIOS: readonly ScenarioSpec[] = [
         label: '#4812 · pr/412',
         runCount: 5,
         fingerprintStable: true,
-        metrics: {
-          transferred_bytes: { centre: 1_298_000, spread: 18_000 },
-          request_count: { centre: 84, spread: 2, integral: true },
-          dom_node_count: { centre: 2_140, spread: 320, integral: true },
-          js_execution_ms: { centre: 612, spread: 30 },
-          third_party_bytes: { centre: 366_000, spread: 8_000 },
-        },
+        capture: CANDIDATE_CAPTURE,
+        metrics: fromCapture(CANDIDATE_CAPTURE, {
+          transferred_bytes: 18_000,
+          request_count: 2,
+          dom_node_count: 320,
+          js_execution_ms: 30,
+          third_party_bytes: 6_000,
+        }),
       },
     ],
   },
@@ -377,6 +429,41 @@ export function canonMetric(aggregationId: string, metricId: MetricId): CanonMet
     throw new Error(`aggregation "${aggregationId}" measured no ${metricId}`);
   }
   return found;
+}
+
+/**
+ * one aggregation as the kernel produced it, for the generators that evaluate
+ * against it. the budget engine reads the route's two aggregates from here
+ * rather than summing a resource list of its own, so the verdict on a screen
+ * and the figures above it are the same measurement.
+ */
+export function canonAggregate(aggregationId: string): AggregatedMetrics {
+  const aggregation = BUILT.aggregations.find((entry) => entry.id === aggregationId);
+  if (aggregation === undefined) {
+    throw new Error(`the measurement canon holds no aggregation "${aggregationId}"`);
+  }
+  return {
+    pass: aggregation.pass,
+    sampleCount: aggregation.sampleCount,
+    metrics: aggregation.metrics.map((metric) => ({
+      metricId: metric.metricId,
+      unit: metric.unit,
+      median: metric.median,
+      mad: metric.mad,
+      min: metric.min,
+      max: metric.max,
+      sampleCount: metric.sampleCount,
+    })),
+  };
+}
+
+/** the capture the aggregation's median run recorded, where one is published. */
+export function canonCapture(aggregationId: string): RawCapture {
+  const aggregation = BUILT.aggregations.find((entry) => entry.id === aggregationId);
+  if (aggregation?.capture === undefined) {
+    throw new Error(`aggregation "${aggregationId}" publishes no capture`);
+  }
+  return aggregation.capture;
 }
 
 /** the established floor, or undefined where the history has not set one. */

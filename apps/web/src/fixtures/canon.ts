@@ -178,82 +178,16 @@ export const canon = {
 
 // ---- run detail ----
 
-export type WaterfallKind = 'first-party' | 'app' | 'regression' | 'third-party';
-
-export type ResourceType = 'document' | 'script' | 'stylesheet' | 'image' | 'font' | 'media' | 'other';
-
-export interface ResourceRecord {
-  name: string;
-  type: ResourceType;
-  transferredKb: number;
-  /** bytes after decompression. coverage is measured against this. */
-  decodedKb: number;
-  /** decoded bytes never executed, from the coverage capture. js and css only. */
-  unusedDecodedKb?: number;
-  /** absent for first-party resources. */
-  origin?: string;
-  /** the resource this run's regression was attributed to. */
-  regression?: boolean;
-}
-
 export const runDetailFixture = {
   id: '#4812',
   timestamp: '15 Aug 2026 14:02:41 UTC',
   route: '/demarches/acte-naissance',
   profile: 'mobile-4g',
-  requests: 84,
-  totalKb: 1298,
-  waterfall: [
-    { name: 'document', kb: 42, start: 0, kind: 'first-party' },
-    { name: 'app.a91f.js', kb: 412, start: 0.08, kind: 'app' },
-    { name: 'vendor-dates.c40e.js', kb: 184, start: 0.13, kind: 'regression' },
-    { name: 'marianne-bold.woff2', kb: 68, start: 0.11, kind: 'first-party' },
-    { name: 'hero-mairie.jpg', kb: 224, start: 0.18, kind: 'first-party' },
-    { name: 'tarteaucitron.js', kb: 96, start: 0.32, kind: 'third-party' },
-    { name: 'matomo.js', kb: 72, start: 0.36, kind: 'third-party' },
-    { name: 'player.dailymotion', kb: 198, start: 0.42, kind: 'third-party' },
-  ] as ReadonlyArray<{ name: string; kb: number; start: number; kind: WaterfallKind }>,
-  moreCount: 76,
-  moreKb: 2,
-  // the resource inventory behind the waterfall. same capture, same totals:
-  // eight records plus the tail add to 84 requests and 1 298 KB. coverage is
-  // measured on decoded bytes, so unusedDecodedKb is never a transferred
-  // saving; the two are kept in separate columns for that reason.
-  resources: [
-    { name: 'document', type: 'document', transferredKb: 42, decodedKb: 210 },
-    { name: 'app.a91f.js', type: 'script', transferredKb: 412, decodedKb: 1180, unusedDecodedKb: 402 },
-    {
-      name: 'vendor-dates.c40e.js',
-      type: 'script',
-      transferredKb: 184,
-      decodedKb: 604,
-      unusedDecodedKb: 574,
-      regression: true,
-    },
-    { name: 'marianne-bold.woff2', type: 'font', transferredKb: 68, decodedKb: 68 },
-    { name: 'hero-mairie.jpg', type: 'image', transferredKb: 224, decodedKb: 224 },
-    {
-      name: 'tarteaucitron.js',
-      type: 'script',
-      transferredKb: 96,
-      decodedKb: 288,
-      unusedDecodedKb: 121,
-      origin: 'tarteaucitron.io',
-    },
-    {
-      name: 'matomo.js',
-      type: 'script',
-      transferredKb: 72,
-      decodedKb: 214,
-      unusedDecodedKb: 96,
-      origin: 'matomo.selo.fr',
-    },
-    { name: 'player.dailymotion', type: 'media', transferredKb: 198, decodedKb: 198, origin: 'player.dailymotion.com' },
-  ] as readonly ResourceRecord[],
-  // the tail the waterfall shows as "+ 76 more". we hold no per-resource
-  // record for it here, so it is carried as one group rather than invented
-  // row by row.
-  remainder: { requests: 76, transferredKb: 2 },
+  // the waterfall, the resource inventory and the by-type summary are all read
+  // from this run's capture, which the measurement canon publishes beside the
+  // metrics extracted from it: see lib/capture-view.ts. the version of this
+  // fixture that listed eight resources here had them adding to a different
+  // page from the one the attribution engine diffed.
   // every figure on this card is the aggregate's, including the run dots: the
   // dispersion drawn is the dispersion of the runs drawn, and the two sides
   // carry their own mad because two run sets do not share one.
@@ -279,6 +213,9 @@ export const runDetailFixture = {
     { key: 'image', value: 'sha256:4e91c2a7…' },
     { key: 'throttle', value: 'mobile-4g (1.6 Mbps / 4× CPU)' },
     { key: 'region', value: 'eu-west-par' },
+    // coverage instruments script execution and moves the time it reports, so
+    // it is part of the environment and not a detail of the run.
+    { key: 'coverage', value: 'js + css' },
     // the models row is filled at render time from what actually ran.
     { key: 'models', value: '' },
     { key: 'ledger', value: `${shortHash(REF.run)}…`, link: true },

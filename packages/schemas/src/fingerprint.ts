@@ -16,5 +16,12 @@ export const EnvironmentFingerprint = z.object({
   locale: z.string().min(1),
   timezone: z.string().min(1),
   region: z.string().min(1),
+  /**
+   * whether js and css coverage was instrumented on this run. v8's precise
+   * coverage moves script execution time, so a run measured with it and a run
+   * measured without it are two different environments and invariant 3 keeps
+   * them apart.
+   */
+  coverageEnabled: z.boolean(),
 });
 export type EnvironmentFingerprint = z.infer<typeof EnvironmentFingerprint>;

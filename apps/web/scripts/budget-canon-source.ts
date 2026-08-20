@@ -1,5 +1,4 @@
 import type { AggregatedMetrics, BudgetOverride, MetricId, NoiseFloor } from '@balise/schemas';
-import type { AttributionSide } from '@balise/attribution';
 import { carbonModels } from '@balise/carbon-models';
 import {
   evaluateBudgets,
@@ -8,8 +7,8 @@ import {
   type CheckProvenance,
   type ScenarioMeasurement,
 } from '@balise/budgets';
-import { BASELINE_SIDE, CANDIDATE_SIDE, ROUTE } from './attribution-canon-source';
-import { aggregateFrom, canonMetric } from './measurement-canon-source';
+import { ROUTE } from './capture-canon-source';
+import { aggregateFrom, canonAggregate, canonMetric } from './measurement-canon-source';
 import { ledgerEntry, REF, shortHash, verifyUrl } from '../src/fixtures/ledger-refs';
 
 /**
@@ -17,9 +16,10 @@ import { ledgerEntry, REF, shortHash, verifyUrl } from '../src/fixtures/ledger-r
  * the runs the other canons already publish.
  *
  * the route the comparison and attribution screens are about is not restated
- * here: its two aggregates are derived from the same resource lists that produced
- * the attribution card, so the budget table, the pr check and the attribution
- * card cannot disagree about what the run measured.
+ * here: its two aggregates are the ones the measurement canon published, from
+ * the captures the attribution card was built from, so the budget table, the pr
+ * check, the metric row and the attribution card cannot disagree about what the
+ * run measured.
  */
 
 export const CANON_CONFIG_SOURCE = `# balise.yml · sevre-et-loire.fr · pack rgesn-2024-v2
@@ -84,7 +84,7 @@ interface Measured {
  * the version of this that typed `min: median - mad` was describing a
  * distribution no runs produced.
  */
-function aggregate(measured: Measured): AggregatedMetrics {
+function fromMeasured(measured: Measured): AggregatedMetrics {
   const share = measured.thirdPartyBytes / measured.bytes;
   return aggregateFrom(
     {
@@ -97,37 +97,35 @@ function aggregate(measured: Measured): AggregatedMetrics {
   );
 }
 
-/** the same resource lists the attribution canon runs on, read as metrics. */
-function fromSide(side: AttributionSide, mad: number): Measured {
-  const bytes = side.resources.reduce((total, resource) => total + resource.transferredBytes, 0);
-  const thirdPartyBytes = side.resources
-    .filter((resource) => !resource.url.startsWith(side.serviceOrigin))
-    .reduce((total, resource) => total + resource.transferredBytes, 0);
-  return { bytes, requests: side.resources.length, thirdPartyBytes, mad };
-}
-
-const MAIN: Record<string, Measured> = {
-  '/accueil': { bytes: 840_000, requests: 61, thirdPartyBytes: 184_800, mad: 3_000 },
-  [ROUTE]: fromSide(BASELINE_SIDE, 9_000),
+const MAIN: Record<string, AggregatedMetrics> = {
+  '/accueil': fromMeasured({ bytes: 840_000, requests: 61, thirdPartyBytes: 184_800, mad: 3_000 }),
+  // the route the comparison screen is about, exactly as the kernel aggregated
+  // the captures. nothing here re-sums a resource list.
+  [ROUTE]: canonAggregate('baseline'),
   // the video hero the override is about: 340 KB past a 900 KB budget, and the
   // reason the service third-party share is where it is.
-  '/actualites': { bytes: 1_240_000, requests: 74, thirdPartyBytes: 480_000, mad: 11_000 },
-  'demande-acte': { bytes: 1_258_000, requests: 96, thirdPartyBytes: 226_000, mad: 9_000 },
+  '/actualites': fromMeasured({ bytes: 1_240_000, requests: 74, thirdPartyBytes: 480_000, mad: 11_000 }),
+  'demande-acte': fromMeasured({ bytes: 1_258_000, requests: 96, thirdPartyBytes: 226_000, mad: 9_000 }),
 };
 
-const HEAD: Record<string, Measured> = {
-  '/accueil': { bytes: 842_000, requests: 61, thirdPartyBytes: 185_240, mad: 3_000 },
-  [ROUTE]: fromSide(CANDIDATE_SIDE, 9_000),
-  'demande-acte': { bytes: 1_442_000, requests: 100, thirdPartyBytes: 296_000, mad: 9_000 },
+const HEAD: Record<string, AggregatedMetrics> = {
+  '/accueil': fromMeasured({ bytes: 842_000, requests: 61, thirdPartyBytes: 185_240, mad: 3_000 }),
+  [ROUTE]: canonAggregate('candidate'),
+  'demande-acte': fromMeasured({ bytes: 1_442_000, requests: 100, thirdPartyBytes: 296_000, mad: 9_000 }),
 };
 
-function scenario(id: string, label: string, kind: 'route' | 'journey', head?: Measured): ScenarioMeasurement {
+function scenario(
+  id: string,
+  label: string,
+  kind: 'route' | 'journey',
+  head?: AggregatedMetrics,
+): ScenarioMeasurement {
   return {
     id,
     kind,
     label,
-    candidate: aggregate(head ?? MAIN[id]!),
-    baseline: head === undefined ? undefined : aggregate(MAIN[id]!),
+    candidate: head ?? MAIN[id]!,
+    baseline: head === undefined ? undefined : MAIN[id]!,
     floors: floors(),
   };
 }

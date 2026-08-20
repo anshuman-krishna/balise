@@ -1,6 +1,14 @@
 import { describe, expect, it } from 'vitest';
 import { AggregatedMetric, NoiseFloor } from '@balise/schemas';
-import { classifyDelta, gradeConfidence, median, medianAbsoluteDeviation } from '@balise/measure-core';
+import {
+  classifyDelta,
+  extractMetrics,
+  gradeConfidence,
+  median,
+  medianAbsoluteDeviation,
+  summariseResources,
+} from '@balise/measure-core';
+import { RawCapture } from '@balise/schemas';
 import { buildMeasurementCanon } from '../../scripts/measurement-canon-source';
 import { measurementCanon } from './measurement-canon';
 
@@ -164,3 +172,51 @@ function asAggregate(metric: (typeof measurementCanon.aggregations)[number]['met
     sampleCount: metric.sampleCount,
   };
 }
+
+describe('a published capture and the metrics beside it', () => {
+  const withCapture = measurementCanon.aggregations.filter(
+    (aggregation) => aggregation.capture !== undefined,
+  );
+
+  it('publishes one', () => {
+    expect(withCapture.length).toBeGreaterThan(0);
+  });
+
+  it('parses through the schema', () => {
+    for (const aggregation of withCapture) {
+      expect(() => RawCapture.parse(aggregation.capture)).not.toThrow();
+    }
+  });
+
+  it('extracts to the median the aggregation reports', () => {
+    // the reason this file exists in the first place: the run detail used to
+    // hold a resource list that added to a different page from the one the
+    // figures above it described.
+    for (const aggregation of withCapture) {
+      const extracted = extractMetrics(aggregation.capture!);
+      for (const value of extracted.values) {
+        const published = aggregation.metrics.find(
+          (metric) => metric.metricId === value.metricId,
+        );
+        if (published === undefined) continue;
+        expect(published.median, `${aggregation.id} ${value.metricId}`).toBeCloseTo(value.value, 6);
+      }
+    }
+  });
+
+  it('sums to the same transferred bytes however the capture is reduced', () => {
+    for (const aggregation of withCapture) {
+      const summary = summariseResources(aggregation.capture!);
+      const extracted = extractMetrics(aggregation.capture!).values.find(
+        (value) => value.metricId === 'transferred_bytes',
+      )!;
+      expect(summary.totalTransferredBytes).toBe(extracted.value);
+    }
+  });
+
+  it('holds a record for every request it counted', () => {
+    for (const aggregation of withCapture) {
+      expect(aggregation.capture!.resources.length).toBe(aggregation.capture!.requestCount);
+    }
+  });
+});

@@ -1,13 +1,6 @@
 import type { MetricSet, MetricValue, RawCapture } from '@balise/schemas';
 import { METRIC_UNIT } from '@balise/schemas';
-
-function originOf(url: string): string | null {
-  try {
-    return new URL(url).origin;
-  } catch {
-    return null;
-  }
-}
+import { isThirdParty, requireOrigin } from './origin.js';
 
 /**
  * pure extraction from a raw capture to a metric set. no io, no rounding:
@@ -18,20 +11,13 @@ function originOf(url: string): string | null {
  * captured counts. both stay available on the capture.
  */
 export function extractMetrics(capture: RawCapture): MetricSet {
-  const serviceOrigin = originOf(capture.serviceOrigin);
-  if (serviceOrigin === null) {
-    throw new Error(`serviceOrigin is not a valid URL: ${capture.serviceOrigin}`);
-  }
+  const serviceOrigin = requireOrigin(capture.serviceOrigin);
 
   let totalBytes = 0;
   let thirdPartyBytes = 0;
   for (const resource of capture.resources) {
     totalBytes += resource.transferredBytes;
-    const origin = originOf(resource.url);
-    // unparsable urls and opaque origins (data:, about:, blob:) have no
-    // network host of their own; they count as first party rather than
-    // being guessed at. an opaque origin serializes to the string "null".
-    if (origin !== null && origin !== 'null' && origin !== serviceOrigin) {
+    if (isThirdParty(resource.url, serviceOrigin)) {
       thirdPartyBytes += resource.transferredBytes;
     }
   }

@@ -135,6 +135,7 @@ export const fr: Catalog = {
     waterfallTitle: 'CASCADE · {requests} REQUÊTES · {kb} KO',
     resourceHeader: 'RESSOURCE',
     kbHeader: 'KO',
+    timeHeader: 'TEMPS',
     moreRows: '+ {count} autres',
     thirdPartyTag: '⟨3p⟩',
     modelsTitle: 'SORTIES DE TOUS LES MODÈLES · CÔTE À CÔTE',
@@ -170,12 +171,11 @@ export const fr: Catalog = {
         other: 'autre',
       },
       recordsTitle: 'RELEVÉS · {count} SUR {requests} REQUÊTES',
-      remainderRow: '{count} requêtes plus petites, aucun relevé par ressource conservé',
       firstParty: 'première partie',
       coverageCaption:
         "Inutilisé compte les octets décompressés jamais exécutés, relevés par la couverture de code. Ce n'est pas une économie de transfert : ce que la compression aurait fait de ces octets est une autre question, à laquelle le panneau d'attribution répond bundle par bundle.",
-      tailCaption:
-        'Les {count} requêtes hors des relevés ci-dessus représentent {kb} KB. Elles sont comptées dans les totaux et dans la ligne autre, jamais estimées.',
+      unavailableCaption:
+        'Taille décompressée indisponible pour {decoded} ressources, couverture non relevée pour {coverage} scripts ou feuilles de style. Comptées comme telles, jamais estimées.',
     },
     fingerprintTitle: 'EMPREINTE ENVIRONNEMENT',
     fingerprintMatchNote:

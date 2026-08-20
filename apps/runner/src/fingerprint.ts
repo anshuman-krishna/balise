@@ -15,6 +15,8 @@ export interface FingerprintInput {
   /** the container image digest, from the environment. */
   imageDigest?: string;
   region?: string;
+  /** coverage instrumentation, which is part of the environment, not of the run. */
+  coverageEnabled?: boolean;
 }
 
 export function buildFingerprint(input: FingerprintInput): EnvironmentFingerprint {
@@ -29,6 +31,7 @@ export function buildFingerprint(input: FingerprintInput): EnvironmentFingerprin
     locale: profile.locale,
     timezone: profile.timezone,
     region: input.region ?? UNPINNED,
+    coverageEnabled: input.coverageEnabled ?? false,
   };
 }
 
@@ -52,6 +55,7 @@ export function fingerprintsMatch(a: EnvironmentFingerprint, b: EnvironmentFinge
     a.deviceScaleFactor === b.deviceScaleFactor &&
     a.locale === b.locale &&
     a.timezone === b.timezone &&
-    a.region === b.region
+    a.region === b.region &&
+    a.coverageEnabled === b.coverageEnabled
   );
 }

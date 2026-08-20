@@ -16,7 +16,47 @@ screenshots, the fidelity source).
 
 ## Current status
 
-**Phase: every statistic is the kernel's (2026-08-20).** The medians, dispersions, noise
+**Phase: one run, one capture (2026-08-20).** Run #4812 had two resource lists and they
+described different pages. The run detail held eight resources plus a tail of seventy-six
+weighing two kilobytes between them, which is twenty-six bytes each and is not a thing a
+browser can fetch. The attribution canon held eighty-four real ones, with different bundle
+names, a different hero image and different third parties. The two also disagreed about what
+the run's third parties weighed, 340 KB against 180 KB on the baseline, so the metric row and
+the origin diff below it on one screen were answering from different measurements. Nothing
+tied them together because the kernel's own `extractMetrics` was not being called by anything
+in the app, exactly as `aggregateRuns` had not been before the previous slice.
+
+A capture is now authored once, in `capture-canon-source.ts`, and everything reduces it:
+`extractMetrics` for the six metrics, `summariseResources` for the inventory, the attribution
+engine for the diff, the budget engine for the verdicts. No generator sums a resource list of
+its own; the budget canon's `fromSide`, which was a third implementation of the first-party
+test and used a url prefix rather than an origin, is gone. Where a scenario is one page the
+centre is not authored either: `fromCapture` reads it off the capture, so a page cannot weigh
+one thing in its metric row and another in its resource list. An aggregate over several pages
+has no single capture and still states a centre, which is the honest difference between the
+two. A test extracts the published capture again and holds the aggregation to it.
+
+The screens follow. The run detail's waterfall draws the twelve heaviest resources in the
+order they were requested, positioned and sized by the timings the capture now records rather
+than by a start fraction typed into a fixture and a width taken from bytes. The resources tab
+lists all eighty-four records instead of eight and a line reading "76 requests, no records
+kept". The regression is marked from the bundle the attribution engine named.
+
+Underneath, the runner learned to capture what the inventory shows: resource type from the
+browser rather than a file extension, decoded size from the body, per-resource timing, and js
+and css coverage. Coverage is real work: `unusedBytesFromCoverage` resolves v8's nested
+ranges, because a function that ran with an unexecuted branch inside it is credited for the
+branch by anything that sums the ranges carrying a count, and it counts bytes over the text
+the offsets cut rather than scaling a character count. It refuses rather than approximates on
+a report that does not describe its source. It is off by default and recorded in the
+fingerprint, because instrumenting execution moves `js_execution_ms` and the size of that
+movement is unmeasured; METHODOLOGY.md section 12 carries it as open decision 14. One
+correction fell out of the new test: the third-party draw was rotated against the first-party
+one to give the share metric dispersion, which moved the middle run off its centre, so the
+share an aggregation reported was not the share of the capture it publishes. It is reversed
+now, which gives the same dispersion and leaves the middle run alone. 724 tests.
+
+**Then: every statistic is the kernel's (2026-08-20).** The medians, dispersions, noise
 floors and confidence grades the application prints were typed into fixtures, and five
 generators each fabricated their own. Three of them contradicted the runs printed beside
 them. The run detail drew five run dots and stated a MAD of 9 where those five give 4. The
@@ -192,6 +232,12 @@ from the carbon tile; both render now and a test asserts it. 646 tests.
       dispersion, the comparison rows, the free scan and the annex's measured-state table
       all read it, and the carbon, budget and ledger canons take their byte counts and
       floors from it)
+- [x] ~~Wire the run detail's waterfall and resource inventory to the run's capture~~
+      (`extractMetrics` and `summariseResources` over one `RawCapture`; all 84 records, the
+      waterfall drawn from the timings the capture records, the regression marked from the
+      bundle attribution named)
+- [ ] The free scan's findings are still three authored sentences with authored savings. They
+      need a findings engine reading the scan's capture, which does not exist yet
 - [ ] ToleranceBand print register for trend and dispersion (the handoff specifies print for the canonical band only; needed when the Typst pipeline lands)
 - [ ] Confidence renders in the pass colour on the metric tiles. Green is a pass state and
       a confidence grade is not one; the tokens say so and the tiles predate the rule
@@ -239,6 +285,8 @@ from the carbon tile; both render now and a test asserts it. 646 tests.
       `ModuleChange.span` from the candidate map; `placeGrowth` returns only what may be
       annotated)
 - [ ] Index maps (`sections`), once a customer build produces one
+- [x] ~~One resource list per run~~ (both attribution sides read the capture the measurement
+      canon publishes, so the origin diff and the metric row above it are the same run)
 
 ## To-do: budgets and the check (V3)
 
@@ -290,10 +338,16 @@ from the carbon tile; both render now and a test asserts it. 646 tests.
 - [x] ~~Playwright runner app with pinned Chromium~~ (V1.0, `apps/runner`; full chromium via `channel: 'chromium'`, fresh context per run, prediction and background networking off)
 - [ ] Digest-locked container around it (`BALISE_IMAGE_DIGEST` and `BALISE_REGION` are read already; without them a run is marked not auditable)
 - [x] ~~Cold and warm passes kept separate~~ (V1.0, the warm pass is a second navigation in the same context; the kernel already refuses to average the two)
-- [ ] Full HAR + CDP trace persisted to object storage (the capture today carries the slice extraction needs)
+- [~] Full HAR + CDP trace persisted to object storage. The capture now carries a real
+      per-resource record (type, transferred, decoded, coverage, timing) rather than a url
+      and a size, which is what the resource inventory renders; the full har and the trace
+      are still not persisted and need object storage
 - [x] ~~EnvironmentFingerprint recorded on every run~~ (V1.0, every field compared for invariant 3, with a test that fails if a field is ever left out of the comparison)
 - [~] METHODOLOGY.md v1 **drafted**, not published and not in force. Thirteen open decisions in its section 12 need sign-off (operating manual section 29)
 - [ ] Sign off the noise floor scaling factor, the throttle profile parameters and the confidence thresholds
+- [ ] **Measure what coverage instrumentation costs**, then decide whether it is on for a
+      measured run. It is written, off by default, and on the fingerprint; METHODOLOGY.md open
+      decision 14
 - [x] ~~The reproducibility test: twenty runs, same verdict, in CI~~ (V1.1, `pnpm test:repro`, its own vitest config so it stays out of the normal loop, plus a CI job that installs the browser)
 - [ ] Run the reproducibility suite for real and record what it says; it has never executed
 
@@ -302,6 +356,50 @@ Later versions: see roadmap; detailed to-dos are appended when the version start
 ---
 
 ## Decisions log
+
+- **2026-08-20 · A capture is authored once and everything else reduces it.** Run #4812 had
+  two resource lists describing different pages, and they disagreed about the run's third
+  parties by 160 KB. The run detail's list also could not have been measured: eight resources
+  plus a tail of seventy-six weighing two kilobytes between them is twenty-six bytes each,
+  and a response cannot be smaller than its headers. `capture-canon-source.ts` now holds the
+  only list; `extractMetrics`, `summariseResources`, the attribution engine and the budget
+  engine each reduce it. The budget canon's `fromSide` is deleted, which removes a third
+  implementation of the first-party test that matched a url prefix rather than an origin and
+  would have counted `sevre-et-loire.fr.example.com` as first party.
+- **2026-08-20 · Where a scenario is one page, even the centre is derived.** `fromCapture`
+  reads the metric centres off the capture, so the only authored numbers for a page are its
+  resource list and how far its runs spread. An aggregate over several pages, like the service
+  median or a journey, has no single capture and still states a centre. That difference is
+  the honest one and it is now visible in the scenario declarations.
+- **2026-08-20 · The waterfall draws timings, because the capture now records them.**
+  `CapturedResource` carries `startMs` and `durationMs` from the browser's own resource
+  timing. The bar starts where the request started and is as long as the response took; the
+  weight is the column beside it. The version that positioned a bar by time and sized it by
+  bytes was two scales on one mark, and both were fixture values. A resource the browser
+  reports no timing for draws no bar rather than one at zero.
+- **2026-08-20 · Coverage is measured or it is absent.** `unusedBytesFromCoverage` resolves
+  v8's nested ranges: a character is executed when the innermost range holding it ran, so a
+  function that ran with a dead branch inside it is not credited for the branch. It counts
+  bytes over the text the offsets cut rather than scaling a character count, because coverage
+  offsets are positions in the source and a bundle with accented strings has more bytes than
+  characters. A report that does not describe the text it arrived with returns null, and the
+  resource records no coverage rather than an approximate figure.
+- **2026-08-20 · Coverage instrumentation is part of the environment, and is off by default.**
+  V8's precise coverage instruments execution and therefore moves `js_execution_ms`. Until
+  that movement is measured, the runner leaves it off, records `coverageEnabled` on the
+  environment fingerprint, and invariant 3 keeps an instrumented run and an uninstrumented one
+  from being compared. METHODOLOGY.md open decision 14 states the three ways out.
+- **2026-08-20 · The third-party draw is reversed, not rotated.** Rotating the run offsets
+  gave the share metric its dispersion but moved the middle run off its centre, so the share
+  an aggregation reported was not the share of the capture it publishes. The offsets are
+  symmetric about the middle run, so reversing them gives every other run a different share
+  and leaves the middle one exactly where it was. The test that extracts a published capture
+  and holds the aggregation to it found this on its first run.
+- **2026-08-20 · `medianRunIndex` names the run a capture belongs to.** An aggregate holds no
+  capture, so anything that shows one page has to name a run, and it is the one sitting on the
+  reported median. With an even run count the median falls between two runs and the answer is
+  null: no capture recorded that page, and picking the nearer of the two would put an
+  inventory under a figure it does not add up to.
 
 - **2026-08-20 · Every statistic in the application is one the kernel computed.** Medians,
   dispersions, noise floors and confidence grades were typed into fixtures, and five

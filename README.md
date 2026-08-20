@@ -61,14 +61,19 @@ These are enforced in code and tested, not aspirational.
 ## How it fits together
 
 **Measure.** `apps/runner` drives a pinned Chromium through named throttle profiles, with
-a fresh browser context per run so a cold pass stays cold. Every run records a complete
-environment fingerprint, and two runs with different fingerprints are not compared without
-a flag that goes on the record.
+a fresh browser context per run so a cold pass stays cold. Every response is recorded with
+what the browser did with it, what crossed the wire, what it decompressed to, when it started
+and how long it took, and, when coverage is asked for, how much of it never ran. Every run
+records a complete environment fingerprint, and two runs with different fingerprints are not
+compared without a flag that goes on the record. Coverage instrumentation is one of those
+fields, because instrumenting execution changes the execution time it reports.
 
 **Reduce.** `packages/measure-core` is pure functions over raw captures: median and MAD,
 the per-metric noise floor from rolling history, confidence grading, and `classifyDelta`,
-which is the mechanical form of the rule that nothing fails on noise. It has no IO and the
-heaviest test suite in the repository.
+which is the mechanical form of the rule that nothing fails on noise. It also holds the two
+reductions of a capture, the six metrics and the resource inventory, so a screen's totals and
+the figures above them cannot come from different arithmetic. It has no IO and the heaviest
+test suite in the repository.
 
 **Estimate.** `packages/carbon-models` runs every configured model on every run. Each one
 declares its assumptions as data, and those assumptions render wherever its output
@@ -195,6 +200,11 @@ pnpm gen:measurement-canon
 dispersion, a noise floor or a confidence grade is produced, and the carbon, budget and
 ledger canons read their byte counts and floors from it rather than restating them, so the
 estimate, the verdict and the register all describe the same run.
+
+Underneath that again is one capture per run: a real list of responses that the metrics are
+extracted from, the inventory is grouped from, and the attribution and budget engines are run
+over. Nothing sums a resource list of its own, which is how a page stops weighing one thing in
+its metric row and another in its resource table.
 
 ## Status
 

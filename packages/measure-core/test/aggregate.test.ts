@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { MetricSet } from '@balise/schemas';
-import { aggregateRuns, getAggregatedMetric } from '../src/aggregate.js';
+import { aggregateRuns, getAggregatedMetric, medianRunIndex } from '../src/aggregate.js';
 
 function run(bytes: number, pass: 'cold' | 'warm' = 'cold'): MetricSet {
   return {
@@ -57,5 +57,33 @@ describe('aggregateRuns', () => {
       ],
     };
     expect(() => aggregateRuns([run(100), wrongUnit])).toThrow('inconsistent units');
+  });
+});
+
+describe('medianRunIndex', () => {
+  it('names the run the reported median came from', () => {
+    const runs = [run(1_002_000), run(1_010_000), run(1_000_000), run(998_000), run(1_004_000)];
+    const index = medianRunIndex(runs, 'transferred_bytes');
+    expect(index).toBe(0);
+    expect(getAggregatedMetric(aggregateRuns(runs), 'transferred_bytes')?.median).toBe(
+      runs[index!]!.values[0]!.value,
+    );
+  });
+
+  it('names no run when the median falls between two of them', () => {
+    // an aggregate of four has a median no capture recorded, and an inventory
+    // shown under it would not add up to the figure above it.
+    expect(medianRunIndex([run(100), run(200), run(300), run(400)], 'transferred_bytes')).toBeNull();
+  });
+
+  it('names the only run of a single-run scenario', () => {
+    expect(medianRunIndex([run(100)], 'transferred_bytes')).toBe(0);
+  });
+
+  it('refuses a metric missing from a run', () => {
+    const broken: MetricSet = { pass: 'cold', values: [] };
+    expect(() => medianRunIndex([run(100), broken, run(300)], 'transferred_bytes')).toThrow(
+      'never imputed',
+    );
   });
 });

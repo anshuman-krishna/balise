@@ -136,6 +136,7 @@ export const en = {
     waterfallTitle: 'WATERFALL · {requests} REQUESTS · {kb} KB',
     resourceHeader: 'RESOURCE',
     kbHeader: 'KB',
+    timeHeader: 'TIME',
     moreRows: '+ {count} more',
     thirdPartyTag: '⟨3p⟩',
     modelsTitle: 'ALL MODEL OUTPUTS · SIDE BY SIDE',
@@ -171,12 +172,11 @@ export const en = {
         other: 'other',
       },
       recordsTitle: 'RECORDS · {count} OF {requests} REQUESTS',
-      remainderRow: '{count} smaller requests, no per-resource record held',
       firstParty: 'first-party',
       coverageCaption:
         'Unused is decoded bytes never executed, from the coverage capture. It is not a transferred saving: what compression would have done with those bytes is a separate question, and the attribution panel answers it per bundle.',
-      tailCaption:
-        'The {count} requests outside the records above account for {kb} KB. They are counted in the totals and in the other row, never estimated.',
+      unavailableCaption:
+        'Decoded size unavailable for {decoded} resources, coverage not captured for {coverage} scripts or stylesheets. Counted as such, never estimated.',
     },
     fingerprintTitle: 'ENVIRONMENT FINGERPRINT',
     fingerprintMatchNote: 'Identical to baseline fingerprint. Comparison permitted without a flag.',

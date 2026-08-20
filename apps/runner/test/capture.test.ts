@@ -81,6 +81,50 @@ describe.skipIf(!installed)('captureRun', () => {
     expect(second.capture.resources.length).toBe(first.capture.resources.length);
   }, 120_000);
 
+  it('records what the browser did with each resource, and its decoded size', async () => {
+    const { capture, fingerprint } = await captureRun(browser, {
+      url: site.origin,
+      profile: 'desktop-fibre',
+      pass: 'cold',
+    });
+
+    const types = new Set(capture.resources.map((resource) => resource.resourceType));
+    expect(types.has('document')).toBe(true);
+    expect(types.has('script')).toBe(true);
+    expect(types.has('stylesheet')).toBe(true);
+
+    const document = capture.resources.find((resource) => resource.resourceType === 'document')!;
+    expect(document.decodedBytes).toBeGreaterThan(0);
+    // coverage was not asked for, so it is absent rather than zero.
+    expect(document.unusedDecodedBytes).toBeNull();
+    expect(fingerprint.coverageEnabled).toBe(false);
+
+    // the document starts the navigation everything else is measured from.
+    expect(document.startMs).toBe(0);
+    for (const resource of capture.resources) {
+      if (resource.startMs !== null) expect(resource.startMs).toBeGreaterThanOrEqual(0);
+      if (resource.durationMs !== null) expect(resource.durationMs).toBeGreaterThanOrEqual(0);
+    }
+  }, 120_000);
+
+  it('reports unused decoded bytes only when coverage was asked for', async () => {
+    const { capture, fingerprint } = await captureRun(browser, {
+      url: site.origin,
+      profile: 'desktop-fibre',
+      pass: 'cold',
+      coverage: true,
+    });
+
+    expect(fingerprint.coverageEnabled).toBe(true);
+    const scripts = capture.resources.filter((resource) => resource.resourceType === 'script');
+    expect(scripts.length).toBeGreaterThan(0);
+    for (const script of scripts) {
+      if (script.unusedDecodedBytes === null) continue;
+      expect(script.decodedBytes).not.toBeNull();
+      expect(script.unusedDecodedBytes).toBeLessThanOrEqual(script.decodedBytes!);
+    }
+  }, 120_000);
+
   it('fails a hung run rather than waiting on it', async () => {
     await expect(
       captureRun(browser, {

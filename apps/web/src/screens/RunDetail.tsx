@@ -18,7 +18,7 @@ import {
 } from '../lib/carbon-view';
 import { ResourceTable } from '../components/ResourceTable';
 import { ResourceTypeSummary } from '../components/ResourceTypeSummary';
-import { summariseResources } from '../lib/resources';
+import { capture, inventory, resourceRows, waterfall } from '../lib/capture-view';
 
 // the verdict on this card comes from the kernel, like the comparison
 // verdicts do. nothing here decides for itself whether a delta is real.
@@ -26,7 +26,13 @@ const dispersionDelta = classifyDelta(run.dispersion.before, run.dispersion.afte
 const deltaKb = Math.round(dispersionDelta.value / 1000);
 const floorKb = run.dispersion.floor.status === 'established' ? run.dispersion.floor.value / 1000 : 0;
 const noiseRatio = floorKb === 0 ? 0 : Math.round(Math.abs(deltaKb) / floorKb);
-const resourceSummary = summariseResources(run.resources, run.remainder);
+// one capture, read three ways: the waterfall draws it in time, the table
+// lists every record, and the summary groups them. the figures above all three
+// are `extractMetrics` on the same capture.
+const runCapture = capture('candidate');
+const rows = resourceRows(runCapture);
+const waterfallRows = waterfall(rows, 12);
+const resourceSummary = inventory(runCapture);
 
 type Tab = 'waterfall' | 'resources' | 'dispersion' | 'models' | 'environment';
 
@@ -207,10 +213,13 @@ export function RunDetail() {
         <div className="dashboard-cols" style={{ gridTemplateColumns: '1.5fr 1fr', marginTop: 14 }}>
           <div className="card">
             <span className="eyebrow">
-              {fill(t.runDetail.waterfallTitle, { requests: run.requests, kb: formatInt(run.totalKb) })}
+              {fill(t.runDetail.waterfallTitle, {
+                requests: runCapture.requestCount,
+                kb: formatInt(resourceSummary.totalTransferredBytes / 1000),
+              })}
             </span>
             <div style={{ marginTop: 4 }}>
-              <Waterfall rows={run.waterfall} moreCount={run.moreCount} moreKb={run.moreKb} />
+              <Waterfall rows={waterfallRows.rows} remainder={waterfallRows.remainder} />
             </div>
           </div>
           <div className="stack">
@@ -242,23 +251,25 @@ export function RunDetail() {
       {tab === 'resources' ? (
         <div className="dashboard-cols" style={{ gridTemplateColumns: '1.5fr 1fr', marginTop: 14 }}>
           <div className="stack">
-            <ResourceTable
-              records={run.resources}
-              remainder={run.remainder}
-              totalRequests={resourceSummary.totalRequests}
-            />
+            <ResourceTable rows={rows} requestCount={runCapture.requestCount} />
             <p style={{ margin: 0, fontSize: 10.5, lineHeight: 1.6, color: 'var(--text-secondary)', maxWidth: '72ch' }}>
               {t.runDetail.resources.coverageCaption}
             </p>
           </div>
           <div className="stack">
             <ResourceTypeSummary summary={resourceSummary} />
-            <p style={{ margin: 0, fontSize: 10.5, lineHeight: 1.6, color: 'var(--text-secondary)' }}>
-              {fill(t.runDetail.resources.tailCaption, {
-                count: run.remainder.requests,
-                kb: run.remainder.transferredKb,
-              })}
-            </p>
+            {resourceSummary.decodedUnavailableCount +
+              resourceSummary.coverageUnavailableCount ===
+            0 ? null : (
+              // stated only when something is missing. a line reading "0 and 0"
+              // is not a disclosure, it is furniture.
+              <p style={{ margin: 0, fontSize: 10.5, lineHeight: 1.6, color: 'var(--text-secondary)' }}>
+                {fill(t.runDetail.resources.unavailableCaption, {
+                  decoded: resourceSummary.decodedUnavailableCount,
+                  coverage: resourceSummary.coverageUnavailableCount,
+                })}
+              </p>
+            )}
           </div>
         </div>
       ) : null}

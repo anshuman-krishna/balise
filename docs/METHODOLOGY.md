@@ -50,6 +50,36 @@ first party rather than guessed at.
 Every metric in this table falls into the same direction of harm: it regresses
 when it grows.
 
+### 1.1 The resource inventory
+
+The six metrics are a reduction of the run's capture, and the capture is kept.
+For every response the page received, the capture records:
+
+| Field | What it is |
+| --- | --- |
+| URL | The address requested, unmodified. |
+| Resource type | What the browser did with the response: document, script, stylesheet, image, font, media, or other. Anything the browser reports outside those six is `other`; no category is inferred from a file extension. |
+| Transferred bytes | Encoded body plus response headers. The quantity `transferred_bytes` sums. |
+| Decoded bytes | The body after content-encoding is undone. Recorded as unavailable, never substituted from the transferred size, when the browser hands back no body: a redirect, an evicted body, or a response above the runner's read cap of 8 MB. |
+| Unused decoded bytes | Decoded bytes never executed, from the coverage capture. Applies to scripts and stylesheets only; anything else records it as not applicable rather than as zero. |
+| Start and duration | When the request started, measured from the start of the navigation, and how long it took to the last byte. Recorded as unavailable where the browser reports no timing. |
+
+Two consequences worth stating, because both are places a report could quietly
+overstate itself:
+
+**Unused decoded bytes are not a saving.** They are a share of what the page
+decompressed, not of what it transferred. What compression would have done with
+those bytes is a different question, and the figure is never presented as bytes
+that could be removed from the wire.
+
+**Coverage is measured, not estimated.** V8 reports nested execution ranges, and
+a character counts as executed only when the innermost range containing it ran;
+a function that ran while one of its branches did not is credited for the branch
+by any method that simply sums the ranges with a count. Offsets are positions in
+the source text rather than byte offsets, so the unused share is measured over
+the text those offsets cut. A coverage report that does not describe the text it
+arrived with yields no figure at all rather than an approximate one.
+
 ## 2. What is not measured
 
 Balise measures a web service loaded in a browser. It does not measure server
@@ -352,3 +382,12 @@ settled. This section must be empty before version 1.0 is in force.
 13. **Publication language.** This document is maintained in English in the
     repository. The version published at `balise.fr/methodologie`, which is what
     a public buyer reads, must be French.
+14. **Whether coverage is captured on a measured run.** V8's precise coverage
+    instruments execution, so it moves `js_execution_ms`; the size of that
+    movement has not been measured. The runner therefore leaves coverage off by
+    default and records `coverageEnabled` in the environment fingerprint, which
+    means a run with it and a run without it are never compared (invariant 3).
+    The decision is whether to turn it on for every run and accept an
+    instrumented script-execution figure, leave it off and lose the resource
+    inventory's coverage column, or take it on a separate pass that is not the
+    measured one. Measuring the overhead on the fixture site comes first.

@@ -57,6 +57,17 @@ describe('fingerprintsMatch', () => {
     ).toBe(false);
   });
 
+  it('refuses a coverage-instrumented run against an uninstrumented one', () => {
+    // v8's precise coverage moves script execution time, so the two runs were
+    // not made in the same environment and invariant 3 keeps them apart.
+    expect(
+      fingerprintsMatch(
+        buildFingerprint(base),
+        buildFingerprint({ ...base, coverageEnabled: true }),
+      ),
+    ).toBe(false);
+  });
+
   it('checks every field the schema declares', () => {
     const fields = Object.keys(EnvironmentFingerprint.shape);
     const fingerprint = buildFingerprint({

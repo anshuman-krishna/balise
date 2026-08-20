@@ -5,6 +5,7 @@ import type {
   EnvironmentFingerprint,
   MetricId,
   MetricSet,
+  RawCapture,
   ThrottleProfile,
 } from '@balise/schemas';
 import { aggregateRuns, extractMetrics, gradeConfidence } from '@balise/measure-core';
@@ -25,12 +26,20 @@ export interface MeasureOptions {
   /** five by default, never below three. */
   runs?: number;
   runTimeoutMs?: number;
+  /** instrument js and css coverage. changes the fingerprint. */
+  coverage?: boolean;
 }
 
 interface MeasureBase {
   fingerprint: EnvironmentFingerprint;
   fingerprintStable: boolean;
   metricSets: readonly MetricSet[];
+  /**
+   * the capture each metric set was extracted from, in the same order. the
+   * resource inventory a run detail shows is read from here, so the inventory
+   * and the metrics above it are two readings of one capture.
+   */
+  captures: readonly RawCapture[];
   failures: readonly RunFailure[];
 }
 
@@ -54,6 +63,7 @@ export async function measure(options: MeasureOptions): Promise<MeasureResult> {
   const browser = await launchBrowser();
 
   const metricSets: MetricSet[] = [];
+  const captures: RawCapture[] = [];
   const failures: RunFailure[] = [];
   const fingerprints: EnvironmentFingerprint[] = [];
 
@@ -64,12 +74,14 @@ export async function measure(options: MeasureOptions): Promise<MeasureResult> {
       pass: options.pass,
       ...(options.serviceOrigin === undefined ? {} : { serviceOrigin: options.serviceOrigin }),
       ...(options.runTimeoutMs === undefined ? {} : { runTimeoutMs: options.runTimeoutMs }),
+      ...(options.coverage === undefined ? {} : { coverage: options.coverage }),
     };
 
     for (let index = 0; index < runCount; index += 1) {
       try {
         const result = await captureRun(browser, captureOptions);
         metricSets.push(extractMetrics(result.capture));
+        captures.push(result.capture);
         fingerprints.push(result.fingerprint);
       } catch (error) {
         failures.push({ index, message: error instanceof Error ? error.message : String(error) });
@@ -85,7 +97,13 @@ export async function measure(options: MeasureOptions): Promise<MeasureResult> {
   }
   const fingerprintStable = fingerprints.every((candidate) => fingerprintsMatch(first, candidate));
 
-  const base: MeasureBase = { fingerprint: first, fingerprintStable, metricSets, failures };
+  const base: MeasureBase = {
+    fingerprint: first,
+    fingerprintStable,
+    metricSets,
+    captures,
+    failures,
+  };
 
   if (!sufficientForAggregate(metricSets.length)) {
     return { ...base, status: 'insufficient-runs', required: MIN_RUNS };

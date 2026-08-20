@@ -8,6 +8,7 @@
 // median of the historical mads, and the grade is what gradeConfidence
 // returned for that dispersion at that sample count.
 
+import type { RawCapture } from '@balise/schemas';
 import type { CanonHistoryPoint, CanonMetric } from './measurement-types';
 
 export const measurementCanon = {
@@ -178,11 +179,11 @@ export const measurementCanon = {
         "max": 487000,
         "sampleCount": 5,
         "runValues": [
-          478000,
-          469000,
           482500,
-          473950,
-          487000
+          469000,
+          478000,
+          487000,
+          473950
         ],
         "floor": {
           "status": "established",
@@ -197,23 +198,23 @@ export const measurementCanon = {
       {
         "metricId": "third_party_share_pct",
         "unit": "pct",
-        "median": 38.16062589813188,
-        "mad": 0.19390510345794354,
+        "median": 37.99682034976153,
+        "mad": 0.5230583026414735,
         "min": 36.92913385826772,
-        "max": 38.528481012658226,
+        "max": 39.08507223113965,
         "sampleCount": 5,
         "runValues": [
-          38.16062589813188,
+          38.519878652403,
           36.92913385826772,
-          38.35453100158983,
-          38.03772070626003,
-          38.528481012658226
+          37.99682034976153,
+          39.08507223113965,
+          37.49604430379747
         ],
         "floor": {
           "status": "established",
           "metricId": "third_party_share_pct",
           "unit": "pct",
-          "value": 0.2384810280667281,
+          "value": 0.6434327575943157,
           "sampleCount": 24,
           "scalingFactor": 1.2
         },
@@ -332,23 +333,23 @@ export const measurementCanon = {
       {
         "metricId": "third_party_bytes",
         "unit": "bytes",
-        "median": 340000,
-        "mad": 3500,
-        "min": 333000,
-        "max": 347000,
+        "median": 180000,
+        "mad": 2000,
+        "min": 176000,
+        "max": 184000,
         "sampleCount": 5,
         "runValues": [
-          340000,
-          333000,
-          343500,
-          336850,
-          347000
+          182000,
+          176000,
+          180000,
+          184000,
+          178200
         ],
         "floor": {
           "status": "established",
           "metricId": "third_party_bytes",
           "unit": "bytes",
-          "value": 4305,
+          "value": 2460,
           "sampleCount": 24,
           "scalingFactor": 1.2
         },
@@ -357,23 +358,23 @@ export const measurementCanon = {
       {
         "metricId": "third_party_share_pct",
         "unit": "pct",
-        "median": 30.669312646581275,
-        "mad": 0.16551679686576293,
-        "min": 29.573712255772644,
-        "max": 30.982142857142858,
+        "median": 16.15798922800718,
+        "mad": 0.2591134239863244,
+        "min": 15.630550621669629,
+        "max": 16.696914700544465,
         "sampleCount": 5,
         "runValues": [
-          30.669312646581275,
-          29.573712255772644,
-          30.83482944344704,
-          30.567150635208712,
-          30.982142857142858
+          16.417102651993506,
+          15.630550621669629,
+          16.15798922800718,
+          16.696914700544465,
+          15.910714285714286
         ],
         "floor": {
           "status": "established",
           "metricId": "third_party_share_pct",
           "unit": "pct",
-          "value": 0.20356284370734343,
+          "value": 0.31874927871458564,
           "sampleCount": 24,
           "scalingFactor": 1.2
         },
@@ -492,23 +493,23 @@ export const measurementCanon = {
       {
         "metricId": "third_party_bytes",
         "unit": "bytes",
-        "median": 366000,
-        "mad": 4000,
-        "min": 358000,
-        "max": 374000,
+        "median": 378000,
+        "mad": 3000,
+        "min": 372000,
+        "max": 384000,
         "sampleCount": 5,
         "runValues": [
-          366000,
-          358000,
-          370000,
-          362400,
-          374000
+          381000,
+          372000,
+          378000,
+          384000,
+          375300
         ],
         "floor": {
           "status": "established",
           "metricId": "third_party_bytes",
           "unit": "bytes",
-          "value": 4305,
+          "value": 2460,
           "sampleCount": 24,
           "scalingFactor": 1.2
         },
@@ -517,29 +518,795 @@ export const measurementCanon = {
       {
         "metricId": "third_party_share_pct",
         "unit": "pct",
-        "median": 28.37429258082022,
-        "mad": 0.13110033135235,
-        "min": 27.203647416413375,
-        "max": 28.61514919663351,
+        "median": 29.121725731895225,
+        "mad": 0.4154476924012336,
+        "min": 28.267477203647417,
+        "max": 30,
         "sampleCount": 5,
         "runValues": [
-          28.37429258082022,
-          27.203647416413375,
-          28.50539291217257,
-          28.3125,
-          28.61514919663351
+          29.53717342429646,
+          28.267477203647417,
+          29.121725731895225,
+          30,
+          28.71461361897475
         ],
         "floor": {
           "status": "established",
           "metricId": "third_party_share_pct",
           "unit": "pct",
-          "value": 0.20356284370734343,
+          "value": 0.31874927871458564,
           "sampleCount": 24,
           "scalingFactor": 1.2
         },
         "confidence": "high"
       }
-    ]
+    ],
+    "capture": {
+      "serviceOrigin": "https://sevre-et-loire.fr",
+      "pass": "cold",
+      "resources": [
+        {
+          "url": "https://sevre-et-loire.fr/demarches/acte-naissance",
+          "resourceType": "document",
+          "transferredBytes": 42000,
+          "decodedBytes": 186000,
+          "unusedDecodedBytes": null,
+          "startMs": 0,
+          "durationMs": 240
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/app.9d1e.css",
+          "resourceType": "stylesheet",
+          "transferredBytes": 38000,
+          "decodedBytes": 214000,
+          "unusedDecodedBytes": 148000,
+          "startMs": 252,
+          "durationMs": 180
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/app.7c2f.js",
+          "resourceType": "script",
+          "transferredBytes": 122000,
+          "decodedBytes": 402000,
+          "unusedDecodedBytes": 176000,
+          "startMs": 264,
+          "durationMs": 420
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/fonts/martian-mono.woff2",
+          "resourceType": "font",
+          "transferredBytes": 62000,
+          "decodedBytes": 62000,
+          "unusedDecodedBytes": null,
+          "startMs": 288,
+          "durationMs": 190
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/fonts/public-sans.woff2",
+          "resourceType": "font",
+          "transferredBytes": 62000,
+          "decodedBytes": 62000,
+          "unusedDecodedBytes": null,
+          "startMs": 296,
+          "durationMs": 186
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/fonts/archivo-expanded.woff2",
+          "resourceType": "font",
+          "transferredBytes": 62000,
+          "decodedBytes": 62000,
+          "unusedDecodedBytes": null,
+          "startMs": 304,
+          "durationMs": 194
+        },
+        {
+          "url": "https://geo.api.gouv.fr/communes?code=44",
+          "resourceType": "other",
+          "transferredBytes": 12000,
+          "decodedBytes": 48000,
+          "unusedDecodedBytes": null,
+          "startMs": 720,
+          "durationMs": 210
+        },
+        {
+          "url": "https://matomo.selo.fr/matomo.js",
+          "resourceType": "script",
+          "transferredBytes": 72000,
+          "decodedBytes": 214000,
+          "unusedDecodedBytes": 96000,
+          "startMs": 832,
+          "durationMs": 260
+        },
+        {
+          "url": "https://tarteaucitron.io/load.js",
+          "resourceType": "script",
+          "transferredBytes": 96000,
+          "decodedBytes": 288000,
+          "unusedDecodedBytes": 121000,
+          "startMs": 936,
+          "durationMs": 300
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/vendor-dates.c40e.js",
+          "resourceType": "script",
+          "transferredBytes": 157000,
+          "decodedBytes": 470000,
+          "unusedDecodedBytes": 442000,
+          "startMs": 340,
+          "durationMs": 460
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/media/hero.webp",
+          "resourceType": "image",
+          "transferredBytes": 165000,
+          "decodedBytes": 165000,
+          "unusedDecodedBytes": null,
+          "startMs": 468,
+          "durationMs": 480
+        },
+        {
+          "url": "https://player.dailymotion.com/embed.js",
+          "resourceType": "script",
+          "transferredBytes": 176000,
+          "decodedBytes": 512000,
+          "unusedDecodedBytes": 214000,
+          "startMs": 1092,
+          "durationMs": 420
+        },
+        {
+          "url": "https://player.dailymotion.com/poster/x8k2p1.jpg",
+          "resourceType": "image",
+          "transferredBytes": 22000,
+          "decodedBytes": 22000,
+          "unusedDecodedBytes": null,
+          "startMs": 1520,
+          "durationMs": 180
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/media/vignette-01.webp",
+          "resourceType": "image",
+          "transferredBytes": 2000,
+          "decodedBytes": 2000,
+          "unusedDecodedBytes": null,
+          "startMs": 620,
+          "durationMs": 120
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/media/vignette-02.webp",
+          "resourceType": "image",
+          "transferredBytes": 2137,
+          "decodedBytes": 2137,
+          "unusedDecodedBytes": null,
+          "startMs": 642,
+          "durationMs": 173
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/media/vignette-03.webp",
+          "resourceType": "image",
+          "transferredBytes": 2274,
+          "decodedBytes": 2274,
+          "unusedDecodedBytes": null,
+          "startMs": 664,
+          "durationMs": 226
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/media/vignette-04.webp",
+          "resourceType": "image",
+          "transferredBytes": 2411,
+          "decodedBytes": 2411,
+          "unusedDecodedBytes": null,
+          "startMs": 686,
+          "durationMs": 139
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/media/vignette-05.webp",
+          "resourceType": "image",
+          "transferredBytes": 2548,
+          "decodedBytes": 2548,
+          "unusedDecodedBytes": null,
+          "startMs": 708,
+          "durationMs": 192
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/media/vignette-06.webp",
+          "resourceType": "image",
+          "transferredBytes": 2685,
+          "decodedBytes": 2685,
+          "unusedDecodedBytes": null,
+          "startMs": 730,
+          "durationMs": 245
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/media/vignette-07.webp",
+          "resourceType": "image",
+          "transferredBytes": 2822,
+          "decodedBytes": 2822,
+          "unusedDecodedBytes": null,
+          "startMs": 752,
+          "durationMs": 158
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/media/vignette-08.webp",
+          "resourceType": "image",
+          "transferredBytes": 2959,
+          "decodedBytes": 2959,
+          "unusedDecodedBytes": null,
+          "startMs": 774,
+          "durationMs": 211
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/media/vignette-09.webp",
+          "resourceType": "image",
+          "transferredBytes": 3096,
+          "decodedBytes": 3096,
+          "unusedDecodedBytes": null,
+          "startMs": 796,
+          "durationMs": 124
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/media/vignette-10.webp",
+          "resourceType": "image",
+          "transferredBytes": 3233,
+          "decodedBytes": 3233,
+          "unusedDecodedBytes": null,
+          "startMs": 818,
+          "durationMs": 177
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/media/vignette-11.webp",
+          "resourceType": "image",
+          "transferredBytes": 3370,
+          "decodedBytes": 3370,
+          "unusedDecodedBytes": null,
+          "startMs": 840,
+          "durationMs": 230
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/media/vignette-12.webp",
+          "resourceType": "image",
+          "transferredBytes": 3507,
+          "decodedBytes": 3507,
+          "unusedDecodedBytes": null,
+          "startMs": 862,
+          "durationMs": 143
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/media/vignette-13.webp",
+          "resourceType": "image",
+          "transferredBytes": 3644,
+          "decodedBytes": 3644,
+          "unusedDecodedBytes": null,
+          "startMs": 884,
+          "durationMs": 196
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/media/vignette-14.webp",
+          "resourceType": "image",
+          "transferredBytes": 3781,
+          "decodedBytes": 3781,
+          "unusedDecodedBytes": null,
+          "startMs": 906,
+          "durationMs": 249
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/media/vignette-15.webp",
+          "resourceType": "image",
+          "transferredBytes": 2118,
+          "decodedBytes": 2118,
+          "unusedDecodedBytes": null,
+          "startMs": 928,
+          "durationMs": 162
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/media/vignette-16.webp",
+          "resourceType": "image",
+          "transferredBytes": 2255,
+          "decodedBytes": 2255,
+          "unusedDecodedBytes": null,
+          "startMs": 950,
+          "durationMs": 215
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/media/vignette-17.webp",
+          "resourceType": "image",
+          "transferredBytes": 2392,
+          "decodedBytes": 2392,
+          "unusedDecodedBytes": null,
+          "startMs": 972,
+          "durationMs": 128
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/media/vignette-18.webp",
+          "resourceType": "image",
+          "transferredBytes": 2529,
+          "decodedBytes": 2529,
+          "unusedDecodedBytes": null,
+          "startMs": 994,
+          "durationMs": 181
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/media/vignette-19.webp",
+          "resourceType": "image",
+          "transferredBytes": 2666,
+          "decodedBytes": 2666,
+          "unusedDecodedBytes": null,
+          "startMs": 1016,
+          "durationMs": 234
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/media/vignette-20.webp",
+          "resourceType": "image",
+          "transferredBytes": 2803,
+          "decodedBytes": 2803,
+          "unusedDecodedBytes": null,
+          "startMs": 1038,
+          "durationMs": 147
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/media/vignette-21.webp",
+          "resourceType": "image",
+          "transferredBytes": 2940,
+          "decodedBytes": 2940,
+          "unusedDecodedBytes": null,
+          "startMs": 1060,
+          "durationMs": 200
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/media/vignette-22.webp",
+          "resourceType": "image",
+          "transferredBytes": 3077,
+          "decodedBytes": 3077,
+          "unusedDecodedBytes": null,
+          "startMs": 1082,
+          "durationMs": 253
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/media/vignette-23.webp",
+          "resourceType": "image",
+          "transferredBytes": 3214,
+          "decodedBytes": 3214,
+          "unusedDecodedBytes": null,
+          "startMs": 1104,
+          "durationMs": 166
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/media/vignette-24.webp",
+          "resourceType": "image",
+          "transferredBytes": 3351,
+          "decodedBytes": 3351,
+          "unusedDecodedBytes": null,
+          "startMs": 1126,
+          "durationMs": 219
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/media/vignette-25.webp",
+          "resourceType": "image",
+          "transferredBytes": 3488,
+          "decodedBytes": 3488,
+          "unusedDecodedBytes": null,
+          "startMs": 1148,
+          "durationMs": 132
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/media/vignette-26.webp",
+          "resourceType": "image",
+          "transferredBytes": 3625,
+          "decodedBytes": 3625,
+          "unusedDecodedBytes": null,
+          "startMs": 1170,
+          "durationMs": 185
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/media/vignette-27.webp",
+          "resourceType": "image",
+          "transferredBytes": 3762,
+          "decodedBytes": 3762,
+          "unusedDecodedBytes": null,
+          "startMs": 1192,
+          "durationMs": 238
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/media/vignette-28.webp",
+          "resourceType": "image",
+          "transferredBytes": 2099,
+          "decodedBytes": 2099,
+          "unusedDecodedBytes": null,
+          "startMs": 1214,
+          "durationMs": 151
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/media/vignette-29.webp",
+          "resourceType": "image",
+          "transferredBytes": 2236,
+          "decodedBytes": 2236,
+          "unusedDecodedBytes": null,
+          "startMs": 1236,
+          "durationMs": 204
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/media/vignette-30.webp",
+          "resourceType": "image",
+          "transferredBytes": 2373,
+          "decodedBytes": 2373,
+          "unusedDecodedBytes": null,
+          "startMs": 1258,
+          "durationMs": 257
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/media/vignette-31.webp",
+          "resourceType": "image",
+          "transferredBytes": 2510,
+          "decodedBytes": 2510,
+          "unusedDecodedBytes": null,
+          "startMs": 1280,
+          "durationMs": 170
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/media/vignette-32.webp",
+          "resourceType": "image",
+          "transferredBytes": 2647,
+          "decodedBytes": 2647,
+          "unusedDecodedBytes": null,
+          "startMs": 1302,
+          "durationMs": 223
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/media/vignette-33.webp",
+          "resourceType": "image",
+          "transferredBytes": 2784,
+          "decodedBytes": 2784,
+          "unusedDecodedBytes": null,
+          "startMs": 1324,
+          "durationMs": 136
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/media/vignette-34.webp",
+          "resourceType": "image",
+          "transferredBytes": 2921,
+          "decodedBytes": 2921,
+          "unusedDecodedBytes": null,
+          "startMs": 1346,
+          "durationMs": 189
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/media/vignette-35.webp",
+          "resourceType": "image",
+          "transferredBytes": 3058,
+          "decodedBytes": 3058,
+          "unusedDecodedBytes": null,
+          "startMs": 1368,
+          "durationMs": 242
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/media/vignette-36.webp",
+          "resourceType": "image",
+          "transferredBytes": 3195,
+          "decodedBytes": 3195,
+          "unusedDecodedBytes": null,
+          "startMs": 1390,
+          "durationMs": 155
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/media/vignette-37.webp",
+          "resourceType": "image",
+          "transferredBytes": 3332,
+          "decodedBytes": 3332,
+          "unusedDecodedBytes": null,
+          "startMs": 1412,
+          "durationMs": 208
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/media/vignette-38.webp",
+          "resourceType": "image",
+          "transferredBytes": 3469,
+          "decodedBytes": 3469,
+          "unusedDecodedBytes": null,
+          "startMs": 1434,
+          "durationMs": 121
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/media/vignette-39.webp",
+          "resourceType": "image",
+          "transferredBytes": 3606,
+          "decodedBytes": 3606,
+          "unusedDecodedBytes": null,
+          "startMs": 1456,
+          "durationMs": 174
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/media/vignette-40.webp",
+          "resourceType": "image",
+          "transferredBytes": 3743,
+          "decodedBytes": 3743,
+          "unusedDecodedBytes": null,
+          "startMs": 1478,
+          "durationMs": 227
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/media/vignette-41.webp",
+          "resourceType": "image",
+          "transferredBytes": 2080,
+          "decodedBytes": 2080,
+          "unusedDecodedBytes": null,
+          "startMs": 1500,
+          "durationMs": 140
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/media/vignette-42.webp",
+          "resourceType": "image",
+          "transferredBytes": 2217,
+          "decodedBytes": 2217,
+          "unusedDecodedBytes": null,
+          "startMs": 1522,
+          "durationMs": 193
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/media/vignette-43.webp",
+          "resourceType": "image",
+          "transferredBytes": 2354,
+          "decodedBytes": 2354,
+          "unusedDecodedBytes": null,
+          "startMs": 1544,
+          "durationMs": 246
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/media/vignette-44.webp",
+          "resourceType": "image",
+          "transferredBytes": 2491,
+          "decodedBytes": 2491,
+          "unusedDecodedBytes": null,
+          "startMs": 1566,
+          "durationMs": 159
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/media/vignette-45.webp",
+          "resourceType": "image",
+          "transferredBytes": 2628,
+          "decodedBytes": 2628,
+          "unusedDecodedBytes": null,
+          "startMs": 1588,
+          "durationMs": 212
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/media/vignette-46.webp",
+          "resourceType": "image",
+          "transferredBytes": 2765,
+          "decodedBytes": 2765,
+          "unusedDecodedBytes": null,
+          "startMs": 1610,
+          "durationMs": 125
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/media/vignette-47.webp",
+          "resourceType": "image",
+          "transferredBytes": 2902,
+          "decodedBytes": 2902,
+          "unusedDecodedBytes": null,
+          "startMs": 1632,
+          "durationMs": 178
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/media/vignette-48.webp",
+          "resourceType": "image",
+          "transferredBytes": 3039,
+          "decodedBytes": 3039,
+          "unusedDecodedBytes": null,
+          "startMs": 1654,
+          "durationMs": 231
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/media/vignette-49.webp",
+          "resourceType": "image",
+          "transferredBytes": 3176,
+          "decodedBytes": 3176,
+          "unusedDecodedBytes": null,
+          "startMs": 1676,
+          "durationMs": 144
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/media/vignette-50.webp",
+          "resourceType": "image",
+          "transferredBytes": 3313,
+          "decodedBytes": 3313,
+          "unusedDecodedBytes": null,
+          "startMs": 1698,
+          "durationMs": 197
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/media/vignette-51.webp",
+          "resourceType": "image",
+          "transferredBytes": 3450,
+          "decodedBytes": 3450,
+          "unusedDecodedBytes": null,
+          "startMs": 1720,
+          "durationMs": 250
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/media/vignette-52.webp",
+          "resourceType": "image",
+          "transferredBytes": 3587,
+          "decodedBytes": 3587,
+          "unusedDecodedBytes": null,
+          "startMs": 1742,
+          "durationMs": 163
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/media/vignette-53.webp",
+          "resourceType": "image",
+          "transferredBytes": 3724,
+          "decodedBytes": 3724,
+          "unusedDecodedBytes": null,
+          "startMs": 1764,
+          "durationMs": 216
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/media/vignette-54.webp",
+          "resourceType": "image",
+          "transferredBytes": 2061,
+          "decodedBytes": 2061,
+          "unusedDecodedBytes": null,
+          "startMs": 1786,
+          "durationMs": 129
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/media/vignette-55.webp",
+          "resourceType": "image",
+          "transferredBytes": 2198,
+          "decodedBytes": 2198,
+          "unusedDecodedBytes": null,
+          "startMs": 1808,
+          "durationMs": 182
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/media/vignette-56.webp",
+          "resourceType": "image",
+          "transferredBytes": 2335,
+          "decodedBytes": 2335,
+          "unusedDecodedBytes": null,
+          "startMs": 1830,
+          "durationMs": 235
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/media/vignette-57.webp",
+          "resourceType": "image",
+          "transferredBytes": 2472,
+          "decodedBytes": 2472,
+          "unusedDecodedBytes": null,
+          "startMs": 1852,
+          "durationMs": 148
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/media/vignette-58.webp",
+          "resourceType": "image",
+          "transferredBytes": 2609,
+          "decodedBytes": 2609,
+          "unusedDecodedBytes": null,
+          "startMs": 1874,
+          "durationMs": 201
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/media/vignette-59.webp",
+          "resourceType": "image",
+          "transferredBytes": 2746,
+          "decodedBytes": 2746,
+          "unusedDecodedBytes": null,
+          "startMs": 1896,
+          "durationMs": 254
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/media/vignette-60.webp",
+          "resourceType": "image",
+          "transferredBytes": 2883,
+          "decodedBytes": 2883,
+          "unusedDecodedBytes": null,
+          "startMs": 1918,
+          "durationMs": 167
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/media/vignette-61.webp",
+          "resourceType": "image",
+          "transferredBytes": 3020,
+          "decodedBytes": 3020,
+          "unusedDecodedBytes": null,
+          "startMs": 1940,
+          "durationMs": 220
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/media/vignette-62.webp",
+          "resourceType": "image",
+          "transferredBytes": 3157,
+          "decodedBytes": 3157,
+          "unusedDecodedBytes": null,
+          "startMs": 1962,
+          "durationMs": 133
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/media/vignette-63.webp",
+          "resourceType": "image",
+          "transferredBytes": 3294,
+          "decodedBytes": 3294,
+          "unusedDecodedBytes": null,
+          "startMs": 1984,
+          "durationMs": 186
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/media/vignette-64.webp",
+          "resourceType": "image",
+          "transferredBytes": 3431,
+          "decodedBytes": 3431,
+          "unusedDecodedBytes": null,
+          "startMs": 2006,
+          "durationMs": 239
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/media/vignette-65.webp",
+          "resourceType": "image",
+          "transferredBytes": 3568,
+          "decodedBytes": 3568,
+          "unusedDecodedBytes": null,
+          "startMs": 2028,
+          "durationMs": 152
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/media/vignette-66.webp",
+          "resourceType": "image",
+          "transferredBytes": 3705,
+          "decodedBytes": 3705,
+          "unusedDecodedBytes": null,
+          "startMs": 2050,
+          "durationMs": 205
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/media/vignette-67.webp",
+          "resourceType": "image",
+          "transferredBytes": 2042,
+          "decodedBytes": 2042,
+          "unusedDecodedBytes": null,
+          "startMs": 2072,
+          "durationMs": 258
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/media/vignette-68.webp",
+          "resourceType": "image",
+          "transferredBytes": 2179,
+          "decodedBytes": 2179,
+          "unusedDecodedBytes": null,
+          "startMs": 2094,
+          "durationMs": 171
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/media/vignette-69.webp",
+          "resourceType": "image",
+          "transferredBytes": 2316,
+          "decodedBytes": 2316,
+          "unusedDecodedBytes": null,
+          "startMs": 2116,
+          "durationMs": 224
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/media/vignette-70.webp",
+          "resourceType": "image",
+          "transferredBytes": 2453,
+          "decodedBytes": 2453,
+          "unusedDecodedBytes": null,
+          "startMs": 2138,
+          "durationMs": 137
+        },
+        {
+          "url": "https://sevre-et-loire.fr/assets/media/vignette-71.webp",
+          "resourceType": "image",
+          "transferredBytes": 9145,
+          "decodedBytes": 9145,
+          "unusedDecodedBytes": null,
+          "startMs": 2160,
+          "durationMs": 190
+        }
+      ],
+      "requestCount": 84,
+      "domNodeCountAtLoad": 2062,
+      "domNodeCountAtNetworkIdle": 2140,
+      "jsExecutionMs": 612
+    }
   },
   {
     "id": "journey",
@@ -779,11 +1546,11 @@ export const measurementCanon = {
         "max": 232000,
         "sampleCount": 5,
         "runValues": [
-          226000,
-          220000,
           229000,
-          223300,
-          232000
+          220000,
+          226000,
+          232000,
+          223300
         ],
         "floor": {
           "status": "established",
@@ -798,23 +1565,23 @@ export const measurementCanon = {
       {
         "metricId": "third_party_share_pct",
         "unit": "pct",
-        "median": 18.120590121872997,
-        "mad": 0.08290749338932457,
+        "median": 17.965023847376788,
+        "mad": 0.3961050814237268,
         "min": 17.160686427457097,
-        "max": 18.26771653543307,
+        "max": 18.80064829821718,
         "sampleCount": 5,
         "runValues": [
-          18.120590121872997,
+          18.361128928800515,
           17.160686427457097,
-          18.20349761526232,
-          18.095623987034035,
-          18.26771653543307
+          17.965023847376788,
+          18.80064829821718,
+          17.58267716535433
         ],
         "floor": {
           "status": "established",
           "metricId": "third_party_share_pct",
           "unit": "pct",
-          "value": 0.10071221947615569,
+          "value": 0.4814881464749618,
           "sampleCount": 24,
           "scalingFactor": 1.2
         },
@@ -897,6 +1664,12 @@ export const measurementCanon = {
     sampleCount: number;
     fingerprintStable: boolean;
     metrics: readonly CanonMetric[];
+    /**
+     * the median run's capture, where a surface renders its inventory. absent
+     * on an aggregate over several pages, which has no single capture, and on
+     * one nothing shows an inventory for.
+     */
+    capture?: RawCapture;
   }>,
 } as const;
 

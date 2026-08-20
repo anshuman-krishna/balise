@@ -58,3 +58,32 @@ export function getAggregatedMetric(
 ): AggregatedMetric | undefined {
   return aggregate.metrics.find((m) => m.metricId === metricId);
 }
+
+/**
+ * the run whose value for `metricId` is the median.
+ *
+ * an aggregate describes n runs and holds no capture of its own, so anything
+ * that has to show one page (a resource inventory, a waterfall, a screenshot)
+ * has to name a run. this is the one that sits on the reported median.
+ *
+ * null when the median falls between two runs, which is every even run count:
+ * no capture recorded that page, and picking the nearer of the two would put
+ * an inventory under a figure it does not add up to.
+ */
+export function medianRunIndex(
+  runs: readonly MetricSet[],
+  metricId: MetricId,
+): number | null {
+  const found = runs.map((run, index) => ({
+    index,
+    value: run.values.find((value) => value.metricId === metricId)?.value,
+  }));
+  if (found.some((entry) => entry.value === undefined)) {
+    throw new Error(`metric ${metricId} missing from a run; missing data is never imputed`);
+  }
+  if (found.length === 0 || found.length % 2 === 0) {
+    return null;
+  }
+  const sorted = [...found].sort((a, b) => a.value! - b.value!);
+  return sorted[(sorted.length - 1) / 2]!.index;
+}

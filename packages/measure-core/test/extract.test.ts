@@ -1,16 +1,28 @@
 import { describe, expect, it } from 'vitest';
-import type { RawCapture } from '@balise/schemas';
+import type { CapturedResource, RawCapture, ResourceType } from '@balise/schemas';
 import { extractMetrics } from '../src/extract.js';
+
+function res(url: string, transferredBytes: number, resourceType: ResourceType): CapturedResource {
+  return {
+    url,
+    resourceType,
+    transferredBytes,
+    decodedBytes: null,
+    unusedDecodedBytes: null,
+    startMs: null,
+    durationMs: null,
+  };
+}
 
 function capture(overrides: Partial<RawCapture> = {}): RawCapture {
   return {
     serviceOrigin: 'https://sevre-et-loire.fr',
     pass: 'cold',
     resources: [
-      { url: 'https://sevre-et-loire.fr/', transferredBytes: 42_000 },
-      { url: 'https://sevre-et-loire.fr/app.js', transferredBytes: 412_000 },
-      { url: 'https://player.dailymotion.com/player.js', transferredBytes: 198_000 },
-      { url: 'https://matomo.selo.fr/matomo.js', transferredBytes: 72_000 },
+      res('https://sevre-et-loire.fr/', 42_000, 'document'),
+      res('https://sevre-et-loire.fr/app.js', 412_000, 'script'),
+      res('https://player.dailymotion.com/player.js', 198_000, 'media'),
+      res('https://matomo.selo.fr/matomo.js', 72_000, 'script'),
     ],
     requestCount: 84,
     domNodeCountAtLoad: 2_050,
@@ -41,8 +53,8 @@ describe('extractMetrics', () => {
     const result = extractMetrics(
       capture({
         resources: [
-          { url: 'https://sevre-et-loire.fr/', transferredBytes: 100 },
-          { url: 'https://cdn.sevre-et-loire.fr/a.js', transferredBytes: 50 },
+          res('https://sevre-et-loire.fr/', 100, 'document'),
+          res('https://cdn.sevre-et-loire.fr/a.js', 50, 'script'),
         ],
       }),
     );
@@ -53,8 +65,8 @@ describe('extractMetrics', () => {
     const result = extractMetrics(
       capture({
         resources: [
-          { url: 'https://sevre-et-loire.fr/', transferredBytes: 100 },
-          { url: 'data:image/png;base64,AAAA', transferredBytes: 10 },
+          res('https://sevre-et-loire.fr/', 100, 'document'),
+          res('data:image/png;base64,AAAA', 10, 'image'),
         ],
       }),
     );

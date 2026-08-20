@@ -1,4 +1,4 @@
-import type { AttributedResource } from '@balise/schemas';
+import type { AttributedResource, RawCapture } from '@balise/schemas';
 import {
   attribute,
   attributeBundle,
@@ -7,6 +7,14 @@ import {
   type AttributionSide,
   type GitPort,
 } from '@balise/attribution';
+import {
+  BASELINE_BUNDLE,
+  BASELINE_CAPTURE,
+  CANDIDATE_BUNDLE,
+  CANDIDATE_CAPTURE,
+  DAILYMOTION,
+  ROUTE,
+} from './capture-canon-source';
 
 /**
  * the canon's regression, as an actual pair of bundles with actual source maps
@@ -14,17 +22,12 @@ import {
  * screen shows is computed by @balise/attribution from these two builds.
  *
  * deterministic by construction: fixed sizes, fixed content, fixed commit. the
- * resource lists sum to the transferred medians the comparison fixture already
- * carries (1 114 000 and 1 298 000 bytes, 82 and 84 requests), so the
- * attribution card and the metric table above it describe the same two runs.
+ * resource lists are not restated here: both sides read the captures in
+ * capture-canon-source, so the attribution card and the metric table above it
+ * are two readings of one pair of runs.
  */
 
-const ORIGIN = 'https://sevre-et-loire.fr';
-export const ROUTE = '/demarches/acte-naissance';
-
-const BASELINE_BUNDLE = `${ORIGIN}/assets/vendor-dates.a91b.js`;
-const CANDIDATE_BUNDLE = `${ORIGIN}/assets/vendor-dates.c40e.js`;
-const DAILYMOTION = 'https://player.dailymotion.com/embed.js';
+export { ROUTE } from './capture-canon-source';
 
 // ---------------------------------------------------------------------------
 // the two builds
@@ -152,78 +155,30 @@ export const CANDIDATE_BUILD = build(CANDIDATE_BUNDLE, CANDIDATE_MODULES, PRELUD
 // the two runs, as the runner recorded them
 // ---------------------------------------------------------------------------
 
-const BASELINE_TRANSFERRED = 1_114_000;
-const CANDIDATE_TRANSFERRED = 1_298_000;
-const BASELINE_REQUESTS = 82;
-const CANDIDATE_REQUESTS = 84;
-
-interface Named {
-  url: string;
-  transferredBytes: number;
-  decodedBytes?: number;
-}
-
-const SHARED: readonly Named[] = [
-  { url: `${ORIGIN}${ROUTE}`, transferredBytes: 42_000, decodedBytes: 186_000 },
-  { url: `${ORIGIN}/assets/app.9d1e.css`, transferredBytes: 38_000, decodedBytes: 214_000 },
-  { url: `${ORIGIN}/assets/app.7c2f.js`, transferredBytes: 122_000, decodedBytes: 402_000 },
-  { url: `${ORIGIN}/assets/fonts/martian-mono.woff2`, transferredBytes: 62_000 },
-  { url: `${ORIGIN}/assets/fonts/public-sans.woff2`, transferredBytes: 62_000 },
-  { url: `${ORIGIN}/assets/fonts/archivo-expanded.woff2`, transferredBytes: 62_000 },
-  { url: 'https://geo.api.gouv.fr/communes?code=44', transferredBytes: 12_000 },
-  { url: 'https://matomo.selo.fr/matomo.js', transferredBytes: 72_000 },
-  { url: 'https://tarteaucitron.io/load.js', transferredBytes: 96_000 },
-];
-
-/** the long tail of icons and thumbnails, deterministic and summing exactly. */
-function tail(count: number, total: number): AttributedResource[] {
-  const sizes: number[] = [];
-  let running = 0;
-  for (let index = 0; index < count; index += 1) {
-    const size = 2_000 + ((index * 137) % 1_800);
-    sizes.push(size);
-    running += size;
-  }
-  // the last item absorbs the difference, so the run total matches the median
-  // the comparison fixture already publishes.
-  sizes[count - 1] = sizes[count - 1]! + (total - running);
-  return sizes.map((transferredBytes, index) => ({
-    url: `${ORIGIN}/assets/media/vignette-${String(index + 1).padStart(2, '0')}.webp`,
-    transferredBytes,
+/**
+ * attribution sees a subset of a capture: a url, what crossed the wire, and the
+ * decoded size where the capture holds one, because a source map explains
+ * decoded bytes and never transferred ones. the type, the coverage and the
+ * timing stay on the capture, which is where the inventory reads them.
+ */
+function attributed(capture: RawCapture): AttributedResource[] {
+  return capture.resources.map((resource) => ({
+    url: resource.url,
+    transferredBytes: resource.transferredBytes,
+    ...(resource.decodedBytes === null ? {} : { decodedBytes: resource.decodedBytes }),
   }));
 }
 
-function side(build: Build, extras: readonly Named[], requests: number, transferred: number): AttributionSide {
-  const named = [...SHARED, ...extras];
-  const namedTotal = named.reduce((sum, resource) => sum + resource.transferredBytes, 0);
+function side(capture: RawCapture, build: Build): AttributionSide {
   return {
-    serviceOrigin: ORIGIN,
-    resources: [...named, ...tail(requests - named.length, transferred - namedTotal)],
+    serviceOrigin: capture.serviceOrigin,
+    resources: attributed(capture),
     bundles: [{ url: build.url, content: build.content, sourceMap: build.sourceMap }],
   };
 }
 
-export const BASELINE_SIDE = side(
-  BASELINE_BUILD,
-  [
-    { url: BASELINE_BUNDLE, transferredBytes: 96_000, decodedBytes: 286_000 },
-    { url: `${ORIGIN}/assets/media/hero.jpg`, transferredBytes: 240_000 },
-  ],
-  BASELINE_REQUESTS,
-  BASELINE_TRANSFERRED,
-);
-
-export const CANDIDATE_SIDE = side(
-  CANDIDATE_BUILD,
-  [
-    { url: CANDIDATE_BUNDLE, transferredBytes: 157_000, decodedBytes: 470_000 },
-    { url: `${ORIGIN}/assets/media/hero.webp`, transferredBytes: 165_000 },
-    { url: DAILYMOTION, transferredBytes: 176_000 },
-    { url: 'https://player.dailymotion.com/poster/x8k2p1.jpg', transferredBytes: 22_000 },
-  ],
-  CANDIDATE_REQUESTS,
-  CANDIDATE_TRANSFERRED,
-);
+export const BASELINE_SIDE = side(BASELINE_CAPTURE, BASELINE_BUILD);
+export const CANDIDATE_SIDE = side(CANDIDATE_CAPTURE, CANDIDATE_BUILD);
 
 // ---------------------------------------------------------------------------
 // the repository, as blame is allowed to see it
