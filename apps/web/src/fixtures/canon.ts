@@ -442,7 +442,8 @@ export type ContractStatus = 'tenu' | 'atRisk' | 'aJour';
 export interface ContractRow {
   label: string;
   seuil: string;
-  actuel: string;
+  /** null when the figure is read off the assessments rather than typed. */
+  actuel: string | null;
   actuelTone?: 'caution';
   // gauge rows have a bar; the quarterly row shows delivery squares instead
   headroom?: { barPct: number; tone: 'ok' | 'caution'; labelPct?: number; ptToGo?: number };
@@ -481,10 +482,13 @@ export const contractFixture = {
     {
       label: 'Taux de conformité RGESN à 12 mois',
       seuil: '75%',
-      actuel: '59%',
+      // null is the derived row: the rate and the headroom come from the
+      // assessments, so the tracker and the report cannot state two rates.
+      actuel: null,
       actuelTone: 'caution',
-      headroom: { barPct: 79, tone: 'caution', ptToGo: 16 },
-      trendPoints: '2,15 16,14 30,13 44,12 58,11 72,11 86,10 108,10',
+      headroom: { barPct: 0, tone: 'caution', ptToGo: 0 },
+      // no conformity history is held yet, so no line is drawn from one.
+      trendPoints: '',
       trendTone: 'caution',
       status: 'atRisk',
       rowTint: 'caution',
@@ -499,17 +503,11 @@ export const contractFixture = {
       status: 'aJour',
     },
   ] as readonly ContractRow[],
-  // the early warning is engine analysis, kept as data
-  earlyWarningParts: [
-    { text: 'Conformity is rising at ' },
-    { text: '1.9 pt/month', mono: true },
-    { text: '. At that rate you reach ' },
-    { text: '70%', mono: true },
-    { text: ' by the 12-month review, not 75%.' },
-  ] as ReadonlyArray<{ text: string; mono?: boolean }>,
-  earlyWarningDetail:
-    'The 14 unassessed declarative criteria are the whole gap. Assigning them closes 11 points without touching the code.',
-  unassessedCount: 14,
+  // the contractual conformity target, which the row and the warning under it
+  // are both measured against.
+  conformityTargetPct: 75,
+  /** the review the conformity target is measured at, not the contract length. */
+  conformityReviewMonths: 12,
   calendar: [
     { date: '30 SEP 26', label: "Rapport d'exécution Q3", days: 45, urgent: true },
     { date: '31 DEC 26', label: "Rapport d'exécution Q4", days: 137 },

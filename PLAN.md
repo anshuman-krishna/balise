@@ -239,6 +239,13 @@ Later versions: see roadmap; detailed to-dos are appended when the version start
 
 ## Decisions log
 
+- **2026-08-20 · The contract tracker states a ceiling, never a rate of rise.** Its early
+  warning read "conformity is rising at 1.9 pt/month", extrapolated from history nothing
+  holds, and named 14 unassessed declarative criteria where the engine finds 3. It now says
+  what is measurable: the rate today, what answering the open criteria can reach at best,
+  and how far short of the target that leaves you. The 90-day trend cell on that row reads
+  "no history" rather than drawing a line, because the two would have contradicted each
+  other on one screen.
 - **2026-08-20 · The criteria canon answers the pack; it does not describe an answer.**
   The workspace ran on fourteen hand-written rows whose tier split (31 automated) the real
   pack contradicts (9). The generator now hands the engine a measured metric set and the

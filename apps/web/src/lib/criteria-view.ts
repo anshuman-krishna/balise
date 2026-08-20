@@ -200,3 +200,45 @@ export function nonConformeRows(): NonConformeRow[] {
     .filter((row) => row.status === 'non_conforme')
     .map((row) => ({ id: row.id, statementFr: row.statementFr, justification: row.justification }));
 }
+
+export interface ConformityOutlook {
+  /** the rate today, over applicable criteria. */
+  currentPct: number;
+  /** criteria nobody has answered yet. */
+  unanswered: number;
+  /**
+   * the rate if every one of those came back conforme. a ceiling, not a
+   * forecast: it is what answering the open criteria can reach at best, and
+   * nothing here extrapolates a rate of change from history we do not have.
+   */
+  ceilingPct: number;
+  /** conforme answers a target needs, over the same applicable count. */
+  neededForTarget: number;
+  /** how many of those the ceiling still leaves to find in the answers. */
+  shortOfTarget: number;
+  applicable: number;
+}
+
+/**
+ * what a contractual conformity target can and cannot be reached with. the
+ * point of the ceiling is that it usually is not enough: a target missed by
+ * more than the open criteria can supply is a target that needs the code to
+ * change, not the paperwork.
+ */
+export function conformityOutlook(targetPct: number): ConformityOutlook {
+  const applicable: number = criteriaCanon.completion.applicable;
+  const conforme: number = criteriaCanon.completion.conforme;
+  const unanswered: number = criteriaCanon.byStatus.non_evalue;
+
+  const ceiling = conforme + unanswered;
+  const needed = Math.ceil((targetPct / 100) * applicable);
+
+  return {
+    currentPct: conformityPct(),
+    unanswered,
+    ceilingPct: applicable === 0 ? 0 : Math.round((ceiling / applicable) * 100),
+    neededForTarget: needed,
+    shortOfTarget: Math.max(0, needed - ceiling),
+    applicable,
+  };
+}

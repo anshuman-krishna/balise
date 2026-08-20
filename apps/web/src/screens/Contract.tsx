@@ -1,5 +1,24 @@
 import { fill, t } from '../i18n';
 import { contractFixture as contract, type ContractRow, type ContractStatus } from '../fixtures/canon';
+import { conformityOutlook, conformityPct } from '../lib/criteria-view';
+
+// the conformity engagement is read off the assessments, and so is the warning
+// under it. nothing here draws a rate of change: the ceiling is what answering
+// the open criteria can reach, which is a fact, not a forecast.
+const outlook = conformityOutlook(contract.conformityTargetPct);
+const rows: ContractRow[] = contract.rows.map((row) =>
+  row.actuel !== null
+    ? row
+    : {
+        ...row,
+        actuel: `${conformityPct()}%`,
+        headroom: {
+          tone: 'caution',
+          barPct: Math.min(100, (outlook.currentPct / contract.conformityTargetPct) * 100),
+          ptToGo: Math.max(0, contract.conformityTargetPct - outlook.currentPct),
+        },
+      },
+);
 
 const GRID = 'minmax(200px,1.6fr) 92px 92px minmax(130px,1fr) 118px 84px';
 
@@ -57,6 +76,15 @@ function TrendCell({ row }: { row: ContractRow }) {
           ),
         )}
       </svg>
+    );
+  }
+  // no points is no history, and a trend drawn from nothing is the one thing
+  // this screen must not do. the cell says so instead of drawing a line.
+  if (row.trendPoints === '') {
+    return (
+      <span className="mono" style={{ fontSize: 9.5, color: 'var(--text-tertiary)' }}>
+        {t.contract.noHistory}
+      </span>
     );
   }
   const stroke = row.trendTone === 'caution' ? 'var(--caution)' : 'var(--text-secondary)';
@@ -121,7 +149,7 @@ export function Contract() {
             </span>
           ))}
         </div>
-        {contract.rows.map((row) => (
+        {rows.map((row) => (
           <div
             key={row.label}
             style={{
@@ -159,22 +187,31 @@ export function Contract() {
           <span className="eyebrow">{t.contract.earlyWarningTitle}</span>
           <div className="left-rule caution" style={{ marginTop: 13, paddingLeft: 12 }}>
             <div style={{ fontSize: 12.5, lineHeight: 1.55 }}>
-              {contract.earlyWarningParts.map((part, index) =>
-                part.mono === true ? (
-                  <span key={index} className="mono" style={{ fontSize: 11 }}>
-                    {part.text}
-                  </span>
-                ) : (
-                  <span key={index}>{part.text}</span>
-                ),
-              )}
+              {fill(t.contract.earlyWarning.rate, {
+                current: outlook.currentPct,
+                target: contract.conformityTargetPct,
+                months: contract.conformityReviewMonths,
+              })}{' '}
+              {fill(t.contract.earlyWarning.ceiling, {
+                unanswered: outlook.unanswered,
+                ceiling: outlook.ceilingPct,
+              })}
             </div>
             <div style={{ marginTop: 7, fontSize: 11, lineHeight: 1.6, color: 'var(--text-secondary)' }}>
-              {contract.earlyWarningDetail}
+              {outlook.shortOfTarget === 0
+                ? t.contract.earlyWarning.reached
+                : fill(t.contract.earlyWarning.short, {
+                    needed: outlook.neededForTarget,
+                    applicable: outlook.applicable,
+                    short: outlook.shortOfTarget,
+                  })}
+            </div>
+            <div className="mono" style={{ marginTop: 7, fontSize: 9.5, lineHeight: 1.55, color: 'var(--text-tertiary)' }}>
+              {t.contract.earlyWarning.noExtrapolation}
             </div>
           </div>
           <button type="button" className="btn" style={{ marginTop: 13, borderColor: 'var(--ink)', color: 'var(--ink)' }}>
-            {fill(t.contract.openCriteria, { count: contract.unassessedCount })}
+            {fill(t.contract.openCriteria, { count: outlook.unanswered })}
           </button>
         </div>
 

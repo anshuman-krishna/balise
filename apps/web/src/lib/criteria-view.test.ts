@@ -3,6 +3,7 @@ import { criteriaCanon } from '../fixtures/criteria-canon';
 import {
   attestedText,
   blockingRows,
+  conformityOutlook,
   conformityPct,
   evidenceText,
   familyBars,
@@ -126,5 +127,34 @@ describe('the surfaces outside the workspace', () => {
     expect(conformityPct()).toBe(59);
     expect(criteriaCanon.completion.conforme).toBe(41);
     expect(criteriaCanon.completion.applicable).toBe(70);
+  });
+});
+
+describe('the conformity outlook', () => {
+  it('reports a ceiling, which is what answering the open criteria can reach', () => {
+    const outlook = conformityOutlook(75);
+    expect(outlook.currentPct).toBe(59);
+    expect(outlook.unanswered).toBe(criteriaCanon.byStatus.non_evalue);
+    // 41 conforme plus the 5 nobody looked at, over 70 applicable.
+    expect(outlook.ceilingPct).toBe(66);
+    expect(outlook.ceilingPct).toBeGreaterThan(outlook.currentPct);
+  });
+
+  it('says how far short of the target the paperwork leaves you', () => {
+    const outlook = conformityOutlook(75);
+    // 75% of 70 applicable is 53 conforme; the ceiling supplies 46.
+    expect(outlook.neededForTarget).toBe(53);
+    expect(outlook.shortOfTarget).toBe(7);
+  });
+
+  it('reports nothing short when the target is inside the ceiling', () => {
+    expect(conformityOutlook(60).shortOfTarget).toBe(0);
+    expect(conformityOutlook(0).shortOfTarget).toBe(0);
+  });
+
+  it('never claims a target beyond what every criterion answered could give', () => {
+    const outlook = conformityOutlook(100);
+    expect(outlook.neededForTarget).toBe(outlook.applicable);
+    expect(outlook.ceilingPct).toBeLessThan(100);
   });
 });

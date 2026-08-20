@@ -501,6 +501,16 @@ export const fr: Catalog = {
     openAnnex: "Ouvrir l'annexe",
   },
   contract: {
+    noHistory: 'pas d\'historique',
+    earlyWarning: {
+      rate: 'La conformité est à {current}%, pour une cible de {target}% à la revue des {months} mois.',
+      ceiling:
+        'Répondre aux {unanswered} critères que personne n\'a examinés, tous conformes, mène à {ceiling}%.',
+      short:
+        'La cible demande {needed} conformes sur {applicable}, soit {short} de plus que ce que peut donner la réponse aux critères ouverts. Cet écart se trouve dans les critères répondus et non conformes.',
+      reached: 'La cible reste atteignable en répondant aux critères ouverts.',
+      noExtrapolation: "Aucune tendance n'en est tirée : une évolution de la conformité demande un historique que le registre ne porte pas encore.",
+    },
     subtitle: 'Marché {ref} · notifié {date} · {months} mois · clause environnementale art. {article}',
     generateReport: 'Générer le rapport {quarter}',
     headers: {

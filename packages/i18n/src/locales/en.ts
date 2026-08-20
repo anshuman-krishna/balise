@@ -499,6 +499,16 @@ export const en = {
     openAnnex: 'Open the annex',
   },
   contract: {
+    noHistory: 'no history',
+    earlyWarning: {
+      rate: 'Conformity is at {current}%, against a {target}% target at the {months}-month review.',
+      ceiling:
+        'Answering the {unanswered} criteria nobody has looked at, every one of them conforme, reaches {ceiling}%.',
+      short:
+        'The target needs {needed} conforme out of {applicable}, which is {short} more than answering the open criteria can give. That gap is in criteria that are answered and not conforme.',
+      reached: 'The target is within what answering the open criteria can reach.',
+      noExtrapolation: 'No rate of change is drawn from this. A conformity trend needs history the ledger does not hold yet.',
+    },
     subtitle: 'Marché {ref} · notifié {date} · {months} months · clause environnementale art. {article}',
     generateReport: 'Generate {quarter} report',
     headers: {
