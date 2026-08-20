@@ -143,8 +143,10 @@ export const en = {
       'Two scales, not one: a model that does not compute the same quantity is not drawn on the same axis. A model that publishes no uncertainty of its own is drawn as a line rather than a band, because an invented width would read as a stated one.',
     dispersionTitle: 'RUN-TO-RUN DISPERSION · N={n}',
     noiseFloorLabel: 'NOISE ±{value} KB',
+    noFloorLabel: 'NO FLOOR ESTABLISHED',
     deltaTimesNoise: 'Δ +{delta} KB · {ratio}× noise',
-    dispersionCaption: 'Real change. MAD {mad} KB, five runs, same fingerprint as baseline.',
+    dispersionCaption:
+      'MAD {baseMad} KB on the baseline, {candMad} KB on the candidate. {runs} runs each side, same fingerprint.',
     baselineRow: 'baseline',
     candidateRow: 'candidate',
     resources: {
@@ -672,7 +674,11 @@ export const en = {
     gradeLabel: 'ECOINDEX',
     gradeScore: '{score}/100',
     bandLabel: 'EMPREINTE PAR VISITE · ÉTENDUE INTER-MODÈLES',
-    confidenceHigh: 'CONFIANCE ÉLEVÉE',
+    confidenceNote: 'CONFIANCE {grade}',
+    // the grade word, in french on both catalogs like the rest of this
+    // surface. `t.confidence` is interface vocabulary and would print
+    // english here the moment the app locale changed.
+    confidenceGrade: { high: 'ÉLEVÉE', medium: 'MOYENNE', low: 'FAIBLE' },
     // the public surfaces are french in both locales.
     provenance: 'médiane {model} · étendue sur {count} modèles · réseau {grid} gCO2e/kWh ({zone})',
     provenanceNoFloor: 'un seul relevé à froid : aucun plancher de bruit établi, aucune tendance affichée',

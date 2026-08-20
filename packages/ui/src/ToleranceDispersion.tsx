@@ -13,9 +13,18 @@ export interface ToleranceDispersionProps {
   candidateRuns: readonly number[];
   baselineMedian: number;
   candidateMedian: number;
-  mad: number;
-  /** the computed noise floor, drawn as a field around the baseline median. */
-  noise: number;
+  /**
+   * each side's own dispersion. two run sets do not share one mad, and drawing
+   * the same box on both would report a spread neither of them measured.
+   */
+  baselineMad: number;
+  candidateMad: number;
+  /**
+   * the computed noise floor, drawn as a field around the baseline median.
+   * null where the history has not established one: a scenario with no floor
+   * draws no field rather than a field of nothing.
+   */
+  noise: number | null;
   scaleMin: number;
   scaleMax: number;
   noiseLabel: string;
@@ -45,7 +54,8 @@ export function ToleranceDispersion(props: ToleranceDispersionProps) {
     candidateRuns,
     baselineMedian,
     candidateMedian,
-    mad,
+    baselineMad,
+    candidateMad,
     noise,
     scaleMin,
     scaleMax,
@@ -68,11 +78,11 @@ export function ToleranceDispersion(props: ToleranceDispersionProps) {
 
   const significant = resolveBandState('breach', deltaClassification) === 'breach';
   const candidateColor = significant ? BAND_COLORS.bandBreach : BAND_COLORS.median;
-  const noiseX1 = x(baselineMedian - noise);
-  const noiseX2 = x(baselineMedian + noise);
+  const noiseX1 = noise === null ? 0 : x(baselineMedian - noise);
+  const noiseX2 = noise === null ? 0 : x(baselineMedian + noise);
   const ticks = tickValues(scaleMin, scaleMax, layout.tickCount);
 
-  const row = (runs: readonly number[], median: number, y: number, color: string) => (
+  const row = (runs: readonly number[], median: number, mad: number, y: number, color: string) => (
     <>
       <line x1={layout.plotLeft} y1={y} x2={layout.plotRight} y2={y} stroke={BAND_COLORS.axis} strokeOpacity=".18" />
       <rect
@@ -106,24 +116,28 @@ export function ToleranceDispersion(props: ToleranceDispersionProps) {
       role="img"
       aria-label={`${baselineRowLabel} against ${candidateRowLabel}: ${deltaLabel}, noise floor ${noiseLabel}`}
     >
-      <rect
-        x={noiseX1}
-        y={layout.noiseY}
-        width={Math.max(0, noiseX2 - noiseX1)}
-        height={layout.noiseHeight}
-        fill={BAND_COLORS.noise}
-        opacity=".1"
-      />
-      <text
-        x={(noiseX1 + noiseX2) / 2}
-        y={layout.noiseY + 12}
-        textAnchor="middle"
-        fill={BAND_COLORS.noise}
-        fontFamily={MONO}
-        fontSize="7.5"
-      >
-        {noiseLabel}
-      </text>
+      {noise === null ? null : (
+        <>
+          <rect
+            x={noiseX1}
+            y={layout.noiseY}
+            width={Math.max(0, noiseX2 - noiseX1)}
+            height={layout.noiseHeight}
+            fill={BAND_COLORS.noise}
+            opacity=".1"
+          />
+          <text
+            x={(noiseX1 + noiseX2) / 2}
+            y={layout.noiseY + 12}
+            textAnchor="middle"
+            fill={BAND_COLORS.noise}
+            fontFamily={MONO}
+            fontSize="7.5"
+          >
+            {noiseLabel}
+          </text>
+        </>
+      )}
 
       <text
         x={layout.plotLeft - 6}
@@ -135,7 +149,7 @@ export function ToleranceDispersion(props: ToleranceDispersionProps) {
       >
         {baselineRowLabel}
       </text>
-      {row(baselineRuns, baselineMedian, layout.baselineY, BAND_COLORS.median)}
+      {row(baselineRuns, baselineMedian, baselineMad, layout.baselineY, BAND_COLORS.median)}
 
       <text
         x={layout.plotLeft - 6}
@@ -147,7 +161,7 @@ export function ToleranceDispersion(props: ToleranceDispersionProps) {
       >
         {candidateRowLabel}
       </text>
-      {row(candidateRuns, candidateMedian, layout.candidateY, candidateColor)}
+      {row(candidateRuns, candidateMedian, candidateMad, layout.candidateY, candidateColor)}
 
       <line
         x1={x(baselineMedian)}

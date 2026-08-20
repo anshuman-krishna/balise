@@ -7,7 +7,7 @@ import { describeKind, formatRecordedAt, toRecordView } from './ledger-view';
 
 describe('describeKind', () => {
   it('names the kind and the one detail that identifies it', () => {
-    expect(describeKind(ledgerEntry(REF.run))).toBe('run · /accueil · mobile-4g');
+    expect(describeKind(ledgerEntry(REF.run))).toBe('run · /demarches/acte-naissance · mobile-4g');
     expect(describeKind(ledgerEntry(REF.report))).toBe('report_generated · T3 2026');
     expect(describeKind(ledgerEntry(REF.declarationV2))).toBe('declaration_version · v2');
     expect(describeKind(ledgerEntry(REF.override))).toBe('budget_override · PR #401');
@@ -33,14 +33,16 @@ describe('formatRecordedAt', () => {
 describe('toRecordView', () => {
   it('reads the recorded values off the run entry', () => {
     const view = toRecordView(ledgerEntry(REF.run));
+    // run #4812 is the candidate on /demarches/acte-naissance, so the register
+    // carries that run's figures and not the service median's.
     expect(view.values).toEqual({
-      transferredKb: formatInt(1258),
-      madKb: '6',
+      transferredKb: formatInt(1298),
+      madKb: '9',
       requests: '84',
       domNodes: formatInt(2140),
-      carbon: '0,076',
-      low: '0,076',
-      high: '0,292',
+      carbon: '0,078',
+      low: '0,078',
+      high: '0,301',
     });
     expect(view.fingerprint).toContain('chromium 127.0.6533.88');
     expect(view.models).toBe('ecoindex@0.1.0 · swd@0.1.0 · onebyte@0.1.0');

@@ -69,3 +69,29 @@ describe('formatMeasuredSigned', () => {
     expect(formatMeasuredSigned(-8.71, 'pct')).toBe('-8.7 pt');
   });
 });
+
+describe('kilobytes under ten', () => {
+  it('keeps a decimal, so two measurements a hundred bytes apart do not read the same', () => {
+    expect(formatMeasured(7_380, 'bytes')).toBe('7.4 KB');
+    expect(formatMeasured(7_490, 'bytes')).toBe('7.5 KB');
+    expect(formatMeasured(4_240, 'bytes')).toBe('4.2 KB');
+  });
+
+  it('drops it above ten, where the decimal is noise on the reading', () => {
+    expect(formatMeasured(10_000, 'bytes')).toBe('10 KB');
+    expect(formatMeasured(842_000, 'bytes')).toBe('842 KB');
+    expect(formatMeasured(1_258_000, 'bytes')).toBe('1 258 KB');
+  });
+
+  it('still writes bytes below a thousand rather than a rounded zero', () => {
+    expect(formatMeasured(840, 'bytes')).toBe('840 B');
+    expect(formatMeasured(120, 'bytes')).toBe('120 B');
+  });
+
+  it('applies the same rule to a signed delta', () => {
+    expect(formatMeasuredSigned(4_240, 'bytes')).toBe('+4.2 KB');
+    expect(formatMeasuredSigned(-4_240, 'bytes')).toBe('-4.2 KB');
+    expect(formatMeasuredSigned(184_000, 'bytes')).toBe('+184 KB');
+    expect(formatMeasuredSigned(-120, 'bytes')).toBe('-120 B');
+  });
+});

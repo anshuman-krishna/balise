@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router';
 import { classifyDelta } from '@balise/measure-core';
-import { formatInt, ToleranceDispersion } from '@balise/ui';
+import { formatInt, formatNumber, ToleranceDispersion } from '@balise/ui';
 import { fill, t } from '../i18n';
 import { runDetailFixture as run } from '../fixtures/canon';
 import { REF, shortHash } from '../fixtures/ledger-refs';
@@ -102,11 +102,16 @@ function DispersionCard() {
           candidateRuns={d.candidateRuns}
           baselineMedian={d.baselineMedian}
           candidateMedian={d.candidateMedian}
-          mad={d.mad}
+          baselineMad={d.baselineMad}
+          candidateMad={d.candidateMad}
           noise={d.noiseKb}
           scaleMin={d.scaleMin}
           scaleMax={d.scaleMax}
-          noiseLabel={fill(t.runDetail.noiseFloorLabel, { value: d.noiseKb })}
+          noiseLabel={
+            d.noiseKb === null
+              ? t.runDetail.noFloorLabel
+              : fill(t.runDetail.noiseFloorLabel, { value: formatNumber(d.noiseKb, 1) })
+          }
           deltaLabel={fill(t.runDetail.deltaTimesNoise, { delta: deltaKb, ratio: noiseRatio })}
           baselineRowLabel={t.runDetail.baselineRow}
           candidateRowLabel={t.runDetail.candidateRow}
@@ -115,7 +120,11 @@ function DispersionCard() {
         />
       </div>
       <p style={{ margin: '10px 0 0', fontSize: 10.5, lineHeight: 1.5, color: 'var(--text-secondary)', maxWidth: '62ch' }}>
-        {fill(t.runDetail.dispersionCaption, { mad: run.dispersion.mad })}
+        {fill(t.runDetail.dispersionCaption, {
+          baseMad: formatNumber(run.dispersion.baselineMad, 1),
+          candMad: formatNumber(run.dispersion.candidateMad, 1),
+          runs: run.dispersion.baselineRuns.length,
+        })}
       </p>
     </div>
   );

@@ -1,5 +1,5 @@
 import { Link } from 'react-router';
-import type { DeltaClassification } from '@balise/schemas';
+import type { Confidence, DeltaClassification } from '@balise/schemas';
 import { classifyDelta } from '@balise/measure-core';
 import { formatInt, formatNumber, formatSigned, ToleranceBand } from '@balise/ui';
 import { fill, t } from '../i18n';
@@ -11,6 +11,7 @@ import {
   referenceModelRef,
   referenceSpecLabel,
 } from '../lib/carbon-view';
+import { confidenceLabel } from '../lib/measurement-view';
 import { VERDICT_COLOR, verdictKeyFor, type VerdictKey } from '../lib/verdict';
 import {
   attributionCoverage,
@@ -41,7 +42,7 @@ function deltaByKind(kind: ComparisonRow['kind'], value: number): string {
 
 interface DisplayRow {
   label: string;
-  lowConfidence: boolean;
+  confidence: Confidence;
   baselineText: string;
   candidateText: string;
   deltaText: string;
@@ -67,7 +68,7 @@ function toDisplayRow(row: ComparisonRow): DisplayRow {
   const spread = Math.max(Math.abs(delta.value) + row.after.mad, floorValue * 2);
   return {
     label: row.label,
-    lowConfidence: row.lowConfidence === true,
+    confidence: row.confidence,
     baselineText: formatByKind(row.kind, row.before.median),
     candidateText: formatByKind(row.kind, row.after.median),
     deltaText: deltaByKind(row.kind, delta.value),
@@ -218,9 +219,14 @@ export function Comparison() {
           >
             <span style={{ fontSize: 11.5 }}>
               {row.label}
-              {row.lowConfidence ? (
-                <span style={{ color: 'var(--caution)', fontSize: 10 }}> △ {t.comparison.lowConf}</span>
-              ) : null}
+              {/* the grade is the kernel's. anything short of high is said on
+                  the row it applies to, in caution, wherever that row appears. */}
+              {row.confidence === 'high' ? null : (
+                <span style={{ color: 'var(--caution)', fontSize: 10 }}>
+                  {' '}
+                  △ {confidenceLabel(row.confidence)}
+                </span>
+              )}
             </span>
             <span className="mono" style={{ fontSize: 10.5, textAlign: 'right' }}>{row.baselineText}</span>
             <span
@@ -246,7 +252,7 @@ export function Comparison() {
               noiseLow={row.band.noiseLow}
               noiseHigh={row.band.noiseHigh}
               referenceModel={referenceModelRef()}
-              confidence={row.lowConfidence ? 'low' : 'high'}
+              confidence={row.confidence}
               state={row.verdict === 'breach' ? 'breach' : 'normal'}
               deltaClassification={row.classification}
               unitLabel={t.comparison.headers.delta}

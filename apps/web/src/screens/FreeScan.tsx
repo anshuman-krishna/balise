@@ -89,8 +89,18 @@ function Result() {
             <span className="mono" style={{ fontSize: 9, color: 'var(--text-secondary)' }}>
               {t.publicScan.bandLabel}
             </span>
-            <span className="mono" style={{ fontSize: 9, color: 'var(--conforme)' }}>
-              {t.publicScan.confidenceHigh}
+            {/* the grade the kernel gave this capture. one cold pass with no
+                history is low confidence, and a public surface saying so is
+                worth more than one that does not. caution, never a pass
+                colour: confidence is not conformity. */}
+            <span
+              className="mono"
+              style={{
+                fontSize: 9,
+                color: scan.confidence === 'high' ? 'var(--text-secondary)' : 'var(--caution)',
+              }}
+            >
+              {fill(t.publicScan.confidenceNote, { grade: t.publicScan.confidenceGrade[scan.confidence] })}
             </span>
           </div>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginTop: 7 }}>

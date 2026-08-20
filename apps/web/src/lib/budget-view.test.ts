@@ -58,8 +58,10 @@ describe('the budgets table', () => {
 
   it('reports the worst scenario a service rule found', () => {
     const share = rows.find((row) => row.metric === 'third-party share');
-    expect(share!.current).toBe('38.7 %');
-    expect(share!.headroom).toBe('-8.7 pt');
+    // the median of the shares the runs measured, not the ratio of two
+    // medians: the share is extracted per run like any other metric.
+    expect(share!.current).toBe('39.1 %');
+    expect(share!.headroom).toBe('-9.1 pt');
   });
 
   it('marks the row an override is holding open', () => {

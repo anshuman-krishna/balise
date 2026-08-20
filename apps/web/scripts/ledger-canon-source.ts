@@ -1,6 +1,7 @@
 import { OrganizationId, type LedgerEntry, type LedgerEntryInput } from '@balise/schemas';
 import { anchor, append, createMemoryStore, verify } from '@balise/ledger';
 import { buildCarbonCanon } from './carbon-canon-source';
+import { canonMetric } from './measurement-canon-source';
 
 /**
  * the canon's register, as an actual chain rather than a set of hashes typed
@@ -20,7 +21,10 @@ export const ORGANIZATION = OrganizationId.parse('org_atelier_sextant');
 // different figure than the run detail would be worth nothing.
 const CARBON = buildCarbonCanon();
 const RUN_PAGE = (() => {
-  const page = CARBON.pages.find((candidate) => candidate.id === 'dashboard');
+  // run #4812 is the candidate on /demarches/acte-naissance: the run the run
+  // detail shows and the pull request check reports on. the register records
+  // that run's own figures, not the service median's.
+  const page = CARBON.pages.find((candidate) => candidate.id === 'candidate');
   if (page === undefined) throw new Error('the carbon canon holds no page for the retained run');
   return page;
 })();
@@ -74,7 +78,7 @@ function finalRunEntry(): Planned {
       refId: `run_${RUN_COUNT}`,
       payload: {
         runId: `#${RUN_COUNT}`,
-        scenario: '/accueil',
+        scenario: '/demarches/acte-naissance',
         profile: 'mobile-4g',
         pass: 'cold',
         runs: 5,
@@ -87,15 +91,15 @@ function finalRunEntry(): Planned {
         },
         models: CARBON.assumptions.map((model) => `${model.id}@${model.version}`),
         metrics: {
-          transferredBytes: 1_258_000,
-          transferredBytesMad: 6_000,
-          requestCount: 84,
-          domNodeCount: 2_140,
+          transferredBytes: canonMetric('candidate', 'transferred_bytes').median,
+          transferredBytesMad: canonMetric('candidate', 'transferred_bytes').mad,
+          requestCount: canonMetric('candidate', 'request_count').median,
+          domNodeCount: canonMetric('candidate', 'dom_node_count').median,
           carbonPerVisitG: RUN_PAGE.band.reference,
           carbonBandLowG: RUN_PAGE.band.low,
           carbonBandHighG: RUN_PAGE.band.high,
         },
-        confidence: 'high',
+        confidence: canonMetric('candidate', 'transferred_bytes').confidence,
       },
     },
   };

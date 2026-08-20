@@ -1,11 +1,4 @@
-import type {
-  AggregatedMetric,
-  AggregatedMetrics,
-  BudgetOverride,
-  MetricId,
-  NoiseFloor,
-} from '@balise/schemas';
-import { METRIC_UNIT } from '@balise/schemas';
+import type { AggregatedMetrics, BudgetOverride, MetricId, NoiseFloor } from '@balise/schemas';
 import type { AttributionSide } from '@balise/attribution';
 import { carbonModels } from '@balise/carbon-models';
 import {
@@ -16,6 +9,7 @@ import {
   type ScenarioMeasurement,
 } from '@balise/budgets';
 import { BASELINE_SIDE, CANDIDATE_SIDE, ROUTE } from './attribution-canon-source';
+import { aggregateFrom, canonMetric } from './measurement-canon-source';
 import { ledgerEntry, REF, shortHash, verifyUrl } from '../src/fixtures/ledger-refs';
 
 /**
@@ -60,21 +54,19 @@ check:
 // the measurements
 // ---------------------------------------------------------------------------
 
-const FLOORS: ReadonlyArray<{ metricId: MetricId; value: number }> = [
-  { metricId: 'transferred_bytes', value: 7_000 },
-  { metricId: 'request_count', value: 1 },
-  { metricId: 'third_party_share_pct', value: 0.5 },
+/**
+ * the floors the budgets are read against, from the service scenario's own
+ * history rather than typed in. a budget that failed on a delta the floor
+ * would have absorbed is the failure mode this removes.
+ */
+const FLOOR_METRICS: readonly MetricId[] = [
+  'transferred_bytes',
+  'request_count',
+  'third_party_share_pct',
 ];
 
 function floors(): NoiseFloor[] {
-  return FLOORS.map((entry) => ({
-    status: 'established',
-    metricId: entry.metricId,
-    unit: METRIC_UNIT[entry.metricId],
-    value: entry.value,
-    sampleCount: 24,
-    scalingFactor: 1.2,
-  }));
+  return FLOOR_METRICS.map((metricId) => canonMetric('service', metricId).floor);
 }
 
 interface Measured {
@@ -85,28 +77,24 @@ interface Measured {
   mad: number;
 }
 
-function metric(metricId: MetricId, median: number, mad: number): AggregatedMetric {
-  return {
-    metricId,
-    unit: METRIC_UNIT[metricId],
-    median,
-    mad,
-    min: median - mad,
-    max: median + mad,
-    sampleCount: 5,
-  };
-}
-
+/**
+ * an aggregation built from runs, through the kernel's own aggregator. the
+ * spread is twice the mad because the run offsets put the mad at half of it,
+ * and the third-party share is divided out of each run rather than declared:
+ * the version of this that typed `min: median - mad` was describing a
+ * distribution no runs produced.
+ */
 function aggregate(measured: Measured): AggregatedMetrics {
-  return {
-    pass: 'cold',
-    sampleCount: 5,
-    metrics: [
-      metric('transferred_bytes', measured.bytes, measured.mad),
-      metric('request_count', measured.requests, 0),
-      metric('third_party_share_pct', (measured.thirdPartyBytes / measured.bytes) * 100, 0.2),
-    ],
-  };
+  const share = measured.thirdPartyBytes / measured.bytes;
+  return aggregateFrom(
+    {
+      transferred_bytes: { centre: measured.bytes, spread: measured.mad * 2 },
+      request_count: { centre: measured.requests, spread: 2, integral: true },
+      third_party_bytes: { centre: measured.thirdPartyBytes, spread: measured.mad * 2 * share },
+    },
+    'cold',
+    5,
+  );
 }
 
 /** the same resource lists the attribution canon runs on, read as metrics. */

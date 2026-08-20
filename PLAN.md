@@ -16,7 +16,35 @@ screenshots, the fidelity source).
 
 ## Current status
 
-**Phase: the criteria workspace answers the pack (2026-08-20).** The workspace ran
+**Phase: every statistic is the kernel's (2026-08-20).** The medians, dispersions, noise
+floors and confidence grades the application prints were typed into fixtures, and five
+generators each fabricated their own. Three of them contradicted the runs printed beside
+them. The run detail drew five run dots and stated a MAD of 9 where those five give 4. The
+comparison marked DOM nodes low confidence where `gradeConfidence` grades them medium. The
+free scan printed "confiance élevée", in green, on a single cold pass with no history, where
+the kernel grades it low.
+
+`pnpm gen:measurement-canon` now builds runs and hands them to `aggregateRuns`,
+`computeNoiseFloor` and `gradeConfidence`. What is authored is a distribution: what a
+scenario settles at, how far its runs spread, how many there were, and how much history sits
+behind it. Everything after that is derived, and a test recomputes the median, the MAD, the
+extremes and the grade from the run values written beside them, so a fixture cannot state a
+statistic its own runs do not give. A floor belongs to a scenario rather than a run, so
+baseline #4790 and candidate #4812 are two aggregations of one route read against one number,
+while each keeps its own dispersion and the dispersion card draws a box per side.
+
+Where the kernel disagrees with the design, the kernel stands. Two extra requests against a
+1.2-request floor is a real change; the pull request did add a bundle. The service's DOM count
+grades medium, not high, and says so on the tile, in the comparison and in the annex. The free
+scan says low confidence in caution rather than high in green. The carbon, budget and ledger
+canons read their byte counts and floors from this one place, so the estimate, the verdict and
+the register describe the same run: the register's entry for #4812 used to name `/accueil` and
+carry the service median's bytes beside the candidate's request count, and the annex's
+measured-state table mixed three different measurements into one page of a tender document.
+Both are one measurement now. `formatMeasured` keeps a decimal under 10 KB, which is what
+stopped one floor reading 7.4 KB on the run detail and 7 KB in the annex. 674 tests.
+
+**Then: the criteria workspace answers the pack (2026-08-20).** The workspace ran
 on fourteen hand-written rows whose tier split, 31 automated, the pack it named
 contradicts at 9. It now runs on the pack itself: `pnpm gen:criteria-canon` hands
 `@balise/criteria-engine` the measured metrics and the two reviewers' attestations
@@ -159,7 +187,14 @@ from the carbon tile; both render now and a test asserts it. 646 tests.
 - [x] ~~Documents (declaration, annexe, rapport) in the print register~~ (V0.5, FIG. 3 goes through the print ToleranceBand; document content french in both locales)
 - [x] ~~Public surfaces (free scan, observatory, ledger verification)~~ (V0.6, `/v/:hash` is a real permalink and the document footers link to it)
 - [x] ~~ToleranceBand trend + dispersion variants~~ (V0.7, moved into packages/ui as ToleranceTrend and ToleranceDispersion, geometry unit-tested, rule 2 enforced in the component)
+- [x] ~~Wire the screens to `aggregateRuns`, `computeNoiseFloor` and `gradeConfidence`~~
+      (`pnpm gen:measurement-canon`; the dashboard tiles, the trend, the run-detail
+      dispersion, the comparison rows, the free scan and the annex's measured-state table
+      all read it, and the carbon, budget and ledger canons take their byte counts and
+      floors from it)
 - [ ] ToleranceBand print register for trend and dispersion (the handoff specifies print for the canonical band only; needed when the Typst pipeline lands)
+- [ ] Confidence renders in the pass colour on the metric tiles. Green is a pass state and
+      a confidence grade is not one; the tokens say so and the tiles predate the rule
 - [ ] Self-hosted font subsetting check (weight budget)
 
 ## To-do: criteria (brought forward from V5)
@@ -230,9 +265,9 @@ from the carbon tile; both render now and a test asserts it. 646 tests.
       rendered one, built from the same assessments and in the interface locale)
 - [ ] Post it: Octokit, check run creation, comment upsert, annotation batches.
       Needs the api and a GitHub App, so it waits on V2
-- [ ] Decide how a measured value under 10 KB is written. `formatMeasured` rounds to whole
-      kilobytes above 1 000 B, so a 4 240 B module reads `4 KB`. Fine at page weights,
-      coarse at module weights, and the placed annotation is the first surface to show one
+- [x] ~~Decide how a measured value under 10 KB is written~~ (one decimal below 10 KB,
+      whole kilobytes above; two significant figures anywhere the unit is kilobytes. the
+      same floor was reading 7.4 KB on the run detail and 7 KB in the annex)
 - [ ] Serve the band svg from the api, so the comment can embed one
       (`bandImageUrl` is already an input and is omitted while nothing serves it)
 - [ ] Record an override as a ledger entry when the api can write one
@@ -267,6 +302,47 @@ Later versions: see roadmap; detailed to-dos are appended when the version start
 ---
 
 ## Decisions log
+
+- **2026-08-20 · Every statistic in the application is one the kernel computed.** Medians,
+  dispersions, noise floors and confidence grades were typed into fixtures, and five
+  generators each fabricated their own. Three of them contradicted the runs printed beside
+  them: the run detail drew five run dots and stated a MAD of 9 where those five give 4, the
+  comparison marked DOM nodes low confidence where `gradeConfidence` grades them medium, and
+  the free scan printed "confiance élevée" in green on a single cold pass with no history,
+  where the kernel grades it low. `pnpm gen:measurement-canon` now builds runs and hands them
+  to `aggregateRuns`, `computeNoiseFloor` and `gradeConfidence`, and everything after that is
+  derived. A test recomputes the median, the MAD, the extremes and the grade from the run
+  values written beside them, so a fixture cannot state a statistic its own runs do not give.
+- **2026-08-20 · What is authored is a distribution, never an aggregate.** The fixture says
+  what a scenario settles at, how far its runs spread, how many there were and how much
+  history sits behind it. It never says what the median is. The runs are shaped rather than
+  random so the file regenerates identically, five per aggregation with the middle one exactly
+  on the centre, because the median run is the capture the run detail and the resource
+  inventory hold and a median falling between two runs would describe a page no capture
+  recorded.
+- **2026-08-20 · A noise floor belongs to a scenario, not to a run.** Baseline #4790 and
+  candidate #4812 are two aggregations of one route, so the comparison reads both against one
+  floor computed from that route's history. Modelling them as two scenarios would have given
+  one route two different floors and made the verdict depend on which side you asked. The
+  candidate's own dispersion still differs from the baseline's, and the dispersion card now
+  draws a box per side rather than one shared MAD.
+- **2026-08-20 · The kernel's verdict stands where it disagrees with the design.** With the
+  floor derived rather than typed, two extra requests on a 1.2-request floor is a real change,
+  where the design canon showed it as no significant change. The pull request did add a
+  bundle. Nothing was widened to put the old verdict back.
+- **2026-08-20 · A measured value under 10 KB keeps a decimal.** `formatMeasured` rounded to
+  whole kilobytes above 1 000 B, so a 7 380 byte floor and a 7 490 byte one both read "7 KB",
+  and the same floor read "7.4 KB" on the run detail and "7 KB" in the annex. One decimal below
+  10 KB, whole kilobytes above, which leaves at least two significant figures anywhere the unit
+  is kilobytes. Closes the open to-do from the check slice.
+- **2026-08-20 · Run #4812's register entry describes run #4812.** The ledger recorded the
+  retained run against `/accueil` carrying the service median's bytes and the candidate's
+  request count, while the run detail that links to it shows `/demarches/acte-naissance`. It
+  now carries that run's own scenario, metrics, dispersion, confidence and estimate.
+- **2026-08-20 · The annex's measured-state table is one measurement.** It mixed the candidate
+  run's request count with the service median's bytes and the baseline's DOM dispersion, and
+  its prose stated a third-party share the row above it did not. All four rows and the sentence
+  now come from the service aggregation.
 
 - **2026-08-20 · Only energy models share the gCO2e band.** EcoIndex reads its figure off
   a score and is blind to the grid and to hosting; SWD v4 and 1byte compute an energy. On

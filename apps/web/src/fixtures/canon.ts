@@ -1,8 +1,39 @@
-import type { AggregatedMetric, MetricId, NoiseFloor, Unit } from '@balise/schemas';
+import type { AggregatedMetric, Confidence, MetricId, NoiseFloor } from '@balise/schemas';
 import { formatInt, formatNumber } from '@balise/ui';
+import {
+  asAggregate,
+  floorValue,
+  kb,
+  metric,
+  runsVaried,
+  trendPoints,
+} from '../lib/measurement-view';
 import { carbonCanon } from './carbon-canon';
 import { elidedHash, groupedHash, REF, shortHash, verifyUrl } from './ledger-refs';
 import { ledgerCanon } from './ledger-canon';
+
+// ---- the measured state, from @balise/measure-core ----
+
+// the service median the dashboard tiles draw. read once here so no tile can
+// state a median, a dispersion or a floor that another tile contradicts.
+const SERVICE_BYTES = metric('service', 'transferred_bytes');
+const SERVICE_DOM = metric('service', 'dom_node_count');
+const SERVICE_SHARE = metric('service', 'third_party_share_pct');
+const SERVICE_REQUESTS = metric('service', 'request_count');
+
+// a floor is null until the history establishes one, and a tile with no floor
+// draws no noise region rather than a region of zero width.
+const SERVICE_BYTES_FLOOR = floorValue(SERVICE_BYTES);
+const SERVICE_DOM_FLOOR = floorValue(SERVICE_DOM);
+const SERVICE_SHARE_FLOOR = floorValue(SERVICE_SHARE);
+
+// the two runs the comparison and the run detail read against each other. both
+// are aggregations of one scenario, so both are measured against its one floor.
+const BASE_BYTES = metric('baseline', 'transferred_bytes');
+const CAND_BYTES = metric('candidate', 'transferred_bytes');
+
+// the free scan: one cold pass on a page nobody has history for.
+const SCAN_DOM = metric('scan', 'dom_node_count');
 
 // ---- the contractual footprint engagement ----
 
@@ -43,6 +74,11 @@ const fr = (text: string): string => text.replace('.', ',');
 // same story until the runner (v1) and the api (v2) replace it with real data.
 // keep the cross-screen arithmetic consistent; the design brief in testing/
 // holds the canon.
+//
+// every median, dispersion, noise floor and confidence grade below is read
+// from the measurement canon, which @balise/measure-core computed from runs.
+// nothing in this file may state a statistic of its own: the version of it
+// that did drew five run dots beside a mad those five runs do not give.
 
 export const canon = {
   tenant: {
@@ -72,32 +108,41 @@ export const canon = {
     methodologyVersion: 'v1.2',
   },
   transferred: {
-    medianKb: 1258,
-    madKb: 6,
-    noiseKb: 7,
+    medianKb: kb(SERVICE_BYTES.median),
+    madKb: kb(SERVICE_BYTES.mad),
+    noiseKb: SERVICE_BYTES_FLOOR === null ? null : kb(SERVICE_BYTES_FLOOR),
+    confidence: SERVICE_BYTES.confidence,
+    // the budget is a threshold someone set, not a measurement.
     budgetKb: 1300,
     scaleMin: 1000,
     scaleMax: 1500,
   },
   thirdParty: {
-    sharePct: 38,
+    sharePct: SERVICE_SHARE.median,
+    // the ceiling the offer committed to. authored, like every threshold.
     commitCeilingPct: 30,
-    bandLow: 36,
-    bandHigh: 40,
+    bandLow: SERVICE_SHARE.median - SERVICE_SHARE.mad,
+    bandHigh: SERVICE_SHARE.median + SERVICE_SHARE.mad,
+    noiseLow: SERVICE_SHARE_FLOOR === null ? null : SERVICE_SHARE.median - SERVICE_SHARE_FLOOR,
+    noiseHigh: SERVICE_SHARE_FLOOR === null ? null : SERVICE_SHARE.median + SERVICE_SHARE_FLOOR,
+    confidence: SERVICE_SHARE.confidence,
     scaleMin: 0,
     scaleMax: 50,
   },
   domNodes: {
-    median: 2140,
-    mad: 78,
-    bandLow: 2062,
-    bandHigh: 2218,
-    noiseLow: 2040,
-    noiseHigh: 2240,
+    median: SERVICE_DOM.median,
+    mad: SERVICE_DOM.mad,
+    bandLow: SERVICE_DOM.median - SERVICE_DOM.mad,
+    bandHigh: SERVICE_DOM.median + SERVICE_DOM.mad,
+    noiseLow: SERVICE_DOM_FLOOR === null ? null : SERVICE_DOM.median - SERVICE_DOM_FLOOR,
+    noiseHigh: SERVICE_DOM_FLOOR === null ? null : SERVICE_DOM.median + SERVICE_DOM_FLOOR,
+    confidence: SERVICE_DOM.confidence,
     scaleMin: 1800,
     scaleMax: 2500,
-    runsVaried: 3,
-    runsTotal: 5,
+    // the reason the grade is not high, said plainly: this many of the runs
+    // behind the median landed somewhere else.
+    runsVaried: runsVaried(SERVICE_DOM),
+    runsTotal: SERVICE_DOM.sampleCount,
   },
   trend: {
     journey: "demande d'acte",
@@ -105,23 +150,10 @@ export const canon = {
     startLabel: '17 JUL',
     endLabel: '15 AUG',
     gridValues: [1250, 1350, 1450],
-    // 14 samples, medians in kb with run dispersion envelope.
-    points: [
-      { median: 1242, low: 1218, high: 1266 },
-      { median: 1238, low: 1212, high: 1264 },
-      { median: 1251, low: 1226, high: 1276 },
-      { median: 1247, low: 1222, high: 1272 },
-      { median: 1244, low: 1219, high: 1269 },
-      { median: 1258, low: 1233, high: 1283 },
-      { median: 1262, low: 1237, high: 1287 },
-      { median: 1255, low: 1230, high: 1280 },
-      { median: 1249, low: 1224, high: 1274 },
-      { median: 1421, low: 1394, high: 1448 },
-      { median: 1418, low: 1391, high: 1445 },
-      { median: 1424, low: 1397, high: 1451 },
-      { median: 1263, low: 1238, high: 1288 },
-      { median: 1258, low: 1233, high: 1283 },
-    ],
+    // the last fourteen aggregations of the journey, medians in kilobytes
+    // inside each aggregation's own run spread. the envelope is measured
+    // dispersion, never a smoothing applied to make the line read better.
+    points: trendPoints('journey', 'transferred_bytes', 14),
     // classification is the kernel's vocabulary, not a drawing instruction:
     // the trend component draws breach only for 'regression'. the two
     // unclassified deploys had no delta measured against them.
@@ -222,21 +254,25 @@ export const runDetailFixture = {
   // record for it here, so it is carried as one group rather than invented
   // row by row.
   remainder: { requests: 76, transferredKb: 2 },
+  // every figure on this card is the aggregate's, including the run dots: the
+  // dispersion drawn is the dispersion of the runs drawn, and the two sides
+  // carry their own mad because two run sets do not share one.
   dispersion: {
-    baselineRuns: [1104, 1110, 1114, 1118, 1123],
-    candidateRuns: [1289, 1294, 1298, 1303, 1307],
-    baselineMedian: 1114,
-    candidateMedian: 1298,
-    mad: 9,
-    noiseKb: 7,
+    baselineRuns: BASE_BYTES.runValues.map(kb),
+    candidateRuns: CAND_BYTES.runValues.map(kb),
+    baselineMedian: kb(BASE_BYTES.median),
+    candidateMedian: kb(CAND_BYTES.median),
+    baselineMad: kb(BASE_BYTES.mad),
+    candidateMad: kb(CAND_BYTES.mad),
+    noiseKb: floorValue(CAND_BYTES) === null ? null : kb(floorValue(CAND_BYTES)!),
     scaleMin: 1080,
     scaleMax: 1330,
     // kernel inputs. the verdict on this card is computed through
     // classifyDelta, never asserted here; the delta and the noise ratio are
     // derived from these at the call site.
-    before: agg('transferred_bytes', 'bytes', 1_114_000, 9_000),
-    after: agg('transferred_bytes', 'bytes', 1_298_000, 9_000),
-    floor: establishedFloor('transferred_bytes', 'bytes', 7_000),
+    before: asAggregate(BASE_BYTES),
+    after: asAggregate(CAND_BYTES),
+    floor: CAND_BYTES.floor,
   },
   fingerprint: [
     { key: 'chromium', value: '127.0.6533.88' },
@@ -251,19 +287,12 @@ export const runDetailFixture = {
 
 // ---- comparison ----
 
-function agg(metricId: MetricId, unit: Unit, median: number, mad: number): AggregatedMetric {
-  return { metricId, unit, median, mad, min: median - 2 * mad, max: median + 2 * mad, sampleCount: 5 };
-}
-
-function establishedFloor(metricId: MetricId, unit: Unit, value: number): NoiseFloor {
-  return { status: 'established', metricId, unit, value, sampleCount: 30, scalingFactor: 1.2 };
-}
-
 export interface ComparisonRow {
   label: string;
   /** display formatting family; raw values stay raw (invariant 6). */
   kind: 'kb' | 'ms' | 'count' | 'g';
-  lowConfidence?: boolean;
+  /** the grade the kernel gave the candidate aggregate, never a hand-set flag. */
+  confidence: Confidence;
   before: AggregatedMetric;
   after: AggregatedMetric;
   floor: NoiseFloor;
@@ -271,43 +300,38 @@ export interface ComparisonRow {
   overThreshold: boolean;
 }
 
+/**
+ * one row of the comparison, built from the two aggregations of the route.
+ * the floor is the scenario's, so both sides are read against one number, and
+ * the confidence grade is the candidate's own.
+ */
+function comparisonRow(
+  label: string,
+  kind: ComparisonRow['kind'],
+  metricId: MetricId,
+  overThreshold: boolean,
+): ComparisonRow {
+  const before = metric('baseline', metricId);
+  const after = metric('candidate', metricId);
+  return {
+    label,
+    kind,
+    confidence: after.confidence,
+    before: asAggregate(before),
+    after: asAggregate(after),
+    floor: after.floor,
+    overThreshold,
+  };
+}
+
 export const comparisonFixture = {
   baseline: { run: '#4790', date: '09 Aug 03:00', branch: 'main' },
   candidate: { run: '#4812', date: '15 Aug 14:02', branch: 'pr/412' },
   rows: [
-    {
-      label: 'Transferred bytes',
-      kind: 'kb',
-      before: agg('transferred_bytes', 'bytes', 1_114_000, 6_000),
-      after: agg('transferred_bytes', 'bytes', 1_298_000, 9_000),
-      floor: establishedFloor('transferred_bytes', 'bytes', 7_000),
-      overThreshold: true,
-    },
-    {
-      label: 'Requests',
-      kind: 'count',
-      before: agg('request_count', 'count', 82, 1),
-      after: agg('request_count', 'count', 84, 1),
-      floor: establishedFloor('request_count', 'count', 2),
-      overThreshold: false,
-    },
-    {
-      label: 'JS execution time',
-      kind: 'ms',
-      before: agg('js_execution_ms', 'ms', 548, 12),
-      after: agg('js_execution_ms', 'ms', 612, 15),
-      floor: establishedFloor('js_execution_ms', 'ms', 30),
-      overThreshold: false,
-    },
-    {
-      label: 'DOM nodes',
-      kind: 'count',
-      lowConfidence: true,
-      before: agg('dom_node_count', 'count', 2_118, 78),
-      after: agg('dom_node_count', 'count', 2_140, 82),
-      floor: establishedFloor('dom_node_count', 'count', 90),
-      overThreshold: false,
-    },
+    comparisonRow('Transferred bytes', 'kb', 'transferred_bytes', true),
+    comparisonRow('Requests', 'count', 'request_count', false),
+    comparisonRow('JS execution time', 'ms', 'js_execution_ms', false),
+    comparisonRow('DOM nodes', 'count', 'dom_node_count', false),
   ] as readonly ComparisonRow[],
   // the attribution card and the third-party diff are computed by
   // @balise/attribution from two builds with real source maps. see
@@ -677,14 +701,40 @@ export const documentsFixture = {
     ],
     // fig. 3 in value space; rendered through the print ToleranceBand so the
     // document figure and the app figure are the same component
+    // the service's measured state, all four rows from the one aggregation.
+    // the version of this table mixed the candidate run's request count with
+    // the service median's bytes and the baseline's dom dispersion, which is
+    // three different measurements printed as one page of a tender document.
     indicators: [
-      { label: 'Octets transférés (froid)', median: `${formatInt(1258)} KB`, mad: '6 KB', conf: 'high' },
-      { label: 'Requêtes HTTP', median: '84', mad: '1', conf: 'high' },
-      { label: 'Nœuds DOM', median: formatInt(2140), mad: '78', conf: 'medium' },
-      { label: 'Part des tiers', median: '38%', mad: '2 pt', conf: 'high' },
-    ] as ReadonlyArray<{ label: string; median: string; mad: string; conf: 'high' | 'medium' }>,
-    ecartsBody:
-      "La part des tiers (38%) dépasse la cible de 30% que nous nous fixons. Le lecteur vidéo de la rubrique actualités en représente 15 points. Son remplacement par une intégration à la demande est planifié au 1er septembre 2026 et figure au chapitre 5 comme engagement daté.",
+      {
+        label: 'Octets transférés (froid)',
+        median: `${formatInt(kb(SERVICE_BYTES.median))} KB`,
+        mad: `${formatInt(kb(SERVICE_BYTES.mad))} KB`,
+        conf: SERVICE_BYTES.confidence,
+      },
+      {
+        label: 'Requêtes HTTP',
+        median: formatInt(SERVICE_REQUESTS.median),
+        mad: formatInt(SERVICE_REQUESTS.mad),
+        conf: SERVICE_REQUESTS.confidence,
+      },
+      {
+        label: 'Nœuds DOM',
+        median: formatInt(SERVICE_DOM.median),
+        mad: formatInt(SERVICE_DOM.mad),
+        conf: SERVICE_DOM.confidence,
+      },
+      {
+        label: 'Part des tiers',
+        median: `${fr(formatNumber(SERVICE_SHARE.median, 1))}%`,
+        mad: `${fr(formatNumber(SERVICE_SHARE.mad, 1))} pt`,
+        conf: SERVICE_SHARE.confidence,
+      },
+    ] as ReadonlyArray<{ label: string; median: string; mad: string; conf: Confidence }>,
+    // the figure in the prose is the one in the table above it. a document
+    // that states a share in a sentence and a different one in a row beside it
+    // is the first thing an auditor pulls on.
+    ecartsBody: `La part des tiers (${fr(formatNumber(SERVICE_SHARE.median, 1))}%) dépasse la cible de 30% que nous nous fixons. Le lecteur vidéo de la rubrique actualités en représente 15 points. Son remplacement par une intégration à la demande est planifié au 1er septembre 2026 et figure au chapitre 5 comme engagement daté.`,
     footerLine1: 'MÉTHODOLOGIE v1.2 · balise.fr/methodologie',
     footerLine2: 'RELEVÉS 03/03/2026 → 15/08/2026 · CHROMIUM 127.0.6533.88',
     hash: elidedHash(REF.run, 12, 4),
@@ -827,7 +877,12 @@ export const scanFixture = {
   profile: 'mobile-4g',
   // the grade, the score and the carbon band are estimated by
   // @balise/carbon-models from this page's held capture: see carbon-canon.ts.
-  confidence: 'high',
+  //
+  // the confidence grade is the kernel's, and on one cold pass with no history
+  // it is low. the version of this that printed "confiance élevée" in green
+  // beside a single run was the clearest case in the app of a screen grading
+  // its own measurement.
+  confidence: SCAN_DOM.confidence,
   // findings are engine output, kept as data like the attribution parts
   findings: [
     {
@@ -841,7 +896,7 @@ export const scanFixture = {
       text: 'Deux familles de polices chargées, six graisses, aucune sous-classée.',
     },
     {
-      amount: formatInt(1830),
+      amount: formatInt(SCAN_DOM.median),
       tone: 'caution',
       text: 'Nœuds DOM : le seuil EcoIndex à partir duquel la note décroche.',
     },

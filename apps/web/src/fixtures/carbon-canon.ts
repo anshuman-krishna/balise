@@ -133,9 +133,9 @@ export const carbonCanon = {
       "modelCount": 2
     },
     "noise": {
-      "low": 0.077651068,
-      "high": 0.07849314,
-      "floorBytes": 7000
+      "low": 0.07762821176000001,
+      "high": 0.07851599624,
+      "floorBytes": 7380
     },
     "inBand": [
       {
@@ -201,7 +201,7 @@ export const carbonCanon = {
     "metrics": {
       "transferredBytes": 1114000,
       "requestCount": 82,
-      "domNodeCount": 2100
+      "domNodeCount": 2118
     },
     "band": {
       "low": 0.06700487200000001,
@@ -210,9 +210,9 @@ export const carbonCanon = {
       "modelCount": 2
     },
     "noise": {
-      "low": 0.066583836,
-      "high": 0.067425908,
-      "floorBytes": 7000
+      "low": 0.06656097976,
+      "high": 0.06744876424,
+      "floorBytes": 7380
     },
     "inBand": [
       {
@@ -259,14 +259,14 @@ export const carbonCanon = {
         "specVersion": "1.0",
         "method": "score-derived",
         "gridSensitive": false,
-        "value": 2.406919790884894,
+        "value": 2.4082472245132123,
         "unit": "gCO2e",
         "low": null,
         "high": null,
-        "score": 29.654010455755312,
+        "score": 29.587638774339382,
         "grade": "E",
         "notes": [
-          "EcoIndex score 29.65 / 100, grade E"
+          "EcoIndex score 29.59 / 100, grade E"
         ],
         "isReference": false
       }
@@ -287,9 +287,9 @@ export const carbonCanon = {
       "modelCount": 2
     },
     "noise": {
-      "low": 0.075245148,
-      "high": 0.07608722000000001,
-      "floorBytes": 7000
+      "low": 0.07522229176,
+      "high": 0.07611007623999999,
+      "floorBytes": 7380
     },
     "inBand": [
       {

@@ -142,9 +142,10 @@ export const fr: Catalog = {
       "Deux échelles, pas une : un modèle qui ne calcule pas la même grandeur n'est pas tracé sur le même axe. Un modèle qui ne publie aucune incertitude est tracé en trait, pas en bande, car une largeur inventée se lirait comme une largeur déclarée.",
     dispersionTitle: 'DISPERSION INTER-RELEVÉS · N={n}',
     noiseFloorLabel: 'BRUIT ±{value} KO',
+    noFloorLabel: 'PLANCHER NON ÉTABLI',
     deltaTimesNoise: 'Δ +{delta} KO · {ratio}× le bruit',
     dispersionCaption:
-      'Changement réel. MAD {mad} Ko, cinq relevés, même empreinte que la base.',
+      'MAD {baseMad} Ko sur la base, {candMad} Ko sur le candidat. {runs} relevés de chaque côté, même empreinte.',
     baselineRow: 'base',
     candidateRow: 'candidat',
     resources: {
@@ -669,7 +670,11 @@ export const fr: Catalog = {
     gradeLabel: 'ECOINDEX',
     gradeScore: '{score}/100',
     bandLabel: 'EMPREINTE PAR VISITE · ÉTENDUE INTER-MODÈLES',
-    confidenceHigh: 'CONFIANCE ÉLEVÉE',
+    confidenceNote: 'CONFIANCE {grade}',
+    // the grade word, in french on both catalogs like the rest of this
+    // surface. `t.confidence` is interface vocabulary and would print
+    // english here the moment the app locale changed.
+    confidenceGrade: { high: 'ÉLEVÉE', medium: 'MOYENNE', low: 'FAIBLE' },
     // the public surfaces are french in both locales.
     provenance: 'médiane {model} · étendue sur {count} modèles · réseau {grid} gCO2e/kWh ({zone})',
     provenanceNoFloor: 'un seul relevé à froid : aucun plancher de bruit établi, aucune tendance affichée',

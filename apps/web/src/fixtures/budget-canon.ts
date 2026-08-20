@@ -220,7 +220,7 @@ export const budgetCanon: BudgetCanon = {
             "status": "established",
             "metricId": "transferred_bytes",
             "unit": "bytes",
-            "value": 7000,
+            "value": 7380,
             "sampleCount": 24,
             "scalingFactor": 1.2
         },
@@ -261,7 +261,7 @@ export const budgetCanon: BudgetCanon = {
             "status": "established",
             "metricId": "transferred_bytes",
             "unit": "bytes",
-            "value": 7000,
+            "value": 7380,
             "sampleCount": 24,
             "scalingFactor": 1.2
         },
@@ -298,7 +298,7 @@ export const budgetCanon: BudgetCanon = {
             "status": "established",
             "metricId": "request_count",
             "unit": "count",
-            "value": 1,
+            "value": 1.2,
             "sampleCount": 24,
             "scalingFactor": 1.2
         },
@@ -339,7 +339,7 @@ export const budgetCanon: BudgetCanon = {
             "status": "established",
             "metricId": "transferred_bytes",
             "unit": "bytes",
-            "value": 7000,
+            "value": 7380,
             "sampleCount": 24,
             "scalingFactor": 1.2
         },
@@ -388,7 +388,7 @@ export const budgetCanon: BudgetCanon = {
             "status": "established",
             "metricId": "transferred_bytes",
             "unit": "bytes",
-            "value": 7000,
+            "value": 7380,
             "sampleCount": 24,
             "scalingFactor": 1.2
         },
@@ -424,14 +424,14 @@ export const budgetCanon: BudgetCanon = {
             "status": "established",
             "metricId": "third_party_share_pct",
             "unit": "pct",
-            "value": 0.5,
+            "value": 0.2384810280667281,
             "sampleCount": 24,
             "scalingFactor": 1.2
         },
         "override": null,
         "status": "conforme",
-        "observed": 22,
-        "headroom": 8,
+        "observed": 22.078291814946617,
+        "headroom": 7.921708185053383,
         "withinNoise": false,
         "delta": null
     },
@@ -460,14 +460,14 @@ export const budgetCanon: BudgetCanon = {
             "status": "established",
             "metricId": "third_party_share_pct",
             "unit": "pct",
-            "value": 0.5,
+            "value": 0.2384810280667281,
             "sampleCount": 24,
             "scalingFactor": 1.2
         },
         "override": null,
         "status": "conforme",
-        "observed": 16.15798922800718,
-        "headroom": 13.842010771992818,
+        "observed": 16.28748335361009,
+        "headroom": 13.712516646389911,
         "withinNoise": false,
         "delta": null
     },
@@ -496,14 +496,14 @@ export const budgetCanon: BudgetCanon = {
             "status": "established",
             "metricId": "third_party_share_pct",
             "unit": "pct",
-            "value": 0.5,
+            "value": 0.2384810280667281,
             "sampleCount": 24,
             "scalingFactor": 1.2
         },
         "override": null,
         "status": "breach",
-        "observed": 38.70967741935484,
-        "headroom": -8.70967741935484,
+        "observed": 39.05005028235476,
+        "headroom": -9.05005028235476,
         "withinNoise": false,
         "delta": null
     },
@@ -532,14 +532,14 @@ export const budgetCanon: BudgetCanon = {
             "status": "established",
             "metricId": "third_party_share_pct",
             "unit": "pct",
-            "value": 0.5,
+            "value": 0.2384810280667281,
             "sampleCount": 24,
             "scalingFactor": 1.2
         },
         "override": null,
         "status": "conforme",
-        "observed": 17.965023847376788,
-        "headroom": 12.034976152623212,
+        "observed": 18.092636487176623,
+        "headroom": 11.907363512823377,
         "withinNoise": false,
         "delta": null
     },
@@ -568,7 +568,7 @@ export const budgetCanon: BudgetCanon = {
             "status": "established",
             "metricId": "transferred_bytes",
             "unit": "bytes",
-            "value": 7000,
+            "value": 7380,
             "sampleCount": 24,
             "scalingFactor": 1.2
         },
@@ -605,7 +605,7 @@ export const budgetCanon: BudgetCanon = {
             "status": "established",
             "metricId": "transferred_bytes",
             "unit": "bytes",
-            "value": 7000,
+            "value": 7380,
             "sampleCount": 24,
             "scalingFactor": 1.2
         },
@@ -642,7 +642,7 @@ export const budgetCanon: BudgetCanon = {
             "status": "established",
             "metricId": "transferred_bytes",
             "unit": "bytes",
-            "value": 7000,
+            "value": 7380,
             "sampleCount": 24,
             "scalingFactor": 1.2
         },
@@ -679,7 +679,7 @@ export const budgetCanon: BudgetCanon = {
             "status": "established",
             "metricId": "transferred_bytes",
             "unit": "bytes",
-            "value": 7000,
+            "value": 7380,
             "sampleCount": 24,
             "scalingFactor": 1.2
         },
@@ -726,14 +726,14 @@ export const budgetCanon: BudgetCanon = {
                 "status": "established",
                 "metricId": "third_party_share_pct",
                 "unit": "pct",
-                "value": 0.5,
+                "value": 0.2384810280667281,
                 "sampleCount": 24,
                 "scalingFactor": 1.2
             },
             "override": null,
             "status": "breach",
-            "observed": 38.70967741935484,
-            "headroom": -8.70967741935484,
+            "observed": 39.05005028235476,
+            "headroom": -9.05005028235476,
             "withinNoise": false,
             "delta": null
         }
@@ -769,7 +769,7 @@ export const budgetCanon: BudgetCanon = {
                 "status": "established",
                 "metricId": "transferred_bytes",
                 "unit": "bytes",
-                "value": 7000,
+                "value": 7380,
                 "sampleCount": 24,
                 "scalingFactor": 1.2
             },
@@ -827,7 +827,7 @@ export const budgetCanon: BudgetCanon = {
             "status": "established",
             "metricId": "transferred_bytes",
             "unit": "bytes",
-            "value": 7000,
+            "value": 7380,
             "sampleCount": 24,
             "scalingFactor": 1.2
         },
@@ -868,7 +868,7 @@ export const budgetCanon: BudgetCanon = {
             "status": "established",
             "metricId": "transferred_bytes",
             "unit": "bytes",
-            "value": 7000,
+            "value": 7380,
             "sampleCount": 24,
             "scalingFactor": 1.2
         },
@@ -905,7 +905,7 @@ export const budgetCanon: BudgetCanon = {
             "status": "established",
             "metricId": "request_count",
             "unit": "count",
-            "value": 1,
+            "value": 1.2,
             "sampleCount": 24,
             "scalingFactor": 1.2
         },
@@ -942,7 +942,7 @@ export const budgetCanon: BudgetCanon = {
             "status": "established",
             "metricId": "transferred_bytes",
             "unit": "bytes",
-            "value": 7000,
+            "value": 7380,
             "sampleCount": 24,
             "scalingFactor": 1.2
         },
@@ -978,14 +978,14 @@ export const budgetCanon: BudgetCanon = {
             "status": "established",
             "metricId": "third_party_share_pct",
             "unit": "pct",
-            "value": 0.5,
+            "value": 0.2384810280667281,
             "sampleCount": 24,
             "scalingFactor": 1.2
         },
         "override": null,
         "status": "conforme",
-        "observed": 22,
-        "headroom": 8,
+        "observed": 22.078106508875738,
+        "headroom": 7.921893491124262,
         "withinNoise": false,
         "delta": null
     },
@@ -1014,14 +1014,14 @@ export const budgetCanon: BudgetCanon = {
             "status": "established",
             "metricId": "third_party_share_pct",
             "unit": "pct",
-            "value": 0.5,
+            "value": 0.2384810280667281,
             "sampleCount": 24,
             "scalingFactor": 1.2
         },
         "override": null,
         "status": "conforme",
-        "observed": 29.121725731895225,
-        "headroom": 0.878274268104775,
+        "observed": 29.32225789072235,
+        "headroom": 0.6777421092776486,
         "withinNoise": false,
         "delta": null
     },
@@ -1050,14 +1050,14 @@ export const budgetCanon: BudgetCanon = {
             "status": "established",
             "metricId": "third_party_share_pct",
             "unit": "pct",
-            "value": 0.5,
+            "value": 0.2384810280667281,
             "sampleCount": 24,
             "scalingFactor": 1.2
         },
         "override": null,
         "status": "conforme",
-        "observed": 20.527045769764214,
-        "headroom": 9.472954230235786,
+        "observed": 20.65436721147881,
+        "headroom": 9.34563278852119,
         "withinNoise": false,
         "delta": null
     },
@@ -1086,7 +1086,7 @@ export const budgetCanon: BudgetCanon = {
             "status": "established",
             "metricId": "transferred_bytes",
             "unit": "bytes",
-            "value": 7000,
+            "value": 7380,
             "sampleCount": 24,
             "scalingFactor": 1.2
         },
@@ -1105,7 +1105,7 @@ export const budgetCanon: BudgetCanon = {
                 "status": "established",
                 "metricId": "transferred_bytes",
                 "unit": "bytes",
-                "value": 7000,
+                "value": 7380,
                 "sampleCount": 24,
                 "scalingFactor": 1.2
             },
@@ -1137,7 +1137,7 @@ export const budgetCanon: BudgetCanon = {
             "status": "established",
             "metricId": "transferred_bytes",
             "unit": "bytes",
-            "value": 7000,
+            "value": 7380,
             "sampleCount": 24,
             "scalingFactor": 1.2
         },
@@ -1156,7 +1156,7 @@ export const budgetCanon: BudgetCanon = {
                 "status": "established",
                 "metricId": "transferred_bytes",
                 "unit": "bytes",
-                "value": 7000,
+                "value": 7380,
                 "sampleCount": 24,
                 "scalingFactor": 1.2
             },
@@ -1188,7 +1188,7 @@ export const budgetCanon: BudgetCanon = {
             "status": "established",
             "metricId": "transferred_bytes",
             "unit": "bytes",
-            "value": 7000,
+            "value": 7380,
             "sampleCount": 24,
             "scalingFactor": 1.2
         },
@@ -1207,7 +1207,7 @@ export const budgetCanon: BudgetCanon = {
                 "status": "established",
                 "metricId": "transferred_bytes",
                 "unit": "bytes",
-                "value": 7000,
+                "value": 7380,
                 "sampleCount": 24,
                 "scalingFactor": 1.2
             },
@@ -1250,7 +1250,7 @@ export const budgetCanon: BudgetCanon = {
                 "status": "established",
                 "metricId": "transferred_bytes",
                 "unit": "bytes",
-                "value": 7000,
+                "value": 7380,
                 "sampleCount": 24,
                 "scalingFactor": 1.2
             },
@@ -1279,26 +1279,35 @@ export const budgetCanon: BudgetCanon = {
           "unit": "bytes",
           "median": 842000,
           "mad": 3000,
-          "min": 839000,
-          "max": 845000,
+          "min": 836000,
+          "max": 848000,
           "sampleCount": 5
         },
         {
           "metricId": "request_count",
           "unit": "count",
           "median": 61,
-          "mad": 0,
-          "min": 61,
-          "max": 61,
+          "mad": 1,
+          "min": 59,
+          "max": 63,
+          "sampleCount": 5
+        },
+        {
+          "metricId": "third_party_bytes",
+          "unit": "bytes",
+          "median": 185240,
+          "mad": 660,
+          "min": 183920,
+          "max": 186560,
           "sampleCount": 5
         },
         {
           "metricId": "third_party_share_pct",
           "unit": "pct",
-          "median": 22,
-          "mad": 0.2,
-          "min": 21.8,
-          "max": 22.2,
+          "median": 22.078106508875738,
+          "mad": 0.007333245441923708,
+          "min": 21.68867924528302,
+          "max": 22.08684210526316,
           "sampleCount": 5
         }
       ]
@@ -1312,26 +1321,35 @@ export const budgetCanon: BudgetCanon = {
           "unit": "bytes",
           "median": 840000,
           "mad": 3000,
-          "min": 837000,
-          "max": 843000,
+          "min": 834000,
+          "max": 846000,
           "sampleCount": 5
         },
         {
           "metricId": "request_count",
           "unit": "count",
           "median": 61,
-          "mad": 0,
-          "min": 61,
-          "max": 61,
+          "mad": 1,
+          "min": 59,
+          "max": 63,
+          "sampleCount": 5
+        },
+        {
+          "metricId": "third_party_bytes",
+          "unit": "bytes",
+          "median": 184800,
+          "mad": 660,
+          "min": 183480,
+          "max": 186120,
           "sampleCount": 5
         },
         {
           "metricId": "third_party_share_pct",
           "unit": "pct",
-          "median": 22,
-          "mad": 0.2,
-          "min": 21.8,
-          "max": 22.2,
+          "median": 22.078291814946617,
+          "mad": 0.007349500364028927,
+          "min": 21.687943262411345,
+          "max": 22.08705035971223,
           "sampleCount": 5
         }
       ]
@@ -1341,7 +1359,7 @@ export const budgetCanon: BudgetCanon = {
         "status": "established",
         "metricId": "transferred_bytes",
         "unit": "bytes",
-        "value": 7000,
+        "value": 7380,
         "sampleCount": 24,
         "scalingFactor": 1.2
       },
@@ -1349,7 +1367,7 @@ export const budgetCanon: BudgetCanon = {
         "status": "established",
         "metricId": "request_count",
         "unit": "count",
-        "value": 1,
+        "value": 1.2,
         "sampleCount": 24,
         "scalingFactor": 1.2
       },
@@ -1357,7 +1375,7 @@ export const budgetCanon: BudgetCanon = {
         "status": "established",
         "metricId": "third_party_share_pct",
         "unit": "pct",
-        "value": 0.5,
+        "value": 0.2384810280667281,
         "sampleCount": 24,
         "scalingFactor": 1.2
       }
@@ -1376,26 +1394,35 @@ export const budgetCanon: BudgetCanon = {
           "unit": "bytes",
           "median": 1298000,
           "mad": 9000,
-          "min": 1289000,
-          "max": 1307000,
+          "min": 1280000,
+          "max": 1316000,
           "sampleCount": 5
         },
         {
           "metricId": "request_count",
           "unit": "count",
           "median": 84,
-          "mad": 0,
-          "min": 84,
-          "max": 84,
+          "mad": 1,
+          "min": 82,
+          "max": 86,
+          "sampleCount": 5
+        },
+        {
+          "metricId": "third_party_bytes",
+          "unit": "bytes",
+          "median": 378000,
+          "mad": 2620.955315870582,
+          "min": 372758.08936825884,
+          "max": 383241.91063174116,
           "sampleCount": 5
         },
         {
           "metricId": "third_party_share_pct",
           "unit": "pct",
-          "median": 29.121725731895225,
-          "mad": 0.2,
-          "min": 28.921725731895226,
-          "max": 29.321725731895224,
+          "median": 29.32225789072235,
+          "mad": 0.017660635121139023,
+          "min": 28.32508277874307,
+          "max": 29.34696407935285,
           "sampleCount": 5
         }
       ]
@@ -1409,26 +1436,35 @@ export const budgetCanon: BudgetCanon = {
           "unit": "bytes",
           "median": 1114000,
           "mad": 9000,
-          "min": 1105000,
-          "max": 1123000,
+          "min": 1096000,
+          "max": 1132000,
           "sampleCount": 5
         },
         {
           "metricId": "request_count",
           "unit": "count",
           "median": 82,
-          "mad": 0,
-          "min": 82,
-          "max": 82,
+          "mad": 1,
+          "min": 80,
+          "max": 84,
+          "sampleCount": 5
+        },
+        {
+          "metricId": "third_party_bytes",
+          "unit": "bytes",
+          "median": 180000,
+          "mad": 1454.219030520646,
+          "min": 177091.5619389587,
+          "max": 182908.4380610413,
           "sampleCount": 5
         },
         {
           "metricId": "third_party_share_pct",
           "unit": "pct",
-          "median": 16.15798922800718,
-          "mad": 0.2,
-          "min": 15.957989228007182,
-          "max": 16.35798922800718,
+          "median": 16.28748335361009,
+          "mad": 0.011147337695451398,
+          "min": 15.644130913335575,
+          "max": 16.3039418679317,
           "sampleCount": 5
         }
       ]
@@ -1438,7 +1474,7 @@ export const budgetCanon: BudgetCanon = {
         "status": "established",
         "metricId": "transferred_bytes",
         "unit": "bytes",
-        "value": 7000,
+        "value": 7380,
         "sampleCount": 24,
         "scalingFactor": 1.2
       },
@@ -1446,7 +1482,7 @@ export const budgetCanon: BudgetCanon = {
         "status": "established",
         "metricId": "request_count",
         "unit": "count",
-        "value": 1,
+        "value": 1.2,
         "sampleCount": 24,
         "scalingFactor": 1.2
       },
@@ -1454,7 +1490,7 @@ export const budgetCanon: BudgetCanon = {
         "status": "established",
         "metricId": "third_party_share_pct",
         "unit": "pct",
-        "value": 0.5,
+        "value": 0.2384810280667281,
         "sampleCount": 24,
         "scalingFactor": 1.2
       }
@@ -1473,26 +1509,35 @@ export const budgetCanon: BudgetCanon = {
           "unit": "bytes",
           "median": 1442000,
           "mad": 9000,
-          "min": 1433000,
-          "max": 1451000,
+          "min": 1424000,
+          "max": 1460000,
           "sampleCount": 5
         },
         {
           "metricId": "request_count",
           "unit": "count",
           "median": 100,
-          "mad": 0,
-          "min": 100,
-          "max": 100,
+          "mad": 1,
+          "min": 98,
+          "max": 102,
+          "sampleCount": 5
+        },
+        {
+          "metricId": "third_party_bytes",
+          "unit": "bytes",
+          "median": 296000,
+          "mad": 1847.4341192787979,
+          "min": 292305.13176144246,
+          "max": 299694.86823855754,
           "sampleCount": 5
         },
         {
           "metricId": "third_party_share_pct",
           "unit": "pct",
-          "median": 20.527045769764214,
-          "mad": 0.2,
-          "min": 20.327045769764215,
-          "max": 20.727045769764214,
+          "median": 20.65436721147881,
+          "mad": 0.01136560746179427,
+          "min": 20.020899435715236,
+          "max": 20.66975486605682,
           "sampleCount": 5
         }
       ]
@@ -1506,26 +1551,35 @@ export const budgetCanon: BudgetCanon = {
           "unit": "bytes",
           "median": 1258000,
           "mad": 9000,
-          "min": 1249000,
-          "max": 1267000,
+          "min": 1240000,
+          "max": 1276000,
           "sampleCount": 5
         },
         {
           "metricId": "request_count",
           "unit": "count",
           "median": 96,
-          "mad": 0,
-          "min": 96,
-          "max": 96,
+          "mad": 1,
+          "min": 94,
+          "max": 98,
+          "sampleCount": 5
+        },
+        {
+          "metricId": "third_party_bytes",
+          "unit": "bytes",
+          "median": 226000,
+          "mad": 1616.8521462639037,
+          "min": 222766.2957074722,
+          "max": 229233.7042925278,
           "sampleCount": 5
         },
         {
           "metricId": "third_party_share_pct",
           "unit": "pct",
-          "median": 17.965023847376788,
-          "mad": 0.2,
-          "min": 17.76502384737679,
-          "max": 18.165023847376787,
+          "median": 18.092636487176623,
+          "mad": 0.011189971455365821,
+          "min": 17.45817364478622,
+          "max": 18.108454279706653,
           "sampleCount": 5
         }
       ]
@@ -1535,7 +1589,7 @@ export const budgetCanon: BudgetCanon = {
         "status": "established",
         "metricId": "transferred_bytes",
         "unit": "bytes",
-        "value": 7000,
+        "value": 7380,
         "sampleCount": 24,
         "scalingFactor": 1.2
       },
@@ -1543,7 +1597,7 @@ export const budgetCanon: BudgetCanon = {
         "status": "established",
         "metricId": "request_count",
         "unit": "count",
-        "value": 1,
+        "value": 1.2,
         "sampleCount": 24,
         "scalingFactor": 1.2
       },
@@ -1551,7 +1605,7 @@ export const budgetCanon: BudgetCanon = {
         "status": "established",
         "metricId": "third_party_share_pct",
         "unit": "pct",
-        "value": 0.5,
+        "value": 0.2384810280667281,
         "sampleCount": 24,
         "scalingFactor": 1.2
       }
@@ -1566,8 +1620,8 @@ export const budgetCanon: BudgetCanon = {
     "onebyte@0.1.0"
   ],
   "runId": "#4812",
-  "ledgerRef": "0ad25303",
-  "verificationUrl": "balise.fr/v/0ad25303",
+  "ledgerRef": "e9167c61",
+  "verificationUrl": "balise.fr/v/e9167c61",
   "fingerprintMatched": true
 },
 };

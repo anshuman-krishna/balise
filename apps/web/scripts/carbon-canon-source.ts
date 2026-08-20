@@ -1,5 +1,6 @@
 import type { GridIntensity, ModelInput } from '@balise/schemas';
 import { asideModels, assertModelInputs, bandModels, carbonModels } from '@balise/carbon-models';
+import { canonFloor, canonMetric } from './measurement-canon-source';
 
 /**
  * every carbon figure the application shows, estimated by @balise/carbon-models
@@ -42,18 +43,31 @@ interface Page {
   transferredFloorBytes?: number;
 }
 
+/** one page, read off the measurement canon rather than restated here. */
+function fromMeasured(id: string, label: string, aggregationId: string): Page {
+  const floor = canonFloor(aggregationId, 'transferred_bytes');
+  return {
+    id,
+    label,
+    transferredBytes: canonMetric(aggregationId, 'transferred_bytes').median,
+    requestCount: canonMetric(aggregationId, 'request_count').median,
+    domNodeCount: canonMetric(aggregationId, 'dom_node_count').median,
+    ...(floor === undefined ? {} : { transferredFloorBytes: floor }),
+  };
+}
+
 /**
- * the pages the application estimates. the byte and request counts are the ones
- * the comparison, budget and attribution canons already publish for the same
- * runs, so no two surfaces describe the same page differently.
+ * the pages the application estimates. every byte count, request count and
+ * floor is the one @balise/measure-core computed for that run, so no two
+ * surfaces describe the same page differently.
  */
 const PAGES: readonly Page[] = [
-  { id: 'candidate', label: '/demarches/acte-naissance', transferredBytes: 1_298_000, requestCount: 84, domNodeCount: 2_140, transferredFloorBytes: 7_000 },
-  { id: 'baseline', label: '/demarches/acte-naissance (référence)', transferredBytes: 1_114_000, requestCount: 82, domNodeCount: 2_100, transferredFloorBytes: 7_000 },
-  { id: 'dashboard', label: 'médiane du service', transferredBytes: 1_258_000, requestCount: 82, domNodeCount: 2_140, transferredFloorBytes: 7_000 },
+  fromMeasured('candidate', '/demarches/acte-naissance', 'candidate'),
+  fromMeasured('baseline', '/demarches/acte-naissance (référence)', 'baseline'),
+  fromMeasured('dashboard', 'médiane du service', 'service'),
   // one cold pass on one page: no history, so no floor, and the scan says so
   // rather than drawing a noise region it did not measure.
-  { id: 'scan', label: 'bibliotheques-selo.fr', transferredBytes: 980_000, requestCount: 61, domNodeCount: 1_830 },
+  fromMeasured('scan', 'bibliotheques-selo.fr', 'scan'),
 ];
 
 function inputFor(page: Page): ModelInput {

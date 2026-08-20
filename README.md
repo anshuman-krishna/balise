@@ -188,7 +188,13 @@ pnpm gen:budget-canon
 pnpm gen:carbon-canon
 pnpm gen:criteria-canon
 pnpm gen:ledger-canon
+pnpm gen:measurement-canon
 ```
+
+`gen:measurement-canon` sits underneath the other four. It is the one place a median, a
+dispersion, a noise floor or a confidence grade is produced, and the carbon, budget and
+ledger canons read their byte counts and floors from it rather than restating them, so the
+estimate, the verdict and the register all describe the same run.
 
 ## Status
 

@@ -7,7 +7,7 @@ import type { LedgerEntry } from '@balise/schemas';
 export const ledgerCanon = {
   organizationId: "org_atelier_sextant",
   entryCount: 4820,
-  merkleRoot: "0fd4d25d652906ee343df1c216dd26277bc53804c24fe9a6f3d2014d24f2da35",
+  merkleRoot: "3f6d43602776466f8c32c657bd1a574de25263bb949c1f6d5e82904432a32034",
   anchoredAt: "2026-08-15T04:00:00.000Z",
   verification: {"status":"intact","checkedCount":4820},
   // the entries the interface and the documents cite. the rest of the chain
@@ -24,7 +24,7 @@ export const ledgerCanon = {
     "refId": "run_4812",
     "payload": {
       "runId": "#4812",
-      "scenario": "/accueil",
+      "scenario": "/demarches/acte-naissance",
       "profile": "mobile-4g",
       "pass": "cold",
       "runs": 5,
@@ -41,21 +41,21 @@ export const ledgerCanon = {
         "onebyte@0.1.0"
       ],
       "metrics": {
-        "transferredBytes": 1258000,
-        "transferredBytesMad": 6000,
+        "transferredBytes": 1298000,
+        "transferredBytesMad": 9000,
         "requestCount": 84,
         "domNodeCount": 2140,
-        "carbonPerVisitG": 0.075666184,
-        "carbonBandLowG": 0.075666184,
-        "carbonBandHighG": 0.29180358333333334
+        "carbonPerVisitG": 0.078072104,
+        "carbonBandLowG": 0.078072104,
+        "carbonBandHighG": 0.30108191666666667
       },
       "confidence": "high"
     },
     "sequence": 4818,
     "createdAt": "2026-08-15T14:02:41.000Z",
-    "payloadHash": "bbdfce3d258bb24c30f543c16f1e9260d92952be39e7ce831411749309ba67af",
+    "payloadHash": "c75a770cf93f18a9593ea0836c7eccddf37f67097be34cf25f092586cbf3c801",
     "prevHash": "ed09b53a002f15112d3c5b2b4f4e6ddf1aab9623dab0c4135e9cbccd2453c941",
-    "entryHash": "4d62064c32d0274f356ce4a5901395263abb9db2235654cdc930a1fa2de0989e"
+    "entryHash": "e9167c61073843e2700fc962f91fb521b58274b51903bdd4802e343d72a3243b"
   },
   {
     "organizationId": "org_atelier_sextant",
@@ -72,8 +72,8 @@ export const ledgerCanon = {
     "sequence": 4819,
     "createdAt": "2026-08-15T15:20:08.000Z",
     "payloadHash": "fd70dbfeb08568cb91a20cf8352a41c5c4102f04bfe4f9d8a3f7a562bb5bc820",
-    "prevHash": "4d62064c32d0274f356ce4a5901395263abb9db2235654cdc930a1fa2de0989e",
-    "entryHash": "4532205ce24b3433aa5c520b2187a9f357c73bf4e16eeb5b74fef1bf96d2ee5c"
+    "prevHash": "e9167c61073843e2700fc962f91fb521b58274b51903bdd4802e343d72a3243b",
+    "entryHash": "a766eb5c937fd7efb7bf3ba2d4e7f65957c9afb34fb23a034a049a568658ea43"
   },
   {
     "organizationId": "org_atelier_sextant",

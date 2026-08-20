@@ -13,6 +13,7 @@ import {
   formatCarbon,
   referenceModel,
 } from '../lib/carbon-view';
+import { confidenceLabel, noiseEdge } from '../lib/measurement-view';
 import { MetricTile } from '../components/MetricTile';
 
 // the carbon tile is the estimate @balise/carbon-models produced for the
@@ -100,17 +101,17 @@ export function Dashboard() {
           label={d.tiles.transferred}
           valueText={formatInt(canon.transferred.medianKb)}
           unitText={d.tiles.kbUnit}
-          rightPrimary={fill(d.tiles.madShort, { value: canon.transferred.madKb })}
-          confidence="high"
-          confidenceLabel={t.confidence.high}
+          rightPrimary={fill(d.tiles.madShort, { value: formatInt(canon.transferred.madKb) })}
+          confidence={canon.transferred.confidence}
+          confidenceLabel={confidenceLabel(canon.transferred.confidence)}
           band={{
             scaleMin: canon.transferred.scaleMin,
             scaleMax: canon.transferred.scaleMax,
             median: canon.transferred.medianKb,
             bandLow: canon.transferred.medianKb - canon.transferred.madKb,
             bandHigh: canon.transferred.medianKb + canon.transferred.madKb,
-            noiseLow: canon.transferred.medianKb - canon.transferred.noiseKb,
-            noiseHigh: canon.transferred.medianKb + canon.transferred.noiseKb,
+            noiseLow: noiseEdge(canon.transferred.medianKb, canon.transferred.noiseKb, -1),
+            noiseHigh: noiseEdge(canon.transferred.medianKb, canon.transferred.noiseKb, 1),
             budget: canon.transferred.budgetKb,
             referenceModel: ref,
             confidence: 'high',
@@ -124,20 +125,22 @@ export function Dashboard() {
           valueText={formatInt(canon.thirdParty.sharePct)}
           unitText={d.tiles.pctOfBytes}
           rightPrimary={fill(d.tiles.commitCeiling, { value: canon.thirdParty.commitCeilingPct })}
-          confidence="high"
-          confidenceLabel={t.confidence.high}
+          confidence={canon.thirdParty.confidence}
+          confidenceLabel={confidenceLabel(canon.thirdParty.confidence)}
           band={{
             scaleMin: canon.thirdParty.scaleMin,
             scaleMax: canon.thirdParty.scaleMax,
             median: canon.thirdParty.sharePct,
             bandLow: canon.thirdParty.bandLow,
             bandHigh: canon.thirdParty.bandHigh,
+            noiseLow: canon.thirdParty.noiseLow ?? undefined,
+            noiseHigh: canon.thirdParty.noiseHigh ?? undefined,
             budget: canon.thirdParty.commitCeilingPct,
             // absolute contractual threshold, no delta involved: breach is
             // legitimate without a classification.
             state: 'breach',
             referenceModel: ref,
-            confidence: 'high',
+            confidence: canon.thirdParty.confidence,
             unitLabel: d.tiles.pctOfBytes,
           }}
           provenance={d.tiles.provenanceMeasured}
@@ -148,19 +151,19 @@ export function Dashboard() {
           label={d.tiles.domNodes}
           valueText={formatInt(canon.domNodes.median)}
           unitText={d.tiles.nodesUnit}
-          rightPrimary={fill(d.tiles.madShort, { value: canon.domNodes.mad })}
-          confidence="medium"
-          confidenceLabel={t.confidence.medium}
+          rightPrimary={fill(d.tiles.madShort, { value: formatInt(canon.domNodes.mad) })}
+          confidence={canon.domNodes.confidence}
+          confidenceLabel={confidenceLabel(canon.domNodes.confidence)}
           band={{
             scaleMin: canon.domNodes.scaleMin,
             scaleMax: canon.domNodes.scaleMax,
             median: canon.domNodes.median,
             bandLow: canon.domNodes.bandLow,
             bandHigh: canon.domNodes.bandHigh,
-            noiseLow: canon.domNodes.noiseLow,
-            noiseHigh: canon.domNodes.noiseHigh,
+            noiseLow: canon.domNodes.noiseLow ?? undefined,
+            noiseHigh: canon.domNodes.noiseHigh ?? undefined,
             referenceModel: ref,
-            confidence: 'medium',
+            confidence: canon.domNodes.confidence,
             unitLabel: d.tiles.nodesUnit,
           }}
           provenance={d.tiles.provenanceMeasured}
