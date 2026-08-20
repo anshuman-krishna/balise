@@ -52,6 +52,11 @@ export const ecoindexModel: CarbonModel = {
   version: '0.1.0',
   specVersion: '1.0',
   inputs: ['dom_node_count', 'request_count', 'transferred_bytes'],
+  sensitivity: { gridIntensity: false, greenHosting: false },
+  // the ges figure is read off the score, not computed from energy. see
+  // METHODOLOGY.md 10.1: this is why ecoindex is reported as its grade and is
+  // not carried in the gCO2e band.
+  method: 'score-derived',
   assumptions: [
     {
       id: 'ecoindex-published-method',

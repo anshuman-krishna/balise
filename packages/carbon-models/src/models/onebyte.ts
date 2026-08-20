@@ -22,6 +22,10 @@ export const onebyteModel: CarbonModel = {
   version: '0.1.0',
   specVersion: '2021',
   inputs: ['transferred_bytes'],
+  // fixed published intensities, never the visitor's grid: see the first
+  // assumption below, which said so before this declaration existed.
+  sensitivity: { gridIntensity: false, greenHosting: true },
+  method: 'energy',
   assumptions: [
     {
       id: 'onebyte-fixed-intensity',

@@ -4,7 +4,7 @@ import { ecoindexModel } from './models/ecoindex.js';
 import { swdModel } from './models/swd.js';
 import { onebyteModel } from './models/onebyte.js';
 
-export type { CarbonModel } from './types.js';
+export type { CarbonModel, ModelMethod, ModelSensitivity } from './types.js';
 export { ecoindexModel, computeEcoIndexScore, ecoIndexGrade } from './models/ecoindex.js';
 export { swdModel } from './models/swd.js';
 export { onebyteModel } from './models/onebyte.js';
@@ -15,6 +15,26 @@ export const carbonModels: readonly CarbonModel[] = [ecoindexModel, swdModel, on
 
 export function getCarbonModel(id: string): CarbonModel | undefined {
   return carbonModels.find((model) => model.id === id);
+}
+
+/**
+ * the models whose gCO2e output may share one band, from what each declares
+ * about itself rather than from a list of names here.
+ *
+ * an energy model and a score-derived one do not estimate the same quantity,
+ * however alike the unit looks, and drawing them on one axis states a
+ * comparison that is not true. every model still runs and every model's output
+ * is still shown; this governs only which outputs share an axis. see
+ * METHODOLOGY.md 10.1.
+ */
+export function bandModels(models: readonly CarbonModel[] = carbonModels): readonly CarbonModel[] {
+  return models.filter((model) => model.method === 'energy');
+}
+
+/** the models reported on their own terms, beside the band rather than in it. */
+export function asideModels(models: readonly CarbonModel[] = carbonModels): readonly CarbonModel[] {
+  const inBand = new Set(bandModels(models).map((model) => model.id));
+  return models.filter((model) => !inBand.has(model.id));
 }
 
 const INPUT_FIELD: Record<string, (input: ModelInput) => unknown> = {

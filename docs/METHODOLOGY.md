@@ -225,6 +225,9 @@ Rules:
   models, with the customer's chosen reference model marked. Models disagree,
   that disagreement is information, and it is never averaged away, reconciled,
   or trimmed of outliers.
+- **A gCO2e band carries only models that respond to grid intensity and to
+  hosting.** See section 10.1. Every model still runs, and every model's output
+  is still shown; what this rule governs is which outputs share one axis.
 - Each model declares its assumptions **as data**. Those assumptions are
   rendered wherever that model's output appears, including in PDFs and in the
   embeddable badge. An assumption that is not in that list is an assumption we
@@ -239,6 +242,64 @@ Rules:
   worthless eight months later in an audit.
 - Where a model includes embodied emissions, that is stated. Where it does not,
   that is stated too.
+
+### 10.1 Which models share a band
+
+Two models can be drawn on one axis when they estimate the same quantity. Not
+all of ours do.
+
+SWD v4 and 1byte are energy models: they multiply data volume by an energy
+intensity and an emissions intensity. EcoIndex is not. Its published method
+scores a page from three measurements (DOM nodes, requests, page weight), and
+the gCO2e figure it carries is read off that score with the formula
+`2 + 2 x (50 - score) / 100`. Feed EcoIndex a page served from a French data
+centre on renewable electricity and the same page served from a coal grid, and
+it returns the same number, because nothing about electricity is an input.
+
+That is not a defect in EcoIndex. It answers a different question: how heavy is
+this page, on a scale calibrated against the French web. It is a useful question
+and the referential's own audiences read the grade fluently. But a rating
+converted to grams is not the same quantity as grams computed from energy, and
+putting the two on one axis states a comparison that is not true.
+
+So, in force from this version:
+
+- The gCO2e band carries the **energy models**: SWD v4 and 1byte.
+- **EcoIndex is reported as its published output**, a score out of 100 and a
+  grade from A to G, shown beside the band and never inside it. Its gCO2e figure
+  remains available in the model detail, labelled as derived from the score.
+- A model declares its method **as data**, in the same way it declares its
+  assumptions, and the rule above is applied from that declaration rather than
+  from a list of model names here. Adding an energy model widens the band.
+  Adding a score-derived one does not, and it is reported on its own terms.
+
+#### What the band does and does not respond to
+
+Being an energy model is not the same as tracking the visitor's grid, and the
+distinction has to be stated rather than implied.
+
+| Model | Method | Applies the visitor grid | Responds to green hosting |
+| --- | --- | --- | --- |
+| SWD v4 | energy | yes | yes |
+| 1byte | energy | no, fixed 519 and 475 gCO2e/kWh | yes |
+| EcoIndex | score-derived | no | no |
+
+1byte is in the band and does not use the measured grid intensity: its published
+constants are a US data centre mix and a 2018 global network average, and the
+reference implementation applies them unconditionally. That is carried in the
+model's own assumptions and rendered wherever its output appears. It is a caveat
+on one edge of the band, not a reason to draw it somewhere else, because it is
+still grams computed from energy.
+
+The practical consequence on a French service is worth naming: only one model in
+the band knows the grid is French, so on a low-carbon grid the band is wide and
+its upper edge is a model using a global average. That width is the honest
+answer, and it is the reason a report states the grid it assumed on its face.
+
+Each model's declared method and sensitivity are held to its actual behaviour by
+tests: a model that claims to respond to grid intensity, and does not, fails.
+This section's rule was written on the assumption that both energy models
+tracked the grid, and that test is what corrected it.
 
 ## 11. Reproducibility
 

@@ -29,6 +29,8 @@ export const swdModel: CarbonModel = {
   version: '0.1.0',
   specVersion: '4.0',
   inputs: ['transferred_bytes'],
+  sensitivity: { gridIntensity: true, greenHosting: true },
+  method: 'energy',
   assumptions: [
     {
       id: 'swd-published-constants',
