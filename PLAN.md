@@ -48,6 +48,29 @@ reach at best, and how far short of the contractual target that leaves you. The
 90-day trend cell on that row reads no history rather than drawing a line.
 606 tests pass across twelve packages.
 
+**Then: every carbon figure is the package's (2026-08-20).** The application's carbon
+numbers were the design canon's, drawn before `packages/carbon-models` existed: four
+models spanning 0.31 to 0.58 gCO2e, one of them a model this build does not implement.
+The three real models disagree by 31x on the canon's own pages, and the reason is
+structural rather than a bug: EcoIndex reads a figure off a score and cannot see the
+grid, while the other two compute an energy. So the band carries the energy models and
+EcoIndex is reported beside it as the grade and score it publishes, its own gCO2e figure
+named rather than hidden. `bandModels()` decides that from what each model declares about
+itself, and the sensitivity test corrected the rule on its first run when it found 1byte
+uses fixed published intensities and never applies the visitor grid.
+
+`pnpm gen:carbon-canon` now estimates every page in the canon and writes back the band,
+the reference value, the measurement floor carried through the model, and every assumption
+of every model that ran. Eleven surfaces read it: the dashboard tile, the run detail's two
+axes, the comparison row, the free scan, the annex's figure 3 and its caption, the fleet
+table and its sector benchmark, the observatory, the tender commitment, the contract
+tracker, the execution report and the ledger entry a verification permalink resolves. The
+figures that were stale are gone with them: a caption naming ADEME Base Empreinte, a check
+comment naming `ademe@2024`, a free-scan lede promising five runs and four models where
+one cold pass and three models ran, and an observatory footnote saying four. The metric
+tile used to swap its provenance line for a state message, which dropped the model version
+from the carbon tile; both render now and a test asserts it. 646 tests.
+
 ---
 
 ## Version roadmap
@@ -245,6 +268,30 @@ Later versions: see roadmap; detailed to-dos are appended when the version start
 
 ## Decisions log
 
+- **2026-08-20 · Only energy models share the gCO2e band.** EcoIndex reads its figure off
+  a score and is blind to the grid and to hosting; SWD v4 and 1byte compute an energy. On
+  France's grid that is a 31x gap, and averaging it or plotting it on one linear axis would
+  both have been lies of a different kind. `bandModels()` splits on `method === 'energy'`,
+  computed from what each model declares about itself. EcoIndex is reported beside the band
+  as its own grade and score, with its gCO2e figure named. `METHODOLOGY.md` 10.1.
+- **2026-08-20 · Every carbon figure in the application is an estimate the package
+  produced.** `pnpm gen:carbon-canon` runs all three models over the measurements the other
+  canons publish and writes back the band, the reference value, the noise carried through
+  the model, and every assumption. The dashboard, the run detail, the comparison, the free
+  scan, the annex figure, the fleet, the observatory, the tender, the contract tracker, the
+  execution report and the ledger entry all read it, so no two surfaces state a different
+  footprint for the same service. A test estimates every page again and holds the
+  checked-in copy to it.
+- **2026-08-20 · Provenance is never displaced by an alert.** The metric tile swapped its
+  provenance line for a state message when it had one, which dropped the model and version
+  from the carbon tile exactly where the figure is read most closely. Both lines render now,
+  and a rendering test asserts it, because invariant 1 is a rendering rule.
+- **2026-08-20 · The estimate's noise region is the measured floor carried through the
+  model, not a second uncertainty.** An estimate has no runs of its own, so it has no
+  dispersion of its own. The comparison row's band is what the band models each make of the
+  size of the change, its noise region is the transferred-bytes floor run through the
+  reference model on both sides, and its verdict is inherited from the measured metric that
+  drives it. Nothing on that row can make an estimate significant on its own.
 - **2026-08-20 · The contract tracker states a ceiling, never a rate of rise.** Its early
   warning read "conformity is rising at 1.9 pt/month", extrapolated from history nothing
   holds, and named 14 unassessed declarative criteria where the engine finds 3. It now says
@@ -638,15 +685,14 @@ Later versions: see roadmap; detailed to-dos are appended when the version start
   author; the pull request number survives in the commit subject where a squash merge
   puts it. Nothing is invented to match the mockup's wording.
 
-## Open: the carbon band the models actually produce
+## Resolved: the carbon band the models actually produce
 
-Blocking a real slice, and a decision rather than a bug.
+Decided 2026-08-20, option 2. Kept here because the reasoning is the point.
 
-Every carbon figure in the application still comes from the design canon, which was
-drawn before `packages/carbon-models` existed. It shows four models spanning 0.31 to
-0.58 gCO2e per visit, one of them ADEME Base Empreinte, which this build does not
-implement. Run the three models we do have over the canon's own measurements and they
-say something else entirely:
+Every carbon figure in the application came from the design canon, drawn before
+`packages/carbon-models` existed. It showed four models spanning 0.31 to 0.58 gCO2e per
+visit, one of them ADEME Base Empreinte, which this build does not implement. Running the
+three models we do have over the canon's own measurements said something else entirely:
 
 | Page | EcoIndex | SWD v4 | 1byte | Spread |
 | --- | --: | --: | --: | --: |
@@ -654,26 +700,27 @@ say something else entirely:
 | Free scan page | 2.280 | 0.059 | 0.227 | 39x |
 | Baseline before PR #412 | 2.407 | 0.067 | 0.258 | 36x |
 
-The gap is structural, not a bug. EcoIndex returns 2.436 for that page on a French grid,
-on a European grid, and on grey hosting: it is a score-to-carbon lookup and is blind to
-both. SWD v4 and 1byte both respond to grid intensity and to green hosting, which is why
-they land an order of magnitude lower on France's grid.
+The gap is structural. EcoIndex returns 2.436 for that page on a French grid, on a
+European grid, and on grey hosting: it reads a figure off a score and electricity is not
+one of its inputs. The other two compute an energy and multiply it by an emissions
+intensity, which is why they land an order of magnitude lower.
 
-Three ways to go, and the choice changes what the signature component looks like:
+The band now carries the energy models and EcoIndex is reported beside it as the grade and
+score it publishes, with its own gCO2e figure named rather than hidden. `METHODOLOGY.md`
+10.1 carries the reasoning; `bandModels()` applies it from what each model declares about
+itself, never from a list of names.
 
-1. **Render it.** The band spans 0.08 to 2.44 and needs a log scale. This is section 10
-   of the operating manual taken literally, and it makes the disagreement the first thing
-   anyone sees. Every carbon figure in the app, the documents and the fleet changes.
-2. **Report EcoIndex as its grade, and band the two grid-sensitive models.** The band
-   becomes 0.078 to 0.301, a 3.9x spread that reads on a linear scale, with the EcoIndex
-   grade beside it as the referential's own output. Defensible on the grounds that a
-   grid-blind figure and a grid-sensitive one are not the same quantity. It is a
-   `METHODOLOGY.md` decision and needs sign-off.
-3. **Defer.** The screens keep the design canon's numbers and the models stay unwired.
-   Cheapest today, and it leaves the product's central claim on a fixture.
+One correction the work produced: the rule was first written as "models that respond to
+grid intensity and hosting", on the assumption that both energy models track the grid. The
+sensitivity test found on its first run that 1byte does not, and never did: it uses fixed
+published intensities of 519 and 475 gCO2e/kWh, which its own first assumption already
+said verbatim. Under the rule as first written the band would have held one model. The
+rule moved to `method === 'energy'`, which is the line that actually holds.
 
-Nothing here is decided. Recommendation is 2, with the reasoning written into
-`METHODOLOGY.md` rather than into a code comment.
+Still open, and not ours to decide alone: whether `swd` stays the reference model, and
+what the tender's contractual ceiling should be. This build sets it at 0.100 gCO2e per
+visit, proportionate to the 0.076 the reference model gives, which is a placeholder for a
+number a supplier signs.
 
 ---
 

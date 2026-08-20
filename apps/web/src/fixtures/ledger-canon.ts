@@ -7,7 +7,7 @@ import type { LedgerEntry } from '@balise/schemas';
 export const ledgerCanon = {
   organizationId: "org_atelier_sextant",
   entryCount: 4820,
-  merkleRoot: "18cf150030c4892a56ce8ad1eff52f14cb61cd7524e07bccf73a5071020ed48d",
+  merkleRoot: "0fd4d25d652906ee343df1c216dd26277bc53804c24fe9a6f3d2014d24f2da35",
   anchoredAt: "2026-08-15T04:00:00.000Z",
   verification: {"status":"intact","checkedCount":4820},
   // the entries the interface and the documents cite. the rest of the chain
@@ -36,27 +36,26 @@ export const ledgerCanon = {
         "region": "eu-west-par"
       },
       "models": [
-        "ecoindex@3.1",
-        "swd@4.0",
-        "ademe@2024",
-        "1byte@2021"
+        "ecoindex@0.1.0",
+        "swd@0.1.0",
+        "onebyte@0.1.0"
       ],
       "metrics": {
         "transferredBytes": 1258000,
         "transferredBytesMad": 6000,
         "requestCount": 84,
         "domNodeCount": 2140,
-        "carbonPerVisitG": 0.42,
-        "carbonBandLowG": 0.31,
-        "carbonBandHighG": 0.58
+        "carbonPerVisitG": 0.075666184,
+        "carbonBandLowG": 0.075666184,
+        "carbonBandHighG": 0.29180358333333334
       },
       "confidence": "high"
     },
     "sequence": 4818,
     "createdAt": "2026-08-15T14:02:41.000Z",
-    "payloadHash": "35d3d65fa6efd9aa0706b97ba07fe85a6e0e5277edc6ba864e3ef5f62044c3e6",
+    "payloadHash": "bbdfce3d258bb24c30f543c16f1e9260d92952be39e7ce831411749309ba67af",
     "prevHash": "ed09b53a002f15112d3c5b2b4f4e6ddf1aab9623dab0c4135e9cbccd2453c941",
-    "entryHash": "0ad2530376ad8b63f486afc8b782c5899a16843e3ab074717008ec68fb00affc"
+    "entryHash": "4d62064c32d0274f356ce4a5901395263abb9db2235654cdc930a1fa2de0989e"
   },
   {
     "organizationId": "org_atelier_sextant",
@@ -73,8 +72,8 @@ export const ledgerCanon = {
     "sequence": 4819,
     "createdAt": "2026-08-15T15:20:08.000Z",
     "payloadHash": "fd70dbfeb08568cb91a20cf8352a41c5c4102f04bfe4f9d8a3f7a562bb5bc820",
-    "prevHash": "0ad2530376ad8b63f486afc8b782c5899a16843e3ab074717008ec68fb00affc",
-    "entryHash": "e1771446e50c653fa2eea5b871945d5ad91460dc4126a3264cdf7821ff927c17"
+    "prevHash": "4d62064c32d0274f356ce4a5901395263abb9db2235654cdc930a1fa2de0989e",
+    "entryHash": "4532205ce24b3433aa5c520b2187a9f357c73bf4e16eeb5b74fef1bf96d2ee5c"
   },
   {
     "organizationId": "org_atelier_sextant",

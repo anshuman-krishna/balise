@@ -1,5 +1,5 @@
 import type { LedgerEntry } from '@balise/schemas';
-import { formatInt } from '@balise/ui';
+import { formatInt, formatNumber } from '@balise/ui';
 
 /**
  * turns an entry into what the public verification page shows. it reads the
@@ -121,8 +121,10 @@ function describeValues(payload: Record<string, unknown>): LedgerRecordValues | 
   ) {
     return undefined;
   }
-  // the document register writes decimals with a comma
-  const decimal = (value: number) => value.toFixed(2).replace('.', ',');
+  // the document register writes decimals with a comma. three of them, because
+  // at a french grid two would round the reference and the low edge of the band
+  // to the same figure and the record would state a band of nothing.
+  const decimal = (value: number) => formatNumber(value, 3).replace('.', ',');
   return {
     transferredKb: formatInt(transferred / 1000),
     madKb: formatInt(mad / 1000),

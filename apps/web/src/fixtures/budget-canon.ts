@@ -1561,9 +1561,9 @@ export const budgetCanon: BudgetCanon = {
   provenance: {
   "methodologyVersion": "v1.2",
   "models": [
-    "ecoindex@3.1",
-    "swd@4.0",
-    "ademe@2024"
+    "ecoindex@0.1.0",
+    "swd@0.1.0",
+    "onebyte@0.1.0"
   ],
   "runId": "#4812",
   "ledgerRef": "0ad25303",

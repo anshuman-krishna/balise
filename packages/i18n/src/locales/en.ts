@@ -38,6 +38,20 @@ export const en = {
     minutesAgo: '{minutes} min ago',
   },
   months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+  carbon: {
+    provenance: '{model} · reference · band = {count} models · grid {grid} gCO2e/kWh ({zone})',
+    gradeAndScore: '{grade} · {score}/100',
+    scoreDerived: 'Rated from page weight, requests and DOM nodes. Not carried in the band: it reads its figure off that rating rather than from energy.',
+    scoreDerivedShort: 'read off a rating, not an energy calculation',
+    ownValue: 'its own figure: {value} gCO2e',
+    gridSensitive: 'applies the measured grid',
+    gridBlind: 'fixed intensities, not the measured grid',
+    asideTitle: 'REPORTED BESIDE THE BAND',
+    bandTitle: 'IN THE BAND',
+    // 'green' is banned interface vocabulary; the check is against the
+    // green web foundation dataset and the copy names what it establishes.
+    hostingChecked: 'renewable-powered hosting, verified {date}',
+  },
   confidence: {
     high: 'HIGH',
     medium: 'MEDIUM',
@@ -125,7 +139,8 @@ export const en = {
     moreRows: '+ {count} more',
     thirdPartyTag: '⟨3p⟩',
     modelsTitle: 'ALL MODEL OUTPUTS · SIDE BY SIDE',
-    modelsCaption: "Each bar is that model's own stated uncertainty, not run-to-run noise.",
+    modelsCaption:
+      'Two scales, not one: a model that does not compute the same quantity is not drawn on the same axis. A model that publishes no uncertainty of its own is drawn as a line rather than a band, because an invented width would read as a stated one.',
     dispersionTitle: 'RUN-TO-RUN DISPERSION · N={n}',
     noiseFloorLabel: 'NOISE ±{value} KB',
     deltaTimesNoise: 'Δ +{delta} KB · {ratio}× noise',
@@ -178,6 +193,7 @@ export const en = {
       vsNoise: 'VS NOISE FLOOR',
       verdict: 'VERDICT',
     },
+    carbonRow: 'Estimated footprint per visit ({model})',
     lowConf: 'low conf.',
     attributionTitle: 'ATTRIBUTION · RESOLVED THROUGH SOURCE MAPS',
     attributionKeys: {
@@ -611,8 +627,12 @@ export const en = {
     section2Body:
       "Les valeurs ci-dessous sont les médianes de cinq exécutions par scénario, réalisées sur un navigateur épinglé et un profil de bridage documenté. Chaque estimation carbone est présentée sous forme d'étendue inter-modèles, le modèle de référence étant indiqué. Aucune valeur n'est lissée.",
     figLabel: "FIG. 3 · EMPREINTE ESTIMÉE PAR VISITE · PAGE D'ACCUEIL",
+    // filled from the models that actually ran. a caption naming a model the
+    // build does not carry is the kind of thing an auditor checks first.
     figCaption:
-      'Hachures : étendue inter-modèles (EcoIndex 3.1 · SWD v4 · ADEME BE 2024 · 1byte). Pointillé : plancher de bruit ±0,03. Trait plein : médiane, modèle de référence SWD v4.',
+      'Hachures : étendue inter-modèles ({band}). Pointillé : plancher de bruit du scénario, ±{floor} d\'octets transférés, porté dans le modèle. Trait plein : médiane, modèle de référence {reference}.',
+    figCaptionAside:
+      "Hors bande, {model} publie {headline} et {value} gCO2e pour la même page : sa valeur est lue sur une note et non calculée à partir de l'énergie du transfert.",
     headers: { indicator: 'INDICATEUR', median: 'MÉDIANE', mad: 'MAD', confidence: 'CONFIANCE' },
     confHigh: 'Élevée',
     confMedium: 'Moyenne △',
@@ -642,15 +662,20 @@ export const en = {
     navMethodology: 'Méthodologie',
     navPricing: 'Tarifs',
     title: 'Mesurez une page. Sans compte.',
+    // the lede has to describe what this surface actually does. it measured one
+    // cold pass, so it does not promise five, and the model count is filled
+    // from the models that ran rather than typed.
     lede:
-      "Cinq exécutions, quatre modèles d'estimation, méthodologie publiée. Le résultat indique aussi si le service publie une déclaration d'écoconception.",
+      "Un relevé à froid, {count} modèles d'estimation, méthodologie publiée. Le résultat indique aussi si le service publie une déclaration d'écoconception.",
     fieldLabel: 'Adresse du service à mesurer',
     submit: 'Mesurer',
     gradeLabel: 'ECOINDEX',
     gradeScore: '{score}/100',
     bandLabel: 'EMPREINTE PAR VISITE · ÉTENDUE INTER-MODÈLES',
     confidenceHigh: 'CONFIANCE ÉLEVÉE',
-    provenance: 'médiane {model} · étendue sur {count} modèles · plancher de bruit ±{noise}',
+    // the public surfaces are french in both locales.
+    provenance: 'médiane {model} · étendue sur {count} modèles · réseau {grid} gCO2e/kWh ({zone})',
+    provenanceNoFloor: 'un seul relevé à froid : aucun plancher de bruit établi, aucune tendance affichée',
     findingsTitle: "Trois points d'attention",
     declarationTitle: "Déclaration d'écoconception",
     declarationNone: 'Aucune déclaration trouvée',

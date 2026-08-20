@@ -1,7 +1,23 @@
-import { ToleranceBand } from '@balise/ui';
+import { formatMeasured, ToleranceBand } from '@balise/ui';
 import { fill, t } from '../i18n';
 import { canon, documentsFixture, tenderFixture } from '../fixtures/canon';
 import { conformityPct } from '../lib/criteria-view';
+import {
+  bandModelNames,
+  carbonAsides,
+  carbonPage,
+  carbonScale,
+  formatCarbon,
+  referenceModelRef,
+  referenceSpecLabel,
+} from '../lib/carbon-view';
+
+// fig. 3 is the estimate the dashboard shows, drawn through the same component
+// in the print register. the document and the app cannot state two figures.
+const fig3 = carbonPage('dashboard');
+const fig3Axis = carbonScale(fig3);
+const fig3Aside = carbonAsides(fig3)[0] ?? null;
+const fig3AsideOutput = fig3.aside[0] ?? null;
 import { DocumentRegister } from '../components/DocumentRegister';
 import { VerificationUrl } from '../components/VerificationUrl';
 
@@ -167,21 +183,35 @@ export function DocAnnexe() {
               size="canonical"
               register="print"
               width={480}
-              scaleMin={doc.fig3.scaleMin}
-              scaleMax={doc.fig3.scaleMax}
-              median={doc.fig3.median}
-              bandLow={doc.fig3.bandLow}
-              bandHigh={doc.fig3.bandHigh}
-              noiseLow={doc.fig3.noiseLow}
-              noiseHigh={doc.fig3.noiseHigh}
-              referenceModel={canon.referenceModel}
+              scaleMin={fig3Axis.min}
+              scaleMax={fig3Axis.max}
+              median={fig3.band.reference}
+              bandLow={fig3.band.low}
+              bandHigh={fig3.band.high}
+              {...(fig3.noise === null ? {} : { noiseLow: fig3.noise.low, noiseHigh: fig3.noise.high })}
+              referenceModel={referenceModelRef()}
               confidence="high"
               unitLabel={t.dashboard.tiles.carbonUnit}
               formatTick={(value) => value.toFixed(2).replace('.', ',')}
             />
           </div>
           <div style={{ marginTop: 9, fontSize: 9.5, lineHeight: 1.65, color: 'var(--text-secondary)', maxWidth: '64ch' }}>
-            {t.docAnnexe.figCaption}
+            {fill(t.docAnnexe.figCaption, {
+              band: bandModelNames(fig3),
+              floor: fig3.noise === null ? '0' : formatMeasured(fig3.noise.floorBytes, 'bytes'),
+              reference: referenceSpecLabel(fig3),
+            })}
+            {/* the model outside the band is named in the document too. a
+                figure a buyer can check has to say what was left out of it. */}
+            {fig3Aside === null || fig3AsideOutput === null ? null : (
+              <div style={{ marginTop: 5 }}>
+                {fill(t.docAnnexe.figCaptionAside, {
+                  model: `${fig3Aside.id} v${fig3AsideOutput.specVersion}`,
+                  headline: fig3Aside.headline,
+                  value: formatCarbon(fig3AsideOutput.value).replace('.', ','),
+                })}
+              </div>
+            )}
           </div>
         </div>
 

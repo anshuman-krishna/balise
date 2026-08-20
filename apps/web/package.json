@@ -13,6 +13,7 @@
   "dependencies": {
     "@balise/attribution": "workspace:*",
     "@balise/budgets": "workspace:*",
+    "@balise/carbon-models": "workspace:*",
     "@balise/criteria-engine": "workspace:*",
     "@balise/i18n": "workspace:*",
     "@balise/ledger": "workspace:*",

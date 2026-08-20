@@ -78,6 +78,9 @@ importers:
       '@balise/budgets':
         specifier: workspace:*
         version: link:../../packages/budgets
+      '@balise/carbon-models':
+        specifier: workspace:*
+        version: link:../../packages/carbon-models
       '@balise/criteria-engine':
         specifier: workspace:*
         version: link:../../packages/criteria-engine

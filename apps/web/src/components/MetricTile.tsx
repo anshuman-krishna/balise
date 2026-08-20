@@ -83,20 +83,24 @@ export function MetricTile(props: MetricTileProps) {
       <div style={{ marginTop: 8 }}>
         <ToleranceBand {...band} size="compact" width={236} />
       </div>
-      <div
-        className="mono"
-        style={{
-          marginTop: 9,
-          fontSize: 9.5,
-          color:
-            stateMessage === undefined
-              ? 'var(--text-tertiary)'
-              : stateMessage.tone === 'breach'
-                ? 'var(--breach)'
-                : 'var(--caution)',
-        }}
-      >
-        {stateMessage?.text ?? provenance}
+      {stateMessage === undefined ? null : (
+        <div
+          className="mono"
+          style={{
+            marginTop: 9,
+            fontSize: 9.5,
+            color: stateMessage.tone === 'breach' ? 'var(--breach)' : 'var(--caution)',
+          }}
+        >
+          {stateMessage.text}
+        </div>
+      )}
+      {/* provenance is never displaced by a state message. an estimate has to
+          name its model and version wherever it appears (invariant 1), and a
+          tile that swapped the line for an alert would drop it exactly when
+          the figure is being read most closely. */}
+      <div className="mono" style={{ marginTop: 9, fontSize: 9.5, color: 'var(--text-tertiary)' }}>
+        {provenance}
       </div>
     </div>
   );

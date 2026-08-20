@@ -4,7 +4,23 @@ import { fill, t } from '../i18n';
 import { canon } from '../fixtures/canon';
 import { criteriaCanon } from '../fixtures/criteria-canon';
 import { pendingDeclarative, sourceLine, tierCards } from '../lib/criteria-view';
+import {
+  bandRangeText,
+  carbonAsides,
+  carbonPage,
+  carbonProvenance,
+  carbonScale,
+  formatCarbon,
+  referenceModel,
+} from '../lib/carbon-view';
 import { MetricTile } from '../components/MetricTile';
+
+// the carbon tile is the estimate @balise/carbon-models produced for the
+// service median, not a figure chosen for the tile.
+const carbon = carbonPage('dashboard');
+const carbonRef = referenceModel(carbon);
+const carbonAxis = carbonScale(carbon);
+const ecoindex = carbonAsides(carbon)[0] ?? null;
 
 // the completeness card reads the engine's answers, in the pack's tier order.
 const completenessRows = tierCards();
@@ -37,8 +53,9 @@ function TierRow({ label, done, total, color }: { label: string; done: number; t
 
 export function Dashboard() {
   const d = t.dashboard;
-  const ref = canon.referenceModel;
-  const referenceLabel = `${ref.id}@${ref.version}`;
+  // the measured tiles are not estimates, but the band still names the model
+  // version in force, and it names the one that actually ran.
+  const ref = { id: carbonRef.id, version: carbonRef.version };
 
   return (
     <>
@@ -55,28 +72,28 @@ export function Dashboard() {
       <div className="tile-grid">
         <MetricTile
           label={d.tiles.carbonPerVisit}
-          valueText={formatNumber(canon.carbon.median, 2)}
+          valueText={formatCarbon(carbon.band.reference)}
           unitText={d.tiles.carbonUnit}
-          rightPrimary={`${formatNumber(canon.carbon.low, 2)} – ${formatNumber(canon.carbon.high, 2)}`}
-          rightSecondary={fill(d.tiles.acrossModels, { count: canon.models.length })}
+          rightPrimary={bandRangeText(carbon)}
+          rightSecondary={fill(d.tiles.acrossModels, { count: carbon.band.modelCount })}
           confidence="high"
           confidenceLabel={t.confidence.high}
           band={{
-            scaleMin: canon.carbon.scaleMin,
-            scaleMax: canon.carbon.scaleMax,
-            median: canon.carbon.median,
-            bandLow: canon.carbon.low,
-            bandHigh: canon.carbon.high,
-            noiseLow: canon.carbon.noiseLow,
-            noiseHigh: canon.carbon.noiseHigh,
-            referenceModel: ref,
+            scaleMin: carbonAxis.min,
+            scaleMax: carbonAxis.max,
+            median: carbon.band.reference,
+            bandLow: carbon.band.low,
+            bandHigh: carbon.band.high,
+            ...(carbon.noise === null ? {} : { noiseLow: carbon.noise.low, noiseHigh: carbon.noise.high }),
+            referenceModel: { id: carbonRef.id, version: carbonRef.version },
             confidence: 'high',
             unitLabel: d.tiles.carbonUnit,
+            formatTick: (value) => formatNumber(value, 2),
           }}
-          provenance={fill(d.tiles.provenanceReference, {
-            model: referenceLabel,
-            count: canon.models.length,
-          })}
+          provenance={carbonProvenance(carbon)}
+          // ecoindex is not in the band and is not dropped either: the tile
+          // carries its published grade beside the figure.
+          stateMessage={ecoindex === null ? undefined : { text: `${ecoindex.id} ${ecoindex.headline}`, tone: 'caution' }}
         />
 
         <MetricTile

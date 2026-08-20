@@ -1,7 +1,42 @@
 import type { AggregatedMetric, MetricId, NoiseFloor, Unit } from '@balise/schemas';
-import { formatInt } from '@balise/ui';
+import { formatInt, formatNumber } from '@balise/ui';
+import { carbonCanon } from './carbon-canon';
 import { elidedHash, groupedHash, REF, shortHash, verifyUrl } from './ledger-refs';
 import { ledgerCanon } from './ledger-canon';
+
+// ---- the contractual footprint engagement ----
+
+// the service median as @balise/carbon-models estimated it, read once. the
+// tender, the contract tracker and the execution report all print this figure,
+// so no two of them can state a different footprint for the same service.
+const carbonService = carbonCanon.pages.find((page) => page.id === 'dashboard');
+if (carbonService === undefined) throw new Error('the carbon canon holds no service median');
+
+const carbonMedianG = carbonService.band.reference;
+
+// the ceiling is authored, not measured: a threshold is something a supplier
+// signs, and this one was written into the offer with room above the figure
+// the reference model gave at the time. the headroom below is derived from it,
+// never typed beside it.
+const CARBON_CEILING_G = 0.1;
+
+const carbonHeadroomPct = Math.round((1 - carbonMedianG / CARBON_CEILING_G) * 100);
+const carbonBarPct = 100 - carbonHeadroomPct;
+
+const carbonMedianText = formatNumber(carbonMedianG, 3);
+const carbonCeilingText = formatNumber(CARBON_CEILING_G, 3);
+
+// the fleet and the observatory carry carbon figures for services this build
+// does not measure. the design canon put the audited service at the figure
+// below, so those figures are read as ratios to it and multiplied back by what
+// the models estimated. the audited service reads the same on every surface,
+// and the fictional ones keep the shape the design gave them.
+const DESIGN_CARBON_ANCHOR_G = 0.42;
+const designCarbon = (value: number): number =>
+  Math.round((value / DESIGN_CARBON_ANCHOR_G) * carbonMedianG * 10_000) / 10_000;
+
+/** documents are french, and french decimals take a comma. */
+const fr = (text: string): string => text.replace('.', ',');
 
 // the scenario canon: one internally consistent fictional dataset, from the
 // design handoff. none of it is measured. it exists so every screen tells the
@@ -35,22 +70,6 @@ export const canon = {
     fingerprint:
       'chromium 127.0.6533.88 · img sha256:4e91c2a7 · desktop-fibre + mobile-4g · eu-west-par',
     methodologyVersion: 'v1.2',
-  },
-  referenceModel: { id: 'swd', version: '4.0' },
-  models: [
-    { name: 'EcoIndex', version: '3.1', value: 0.31, isReference: false },
-    { name: 'SWD v4', version: '4.0', value: 0.42, isReference: true },
-    { name: 'ADEME BE', version: '2024', value: 0.37, isReference: false },
-    { name: '1byte', version: '2021', value: 0.58, isReference: false },
-  ],
-  carbon: {
-    median: 0.42,
-    low: 0.31,
-    high: 0.58,
-    noiseLow: 0.39,
-    noiseHigh: 0.45,
-    scaleMin: 0.2,
-    scaleMax: 0.7,
   },
   transferred: {
     medianKb: 1258,
@@ -203,13 +222,6 @@ export const runDetailFixture = {
   // record for it here, so it is carried as one group rather than invented
   // row by row.
   remainder: { requests: 76, transferredKb: 2 },
-  models: [
-    { name: 'EcoIndex', value: 0.31, low: 0.28, high: 0.35, isReference: false },
-    { name: 'SWD v4', value: 0.42, low: 0.36, high: 0.49, isReference: true },
-    { name: 'ADEME BE', value: 0.37, low: 0.33, high: 0.42, isReference: false },
-    { name: '1byte', value: 0.58, low: 0.52, high: 0.63, isReference: false },
-  ],
-  modelScale: { min: 0.2, max: 0.7 },
   dispersion: {
     baselineRuns: [1104, 1110, 1114, 1118, 1123],
     candidateRuns: [1289, 1294, 1298, 1303, 1307],
@@ -231,7 +243,8 @@ export const runDetailFixture = {
     { key: 'image', value: 'sha256:4e91c2a7…' },
     { key: 'throttle', value: 'mobile-4g (1.6 Mbps / 4× CPU)' },
     { key: 'region', value: 'eu-west-par' },
-    { key: 'models', value: 'ecoindex@3.1 swd@4.0 ademe@2024 1byte@2021' },
+    // the models row is filled at render time from what actually ran.
+    { key: 'models', value: '' },
     { key: 'ledger', value: `${shortHash(REF.run)}…`, link: true },
   ] as ReadonlyArray<{ key: string; value: string; link?: boolean }>,
 } as const;
@@ -296,17 +309,6 @@ export const comparisonFixture = {
       overThreshold: false,
     },
   ] as readonly ComparisonRow[],
-  // estimates are not kernel metrics; the carbon row inherits significance
-  // from the transferred-bytes delta that drives it and is precomputed here.
-  carbonRow: {
-    label: 'Carbon / visit (SWD v4)',
-    before: 0.98,
-    after: 1.14,
-    delta: 0.16,
-    floorG: 0.02,
-    madG: 0.02,
-    verdict: 'breach' as const,
-  },
   // the attribution card and the third-party diff are computed by
   // @balise/attribution from two builds with real source maps. see
   // fixtures/attribution-canon.ts, which is generated.
@@ -386,9 +388,9 @@ export const tenderFixture = {
     {
       checked: true,
       label: 'Empreinte estimée par visite (SWD v4)',
-      measured: '0.42 g',
-      proposed: '≤ 0.55 g',
-      margin: { kind: 'headroom', pct: 24 },
+      measured: `${carbonMedianText} g`,
+      proposed: `≤ ${carbonCeilingText} g`,
+      margin: { kind: 'headroom', pct: carbonHeadroomPct },
     },
     {
       checked: true,
@@ -472,9 +474,9 @@ export const contractFixture = {
     },
     {
       label: 'Empreinte estimée par visite (SWD v4)',
-      seuil: '0.55',
-      actuel: '0.42',
-      headroom: { barPct: 76, tone: 'ok', labelPct: 24 },
+      seuil: carbonCeilingText,
+      actuel: carbonMedianText,
+      headroom: { barPct: carbonBarPct, tone: 'ok', labelPct: carbonHeadroomPct },
       trendPoints: '2,8 16,9 30,7 44,10 58,11 72,12 86,13 108,13',
       trendTone: 'neutral',
       status: 'tenu',
@@ -543,11 +545,11 @@ export const fleetFixture = {
   activeContracts: 2,
   openTenders: 1,
   summary: { breaches: 3, staleDeclarations: 2, deadlines30d: 1 },
-  scale: { min: 0, max: 1.6 },
+  scale: { min: 0, max: designCarbon(1.6) },
   rows: [
     {
       domain: 'sevre-et-loire.fr',
-      band: { median: 0.42, low: 0.31, high: 0.58, noiseLow: 0.39, noiseHigh: 0.45, state: 'normal', confidence: 'high' },
+      band: { median: designCarbon(0.42), low: designCarbon(0.31), high: designCarbon(0.58), noiseLow: designCarbon(0.39), noiseHigh: designCarbon(0.45), state: 'normal', confidence: 'high' },
       conf: 'high',
       // null is the audited service: its rate is read off the assessments the
       // criteria workspace answers, not repeated here. the other rows are
@@ -559,7 +561,7 @@ export const fleetFixture = {
     },
     {
       domain: 'transports-selo.fr',
-      band: { median: 0.86, low: 0.6, high: 1.35, noiseLow: 0.78, noiseHigh: 0.95, state: 'breach', confidence: 'high' },
+      band: { median: designCarbon(0.86), low: designCarbon(0.6), high: designCarbon(1.35), noiseLow: designCarbon(0.78), noiseHigh: designCarbon(0.95), state: 'breach', confidence: 'high' },
       conf: 'high',
       rgesnPct: 44,
       declaration: { text: 'v1 · 248 d', tone: 'caution' },
@@ -568,7 +570,7 @@ export const fleetFixture = {
     },
     {
       domain: 'bibliotheques-selo.fr',
-      band: { median: 0.24, low: 0.1, high: 0.52, noiseLow: 0.18, noiseHigh: 0.3, state: 'normal', confidence: 'high' },
+      band: { median: designCarbon(0.24), low: designCarbon(0.1), high: designCarbon(0.52), noiseLow: designCarbon(0.18), noiseHigh: designCarbon(0.3), state: 'normal', confidence: 'high' },
       conf: 'high',
       rgesnPct: 71,
       declaration: { text: 'none', tone: 'breach' },
@@ -577,7 +579,7 @@ export const fleetFixture = {
     },
     {
       domain: 'chu-armorique.fr',
-      band: { median: 1.2, low: 0.88, high: 1.53, noiseLow: 1.05, noiseHigh: 1.43, state: 'normal', confidence: 'low' },
+      band: { median: designCarbon(1.2), low: designCarbon(0.88), high: designCarbon(1.53), noiseLow: designCarbon(1.05), noiseHigh: designCarbon(1.43), state: 'normal', confidence: 'low' },
       conf: 'low',
       rgesnPct: 38,
       declaration: { text: 'v1 · 426 d', tone: 'caution' },
@@ -586,7 +588,7 @@ export const fleetFixture = {
     },
     {
       domain: 'craonnais.fr',
-      band: { median: 0.14, low: 0.05, high: 0.32, noiseLow: 0.1, noiseHigh: 0.2, state: 'normal', confidence: 'high' },
+      band: { median: designCarbon(0.14), low: designCarbon(0.05), high: designCarbon(0.32), noiseLow: designCarbon(0.1), noiseHigh: designCarbon(0.2), state: 'normal', confidence: 'high' },
       conf: 'high',
       rgesnPct: 82,
       declaration: { text: 'v4 · 21 d', tone: 'ok' },
@@ -595,7 +597,7 @@ export const fleetFixture = {
     },
     {
       domain: 'eau-selo.fr',
-      band: { median: 0.58, low: 0.38, high: 0.98, noiseLow: 0.5, noiseHigh: 0.65, state: 'normal', confidence: 'high' },
+      band: { median: designCarbon(0.58), low: designCarbon(0.38), high: designCarbon(0.98), noiseLow: designCarbon(0.5), noiseHigh: designCarbon(0.65), state: 'normal', confidence: 'high' },
       conf: 'high',
       rgesnPct: 64,
       declaration: { text: 'v2 · 88 d', tone: 'muted' },
@@ -622,10 +624,14 @@ export const fleetFixture = {
       { x: 266, y: 62, h: 4 },
     ],
     markerX: 99,
-    markerLabel: 'sevre-et-loire · 0.42 · P38',
+    markerLabel: `sevre-et-loire · ${carbonMedianText} · P38`,
     medianX: 200,
-    medianValue: '0.71',
-    axis: ['0.2', '0.8', '1.6 gCO₂e'],
+    medianValue: formatNumber(designCarbon(0.71), 3),
+    axis: [
+      formatNumber(designCarbon(0.2), 3),
+      formatNumber(designCarbon(0.8), 3),
+      `${formatNumber(designCarbon(1.6), 3)} gCO₂e`,
+    ],
   },
   clientAccess: {
     viewers: [
@@ -671,15 +677,6 @@ export const documentsFixture = {
     ],
     // fig. 3 in value space; rendered through the print ToleranceBand so the
     // document figure and the app figure are the same component
-    fig3: {
-      scaleMin: 0.2,
-      scaleMax: 0.7,
-      median: 0.42,
-      bandLow: 0.31,
-      bandHigh: 0.58,
-      noiseLow: 0.39,
-      noiseHigh: 0.45,
-    },
     indicators: [
       { label: 'Octets transférés (froid)', median: `${formatInt(1258)} KB`, mad: '6 KB', conf: 'high' },
       { label: 'Requêtes HTTP', median: '84', mad: '1', conf: 'high' },
@@ -712,9 +709,9 @@ export const documentsFixture = {
       },
       {
         label: 'Empreinte estimée par visite (SWD v4)',
-        seuil: '0,55 g',
-        t3: '0,42 g',
-        gauge: { fillPct: 77, tone: 'held' },
+        seuil: `${fr(carbonCeilingText)} g`,
+        t3: `${fr(carbonMedianText)} g`,
+        gauge: { fillPct: carbonBarPct, tone: 'held' },
         etat: 'tenu',
       },
       {
@@ -828,22 +825,9 @@ export interface ScanFinding {
 export const scanFixture = {
   domain: 'bibliotheques-selo.fr',
   profile: 'mobile-4g',
-  grade: 'B',
-  score: 71,
+  // the grade, the score and the carbon band are estimated by
+  // @balise/carbon-models from this page's held capture: see carbon-canon.ts.
   confidence: 'high',
-  carbon: {
-    median: 0.29,
-    low: 0.21,
-    high: 0.41,
-    // one cold pass on one page: the floor is the service default, not a
-    // floor computed from this scan's own history, which does not exist
-    noiseLow: 0.26,
-    noiseHigh: 0.32,
-    noise: 0.03,
-    scaleMin: 0.1,
-    scaleMax: 1.6,
-  },
-  modelCount: 4,
   // findings are engine output, kept as data like the attribution parts
   findings: [
     {
@@ -898,16 +882,17 @@ export const observatoryFixture = {
   measuredOn: '15 août 2026',
   profile: 'mobile-4g',
   methodology: 'v1.2',
-  modelCount: 4,
+  // the band spans the models that ran, and says how many.
+  modelCount: carbonService.band.modelCount,
   // shared scale across every row, so the bands are comparable by eye
-  scale: { min: 0, max: 1.6 },
+  scale: { min: 0, max: designCarbon(1.6) },
   rows: [
     {
       rank: 1,
       domain: 'craonnais.fr',
       organisme: 'Ville de Craonnais',
       sector: 'communes',
-      band: { median: 0.14, low: 0.05, high: 0.32, noiseLow: 0.1, noiseHigh: 0.2, state: 'normal', confidence: 'high' },
+      band: { median: designCarbon(0.14), low: designCarbon(0.05), high: designCarbon(0.32), noiseLow: designCarbon(0.1), noiseHigh: designCarbon(0.2), state: 'normal', confidence: 'high' },
       grade: 'A',
       kb: 318,
       trend: { pct: -14, significant: true },
@@ -919,7 +904,7 @@ export const observatoryFixture = {
       domain: 'ville-de-plessac.fr',
       organisme: 'Commune de Plessac',
       sector: 'communes',
-      band: { median: 0.18, low: 0.08, high: 0.34, noiseLow: 0.14, noiseHigh: 0.22, state: 'normal', confidence: 'high' },
+      band: { median: designCarbon(0.18), low: designCarbon(0.08), high: designCarbon(0.34), noiseLow: designCarbon(0.14), noiseHigh: designCarbon(0.22), state: 'normal', confidence: 'high' },
       grade: 'A',
       kb: 402,
       trend: { pct: -2, significant: false },
@@ -931,7 +916,7 @@ export const observatoryFixture = {
       domain: 'sevre-et-loire.fr',
       organisme: 'Métropole de Sèvre-et-Loire',
       sector: 'epci',
-      band: { median: 0.42, low: 0.31, high: 0.58, noiseLow: 0.39, noiseHigh: 0.45, state: 'normal', confidence: 'high' },
+      band: { median: designCarbon(0.42), low: designCarbon(0.31), high: designCarbon(0.58), noiseLow: designCarbon(0.39), noiseHigh: designCarbon(0.45), state: 'normal', confidence: 'high' },
       grade: 'B',
       kb: 842,
       trend: { pct: -9, significant: true },
@@ -944,7 +929,7 @@ export const observatoryFixture = {
       domain: 'transports-selo.fr',
       organisme: 'Réseau Naïade',
       sector: 'transport',
-      band: { median: 0.86, low: 0.6, high: 1.35, noiseLow: 0.78, noiseHigh: 0.95, state: 'breach', confidence: 'high' },
+      band: { median: designCarbon(0.86), low: designCarbon(0.6), high: designCarbon(1.35), noiseLow: designCarbon(0.78), noiseHigh: designCarbon(0.95), state: 'breach', confidence: 'high' },
       grade: 'D',
       kb: 2184,
       trend: { pct: 21, significant: true },
@@ -956,7 +941,7 @@ export const observatoryFixture = {
       domain: 'chu-armorique.fr',
       organisme: "CHU d'Armorique",
       sector: 'sante',
-      band: { median: 1.2, low: 0.88, high: 1.53, noiseLow: 1.05, noiseHigh: 1.43, state: 'normal', confidence: 'low' },
+      band: { median: designCarbon(1.2), low: designCarbon(0.88), high: designCarbon(1.53), noiseLow: designCarbon(1.05), noiseHigh: designCarbon(1.43), state: 'normal', confidence: 'low' },
       grade: 'E',
       gradeTone: 'caution',
       kb: 3062,
@@ -970,7 +955,7 @@ export const observatoryFixture = {
       domain: 'portail-arvor.fr',
       organisme: "Département d'Arvor",
       sector: 'departements',
-      band: { median: 1.42, low: 1.1, high: 1.58, noiseLow: 1.32, noiseHigh: 1.52, state: 'breach', confidence: 'high' },
+      band: { median: designCarbon(1.42), low: designCarbon(1.1), high: designCarbon(1.58), noiseLow: designCarbon(1.32), noiseHigh: designCarbon(1.52), state: 'breach', confidence: 'high' },
       grade: 'F',
       gradeTone: 'breach',
       kb: 4418,

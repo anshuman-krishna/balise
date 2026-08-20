@@ -7,6 +7,7 @@ import type {
 } from '@balise/schemas';
 import { METRIC_UNIT } from '@balise/schemas';
 import type { AttributionSide } from '@balise/attribution';
+import { carbonModels } from '@balise/carbon-models';
 import {
   evaluateBudgets,
   readConfig,
@@ -198,7 +199,8 @@ function overrideFromLedger(): BudgetOverride {
  */
 const PROVENANCE: CheckProvenance = {
   methodologyVersion: 'v1.2',
-  models: ['ecoindex@3.1', 'swd@4.0', 'ademe@2024'],
+  // read off the package, so the comment cannot name a model that did not run.
+  models: carbonModels.map((model) => `${model.id}@${model.version}`),
   runId: '#4812',
   ledgerRef: shortHash(REF.run),
   verificationUrl: verifyUrl(REF.run),

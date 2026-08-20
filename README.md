@@ -185,8 +185,9 @@ generator ever disagree.
 ```bash
 pnpm gen:attribution-canon
 pnpm gen:budget-canon
-pnpm gen:ledger-canon
+pnpm gen:carbon-canon
 pnpm gen:criteria-canon
+pnpm gen:ledger-canon
 ```
 
 ## Status

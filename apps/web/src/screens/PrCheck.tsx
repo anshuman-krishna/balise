@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { formatInt, formatSigned, ToleranceBand } from '@balise/ui';
 import { Link } from 'react-router';
 import { fill, t } from '../i18n';
-import { canon, prCheckFixture as pr } from '../fixtures/canon';
+import { prCheckFixture as pr } from '../fixtures/canon';
+import { referenceModelRef } from '../lib/carbon-view';
 import { budgetCanon } from '../fixtures/budget-canon';
 import { attributionCoverage, attributionLead } from '../lib/attribution-view';
 import {
@@ -111,7 +112,7 @@ function MeasurementRow({ row }: { row: CheckRow }) {
         bandHigh={row.deltaKb + row.madKb}
         noiseLow={-row.floorKb}
         noiseHigh={row.floorKb}
-        referenceModel={canon.referenceModel}
+        referenceModel={referenceModelRef()}
         confidence="high"
         state={row.verdict === 'fail' ? 'breach' : row.verdict === 'warn' ? 'caution' : 'normal'}
         deltaClassification={row.classification}

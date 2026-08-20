@@ -16,6 +16,7 @@
     "gen:ledger-canon": "node --experimental-strip-types --import ./scripts/ts-loader.mjs apps/web/scripts/generate-ledger-canon.ts",
     "gen:attribution-canon": "node --experimental-strip-types --import ./scripts/ts-loader.mjs apps/web/scripts/generate-attribution-canon.ts",
     "gen:budget-canon": "node --experimental-strip-types --import ./scripts/ts-loader.mjs apps/web/scripts/generate-budget-canon.ts",
+    "gen:carbon-canon": "node --experimental-strip-types --import ./scripts/ts-loader.mjs apps/web/scripts/generate-carbon-canon.ts",
     "gen:criteria-canon": "node --experimental-strip-types --import ./scripts/ts-loader.mjs apps/web/scripts/generate-criteria-canon.ts"
   },
   "devDependencies": {

@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { ToleranceBand, formatInt } from '@balise/ui';
 import { fill, t } from '../i18n';
-import { canon, observatoryFixture as obs, type ObservatoryRow } from '../fixtures/canon';
+import { observatoryFixture as obs, type ObservatoryRow } from '../fixtures/canon';
+import { referenceModelRef } from '../lib/carbon-view';
 import { PublicHeader } from '../components/PublicHeader';
 import {
   filterObservatory,
@@ -86,7 +87,7 @@ function IndexRow({ row }: { row: ObservatoryRow }) {
         bandHigh={row.band.high}
         noiseLow={row.band.noiseLow}
         noiseHigh={row.band.noiseHigh}
-        referenceModel={canon.referenceModel}
+        referenceModel={referenceModelRef()}
         confidence={row.band.confidence}
         state={row.band.state}
         unitLabel={t.dashboard.tiles.carbonUnit}
@@ -268,7 +269,7 @@ export function Observatory() {
             {/* invariant 1: the bands in this table name their reference model */}
             {fill(t.observatory.footerModel, {
               models: obs.modelCount,
-              model: `${canon.referenceModel.id}@${canon.referenceModel.version}`,
+              model: `${referenceModelRef().id}@${referenceModelRef().version}`,
               methodology: obs.methodology,
             })}
           </div>

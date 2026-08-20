@@ -1,6 +1,7 @@
 import { ToleranceBand } from '@balise/ui';
 import { fill, t } from '../i18n';
 import { canon, fleetFixture as fleet, type FleetRow } from '../fixtures/canon';
+import { referenceModelRef } from '../lib/carbon-view';
 import { conformityPct } from '../lib/criteria-view';
 
 const GRID = 'minmax(190px,1.5fr) 128px 82px 100px 128px 128px minmax(150px,1fr)';
@@ -46,7 +47,7 @@ function ServiceRow({ row }: { row: FleetRow }) {
         bandHigh={row.band.high}
         noiseLow={row.band.noiseLow}
         noiseHigh={row.band.noiseHigh}
-        referenceModel={canon.referenceModel}
+        referenceModel={referenceModelRef()}
         confidence={row.band.confidence}
         state={row.band.state}
         unitLabel={t.dashboard.tiles.carbonUnit}

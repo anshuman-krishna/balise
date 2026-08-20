@@ -38,12 +38,12 @@ describe('toRecordView', () => {
       madKb: '6',
       requests: '84',
       domNodes: formatInt(2140),
-      carbon: '0,42',
-      low: '0,31',
-      high: '0,58',
+      carbon: '0,076',
+      low: '0,076',
+      high: '0,292',
     });
     expect(view.fingerprint).toContain('chromium 127.0.6533.88');
-    expect(view.models).toBe('ecoindex@3.1 · swd@4.0 · ademe@2024 · 1byte@2021');
+    expect(view.models).toBe('ecoindex@0.1.0 · swd@0.1.0 · onebyte@0.1.0');
   });
 
   it('omits what an entry does not carry rather than filling it in', () => {

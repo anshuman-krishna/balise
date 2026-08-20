@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router';
 import { formatInt } from '@balise/ui';
 import { fill, t } from '../i18n';
 import { canon } from '../fixtures/canon';
+import { carbonPage, referenceLabel } from '../lib/carbon-view';
 import { ledgerCanon } from '../fixtures/ledger-canon';
 import { PublicHeader } from '../components/PublicHeader';
 import { lookupLedgerEntry } from '../lib/ledger-lookup';
@@ -94,7 +95,7 @@ function Record({ view }: { view: LedgerRecordView }) {
             requests: view.values.requests,
             dom: view.values.domNodes,
             carbon: view.values.carbon,
-            model: canon.models.find((model) => model.isReference)?.name ?? '',
+            model: referenceLabel(carbonPage('candidate')),
             low: view.values.low,
             high: view.values.high,
           })}

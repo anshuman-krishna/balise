@@ -3,7 +3,14 @@ import type { DeltaClassification } from '@balise/schemas';
 import { classifyDelta } from '@balise/measure-core';
 import { formatInt, formatNumber, formatSigned, ToleranceBand } from '@balise/ui';
 import { fill, t } from '../i18n';
-import { canon, comparisonFixture as cmp, type ComparisonRow } from '../fixtures/canon';
+import { comparisonFixture as cmp, type ComparisonRow } from '../fixtures/canon';
+import {
+  carbonDeltaRow,
+  carbonPage,
+  formatCarbon,
+  referenceModelRef,
+  referenceSpecLabel,
+} from '../lib/carbon-view';
 import { VERDICT_COLOR, verdictKeyFor, type VerdictKey } from '../lib/verdict';
 import {
   attributionCoverage,
@@ -124,7 +131,12 @@ function RunChip({ run, date, tag, accent }: { run: string; date: string; tag: s
 
 export function Comparison() {
   const rows = cmp.rows.map(toDisplayRow);
-  const carbon = cmp.carbonRow;
+  // the estimate row is derived: the figures come from @balise/carbon-models,
+  // and its verdict is inherited from the transferred-bytes row rather than
+  // decided again. an estimate that is monotone in a measured metric cannot be
+  // significant on its own, so nothing here can make it so.
+  const carbon = carbonDeltaRow();
+  const driver = rows[0];
   // the attribution card is engine output: every figure below comes from
   // @balise/attribution, computed over two builds with real source maps.
   const lead = attributionLead();
@@ -233,7 +245,7 @@ export function Comparison() {
               bandHigh={row.band.bandHigh}
               noiseLow={row.band.noiseLow}
               noiseHigh={row.band.noiseHigh}
-              referenceModel={canon.referenceModel}
+              referenceModel={referenceModelRef()}
               confidence={row.lowConfidence ? 'low' : 'high'}
               state={row.verdict === 'breach' ? 'breach' : 'normal'}
               deltaClassification={row.classification}
@@ -243,38 +255,52 @@ export function Comparison() {
           </div>
         ))}
 
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: GRID,
-            gap: '0 14px',
-            alignItems: 'center',
-            padding: '10px 17px',
-            background: 'var(--tint-breach)',
-          }}
-        >
-          <span style={{ fontSize: 11.5 }}>{carbon.label}</span>
-          <span className="mono" style={{ fontSize: 10.5, textAlign: 'right' }}>{formatNumber(carbon.before, 2)}</span>
-          <span className="mono" style={{ fontSize: 10.5, textAlign: 'right', color: 'var(--breach)' }}>{formatNumber(carbon.after, 2)}</span>
-          <span className="mono" style={{ fontSize: 10.5, textAlign: 'right', color: 'var(--breach)' }}>{formatSigned(carbon.delta, 2)}</span>
-          <ToleranceBand
-            size="compact"
-            width={146}
-            scaleMin={-carbon.floorG * 2}
-            scaleMax={carbon.delta * 1.3}
-            median={carbon.delta}
-            bandLow={carbon.delta - carbon.madG}
-            bandHigh={carbon.delta + carbon.madG}
-            noiseLow={-carbon.floorG}
-            noiseHigh={carbon.floorG}
-            referenceModel={canon.referenceModel}
-            confidence="high"
-            state="breach"
-            deltaClassification="regression"
-            unitLabel={t.comparison.headers.delta}
-          />
-          <VerdictCell verdict={carbon.verdict} />
-        </div>
+        {carbon === null || driver === undefined ? null : (
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: GRID,
+              gap: '0 14px',
+              alignItems: 'center',
+              padding: '10px 17px',
+              background: driver.verdict === 'breach' ? 'var(--tint-breach)' : undefined,
+            }}
+          >
+            <span style={{ fontSize: 11.5 }}>
+              {fill(t.comparison.carbonRow, { model: referenceSpecLabel(carbonPage('candidate')) })}
+            </span>
+            <span className="mono" style={{ fontSize: 10.5, textAlign: 'right' }}>{formatCarbon(carbon.before)}</span>
+            <span
+              className="mono"
+              style={{ fontSize: 10.5, textAlign: 'right', color: driver.verdict === 'breach' ? 'var(--breach)' : 'var(--ink)' }}
+            >
+              {formatCarbon(carbon.after)}
+            </span>
+            <span
+              className="mono"
+              style={{ fontSize: 10.5, textAlign: 'right', color: driver.verdict === 'breach' ? 'var(--breach)' : 'var(--ink)' }}
+            >
+              {formatSigned(carbon.delta, 3)}
+            </span>
+            <ToleranceBand
+              size="compact"
+              width={146}
+              scaleMin={-carbon.floor * 2}
+              scaleMax={carbon.bandHigh * 1.15}
+              median={carbon.delta}
+              bandLow={carbon.bandLow}
+              bandHigh={carbon.bandHigh}
+              noiseLow={-carbon.floor}
+              noiseHigh={carbon.floor}
+              referenceModel={referenceModelRef(carbonPage('candidate'))}
+              confidence="high"
+              state={driver.verdict === 'breach' ? 'breach' : 'normal'}
+              deltaClassification={driver.classification}
+              unitLabel={t.comparison.headers.delta}
+            />
+            <VerdictCell verdict={driver.verdict} />
+          </div>
+        )}
       </div>
 
       <div className="dashboard-cols" style={{ gridTemplateColumns: '1fr 1fr' }}>

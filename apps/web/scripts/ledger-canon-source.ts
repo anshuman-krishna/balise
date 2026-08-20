@@ -1,5 +1,6 @@
 import { OrganizationId, type LedgerEntry, type LedgerEntryInput } from '@balise/schemas';
 import { anchor, append, createMemoryStore, verify } from '@balise/ledger';
+import { buildCarbonCanon } from './carbon-canon-source';
 
 /**
  * the canon's register, as an actual chain rather than a set of hashes typed
@@ -13,6 +14,16 @@ import { anchor, append, createMemoryStore, verify } from '@balise/ledger';
  */
 
 export const ORGANIZATION = OrganizationId.parse('org_atelier_sextant');
+
+// the estimate the register records is the one the models produced for the
+// same page, read from the same build. a verification permalink that stated a
+// different figure than the run detail would be worth nothing.
+const CARBON = buildCarbonCanon();
+const RUN_PAGE = (() => {
+  const page = CARBON.pages.find((candidate) => candidate.id === 'dashboard');
+  if (page === undefined) throw new Error('the carbon canon holds no page for the retained run');
+  return page;
+})();
 
 const RUN_COUNT = 4812;
 const FIRST_RUN_AT = Date.parse('2026-03-03T09:00:00.000Z');
@@ -74,15 +85,15 @@ function finalRunEntry(): Planned {
           throttleProfile: 'mobile-4g',
           region: 'eu-west-par',
         },
-        models: ['ecoindex@3.1', 'swd@4.0', 'ademe@2024', '1byte@2021'],
+        models: CARBON.assumptions.map((model) => `${model.id}@${model.version}`),
         metrics: {
           transferredBytes: 1_258_000,
           transferredBytesMad: 6_000,
           requestCount: 84,
           domNodeCount: 2_140,
-          carbonPerVisitG: 0.42,
-          carbonBandLowG: 0.31,
-          carbonBandHighG: 0.58,
+          carbonPerVisitG: RUN_PAGE.band.reference,
+          carbonBandLowG: RUN_PAGE.band.low,
+          carbonBandHighG: RUN_PAGE.band.high,
         },
         confidence: 'high',
       },
