@@ -414,6 +414,30 @@ position is:
    by the same function as every other delta. Where no floor is established
    there is no trend, and the cell says so.
 
+### 10.3 Contractual engagements
+
+An engagement is a measured figure, a threshold someone signed, and the margin
+between them. Only two of those are authored: the wording it carries into the
+annexe, and the threshold.
+
+1. **Margin has one definition.** `(threshold - measured) / threshold`. The
+   denominator is the signed threshold, never the measured value. Over the
+   measured value the same pair reads 11.3% where this reads 10.1%, which is how
+   two surfaces came to print different headroom for one contract.
+2. **An engagement nobody signed has no contractual state.** It is shown as the
+   proposal it is, it still says plainly whether it is met today, and no surface
+   reports it as held or not held. Reporting a breach of an obligation the
+   contract does not contain is worse for the supplier than reporting nothing.
+3. **A gauge and the figure beside it are one computation.**
+4. **An estimate carries its band and its reference model** here as everywhere
+   else, including in a commitments table where the column is narrow.
+5. **A trend is drawn only from history the scenario kept**, classified by
+   `classifyDelta` against that scenario's floor. No history, no line, and the
+   cell says so.
+6. **No figure after a remediation is stated.** A report may say what is planned
+   and when; what the measurement will be afterwards is the next measurement's
+   answer, not this one's.
+
 ## 11. Reproducibility
 
 The exit test for this methodology is verdict stability, not numeric equality.
@@ -433,7 +457,7 @@ It is never to loosen the assertion.
 ## 12. Open decisions
 
 Every item here is a decision rather than a consequence, and none of them are
-settled. This section must be empty before version 1.0 is in force. Sixteen
+settled. This section must be empty before version 1.0 is in force. Seventeen
 open.
 
 1. **Noise floor scaling factor**, currently 1.2. It sets how large a change has
@@ -492,3 +516,11 @@ open.
     in for a page's cost. Ordering on the reference model's estimate, on the
     EcoIndex score, or on nothing at all are the alternatives, and each says
     something different about what an index is for.
+17. **The contractual thresholds themselves**, and the wording each engagement
+    carries into the annexe. Section 10.3 makes the arithmetic one computation;
+    the numbers it computes over are signed by a supplier. One of them is
+    flagged in the code: "Poids médian des 10 pages principales" binds the
+    service median over fourteen scenarios, so the wording says ten and the
+    basis is fourteen. Changing the wording of a commitment a buyer reads is a
+    decision for the maintainer, so the mismatch is carried and flagged rather
+    than quietly corrected.

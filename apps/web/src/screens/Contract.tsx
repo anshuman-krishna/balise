@@ -1,75 +1,69 @@
 import { fill, t } from '../i18n';
-import { contractFixture as contract, type ContractRow, type ContractStatus } from '../fixtures/canon';
-import { conformityOutlook, conformityPct } from '../lib/criteria-view';
+import { contractFixture as contract } from '../fixtures/canon';
+import { conformityOutlook } from '../lib/criteria-view';
+import {
+  deliverySquares,
+  marginText,
+  measuredText,
+  signedEngagements,
+  statusColor,
+  statusText,
+  thresholdText,
+  trendColor,
+  trendLine,
+  headroomDefinition,
+  type Engagement,
+} from '../lib/engagement-view';
 
-// the conformity engagement is read off the assessments, and so is the warning
-// under it. nothing here draws a rate of change: the ceiling is what answering
-// the open criteria can reach, which is a fact, not a forecast.
+// the conformity engagement's outlook is read off the assessments. nothing
+// here draws a rate of change: the ceiling is what answering the open criteria
+// can reach, which is a fact, not a forecast.
 const outlook = conformityOutlook(contract.conformityTargetPct);
-const rows: ContractRow[] = contract.rows.map((row) =>
-  row.actuel !== null
-    ? row
-    : {
-        ...row,
-        actuel: `${conformityPct()}%`,
-        headroom: {
-          tone: 'caution',
-          barPct: Math.min(100, (outlook.currentPct / contract.conformityTargetPct) * 100),
-          ptToGo: Math.max(0, contract.conformityTargetPct - outlook.currentPct),
-        },
-      },
-);
 
 const GRID = 'minmax(200px,1.6fr) 92px 92px minmax(130px,1fr) 118px 84px';
 
-const STATUS_LABEL: Record<ContractStatus, () => string> = {
-  tenu: () => t.contract.statuses.tenu,
-  atRisk: () => t.contract.statuses.atRisk,
-  aJour: () => t.contract.statuses.aJour,
-};
+const TREND = { width: 106, height: 16 } as const;
 
-const STATUS_COLOR: Record<ContractStatus, string> = {
-  tenu: 'var(--conforme)',
-  atRisk: 'var(--caution)',
-  aJour: 'var(--conforme)',
-};
-
-function HeadroomCell({ row }: { row: ContractRow }) {
-  if (row.quarters !== undefined) {
-    return <span className="mono" style={{ fontSize: 10, color: 'var(--text-secondary)' }}>{row.quarters.text}</span>;
+/**
+ * the bar and the number beside it are one computation. the version this
+ * replaces filled the conformity bar to 0 % here and to 78 % in the execution
+ * report, both claiming to read the same assessments.
+ */
+function HeadroomCell({ row }: { row: Engagement }) {
+  const squares = deliverySquares(row);
+  if (squares !== null) {
+    return (
+      <span className="mono" style={{ fontSize: 10, color: 'var(--text-secondary)' }}>
+        {fill(t.contract.deliveredOf, { delivered: squares.delivered, total: squares.total })}
+      </span>
+    );
   }
-  if (row.headroom === undefined) {
-    return null;
-  }
-  const color = row.headroom.tone === 'caution' ? 'var(--caution)' : 'var(--conforme)';
-  const label =
-    row.headroom.ptToGo !== undefined
-      ? fill(t.contract.ptToGo, { points: row.headroom.ptToGo })
-      : `${row.headroom.labelPct ?? 0}%`;
+  const caution = row.status !== 'tenu';
+  const color = caution ? 'var(--caution)' : 'var(--conforme)';
   return (
     <span style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
       <span className="progress-track" style={{ flex: 1, height: 6 }}>
-        <span className="progress-fill" style={{ display: 'block', width: `${row.headroom.barPct}%`, background: color }} />
+        <span
+          className="progress-fill"
+          style={{ display: 'block', width: `${row.gaugePct ?? 0}%`, background: color }}
+        />
       </span>
-      <span
-        className="mono"
-        style={{ fontSize: 10, color: row.headroom.tone === 'caution' ? 'var(--caution)' : 'var(--text-secondary)' }}
-      >
-        {label}
+      <span className="mono" style={{ fontSize: 10, color: caution ? 'var(--caution)' : 'var(--text-secondary)' }}>
+        {marginText(row, t)}
       </span>
     </span>
   );
 }
 
-function TrendCell({ row }: { row: ContractRow }) {
-  const quarters = row.quarters;
-  if (quarters !== undefined) {
+function TrendCell({ row }: { row: Engagement }) {
+  const squares = deliverySquares(row);
+  if (squares !== null) {
     // quarterly deliveries render as squares: filled for delivered, outline
     // for still due
     return (
       <svg viewBox="0 0 110 20" width="110" height="20" aria-hidden="true">
-        {Array.from({ length: quarters.total }, (_, index) =>
-          index < quarters.delivered ? (
+        {Array.from({ length: squares.total }, (_, index) =>
+          index < squares.delivered ? (
             <rect key={index} x={2 + index * 26} y={7} width={7} height={7} fill="var(--conforme)" />
           ) : (
             <rect key={index} x={2 + index * 26} y={7} width={7} height={7} fill="none" stroke="var(--text-secondary)" strokeOpacity=".45" />
@@ -78,19 +72,25 @@ function TrendCell({ row }: { row: ContractRow }) {
       </svg>
     );
   }
-  // no points is no history, and a trend drawn from nothing is the one thing
-  // this screen must not do. the cell says so instead of drawing a line.
-  if (row.trendPoints === '') {
+  // no history is no line, and a trend drawn from nothing is the one thing
+  // this screen must not do. the cell says so instead.
+  const line = trendLine(row, TREND.width, TREND.height);
+  if (line === null) {
     return (
       <span className="mono" style={{ fontSize: 9.5, color: 'var(--text-tertiary)' }}>
         {t.contract.noHistory}
       </span>
     );
   }
-  const stroke = row.trendTone === 'caution' ? 'var(--caution)' : 'var(--text-secondary)';
   return (
     <svg viewBox="0 0 110 20" width="110" height="20" aria-hidden="true">
-      <polyline fill="none" stroke={stroke} strokeWidth="1.3" points={row.trendPoints} />
+      <polyline
+        fill="none"
+        stroke={trendColor(line.classification)}
+        strokeWidth="1.3"
+        points={line.points}
+        transform="translate(2 2)"
+      />
     </svg>
   );
 }
@@ -149,9 +149,9 @@ export function Contract() {
             </span>
           ))}
         </div>
-        {rows.map((row) => (
+        {signedEngagements().map((row) => (
           <div
-            key={row.label}
+            key={row.id}
             style={{
               display: 'grid',
               gridTemplateColumns: GRID,
@@ -159,27 +159,32 @@ export function Contract() {
               alignItems: 'center',
               padding: '11px 17px',
               borderBottom: '1px solid var(--divider-row)',
-              background: row.rowTint === 'caution' ? 'var(--tint-caution)' : undefined,
+              background: row.status === 'enCours' ? 'var(--tint-caution)' : undefined,
             }}
           >
-            <span style={{ fontSize: 11.5, lineHeight: 1.4 }}>{row.label}</span>
-            <span className="mono" style={{ fontSize: 11, textAlign: 'right' }}>{row.seuil}</span>
+            <span style={{ fontSize: 11.5, lineHeight: 1.4 }}>{row.labelFr}</span>
+            <span className="mono" style={{ fontSize: 11, textAlign: 'right' }}>{thresholdText(row, t)}</span>
             <span
               className="mono"
-              style={{ fontSize: 11, textAlign: 'right', color: row.actuelTone === 'caution' ? 'var(--caution)' : 'var(--ink)' }}
+              style={{ fontSize: 11, textAlign: 'right', color: row.status === 'enCours' ? 'var(--caution)' : 'var(--ink)' }}
             >
-              {row.actuel}
+              {measuredText(row)}
             </span>
             <HeadroomCell row={row} />
             <TrendCell row={row} />
             <span
               className="mono"
-              style={{ fontWeight: 500, fontSize: 9.5, textAlign: 'right', color: STATUS_COLOR[row.status] }}
+              style={{ fontWeight: 500, fontSize: 9.5, textAlign: 'right', color: statusColor(row) }}
             >
-              {STATUS_LABEL[row.status]()}
+              {statusText(row, t)}
             </span>
           </div>
         ))}
+        <div style={{ padding: '11px 17px', fontSize: 10.5, lineHeight: 1.6, color: 'var(--text-secondary)' }}>
+          {t.engagements.signedNote}
+          <br />
+          {headroomDefinition()}
+        </div>
       </div>
 
       <div className="dashboard-cols" style={{ gridTemplateColumns: '1fr 1fr' }}>

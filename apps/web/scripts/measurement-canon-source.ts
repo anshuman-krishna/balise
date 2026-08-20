@@ -323,6 +323,10 @@ const SCENARIOS: readonly ScenarioSpec[] = [
     label: 'médiane du service',
     pass: 'cold',
     historyCount: 24,
+    // the contractual engagements are read against this scenario, and a
+    // quarterly tracker draws the movement of the thing it holds. the history
+    // is kept so that line comes from aggregations rather than from a
+    // polyline typed into a fixture.
     metrics: {
       transferred_bytes: { centre: 1_258_000, spread: 12_000 },
       request_count: { centre: 82, spread: 2, integral: true },
@@ -330,6 +334,7 @@ const SCENARIOS: readonly ScenarioSpec[] = [
       js_execution_ms: { centre: 588, spread: 34 },
       third_party_bytes: { centre: 478_000, spread: 9_000 },
     },
+    keepHistoryFor: ['transferred_bytes', 'third_party_share_pct'],
     aggregations: [
       { id: 'service', label: 'médiane du service', runCount: 5, fingerprintStable: true },
     ],

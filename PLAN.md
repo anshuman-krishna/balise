@@ -16,7 +16,48 @@ screenshots, the fidelity source).
 
 ## Current status
 
-**Phase: a comparison is a position in a corpus (2026-08-20).** Two surfaces in the
+**Phase: an engagement is one object (2026-08-21).** The tender proposes contractual
+engagements, the contract carries them, and the execution report reports on them. All three
+authored their own copy of the same four rows, and the copies disagreed.
+
+The tender put 11 % of headroom on 1 258 KB against a 1 400 KB ceiling and the tracker put
+10 % on the same pair, because each screen carried a number rather than a definition. The
+tracker filled the conformity gauge to 0 % and the report filled the same gauge to 78 %,
+both saying they read the assessments. And the execution report's table reported the
+supplier `nonTenu` on the third-party share, which is a declaration of contractual breach,
+for an engagement the tender left unchecked and the contract does not contain. Two
+paragraphs below it, on the same page, the narrative calls that figure a target "que nous
+nous fixons". A document that contradicts itself about whether the supplier is in breach is
+worse for the supplier than no document. The dashboard tile made the same claim in three
+words: "seuil contractuel dépassé", in red, for a threshold nobody signed.
+
+An engagement is authored once now, with the only two things that genuinely are: the
+wording it carries into the annexe, and the threshold a supplier signs. `pnpm
+gen:engagement-canon` derives the rest from the canons. Headroom has one definition,
+`(seuil - mesuré) / seuil`, published on both surfaces that show a margin; over the measured
+value it gives 11.3 % where the ceiling gives 10.1 %, which is where the two numbers came
+from, and the ceiling is the denominator because a ceiling is what was signed. The gauge and
+the figure beside it are one computation. A trend is `classifyDelta` over the scenario's own
+kept history against its own floor, and the service scenario now keeps that history so the
+line comes from twenty-four aggregations rather than from a polyline typed on a viewbox.
+
+Three refusals. **An engagement nobody signed has no status**: `inOffer: false` means no
+contractual state at all, the contract surfaces do not carry the row, and the tender shows
+it as the proposal it is while still saying it is over by 8 points today, a figure that used
+to be typed beside the sentence that reads it. **The carbon commitment renders its band**,
+on the workspace that produces the annexe, where it was a bare "0.076 g" with no model
+version. **No figure after a remediation is stated**: the report said replacing the video
+player "ramènera la part attendue à 26 %", which is a projected saving in the document a
+buyer reads to decide whether to keep the contract.
+
+The conformity sparkline was fourteen coordinates typed on a 46-high viewbox captioned
+"taux de conformité 28 % → 59 %", where the 28 was declaration version 1's count of
+conforming criteria read as a percentage. 28 of 78 is 36 %, so the caption was wrong about
+both ends of its own line. It plots the three published versions now, as the counts they
+are, with the draft drawn open. Also fixed on the way past: the execution report rendered
+its engagement states in English, and a document is French in both locales. 817 tests.
+
+**Then: a comparison is a position in a corpus (2026-08-20).** Two surfaces in the
 product compare services with each other, and on both of them almost every figure is a
 position rather than a quantity. All of them were authored. The public index printed a
 rank of 14 out of a total of 412; the fleet printed a percentile of 38 against an n of 112
@@ -279,6 +320,13 @@ from the carbon tile; both render now and a test asserts it. 646 tests.
 ### Schemas (packages/schemas)
 - Zod as single source of truth, branded IDs, inferred types, closed error-code enum (V2).
 
+### Contractual engagements (apps/web)
+- One object across the tender, the contract tracker and the execution report. Only the
+  wording and the threshold are authored.
+- One headroom definition, published beside the numbers it produced.
+- An engagement that was proposed and not signed has no contractual status anywhere.
+- Trends from the scenario's own kept history through `classifyDelta`, or no line at all.
+
 ### Comparison surfaces (apps/web)
 - One corpus of measured services behind the fleet and the public index, with the rank,
   the grade, the trend, the histogram and the summary strip all computed from it.
@@ -361,6 +409,14 @@ from the carbon tile; both render now and a test asserts it. 646 tests.
       `confidenceTone`)
 - [ ] ToleranceBand print register for trend and dispersion (the handoff specifies print for the canonical band only; needed when the Typst pipeline lands)
 - [ ] Self-hosted font subsetting check (weight budget)
+- [x] ~~The tender, the contract tracker and the execution report each author their own
+      copy of the same engagements~~ (`pnpm gen:engagement-canon`; one object, the wording
+      and the threshold authored and everything else derived. an engagement nobody signed
+      carries no contractual status, so the report stopped declaring a breach of an
+      obligation the contract does not contain)
+- [ ] The engagement wording that says ten pages binds fourteen scenarios. Either the
+      wording changes or the basis does, and both are the maintainer's call
+      (METHODOLOGY.md open decision 17)
 - [ ] The fleet's other clients still carry an authored RGESN rate. Only the audited
       service is assessed by the engine, which is honest, but five numbers on that column
       are backed by nothing. Either assess them or say the column is the agency's own
@@ -469,7 +525,7 @@ from the carbon tile; both render now and a test asserts it. 646 tests.
       and a size, which is what the resource inventory renders; the full har and the trace
       are still not persisted and need object storage
 - [x] ~~EnvironmentFingerprint recorded on every run~~ (V1.0, every field compared for invariant 3, with a test that fails if a field is ever left out of the comparison)
-- [~] METHODOLOGY.md v1 **drafted**, not published and not in force. Sixteen open decisions in its section 12 need sign-off (operating manual section 29)
+- [~] METHODOLOGY.md v1 **drafted**, not published and not in force. Seventeen open decisions in its section 12 need sign-off (operating manual section 29)
 - [ ] Sign off the noise floor scaling factor, the throttle profile parameters and the confidence thresholds
 - [ ] **Measure what coverage instrumentation costs**, then decide whether it is on for a
       measured run. It is written, off by default, and on the fingerprint; METHODOLOGY.md open
@@ -495,6 +551,38 @@ Later versions: see roadmap; detailed to-dos are appended when the version start
 ---
 
 ## Decisions log
+
+- **2026-08-21 · Headroom has one definition and it is published.** `(seuil - mesuré) /
+  seuil`. The alternative, over the measured value, is where the tender's 11 % came from
+  against the tracker's 10 % on one contract. A supplier signs a ceiling, so the ceiling is
+  the denominator, and the definition prints under both tables that use it.
+- **2026-08-21 · An engagement nobody signed has no contractual status.** `inOffer: false`
+  produces `status: null` and `gaugePct: null`, the contract tracker and the execution
+  report do not carry the row at all, and the generator throws if one ever does. It is still
+  shown in the tender, still says it is over by 8 points today, and is named as a proposal
+  rather than given one of the contract's words.
+- **2026-08-21 · A threshold is authored and everything around it is derived.** The two
+  authored parts of an engagement are the wording it carries into the annexe and the number
+  the supplier signs. The product's job is to say whether the number is met, not to choose
+  it. METHODOLOGY.md 10.3, open decision 17.
+- **2026-08-21 · The wording that says ten pages is carried, not corrected.** "Poids médian
+  des 10 pages principales" binds the service median over fourteen scenarios. Changing the
+  wording of a commitment a buyer reads is a section 29 decision, so the mismatch is flagged
+  in the code and in METHODOLOGY.md rather than quietly fixed to match the basis.
+- **2026-08-21 · A document states nothing about a measurement it has not made.** The
+  execution report said a planned replacement "ramènera la part attendue à 26 %". That is a
+  projected saving, in the document a buyer reads to decide whether to keep the contract,
+  and the same rule that removed savings from the free scan removes it here. The report says
+  what is planned and when, and that the next quarter's measurement will say what the figure
+  is.
+- **2026-08-21 · A tile does not call an internal target a contractual one.** The dashboard
+  read "engagement ≤30" and "seuil contractuel dépassé" in red for the engagement that was
+  proposed and not taken. It reads the threshold off that engagement now and names it as
+  the internal target it is.
+- **2026-08-21 · The conformity history is the versions that were published.** Three points,
+  drawn as counts of conforming criteria, with the draft open rather than filled. The
+  fourteen coordinates it replaces were captioned as a rate and read version 1's count of 28
+  criteria as 28 %, which is 36 %.
 
 - **2026-08-20 · The index states the corpus it holds.** The observatory said "412
   services mesurés en continu" and held six rows. Nothing had measured 412 services, and

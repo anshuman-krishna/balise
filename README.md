@@ -59,6 +59,10 @@ These are enforced in code and tested, not aspirational.
 - **No saving is ever projected.** A finding states a quantity measured on the page and
   what it is a share of. What the page would weigh in another format is a statement about a
   page nobody loaded, and one projection in a report makes the whole report a projection.
+- **An engagement nobody signed is never reported as breached.** A contractual commitment
+  is a measured figure, a threshold someone signed, and one definition of the margin between
+  them. The three surfaces that carry commitments read one object, so they cannot disagree
+  about the headroom, the gauge or whether the supplier is in breach.
 - **A comparison is a position in a corpus that exists.** The public index ranks services
   against the ones actually measured, states how many that is, orders on a measured
   quantity rather than on an estimate whose bands overlap, and gives a rank rather than a
@@ -117,6 +121,12 @@ attestation always overrules measurement.
 **Record.** `packages/ledger` is an append-only, per-tenant hash chain with Merkle
 anchoring. There is no update, no delete and no repair utility. If the chain is broken,
 that fact is the finding and it gets surfaced.
+
+**Commit.** The tender proposes contractual engagements, the contract carries the ones that
+were signed, and the execution report reports on those. All three read one object, so the
+headroom on a commitment is one number and an engagement that was proposed and not taken is
+never reported as breached. Only the wording each carries into the annexe and the threshold
+the supplier signs are authored; the margin, the status, the gauge and the trend are derived.
 
 **Compare.** The fleet view and the public index set services against each other, which
 makes almost every figure on them a position rather than a quantity. Each one is computed
@@ -217,12 +227,13 @@ pnpm gen:budget-canon
 pnpm gen:carbon-canon
 pnpm gen:corpus-canon
 pnpm gen:criteria-canon
+pnpm gen:engagement-canon
 pnpm gen:findings-canon
 pnpm gen:ledger-canon
 pnpm gen:measurement-canon
 ```
 
-`gen:measurement-canon` sits underneath the other six. It is the one place a median, a
+`gen:measurement-canon` sits underneath the other seven. It is the one place a median, a
 dispersion, a noise floor or a confidence grade is produced, and the carbon, budget and
 ledger canons read their byte counts and floors from it rather than restating them, so the
 estimate, the verdict and the register all describe the same run.

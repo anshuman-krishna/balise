@@ -1,6 +1,7 @@
 import type { AssessmentStatus, CriterionTier } from '@balise/schemas';
 import { fill, t } from '../i18n';
 import { criteriaCanon, type CriteriaRow } from '../fixtures/criteria-canon';
+import { declarationFixture } from '../fixtures/canon';
 import { shortDate } from './attribution-view';
 
 /**
@@ -48,6 +49,42 @@ export function conformityPct(): number {
   const conforme: number = criteriaCanon.completion.conforme;
   const applicable: number = criteriaCanon.completion.applicable;
   return applicable === 0 ? 0 : Math.round((conforme / applicable) * 100);
+}
+
+export interface ConformityPoint {
+  tag: string;
+  date: string;
+  /** criteria answered `conforme` in that version of the declaration. */
+  conforme: number;
+  draft: boolean;
+}
+
+/**
+ * the conformity history the product actually holds: one point per version of
+ * the declaration, oldest first.
+ *
+ * counts, not rates. the version this replaces drew fourteen coordinates typed
+ * on a 46-high viewbox and captioned them "taux de conformité 28% -> 59%",
+ * where the 28 was version 1's count of conforming criteria read as a
+ * percentage. 28 criteria out of 78 is 36 %, so the caption was wrong about
+ * both ends of its own line.
+ *
+ * three published versions is a short history and the caption says three.
+ */
+export function conformityHistory(): ConformityPoint[] {
+  return [...declarationFixture.versions]
+    .map((version) => ({
+      tag: version.tag,
+      date: version.date,
+      conforme: version.conforme,
+      draft: version.draft,
+    }))
+    .reverse();
+}
+
+/** the pack's own criterion count, which the history is a count out of. */
+export function criteriaCount(): number {
+  return criteriaCanon.pack.criteriaCount;
 }
 
 export interface TierCard {

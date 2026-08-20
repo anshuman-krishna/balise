@@ -89,10 +89,10 @@ export const fr: Catalog = {
       pctOfBytes: '% des octets',
       acrossModels: 'sur {count} modèles',
       madShort: 'MAD {value}',
-      commitCeiling: 'engagement ≤{value}',
+      internalTarget: 'cible interne ≤{value}',
       provenanceReference: '{model} · référence · étendue = {count} modèles',
       provenanceMeasured: 'mesuré · étendue = médiane ± MAD',
-      thresholdBreached: 'seuil contractuel dépassé',
+      thresholdBreached: 'cible interne dépassée · non engagée au marché',
       dispersionHigh: 'dispersion élevée · {varied} relevés sur {total} ont varié',
     },
     trend: {
@@ -465,6 +465,25 @@ export const fr: Catalog = {
       badgeName: 'Écoconception',
     },
   },
+  engagements: {
+    perYear: '{count} / an',
+    notSigned: 'proposé, non retenu',
+    status: {
+      tenu: 'tenu',
+      enCours: 'en cours',
+      nonTenu: 'non tenu',
+    },
+    margins: {
+      headroom: '{pct}% de marge',
+      stretch: 'ambitieux · +{points} pt à combler',
+      notMet: 'dépasse de {points} pt ce jour',
+      process: 'processus',
+    },
+    trendPeriods: '{count} agrégations',
+    noHistory: 'aucun historique',
+    signedNote:
+      "Le tableau ne porte que les engagements signés. Un engagement proposé et non retenu n'est pas une obligation, et n'est jamais reporté comme non tenu.",
+  },
   tender: {
     remiseDesOffres: 'REMISE DES OFFRES',
     daysVia: '{days} jours · via {platform}',
@@ -498,7 +517,7 @@ export const fr: Catalog = {
     historyTitle: 'HISTORIQUE MESURÉ · LA PART QUE PERSONNE NE PEUT SIMULER',
     historySince: 'Mesure continue depuis le',
     historyCounts: '{days} jours, {runs} relevés, {versions} versions de déclaration publiées.',
-    conformityRate: 'taux de conformité · {from}% → {to}%',
+    conformityCounts: 'Critères conformes par version publiée, sur {total} critères du référentiel. {versions} versions, la dernière encore en brouillon.',
     historyCaption:
       'Un concurrent qui soumissionne peut promettre les mêmes chiffres. Il ne peut pas produire cette courbe.',
     outputTitle: 'SORTIE',
@@ -515,6 +534,7 @@ export const fr: Catalog = {
     openAnnex: "Ouvrir l'annexe",
   },
   contract: {
+    deliveredOf: '{delivered} remis sur {total} attendus',
     noHistory: 'pas d\'historique',
     earlyWarning: {
       rate: 'La conformité est à {current}%, pour une cible de {target}% à la revue des {months} mois.',
@@ -662,7 +682,7 @@ export const fr: Catalog = {
     headers: { engagement: 'ENGAGEMENT', seuil: 'SEUIL', t3: 'T3', marge: 'MARGE', etat: 'ÉTAT' },
     etats: { tenu: 'TENU', enCours: 'EN COURS', nonTenu: 'NON TENU' },
     eventsTitle: 'Événements de la période',
-    calloutStrong: 'Engagement non tenu : part des tiers.',
+    calloutStrong: 'Cible interne dépassée : part des tiers. Cet engagement a été proposé et non retenu au marché.',
     hashLabel: 'EMPREINTE DU RAPPORT',
   },
   // the public surfaces are french public pages, like the three documents:

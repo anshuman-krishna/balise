@@ -1,24 +1,29 @@
 import { fill, t } from '../i18n';
-import { formatInt } from '@balise/ui';
-import { canon, tenderFixture as tender, type CommitmentMargin, type CommitmentRow } from '../fixtures/canon';
+import { formatInt, ToleranceBand } from '@balise/ui';
+import { canon, tenderFixture as tender } from '../fixtures/canon';
+import { carbonPage, carbonScale, referenceModelRef } from '../lib/carbon-view';
+import { conformityHistory, criteriaCount } from '../lib/criteria-view';
+import {
+  marginColor,
+  marginText,
+  measuredText,
+  proposedEngagements,
+  thresholdText,
+  headroomDefinition,
+  engagement as engagementById,
+  type Engagement,
+} from '../lib/engagement-view';
 
-const GRID = '26px minmax(210px,1.7fr) 96px 96px minmax(120px,1fr)';
+const GRID = '26px minmax(210px,1.7fr) 118px 96px minmax(120px,1fr)';
 
-function marginLabel(margin: CommitmentMargin): { text: string; color: string } {
-  switch (margin.kind) {
-    case 'headroom':
-      return { text: fill(t.tender.margins.headroom, { pct: margin.pct }), color: 'var(--conforme)' };
-    case 'stretch':
-      return { text: fill(t.tender.margins.stretch, { points: margin.points }), color: 'var(--caution)' };
-    case 'notMet':
-      return { text: t.tender.margins.notMet, color: 'var(--breach)' };
-    case 'process':
-      return { text: t.tender.margins.process, color: 'var(--text-secondary)' };
-  }
-}
-
-function CommitmentLine({ row }: { row: CommitmentRow }) {
-  const margin = marginLabel(row.margin);
+/**
+ * an engagement is a measured value, a threshold someone signs, and the margin
+ * between them. the margin is never typed: the version of this printed 11 % of
+ * headroom on the pair the contract tracker printed 10 % on.
+ */
+function CommitmentLine({ row }: { row: Engagement }) {
+  const carbon = row.measured.band !== null;
+  const page = carbon ? carbonPage('dashboard') : null;
   return (
     <div
       style={{
@@ -28,10 +33,10 @@ function CommitmentLine({ row }: { row: CommitmentRow }) {
         alignItems: 'center',
         padding: '10px 17px',
         borderBottom: '1px solid var(--divider-row)',
-        opacity: row.checked ? undefined : 0.55,
+        opacity: row.inOffer ? undefined : 0.55,
       }}
     >
-      {row.checked ? (
+      {row.inOffer ? (
         <span
           aria-hidden="true"
           style={{
@@ -51,20 +56,62 @@ function CommitmentLine({ row }: { row: CommitmentRow }) {
       ) : (
         <span aria-hidden="true" style={{ width: 13, height: 13, border: '1px solid rgba(21,24,27,.35)', display: 'block' }} />
       )}
-      <span style={{ fontSize: 11.5, lineHeight: 1.4 }}>{row.label}</span>
-      <span
-        className="mono"
-        style={{ fontSize: 11, textAlign: 'right', color: row.measuredTone === 'breach' ? 'var(--breach)' : 'var(--ink)' }}
-      >
-        {row.measured}
+      <span style={{ fontSize: 11.5, lineHeight: 1.4 }}>{row.labelFr}</span>
+      {/* invariant 1: an estimate is never a bare number, on any surface. the
+          carbon commitment used to print "0.076 g" with no band and no model
+          version, on the workspace that produces the annexe. */}
+      {carbon && page !== null ? (
+        <ToleranceBand
+          size="compact"
+          width={118}
+          scaleMin={carbonScale(page).min}
+          scaleMax={carbonScale(page).max}
+          median={row.measured.value}
+          bandLow={row.measured.band!.low}
+          bandHigh={row.measured.band!.high}
+          noiseLow={page.noise?.low ?? row.measured.value}
+          noiseHigh={page.noise?.high ?? row.measured.value}
+          referenceModel={referenceModelRef()}
+          confidence={row.measured.confidence ?? 'low'}
+          state="normal"
+          unitLabel={t.dashboard.tiles.carbonUnit}
+        />
+      ) : (
+        <span
+          className="mono"
+          style={{
+            fontSize: 11,
+            textAlign: 'right',
+            color: row.margin.kind === 'notMet' ? 'var(--breach)' : 'var(--ink)',
+          }}
+        >
+          {measuredText(row)}
+        </span>
+      )}
+      <span className="mono" style={{ fontSize: 11, textAlign: 'right', color: 'var(--measured)' }}>
+        {thresholdText(row, t)}
       </span>
-      <span className="mono" style={{ fontSize: 11, textAlign: 'right', color: 'var(--measured)' }}>{row.proposed}</span>
-      <span className="mono" style={{ fontSize: 10, color: margin.color }}>{margin.text}</span>
+      <span className="mono" style={{ fontSize: 10, color: marginColor(row) }}>{marginText(row, t)}</span>
     </div>
   );
 }
 
 export function Tender() {
+  const history = conformityHistory();
+  const lowest = Math.min(...history.map((point) => point.conforme));
+  const highest = Math.max(...history.map((point) => point.conforme));
+  const historyX = (index: number) =>
+    history.length === 1 ? 125 : 14 + (index / (history.length - 1)) * 222;
+  const historyY = (conforme: number) =>
+    highest === lowest ? 22 : 34 - ((conforme - lowest) / (highest - lowest)) * 24;
+  const historyPoints = history
+    .map((point, index) => `${historyX(index).toFixed(1)},${historyY(point.conforme).toFixed(1)}`)
+    .join(' ');
+
+  const proposal = engagementById('third-party-share');
+  const shortfallPoints =
+    proposal.margin.kind === 'notMet' ? Math.round(proposal.margin.points) : 0;
+
   const steps = [
     t.tender.steps.reference,
     t.tender.steps.scope,
@@ -173,13 +220,19 @@ export function Tender() {
                 ),
               )}
             </div>
-            {tender.commitments.map((row) => (
-              <CommitmentLine key={row.label} row={row} />
+            {proposedEngagements().map((row) => (
+              <CommitmentLine key={row.id} row={row} />
             ))}
+            <div style={{ padding: '10px 17px', fontSize: 10.5, lineHeight: 1.6, color: 'var(--text-secondary)' }}>
+              {headroomDefinition()}
+            </div>
           </div>
           <div style={{ padding: '13px 17px 15px', background: 'var(--tint-caution)', borderTop: '1px solid rgba(196,118,26,.3)' }}>
             <div style={{ fontSize: 11, lineHeight: 1.6 }}>
-              <strong>{t.tender.warningStrong}</strong> {fill(t.tender.warningBody, { points: tender.warningPoints })}
+              {/* the points come from the proposal itself: measured minus the
+                  threshold it would have signed. */}
+              <strong>{t.tender.warningStrong}</strong>{' '}
+              {fill(t.tender.warningBody, { points: shortfallPoints })}
             </div>
           </div>
         </div>
@@ -195,14 +248,44 @@ export function Tender() {
                 versions: tender.history.declarationVersions,
               })}
             </div>
+            {/* one point per published version of the declaration, which is
+                the conformity history the product holds. the version this
+                replaces drew fourteen coordinates typed into a fixture and
+                captioned them as a rate, reading version 1's count of
+                conforming criteria as a percentage. */}
             <svg viewBox="0 0 250 46" width="100%" height="46" style={{ display: 'block', marginTop: 12 }} aria-hidden="true">
-              <polyline fill="none" stroke="var(--measured)" strokeWidth="1.4" points={tender.history.points} />
-              <polygon fill="var(--measured)" opacity=".12" points={`${tender.history.points} 240,44 4,44`} />
-              <text x="4" y="8" fill="var(--text-secondary)" fontFamily="var(--font-mono)" fontSize="7.5">
-                {fill(t.tender.conformityRate, { from: tender.history.rateFrom, to: tender.history.rateTo })}
-              </text>
+              <polyline
+                fill="none"
+                stroke="var(--measured)"
+                strokeWidth="1.4"
+                strokeDasharray={history.some((point) => point.draft) ? '4 2' : undefined}
+                points={historyPoints}
+              />
+              {history.map((point, index) => (
+                <circle
+                  key={point.tag}
+                  cx={historyX(index)}
+                  cy={historyY(point.conforme)}
+                  r="2.2"
+                  fill={point.draft ? 'var(--paper)' : 'var(--measured)'}
+                  stroke="var(--measured)"
+                  strokeWidth="1"
+                />
+              ))}
+              <g fill="var(--text-secondary)" fontFamily="var(--font-mono)" fontSize="7.5">
+                {history.map((point, index) => (
+                  <text key={point.tag} x={historyX(index)} y="44" textAnchor="middle">
+                    {point.tag} · {point.conforme}
+                  </text>
+                ))}
+              </g>
             </svg>
             <div style={{ marginTop: 5, fontSize: 10.5, lineHeight: 1.5, color: 'var(--text-secondary)' }}>
+              {fill(t.tender.conformityCounts, {
+                versions: history.length,
+                total: criteriaCount(),
+              })}
+              <br />
               {t.tender.historyCaption}
             </div>
           </div>

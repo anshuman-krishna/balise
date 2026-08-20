@@ -2,6 +2,7 @@ import { formatMeasured, ToleranceBand } from '@balise/ui';
 import { fill, t } from '../i18n';
 import { canon, documentsFixture, tenderFixture } from '../fixtures/canon';
 import { conformityPct } from '../lib/criteria-view';
+import { signedEngagements } from '../lib/engagement-view';
 import {
   bandModelNames,
   carbonAsides,
@@ -24,9 +25,13 @@ import { VerificationUrl } from '../components/VerificationUrl';
 const doc = documentsFixture.annexe;
 // the conformity figure on the cover is the one the declaration prints, read
 // from the same assessments rather than typed twice.
-const coverStats = doc.coverStats.map((stat) =>
-  stat.value === '%' ? { value: `${conformityPct()}%` } : stat,
-);
+const coverStats = doc.coverStats.map((stat) => {
+  if (stat.value === '%') return { value: `${conformityPct()}%` };
+  // the annexe accompanies the offer, so it states the engagements the offer
+  // carries and counts them rather than repeating a number.
+  if (stat.value === '#') return { value: String(signedEngagements().length) };
+  return stat;
+});
 
 const STAT_LABELS = [
   () => t.docAnnexe.stats.since,

@@ -1,24 +1,31 @@
 import { formatInt } from '@balise/ui';
-import { fill, t } from '../i18n';
+import { fill, t, tFr } from '../i18n';
 import { canon, documentsFixture, type DocEventPart } from '../fixtures/canon';
-import { conformityPct } from '../lib/criteria-view';
 import { DocumentRegister } from '../components/DocumentRegister';
 import { VerificationUrl } from '../components/VerificationUrl';
+import {
+  gaugeTone,
+  measuredText,
+  signedEngagements,
+  statusColor,
+  statusText,
+  thresholdText,
+} from '../lib/engagement-view';
 
 const doc = documentsFixture.rapport;
 
-// the rgesn engagement is reported at the rate the declaration prints, and its
-// gauge fills against the contractual target rather than against a number
-// typed beside it.
-const rows = doc.rows.map((row) =>
-  row.t3 !== null || row.targetPct === undefined
-    ? row
-    : {
-        ...row,
-        t3: `${conformityPct()}%`,
-        gauge: { ...row.gauge, fillPct: Math.min(100, (conformityPct() / row.targetPct) * 100) },
-      },
-);
+/**
+ * only the engagements the contract carries.
+ *
+ * the version this replaces held a fourth row reporting the supplier
+ * `nonTenu` on the third-party share, which is a declaration of contractual
+ * breach, for a commitment the tender left unchecked and this contract does
+ * not contain. two paragraphs below it, on the same page, the écarts narrative
+ * calls the same figure a target "que nous nous fixons". a report that
+ * contradicts itself about whether the supplier is in breach is worse for the
+ * supplier than no report.
+ */
+const rows = signedEngagements();
 
 const GRID = '1.8fr 84px 84px 1fr 92px';
 
@@ -28,11 +35,6 @@ const GAUGE_TONE = {
   breach: { fill: 'var(--breach)', opacity: 1, marker: false },
 } as const;
 
-const ETAT_COLOR = {
-  tenu: 'var(--ink)',
-  enCours: 'var(--caution)',
-  nonTenu: 'var(--breach)',
-} as const;
 
 function Gauge({ fillPct, tone }: { fillPct: number; tone: keyof typeof GAUGE_TONE }) {
   const spec = GAUGE_TONE[tone];
@@ -140,7 +142,7 @@ export function DocRapport() {
           </div>
           {rows.map((row, index) => (
             <div
-              key={row.label}
+              key={row.id}
               style={{
                 display: 'grid',
                 gridTemplateColumns: GRID,
@@ -151,14 +153,17 @@ export function DocRapport() {
                 fontSize: 11,
               }}
             >
-              <span>{row.label}</span>
-              <span className="mono" style={{ textAlign: 'right' }}>{row.seuil}</span>
-              <span className="mono" style={{ textAlign: 'right', color: row.t3Tone === 'breach' ? 'var(--breach)' : 'var(--ink)' }}>
-                {row.t3}
+              <span>{row.labelFr}</span>
+              <span className="mono" style={{ textAlign: 'right' }}>{thresholdText(row, tFr)}</span>
+              <span
+                className="mono"
+                style={{ textAlign: 'right', color: row.status === 'nonTenu' ? 'var(--breach)' : 'var(--ink)' }}
+              >
+                {measuredText(row)}
               </span>
-              <Gauge fillPct={row.gauge.fillPct} tone={row.gauge.tone} />
-              <span className="mono" style={{ fontSize: 9.5, textAlign: 'right', color: ETAT_COLOR[row.etat] }}>
-                {t.docRapport.etats[row.etat]}
+              <Gauge fillPct={row.gaugePct ?? 0} tone={gaugeTone(row)} />
+              <span className="mono" style={{ fontSize: 9.5, textAlign: 'right', color: statusColor(row) }}>
+                {statusText(row, tFr)}
               </span>
             </div>
           ))}

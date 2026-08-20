@@ -8,7 +8,6 @@ import {
   runsVaried,
   trendPoints,
 } from '../lib/measurement-view';
-import { carbonCanon } from './carbon-canon';
 import { elidedHash, groupedHash, REF, shortHash, verifyUrl } from './ledger-refs';
 import { ledgerCanon } from './ledger-canon';
 
@@ -35,27 +34,10 @@ const CAND_BYTES = metric('candidate', 'transferred_bytes');
 // the free scan: one cold pass on a page nobody has history for.
 const SCAN_DOM = metric('scan', 'dom_node_count');
 
-// ---- the contractual footprint engagement ----
-
-// the service median as @balise/carbon-models estimated it, read once. the
-// tender, the contract tracker and the execution report all print this figure,
-// so no two of them can state a different footprint for the same service.
-const carbonService = carbonCanon.pages.find((page) => page.id === 'dashboard');
-if (carbonService === undefined) throw new Error('the carbon canon holds no service median');
-
-const carbonMedianG = carbonService.band.reference;
-
-// the ceiling is authored, not measured: a threshold is something a supplier
-// signs, and this one was written into the offer with room above the figure
-// the reference model gave at the time. the headroom below is derived from it,
-// never typed beside it.
-const CARBON_CEILING_G = 0.1;
-
-const carbonHeadroomPct = Math.round((1 - carbonMedianG / CARBON_CEILING_G) * 100);
-const carbonBarPct = 100 - carbonHeadroomPct;
-
-const carbonMedianText = formatNumber(carbonMedianG, 3);
-const carbonCeilingText = formatNumber(CARBON_CEILING_G, 3);
+// the contractual footprint engagement, its threshold, the margin between them
+// and the state that follows all live in engagement-canon.ts. the tender, the
+// tracker and the execution report each used to compute their own, and two of
+// them disagreed.
 
 /** documents are french, and french decimals take a comma. */
 const fr = (text: string): string => text.replace('.', ',');
@@ -110,8 +92,6 @@ export const canon = {
   },
   thirdParty: {
     sharePct: SERVICE_SHARE.median,
-    // the ceiling the offer committed to. authored, like every threshold.
-    commitCeilingPct: 30,
     bandLow: SERVICE_SHARE.median - SERVICE_SHARE.mad,
     bandHigh: SERVICE_SHARE.median + SERVICE_SHARE.mad,
     noiseLow: SERVICE_SHARE_FLOOR === null ? null : SERVICE_SHARE.median - SERVICE_SHARE_FLOOR,
@@ -308,75 +288,19 @@ export const declarationFixture = {
 
 // ---- tender workspace ----
 
-export type CommitmentMargin =
-  | { kind: 'headroom'; pct: number }
-  | { kind: 'stretch'; points: number }
-  | { kind: 'notMet' }
-  | { kind: 'process' };
-
-export interface CommitmentRow {
-  checked: boolean;
-  // commitment wording appears verbatim in the annex; french legal register
-  label: string;
-  measured: string;
-  measuredTone?: 'breach';
-  proposed: string;
-  margin: CommitmentMargin;
-}
-
 export const tenderFixture = {
   ref: 'AO-2026-SL-0417',
   title: 'Refonte du portail métropolitain',
   deadline: { date: '12 SEP 2026 · 12:00', days: 28, platform: 'PLACE' },
   currentStep: 2,
-  commitments: [
-    {
-      checked: true,
-      label: 'Poids médian des 10 pages principales',
-      measured: `${formatInt(1258)} KB`,
-      proposed: `≤ ${formatInt(1400)} KB`,
-      margin: { kind: 'headroom', pct: 11 },
-    },
-    {
-      checked: true,
-      label: 'Empreinte estimée par visite (SWD v4)',
-      measured: `${carbonMedianText} g`,
-      proposed: `≤ ${carbonCeilingText} g`,
-      margin: { kind: 'headroom', pct: carbonHeadroomPct },
-    },
-    {
-      checked: true,
-      label: 'Taux de conformité RGESN à 12 mois',
-      measured: '59%',
-      proposed: '≥ 75%',
-      margin: { kind: 'stretch', points: 16 },
-    },
-    {
-      checked: false,
-      label: 'Part des tiers dans les octets transférés',
-      measured: '38%',
-      measuredTone: 'breach',
-      proposed: '≤ 30%',
-      margin: { kind: 'notMet' },
-    },
-    {
-      checked: true,
-      label: "Rapport d'exécution trimestriel horodaté",
-      measured: '–',
-      proposed: '4 / an',
-      margin: { kind: 'process' },
-    },
-  ] as readonly CommitmentRow[],
-  warningPoints: 8,
+  // the commitments, their margins, the points the unsigned proposal falls
+  // short by, and the conformity history all come from engagement-canon.ts and
+  // criteria-view.ts. what is left here is the tender itself.
   history: {
     since: '03 Mar 2026',
     days: 165,
     runs: 4812,
     declarationVersions: 3,
-    rateFrom: 28,
-    rateTo: 59,
-    // conformity sparkline, y values on a 46-high viewbox, from the handoff
-    points: '4,34 22,33 40,30 58,31 76,28 94,29 112,25 130,26 148,22 166,20 184,21 202,16 220,14 240,12',
   },
   output: {
     branding: 'Atelier Sextant · sans marque Balise',
@@ -389,74 +313,16 @@ export const tenderFixture = {
   },
 } as const;
 
-// ---- contract tracker ----
-
-export type ContractStatus = 'tenu' | 'atRisk' | 'aJour';
-
-export interface ContractRow {
-  label: string;
-  seuil: string;
-  /** null when the figure is read off the assessments rather than typed. */
-  actuel: string | null;
-  actuelTone?: 'caution';
-  // gauge rows have a bar; the quarterly row shows delivery squares instead
-  headroom?: { barPct: number; tone: 'ok' | 'caution'; labelPct?: number; ptToGo?: number };
-  quarters?: { text: string; delivered: number; total: number };
-  trendPoints: string;
-  trendTone: 'neutral' | 'caution';
-  status: ContractStatus;
-  rowTint?: 'caution';
-}
-
 export const contractFixture = {
   ref: '2026-SL-0417',
   notified: '02 Apr 2026',
   months: 36,
   article: '8.4',
   quarter: 'Q3',
-  rows: [
-    {
-      label: 'Poids médian des 10 pages principales',
-      seuil: formatInt(1400),
-      actuel: formatInt(1258),
-      headroom: { barPct: 90, tone: 'ok', labelPct: 10 },
-      trendPoints: '2,12 16,11 30,13 44,10 58,4 72,5 86,11 108,12',
-      trendTone: 'neutral',
-      status: 'tenu',
-    },
-    {
-      label: 'Empreinte estimée par visite (SWD v4)',
-      seuil: carbonCeilingText,
-      actuel: carbonMedianText,
-      headroom: { barPct: carbonBarPct, tone: 'ok', labelPct: carbonHeadroomPct },
-      trendPoints: '2,8 16,9 30,7 44,10 58,11 72,12 86,13 108,13',
-      trendTone: 'neutral',
-      status: 'tenu',
-    },
-    {
-      label: 'Taux de conformité RGESN à 12 mois',
-      seuil: '75%',
-      // null is the derived row: the rate and the headroom come from the
-      // assessments, so the tracker and the report cannot state two rates.
-      actuel: null,
-      actuelTone: 'caution',
-      headroom: { barPct: 0, tone: 'caution', ptToGo: 0 },
-      // no conformity history is held yet, so no line is drawn from one.
-      trendPoints: '',
-      trendTone: 'caution',
-      status: 'atRisk',
-      rowTint: 'caution',
-    },
-    {
-      label: "Rapport d'exécution trimestriel horodaté",
-      seuil: '4/an',
-      actuel: '2/2',
-      quarters: { text: 'Q1 ✓ 31 Mar · Q2 ✓ 30 Jun', delivered: 2, total: 4 },
-      trendPoints: '',
-      trendTone: 'neutral',
-      status: 'aJour',
-    },
-  ] as readonly ContractRow[],
+  // the engagements this contract carries come from engagement-canon.ts, and
+  // only the ones that were in the offer are there, so the tracker cannot hold
+  // a row the supplier never signed.
+
   // the contractual conformity target, which the row and the warning under it
   // are both measured against.
   conformityTargetPct: 75,
@@ -516,13 +382,14 @@ export const documentsFixture = {
     agencyLine: '14 rue Kervégan · 44000 Nantes · SIRET 892 411 507 00018',
     date: '15 août 2026',
     ref: 'AO-2026-SL-0417',
-    // '%' is the placeholder for the conformity rate, which the screen reads
-    // off the assessments rather than repeating here.
+    // '%' and '#' are placeholders: the conformity rate is read off the
+    // assessments and the engagement count off the engagements the offer
+    // carries, rather than either being repeated here.
     coverStats: [
       { value: '165 j' },
       { value: formatInt(4812) },
       { value: '%' },
-      { value: '4' },
+      { value: '#' },
     ],
     // fig. 3 in value space; rendered through the print ToleranceBand so the
     // document figure and the app figure are the same component
@@ -574,50 +441,11 @@ export const documentsFixture = {
     period: '01/07 → 30/09/2026',
     article: '8.4',
     runs: 1284,
-    rows: [
-      {
-        label: 'Poids médian des 10 pages principales',
-        seuil: `${formatInt(1400)} KB`,
-        t3: `${formatInt(1258)} KB`,
-        gauge: { fillPct: 90, tone: 'held' },
-        etat: 'tenu',
-      },
-      {
-        label: 'Empreinte estimée par visite (SWD v4)',
-        seuil: `${fr(carbonCeilingText)} g`,
-        t3: `${fr(carbonMedianText)} g`,
-        gauge: { fillPct: carbonBarPct, tone: 'held' },
-        etat: 'tenu',
-      },
-      {
-        label: 'Taux de conformité RGESN (cible 12 mois)',
-        seuil: '75%',
-        // the achieved rate and the gauge are read off the assessments, so the
-        // report and the declaration cannot state two different rates.
-        t3: null as string | null,
-        targetPct: 75,
-        gauge: { fillPct: 78, tone: 'caution' },
-        etat: 'enCours',
-      },
-      {
-        label: 'Part des tiers dans les octets transférés',
-        seuil: '30%',
-        t3: '38%',
-        t3Tone: 'breach',
-        gauge: { fillPct: 100, tone: 'breach' },
-        etat: 'nonTenu',
-      },
-    ] as ReadonlyArray<{
-      label: string;
-      seuil: string;
-      /** null when the figure is read off the assessments rather than typed. */
-      t3: string | null;
-      /** the contractual target the gauge fills against, for a derived row. */
-      targetPct?: number;
-      t3Tone?: 'breach';
-      gauge: { fillPct: number; tone: 'held' | 'caution' | 'breach' };
-      etat: 'tenu' | 'enCours' | 'nonTenu';
-    }>,
+    // the engagement rows come from engagement-canon.ts, and only the signed
+    // ones are there. the version this replaces reported the supplier
+    // `nonTenu` on a commitment the tender left unchecked, two paragraphs
+    // above a narrative calling the same figure a target we set ourselves.
+
     // period events are engine and reviewer output, kept as data
     events: [
       {
@@ -647,7 +475,7 @@ export const documentsFixture = {
       },
     ] as ReadonlyArray<{ date: string; parts: readonly DocEventPart[] }>,
     calloutBody:
-      'Le lecteur vidéo tiers représente 15 des 38 points mesurés. Son remplacement par une intégration à la demande est engagé (livraison 01/09/2026), ce qui ramènera la part attendue à 26%. La prochaine mesure trimestrielle vérifiera ce point.',
+      'Le lecteur vidéo tiers représente 15 des 38 points mesurés. Son remplacement par une intégration à la demande est engagé, livraison au 01/09/2026. Aucune valeur après remplacement n\'est avancée ici : la mesure du trimestre suivant dira ce qu\'elle est.',
     footerLine1: `MÉTHODOLOGIE v1.2 · ${formatInt(1284)} RELEVÉS · CHROMIUM 127.0.6533.88`,
     footerLine2: `REGISTRE : ${formatInt(ledgerCanon.entryCount)} ENTRÉES · RACINE ANCRÉE 15/08/2026 04:00 UTC`,
     hash: groupedHash(REF.report),

@@ -90,10 +90,10 @@ export const en = {
       pctOfBytes: '% of bytes',
       acrossModels: 'across {count} models',
       madShort: 'MAD {value}',
-      commitCeiling: 'commit ≤{value}',
+      internalTarget: 'internal target ≤{value}',
       provenanceReference: '{model} · reference · band = {count} models',
       provenanceMeasured: 'measured · band = median ± MAD',
-      thresholdBreached: 'contractual threshold breached',
+      thresholdBreached: 'internal target exceeded · not a contractual commitment',
       dispersionHigh: 'dispersion high · {varied} of {total} runs varied',
     },
     trend: {
@@ -468,6 +468,25 @@ export const en = {
       badgeName: 'Écoconception',
     },
   },
+  engagements: {
+    perYear: '{count} / year',
+    notSigned: 'proposed, not taken',
+    status: {
+      tenu: 'held',
+      enCours: 'in progress',
+      nonTenu: 'not held',
+    },
+    margins: {
+      headroom: '{pct}% headroom',
+      stretch: 'stretch · +{points} pt to close',
+      notMet: 'over by {points} pt today',
+      process: 'process',
+    },
+    trendPeriods: '{count} aggregations',
+    noHistory: 'no history',
+    signedNote:
+      'The table carries only signed engagements. One that was proposed and not taken is not an obligation, and is never reported as not held.',
+  },
   tender: {
     remiseDesOffres: 'REMISE DES OFFRES',
     daysVia: '{days} days · via {platform}',
@@ -501,7 +520,7 @@ export const en = {
     historyTitle: 'MEASURED HISTORY · THE PART NOBODY CAN FAKE',
     historySince: 'Continuous measurement since',
     historyCounts: '{days} days, {runs} runs, {versions} published declaration versions.',
-    conformityRate: 'conformity rate · {from}% → {to}%',
+    conformityCounts: 'Conforming criteria per published version, out of {total} in the referential. {versions} versions, the latest still a draft.',
     historyCaption: 'A competitor bidding this contract can promise the same numbers. They cannot produce this line.',
     outputTitle: 'OUTPUT',
     outputKeys: {
@@ -517,6 +536,7 @@ export const en = {
     openAnnex: 'Open the annex',
   },
   contract: {
+    deliveredOf: '{delivered} of {total} delivered',
     noHistory: 'no history',
     earlyWarning: {
       rate: 'Conformity is at {current}%, against a {target}% target at the {months}-month review.',
@@ -666,7 +686,7 @@ export const en = {
     headers: { engagement: 'ENGAGEMENT', seuil: 'SEUIL', t3: 'T3', marge: 'MARGE', etat: 'ÉTAT' },
     etats: { tenu: 'TENU', enCours: 'EN COURS', nonTenu: 'NON TENU' },
     eventsTitle: 'Événements de la période',
-    calloutStrong: 'Engagement non tenu : part des tiers.',
+    calloutStrong: 'Cible interne dépassée : part des tiers. Cet engagement a été proposé et non retenu au marché.',
     hashLabel: 'EMPREINTE DU RAPPORT',
   },
   // the public surfaces are french public pages, like the three documents:

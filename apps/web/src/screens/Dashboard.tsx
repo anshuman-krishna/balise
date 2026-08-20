@@ -14,6 +14,7 @@ import {
   referenceModel,
 } from '../lib/carbon-view';
 import { confidenceLabel, noiseEdge } from '../lib/measurement-view';
+import { engagement } from '../lib/engagement-view';
 import { MetricTile } from '../components/MetricTile';
 
 // the carbon tile is the estimate @balise/carbon-models produced for the
@@ -53,6 +54,11 @@ function TierRow({ label, done, total, color }: { label: string; done: number; t
 }
 
 export function Dashboard() {
+  // the third-party ceiling is the one the offer proposed and did not sign. it
+  // is read from the engagement it belongs to, so the tile and the tender
+  // cannot state two different targets.
+  const thirdPartyTarget = engagement('third-party-share').threshold;
+
   const d = t.dashboard;
   // the measured tiles are not estimates, but the band still names the model
   // version in force, and it names the one that actually ran.
@@ -124,7 +130,7 @@ export function Dashboard() {
           label={d.tiles.thirdPartyShare}
           valueText={formatInt(canon.thirdParty.sharePct)}
           unitText={d.tiles.pctOfBytes}
-          rightPrimary={fill(d.tiles.commitCeiling, { value: canon.thirdParty.commitCeilingPct })}
+          rightPrimary={fill(d.tiles.internalTarget, { value: thirdPartyTarget })}
           confidence={canon.thirdParty.confidence}
           confidenceLabel={confidenceLabel(canon.thirdParty.confidence)}
           band={{
@@ -135,9 +141,12 @@ export function Dashboard() {
             bandHigh: canon.thirdParty.bandHigh,
             noiseLow: canon.thirdParty.noiseLow ?? undefined,
             noiseHigh: canon.thirdParty.noiseHigh ?? undefined,
-            budget: canon.thirdParty.commitCeilingPct,
-            // absolute contractual threshold, no delta involved: breach is
-            // legitimate without a classification.
+            budget: thirdPartyTarget,
+            // an absolute threshold, so a breach is legitimate without a
+            // classification. it is the team's own target and not a
+            // contractual one: this engagement was proposed and not signed,
+            // and the tile used to say "seuil contractuel dépassé" for an
+            // obligation the contract does not contain.
             state: 'breach',
             referenceModel: ref,
             confidence: canon.thirdParty.confidence,
