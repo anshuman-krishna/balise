@@ -32,3 +32,12 @@ export {
   formatSigned,
   NARROW_NBSP,
 } from './format.js';
+export {
+  parseColor,
+  parseTokens,
+  compositeOver,
+  relativeLuminance,
+  contrastRatio,
+  CONTRAST_AA,
+  type Rgba,
+} from './contrast.js';

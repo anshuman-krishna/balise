@@ -4,6 +4,9 @@ import type { Catalog } from './en.js';
 // le compilateur. règle maison : aucun tiret cadratin dans les chaînes.
 
 export const fr: Catalog = {
+  a11y: {
+    skipToContent: 'Aller au contenu',
+  },
   nav: {
     groups: {
       instrument: "L'instrument",

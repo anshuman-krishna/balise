@@ -13,4 +13,15 @@ export const t = catalogs[locale];
  */
 export const tFr = catalogs.fr;
 
+/**
+ * the language of the content under each register, as a `lang` attribute. the
+ * instrument is the app locale and inherits it; a document and a public surface
+ * are french regardless, and a screen reader has to be told which voice to use.
+ */
+export const CONTENT_LOCALE: Record<'instrument' | 'document' | 'public', Locale | undefined> = {
+  instrument: undefined,
+  document: 'fr',
+  public: 'fr',
+};
+
 export { fill, fillParts } from '@balise/i18n';

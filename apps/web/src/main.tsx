@@ -7,6 +7,7 @@ import '@fontsource-variable/public-sans';
 import '@fontsource-variable/martian-mono';
 import './styles/app.css';
 
+import { locale } from './i18n';
 import { AppShell } from './layout/AppShell';
 import { Dashboard } from './screens/Dashboard';
 import { RunDetail } from './screens/RunDetail';
@@ -29,6 +30,11 @@ const root = document.getElementById('root');
 if (!root) {
   throw new Error('root element missing');
 }
+
+// index.html carries a static lang for the first paint; this is the source of
+// truth, so flipping the app locale cannot leave the document declaring the
+// wrong one. french content marks itself, per register, in AppShell.
+document.documentElement.lang = locale;
 
 createRoot(root).render(
   <StrictMode>
@@ -163,8 +169,17 @@ createRoot(root).render(
           }
         />
         {/* the verification permalink printed on every document. it must
-            resolve with no session, so it carries no app chrome at all. */}
-        <Route path="/v/:hash" element={<LedgerVerification />} />
+            resolve with no session, so it carries no navigation and no app bar.
+            it still needs a main landmark and a content language, which is what
+            the bare shell gives it. */}
+        <Route
+          path="/v/:hash"
+          element={
+            <AppShell showNav={false} showAppBar={false} register="public">
+              <LedgerVerification />
+            </AppShell>
+          }
+        />
       </Routes>
     </BrowserRouter>
   </StrictMode>,

@@ -1,19 +1,25 @@
 /* balise design tokens. source: design brief sections 4 to 6.
-   green is a pass state only, never a brand colour. */
+   green is a pass state only, never a brand colour.
+
+   three values are darker than the brief's: --text-tertiary, --on-dark-muted
+   and --caution. all three are used as text at 7.5 to 12 px and all three
+   failed wcag aa there. the ratios are pinned by test/contrast.test.ts, which
+   reads this file, so a token cannot drift back below the line it has to hold.
+   see docs/DECISIONS/0006-palette-carries-its-own-contrast.md. */
 
 :root {
   --ink: #15181b;
   --paper: #f3f4f1;
   --surface: #ffffff;
   --text-secondary: #5a6169;
-  --text-tertiary: #8b939b;
+  --text-tertiary: #686e74;
   --on-dark-text: #c9ced2;
-  --on-dark-muted: #6e767e;
+  --on-dark-muted: #7d858d;
   --measured: #2b3fd9;
   --measured-on-dark: #8fa3ff;
   --measured-band-on-dark: #5a78ff;
   --conforme: #3e7a5e;
-  --caution: #c4761a;
+  --caution: #9e5f14;
   --breach: #b3312c;
   --breach-on-dark: #e8807b;
   --caution-on-dark: #e0a05c;
@@ -26,7 +32,7 @@
   --hover-row: rgba(43, 63, 217, 0.04);
   --selected-row: rgba(43, 63, 217, 0.06);
   --tint-breach: rgba(179, 49, 44, 0.05);
-  --tint-caution: rgba(196, 118, 26, 0.06);
+  --tint-caution: rgba(158, 95, 20, 0.06);
   --track: rgba(21, 24, 27, 0.09);
   --inset-panel: rgba(21, 24, 27, 0.05);
 

@@ -3,6 +3,9 @@
 // not translatable copy. house rule: no em dashes in any string.
 
 export const en = {
+  a11y: {
+    skipToContent: 'Skip to content',
+  },
   nav: {
     groups: {
       instrument: 'The instrument',

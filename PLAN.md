@@ -16,7 +16,41 @@ screenshots, the fidelity source).
 
 ## Current status
 
-**Phase: the packages are publishable (2026-08-21).** The whole competitive argument is
+**Phase: the palette is measured (2026-08-21).** A product whose second rule pack is RGAA
+had never computed a contrast ratio against its own tokens. Four failures, all on text a
+keyboard or low-vision reader has to read.
+
+`--text-tertiary` (#8b939b) reaches **2.82:1** on paper against the 4.5 body text needs, at
+70 call sites, every one of them between 7.5 and 10 px. `--caution` (#c4761a) reaches
+**3.20:1**, and caution is the low confidence colour, which invariant 1 requires to be
+visible on every surface a figure appears on. `--on-dark-muted` reaches **3.87:1** on ink.
+And the global focus ring was signal blue, 6.8:1 on paper and **2.4:1 on ink**, so keyboard
+focus was effectively invisible on the navigation rail, which is the one component a
+keyboard user traverses on every route.
+
+None of the three could be fixed by restricting them to large text: the exemption starts at
+24 px and this interface runs from 7.5 px to about 15 px. So the three are darker, preserving
+hue, at 4.67, 4.64 and 4.76. The focus ring is a token now, `--focus-ring`, redefined inside
+`.nav-rail` and `.card-dark`; an element that is itself a dark button keeps the default,
+because its ring is drawn on the page behind it rather than on the button.
+
+`packages/ui/test/contrast.test.ts` reads `tokens.css` and computes the ratios, so the list
+of tokens allowed as text is the policy rather than a convention. Reverting one value fails
+two tests by name. The audit also confirmed what does not need changing: `--conforme` 4.58,
+`--breach` 5.61, `--measured` 6.76, all as the brief wrote them.
+
+Three structural fixes came with it. A **skip link**, off screen until focused, first in the
+tab order, clearing the 212 px rail so its own ring lands on paper: the rail is seventeen
+links deep and a keyboard reader should not walk it on every route. **`lang` is declared
+where the language actually changes**: the document element takes the app locale from
+`i18n.ts` rather than from a string typed in `index.html`, and `<main>` carries `lang="fr"`
+on the document and public registers, which are french whatever the chrome is. And `/v/:hash`,
+the permalink printed on every document, had **no `main` landmark at all**, because it
+deliberately renders with no chrome; it now takes a bare shell that gives it the landmark and
+the language without giving it navigation. A `prefers-reduced-motion` block is in place ahead
+of any motion existing, so the preference is respected rather than remembered. 844 tests.
+
+**Then: the packages are publishable (2026-08-21).** The whole competitive argument is
 that our measurement is the most *defensible* on the market, not the most accurate, and the
 mechanism for that argument is that four packages are Apache-2.0 and an auditor can read
 every line that produced a number. None of the four could have been published.
@@ -588,6 +622,21 @@ Later versions: see roadmap; detailed to-dos are appended when the version start
 
 ## Decisions log
 
+- **2026-08-21 · Three palette values are darker than the brief's.** `--text-tertiary`,
+  `--caution` and `--on-dark-muted` all failed wcag aa as text and none could be fixed by
+  restricting them to large sizes, because nothing in the instrument register reaches 24 px.
+  The alternative considered first, a `--caution-text` sibling following the `-on-dark`
+  precedent, was abandoned: of 41 `--caution` references most flow through view modules whose
+  colour is consumed as text, so the split would have left the wrong one reachable by default.
+  ADR 0006.
+- **2026-08-21 · The focus ring is a token, not a colour.** Signal blue reaches 2.4:1 on ink,
+  below the 3.0 a ui component boundary needs, so focus was invisible on the navigation rail.
+  `--focus-ring` is redefined on dark containers and left alone on dark buttons, whose ring is
+  drawn on the page behind them.
+- **2026-08-21 · `lang` is declared where the language changes.** The app locale drives
+  `document.documentElement.lang` from `i18n.ts`, so flipping one line cannot leave the page
+  declaring the wrong language, and `<main>` carries `lang="fr"` on the document and public
+  registers. A screen reader switching voice mid-page is the whole point of the attribute.
 - **2026-08-21 · The decisions log graduates into ADRs.** `docs/DECISIONS/` exists, with
   the five records that were owed: the one-verdict rule, rule pack authoring, the generated
   canon, the carbon band split, and confidence requiring a floor. The rule for which log a

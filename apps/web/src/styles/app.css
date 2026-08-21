@@ -24,9 +24,57 @@ a:hover {
   color: var(--ink);
 }
 
+/* the focus ring is a ui component boundary, so it needs 3:1 against whatever
+   it is drawn on. signal blue gives 6.8 on paper and 2.4 on ink, so a ring
+   inside a dark container swaps to the on-dark blue. containers that are
+   themselves dark buttons keep the default, because their ring is drawn on the
+   page behind them rather than on the button. */
+:root {
+  --focus-ring: var(--measured);
+}
+.nav-rail,
+.card-dark {
+  --focus-ring: var(--measured-on-dark);
+}
+
 :focus-visible {
-  outline: 2px solid var(--measured);
+  outline: 2px solid var(--focus-ring);
   outline-offset: 1px;
+}
+
+/* off screen until focused, then the first thing in the tab order. the nav
+   rail is seventeen links deep and a keyboard reader should not have to walk
+   it on every route. */
+.skip-link {
+  position: absolute;
+  top: 8px;
+  left: -9999px;
+  z-index: 100;
+  padding: 9px 14px;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--font-body);
+  font-size: 12px;
+  outline-offset: 2px;
+}
+/* clears the 212px rail so the focus ring is drawn on paper rather than half
+   on ink, where signal blue only reaches 2.4:1. */
+.skip-link:focus {
+  left: 220px;
+}
+
+/* there is no motion in this interface today. the block is here so that the
+   day someone adds a transition, the preference is already respected rather
+   than remembered. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 .archivo {
@@ -45,6 +93,11 @@ a:hover {
   display: grid;
   grid-template-columns: 212px 1fr;
   min-height: 100vh;
+}
+
+/* the verification permalink: no navigation, so no rail column. */
+.app-bare {
+  grid-template-columns: 1fr;
 }
 
 .nav-rail {

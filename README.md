@@ -192,6 +192,12 @@ docs/
   RUNBOOK.md            Operational procedures, and the ones that do not exist yet
 ```
 
+The design tokens carry their own contrast check. `packages/ui/test/contrast.test.ts` reads
+`tokens.css`, computes WCAG ratios and asserts them, so a colour used as text cannot drop
+below 4.5:1 without failing a test by name. Three of the brief's values are darker than it
+wrote them for exactly that reason, which is recorded in
+[ADR 0006](docs/DECISIONS/0006-palette-carries-its-own-contrast.md).
+
 `schemas`, `measure-core`, `carbon-models`, `criteria-engine` and `rule-packs` are
 Apache-2.0 and meant for standalone publication. Nobody should trust a black box that
 claims to produce audit evidence, so the parts that produce it are open and their
