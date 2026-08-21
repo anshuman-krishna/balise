@@ -11,19 +11,21 @@ const MAIN_CLASS = {
   public: undefined,
 } as const;
 
-type Register = keyof typeof MAIN_CLASS;
+export type Register = keyof typeof MAIN_CLASS;
+
+export interface AppShellProps {
+  children: ReactNode;
+  showAppBar?: boolean;
+  showNav?: boolean;
+  register?: Register;
+}
 
 export function AppShell({
   children,
   showAppBar = true,
   showNav = true,
   register = 'instrument',
-}: {
-  children: ReactNode;
-  showAppBar?: boolean;
-  showNav?: boolean;
-  register?: Register;
-}) {
+}: AppShellProps) {
   return (
     <div className={showNav ? 'app' : 'app app-bare'}>
       {showNav ? (

@@ -32,6 +32,14 @@ export {
   formatSigned,
   NARROW_NBSP,
 } from './format.js';
+export { Tabs, type TabsProps, type TabDefinition } from './Tabs.js';
+export {
+  nextTabIndex,
+  tabId,
+  tabPanelId,
+  tabPanelAttributes,
+  type TabPanelAttributes,
+} from './tab-pattern.js';
 export {
   parseColor,
   parseTokens,

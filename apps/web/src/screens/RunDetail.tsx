@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router';
 import { classifyDelta } from '@balise/measure-core';
-import { formatInt, formatNumber, ToleranceDispersion } from '@balise/ui';
+import { formatInt, formatNumber, Tabs, tabPanelAttributes, ToleranceDispersion } from '@balise/ui';
 import { fill, t } from '../i18n';
 import { runDetailFixture as run } from '../fixtures/canon';
 import { REF, shortHash } from '../fixtures/ledger-refs';
@@ -221,21 +221,15 @@ export function RunDetail() {
         {run.pass === 'cold' ? t.runDetail.coldCache : t.runDetail.warmCache}
       </div>
 
-      <div className="tabs" role="tablist" aria-label={fill(t.runDetail.title, { id: run.id })}>
-        {TABS.map((key) => (
-          <button
-            key={key}
-            type="button"
-            role="tab"
-            aria-selected={tab === key}
-            className={tab === key ? 'tab active' : 'tab'}
-            onClick={() => setTab(key)}
-          >
-            {t.runDetail.tabs[key]}
-          </button>
-        ))}
-      </div>
+      <Tabs
+        label={fill(t.runDetail.title, { id: run.id })}
+        name="run"
+        tabs={TABS.map((key) => ({ key, label: t.runDetail.tabs[key] }))}
+        selected={tab}
+        onSelect={setTab}
+      />
 
+      <div {...tabPanelAttributes('run', tab)}>
       {tab === 'waterfall' ? (
         <div className="dashboard-cols" style={{ gridTemplateColumns: '1.5fr 1fr', marginTop: 14 }}>
           <div className="card">
@@ -309,6 +303,7 @@ export function RunDetail() {
           </div>
         </div>
       ) : null}
+      </div>
     </>
   );
 }

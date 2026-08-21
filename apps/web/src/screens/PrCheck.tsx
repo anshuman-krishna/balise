@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { formatInt, formatSigned, ToleranceBand } from '@balise/ui';
+import { formatInt, formatSigned, Tabs, tabPanelAttributes, ToleranceBand } from '@balise/ui';
 import { Link } from 'react-router';
 import { fill, t } from '../i18n';
 import { prCheckFixture as pr } from '../fixtures/canon';
@@ -427,29 +427,24 @@ export function PrCheck() {
           <h1 className="screen-title">{t.prCheck.title}</h1>
           <div className="screen-subtitle">{t.prCheck.subtitle}</div>
         </div>
-        <div className="segmented" style={{ marginLeft: 'auto' }} role="tablist">
-          <button
-            type="button"
-            role="tab"
-            aria-selected={mode === 'rendered'}
-            className={mode === 'rendered' ? 'active' : undefined}
-            onClick={() => setMode('rendered')}
-          >
-            {t.prCheck.toggleRendered}
-          </button>
-          <button
-            type="button"
-            role="tab"
-            aria-selected={mode === 'markdown'}
-            className={mode === 'markdown' ? 'active' : undefined}
-            onClick={() => setMode('markdown')}
-          >
-            {t.prCheck.toggleMarkdown}
-          </button>
-        </div>
+        <Tabs
+          label={t.prCheck.toggleLabel}
+          name="check"
+          variant="segmented"
+          style={{ marginLeft: 'auto' }}
+          tabs={[
+            { key: 'rendered', label: t.prCheck.toggleRendered },
+            { key: 'markdown', label: t.prCheck.toggleMarkdown },
+          ]}
+          selected={mode}
+          onSelect={setMode}
+        />
       </div>
 
-      <div style={{ maxWidth: 1020, marginTop: 16, display: 'flex', flexDirection: 'column', gap: 14 }}>
+      <div
+        {...tabPanelAttributes('check', mode)}
+        style={{ maxWidth: 1020, marginTop: 16, display: 'flex', flexDirection: 'column', gap: 14 }}
+      >
         {mode === 'markdown' ? <Artifact /> : <Rendered />}
       </div>
     </>

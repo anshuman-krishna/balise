@@ -260,6 +260,7 @@ export const fr: Catalog = {
   },
   budgets: {
     subtitle: 'Écrit dans {file} sur {branch} · chaque modification est un commit',
+    toggleLabel: 'Affichage des budgets',
     toggleVisual: 'Visuel',
     toggleYaml: 'YAML',
     headers: {
@@ -317,6 +318,7 @@ export const fr: Catalog = {
     provenanceLedger: 'registre',
     overrideLink: 'déroger à ce contrôle',
     overrideNote: "(motif requis, apparaît dans le rapport d'exécution)",
+    toggleLabel: 'Affichage du commentaire',
     toggleRendered: 'Rendu',
     toggleMarkdown: 'Markdown',
     artifactNote:

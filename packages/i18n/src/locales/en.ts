@@ -263,6 +263,7 @@ export const en = {
   },
   budgets: {
     subtitle: 'Writes back to {file} on {branch} · every edit is a commit',
+    toggleLabel: 'Budget view',
     toggleVisual: 'Visual',
     toggleYaml: 'YAML',
     headers: {
@@ -320,6 +321,7 @@ export const en = {
     provenanceLedger: 'ledger',
     overrideLink: 'override this check',
     overrideNote: '(reason required, appears in the execution report)',
+    toggleLabel: 'Comment view',
     toggleRendered: 'Rendered',
     toggleMarkdown: 'Markdown',
     artifactNote:

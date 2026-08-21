@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router';
 import type { BudgetStatus } from '@balise/schemas';
+import { Tabs, tabPanelAttributes } from '@balise/ui';
 import { fill, t } from '../i18n';
 import { budgetsFixture as budgets } from '../fixtures/canon';
 import { budgetCanon } from '../fixtures/budget-canon';
@@ -55,28 +56,21 @@ export function Budgets() {
             {fill(t.budgets.subtitle, { file: budgetCanon.file, branch: budgetCanon.branchName })}
           </div>
         </div>
-        <div className="segmented" style={{ marginLeft: 'auto' }} role="tablist">
-          <button
-            type="button"
-            role="tab"
-            aria-selected={mode === 'visual'}
-            className={mode === 'visual' ? 'active' : undefined}
-            onClick={() => setMode('visual')}
-          >
-            {t.budgets.toggleVisual}
-          </button>
-          <button
-            type="button"
-            role="tab"
-            aria-selected={mode === 'yaml'}
-            className={mode === 'yaml' ? 'active' : undefined}
-            onClick={() => setMode('yaml')}
-          >
-            {t.budgets.toggleYaml}
-          </button>
-        </div>
+        <Tabs
+          label={t.budgets.toggleLabel}
+          name="budgets"
+          variant="segmented"
+          style={{ marginLeft: 'auto' }}
+          tabs={[
+            { key: 'visual', label: t.budgets.toggleVisual },
+            { key: 'yaml', label: t.budgets.toggleYaml },
+          ]}
+          selected={mode}
+          onSelect={setMode}
+        />
       </div>
 
+      <div {...tabPanelAttributes('budgets', mode)}>
       {mode === 'visual' ? (
         <div className="card" style={{ marginTop: 16, padding: 0, overflowX: 'auto' }}>
           <div
@@ -251,6 +245,7 @@ export function Budgets() {
             {t.budgets.overridesNoteSuffix}
           </p>
         </div>
+      </div>
       </div>
     </>
   );
