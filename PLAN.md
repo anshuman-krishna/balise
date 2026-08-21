@@ -665,6 +665,22 @@ Later versions: see roadmap; detailed to-dos are appended when the version start
 
 ## Decisions log
 
+- **2026-08-21 · A role is a promise about the keyboard.** `role="tab"` tells an assistive
+  technology that the arrow keys move within the set and that the set is one stop in the page
+  tab order. Three screens declared it and implemented neither. The pattern is implemented
+  once, in `packages/ui`, with a required list label, because a tablist takes no name from
+  the tabs inside it.
+- **2026-08-21 · Only the open tab names its panel.** Panels are rendered when they open
+  rather than all rendered and hidden, so `aria-controls` on a closed tab would point at an
+  id that is not on the page. `aria-controls` is recommended by ARIA, not required, and a
+  dangling reference is worse than its absence: it is a promise of somewhere to go, made to
+  the one reader who cannot check.
+- **2026-08-21 · Keyboard reachability is a test, not a memory of having looked.**
+  `auditMarkup` applies eleven rules to the rendered markup of every route, from a route
+  table the router also reads. Every rule is shown catching something before it is trusted to
+  catch nothing, and the markup reader throws on input it cannot parse rather than
+  recovering, because a parser that recovers silently lets a screen fall out of the audit
+  while the audit goes on reporting nothing wrong.
 - **2026-08-21 · A scenario names a profile and the rest is expanded.** The profile table
   moved to `@balise/schemas`, where the runner that applies it and the screens that state it
   read one copy. The duplicate said "1.6 Mbps" and nothing would have noticed if the runner
