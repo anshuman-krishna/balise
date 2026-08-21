@@ -588,6 +588,17 @@ Later versions: see roadmap; detailed to-dos are appended when the version start
 
 ## Decisions log
 
+- **2026-08-21 · The decisions log graduates into ADRs.** `docs/DECISIONS/` exists, with
+  the five records that were owed: the one-verdict rule, rule pack authoring, the generated
+  canon, the carbon band split, and confidence requiring a floor. The rule for which log a
+  decision belongs in: this one is a running record, an ADR is a considered one, and an
+  entry graduates when someone would otherwise have to reconstruct the reasoning from a
+  diff.
+- **2026-08-21 · The runbook states what it cannot state.** There is no deployed system, so
+  procedures for deploys, migrations, backups and the queue would be fiction. `docs/RUNBOOK.md`
+  covers what can be executed today and carries a table of the ten missing procedures with
+  what each depends on, plus the seven alerts that must exist before launch. A gap that is
+  listed is a gap; a gap that is implied is a surprise.
 - **2026-08-21 · `@balise/schemas` is published too.** The operating manual names four OSS
   packages and all four depend on schemas. Shipping four readable packages that rest on a
   fifth nobody can read is the black box the licence was meant to avoid, so schemas carries

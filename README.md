@@ -188,6 +188,8 @@ packages/
 
 docs/
   METHODOLOGY.md        The public measurement contract, versioned
+  DECISIONS/            Architecture decision records, numbered, append-only
+  RUNBOOK.md            Operational procedures, and the ones that do not exist yet
 ```
 
 `schemas`, `measure-core`, `carbon-models`, `criteria-engine` and `rule-packs` are
