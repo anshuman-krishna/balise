@@ -51,9 +51,9 @@ function Record({ view }: { view: LedgerRecordView }) {
         <span className="status-mark" style={{ background: 'var(--conforme)', width: 17, height: 17, fontSize: 11 }} aria-hidden="true">
           ✓
         </span>
-        <span className="archivo" style={{ fontWeight: 600, fontSize: 19 }}>
+        <h1 className="archivo" style={{ margin: 0, fontWeight: 600, fontSize: 19 }}>
           {t.ledger.intact}
-        </span>
+        </h1>
         <span className="mono" style={{ marginLeft: 'auto', fontSize: 10.5, color: 'var(--text-secondary)' }}>
           {fill(t.ledger.checkedCount, { count: formatInt(ledgerCanon.verification.checkedCount) })}
         </span>
@@ -130,9 +130,9 @@ function NotFound({ query, onKnown }: { query: string; onKnown: () => void }) {
         <span className="status-mark" style={{ background: 'var(--breach)', width: 17, height: 17, fontSize: 11 }} aria-hidden="true">
           ✕
         </span>
-        <span className="archivo" style={{ fontWeight: 600, fontSize: 19 }}>
+        <h1 className="archivo" style={{ margin: 0, fontWeight: 600, fontSize: 19 }}>
           {t.ledger.notFoundTitle}
-        </span>
+        </h1>
       </div>
       {/* a wider label column: the queried-hash label is two words */}
       <div style={{ display: 'grid', gridTemplateColumns: '190px 1fr', marginTop: 2 }}>

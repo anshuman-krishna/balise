@@ -23,7 +23,10 @@ export type A11yRule =
   | 'tab-without-panel'
   | 'tab-selection'
   | 'tab-roving-tabindex'
-  | 'panel-unlabelled';
+  | 'panel-unlabelled'
+  | 'no-h1'
+  | 'multiple-h1'
+  | 'heading-level-skipped';
 
 export interface A11yFinding {
   rule: A11yRule;
@@ -201,6 +204,52 @@ export function auditMarkup(html: string): A11yFinding[] {
   }
 
   findings.push(...auditTabs(nodes, byId));
+  findings.push(...auditHeadings(nodes));
+  return findings;
+}
+
+const HEADING = /^h([1-6])$/;
+
+/**
+ * the heading outline. a document that opens at h2 has no title as far as a
+ * screen reader's outline is concerned, and skipping a level puts a section
+ * inside a parent that is not there.
+ */
+function auditHeadings(nodes: readonly MarkupNode[]): A11yFinding[] {
+  const findings: A11yFinding[] = [];
+  const headings = nodes
+    .map((node) => ({ node, level: Number(HEADING.exec(node.tag)?.[1] ?? 0) }))
+    .filter((entry) => entry.level > 0);
+
+  const first = headings.filter((entry) => entry.level === 1);
+  if (first.length === 0) {
+    findings.push({
+      rule: 'no-h1',
+      element: 'the page',
+      detail:
+        headings.length === 0
+          ? 'no heading at all, so the outline is empty and there is nothing to navigate by'
+          : `opens at h${headings[0]!.level}, so it has no title in the outline`,
+    });
+  } else if (first.length > 1) {
+    findings.push({
+      rule: 'multiple-h1',
+      element: 'the page',
+      detail: `${first.length} first-level headings, so the outline has ${first.length} documents in it`,
+    });
+  }
+
+  let previous = 0;
+  for (const entry of headings) {
+    if (previous !== 0 && entry.level > previous + 1) {
+      findings.push({
+        rule: 'heading-level-skipped',
+        element: `${entry.node.tag} ${collapse(entry.node.text).slice(0, 40)}`,
+        detail: `h${previous} to h${entry.level} skips a level, which nests it under a heading that is not there`,
+      });
+    }
+    previous = entry.level;
+  }
   return findings;
 }
 

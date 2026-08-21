@@ -114,12 +114,12 @@ export function DocAnnexe() {
           <div className="mono" style={{ fontWeight: 500, fontSize: 10, letterSpacing: '.14em', color: 'var(--text-secondary)' }}>
             {fill(t.docAnnexe.consultation, { ref: doc.ref })}
           </div>
-          <h2
+          <h1
             className="archivo"
             style={{ margin: '16px 0 0', fontWeight: 700, fontSize: 33, lineHeight: 1.15, letterSpacing: '-.01em', maxWidth: '22ch' }}
           >
             {t.docAnnexe.title}
-          </h2>
+          </h1>
           <div style={{ marginTop: 18, fontSize: 13.5, lineHeight: 1.7, color: 'var(--text-secondary)', maxWidth: '56ch' }}>
             {fill(t.docAnnexe.lede, { title: tenderFixture.title, organisation: canon.service.organisation })}
           </div>
@@ -176,7 +176,7 @@ export function DocAnnexe() {
           <span>{fill(t.docAnnexe.runningRight, { page: doc.page, pages: doc.pages })}</span>
         </div>
 
-        <h3 className="archivo" style={{ margin: '34px 0 0', fontWeight: 600, fontSize: 17 }}>{t.docAnnexe.section2Title}</h3>
+        <h2 className="archivo" style={{ margin: '34px 0 0', fontWeight: 600, fontSize: 17 }}>{t.docAnnexe.section2Title}</h2>
         <p style={{ margin: '14px 0 0', fontSize: 12.5, lineHeight: 1.8, maxWidth: '62ch' }}>{t.docAnnexe.section2Body}</p>
 
         <div style={{ marginTop: 26 }}>

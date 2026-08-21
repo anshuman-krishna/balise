@@ -112,9 +112,9 @@ export function DocRapport() {
           </div>
         </div>
 
-        <h2 className="archivo" style={{ margin: '32px 0 0', fontWeight: 700, fontSize: 24, lineHeight: 1.2, letterSpacing: '-.01em' }}>
+        <h1 className="archivo" style={{ margin: '32px 0 0', fontWeight: 700, fontSize: 24, lineHeight: 1.2, letterSpacing: '-.01em' }}>
           {t.docRapport.title}
-        </h2>
+        </h1>
         <p style={{ margin: '12px 0 0', fontSize: 12, lineHeight: 1.75, color: 'var(--text-secondary)', maxWidth: '58ch' }}>
           {fill(t.docRapport.intro, { runs: formatInt(doc.runs) })}
         </p>
@@ -169,7 +169,7 @@ export function DocRapport() {
           ))}
         </div>
 
-        <h3 className="archivo" style={{ margin: '30px 0 0', fontWeight: 600, fontSize: 13 }}>{t.docRapport.eventsTitle}</h3>
+        <h2 className="archivo" style={{ margin: '30px 0 0', fontWeight: 600, fontSize: 13 }}>{t.docRapport.eventsTitle}</h2>
         <div style={{ marginTop: 12, fontSize: 11, lineHeight: 1.85 }}>
           {doc.events.map((event, index) => (
             <div

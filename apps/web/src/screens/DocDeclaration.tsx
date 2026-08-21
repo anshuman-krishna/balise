@@ -38,9 +38,9 @@ export function DocDeclaration() {
         <div className="mono" style={{ fontWeight: 500, fontSize: 10, letterSpacing: '.14em', color: 'var(--text-secondary)' }}>
           {canon.service.organisation.toUpperCase()}
         </div>
-        <h2 className="archivo" style={{ margin: '14px 0 0', fontWeight: 700, fontSize: 30, lineHeight: 1.15, letterSpacing: '-.01em' }}>
+        <h1 className="archivo" style={{ margin: '14px 0 0', fontWeight: 700, fontSize: 30, lineHeight: 1.15, letterSpacing: '-.01em' }}>
           {t.declaration.preview.heading}
-        </h2>
+        </h1>
         <p style={{ margin: '14px 0 0', fontSize: 12.5, lineHeight: 1.75, color: 'var(--text-secondary)', maxWidth: '58ch' }}>
           {t.docDeclaration.intro1} <strong style={{ color: 'var(--ink)' }}>{canon.service.title.toLowerCase()}</strong>{' '}
           {fill(t.docDeclaration.intro2, { domain: canon.service.domain, reviewDate: doc.reviewDate })}
@@ -82,9 +82,9 @@ export function DocDeclaration() {
           </div>
         </div>
 
-        <h3 className="archivo" style={{ margin: '36px 0 0', fontWeight: 600, fontSize: 14 }}>
+        <h2 className="archivo" style={{ margin: '36px 0 0', fontWeight: 600, fontSize: 14 }}>
           {t.docDeclaration.nonConformesTitle}
-        </h3>
+        </h2>
         <div style={{ marginTop: 14 }}>
           <div
             className="mono"
@@ -126,9 +126,9 @@ export function DocDeclaration() {
           ))}
         </div>
 
-        <h3 className="archivo" style={{ margin: '32px 0 0', fontWeight: 600, fontSize: 14 }}>
+        <h2 className="archivo" style={{ margin: '32px 0 0', fontWeight: 600, fontSize: 14 }}>
           {t.docDeclaration.hostingTitle}
-        </h3>
+        </h2>
         <p style={{ margin: '12px 0 0', fontSize: 12, lineHeight: 1.8, maxWidth: '60ch' }}>
           {fill(t.docDeclaration.hostingBody, {
             verifiedDate: doc.established,

@@ -1,7 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import { auditMarkup, type A11yRule } from './a11y';
 
+// the page-level rules want a page, so every fragment below is audited inside
+// one that already has a title.
 function rules(html: string): A11yRule[] {
+  return outline(`<h1>Titre</h1>${html}`);
+}
+
+function outline(html: string): A11yRule[] {
   return auditMarkup(html).map((finding) => finding.rule);
 }
 
@@ -54,6 +60,34 @@ describe('the keyboard audit', () => {
 
   it('catches an id used twice, which makes every reference to it ambiguous', () => {
     expect(rules('<div id="main"></div><div id="main"></div>')).toContain('duplicate-id');
+  });
+});
+
+describe('the heading outline', () => {
+  it('passes an outline that descends one level at a time', () => {
+    expect(outline('<h1>Déclaration</h1><h2>Critères non conformes</h2><h2>Hébergement</h2>')).toEqual([]);
+  });
+
+  // a document that opens at h2 has no title in the outline. the three
+  // artifacts this product exists to produce did exactly that.
+  it('catches a page that opens below the first level', () => {
+    expect(outline('<h2>Déclaration</h2><h3>Critères</h3>')).toContain('no-h1');
+  });
+
+  it('catches a page with no heading at all', () => {
+    expect(outline('<div>Empreinte vérifiée</div>')).toContain('no-h1');
+  });
+
+  it('catches an outline with more than one document in it', () => {
+    expect(outline('<h1>Une</h1><h1>Deux</h1>')).toContain('multiple-h1');
+  });
+
+  it('catches a level skipped, which nests a section under a heading that is not there', () => {
+    expect(outline('<h1>Une</h1><h3>Trois</h3>')).toContain('heading-level-skipped');
+  });
+
+  it('allows climbing back up any number of levels', () => {
+    expect(outline('<h1>Une</h1><h2>Deux</h2><h3>Trois</h3><h2>Deux</h2>')).toEqual([]);
   });
 });
 
