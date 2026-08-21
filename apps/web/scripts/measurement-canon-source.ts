@@ -1,15 +1,18 @@
 import type {
   AggregatedMetrics,
   CachePass,
+  EnvironmentFingerprint,
   MetricId,
   MetricSet,
   NoiseFloor,
   RawCapture,
+  ThrottleProfile,
 } from '@balise/schemas';
 import { METRIC_UNIT } from '@balise/schemas';
 import type { CanonMetric } from '../src/fixtures/measurement-types';
 import {
   aggregateRuns,
+  buildFingerprint,
   computeNoiseFloor,
   extractMetrics,
   gradeConfidence,
@@ -125,6 +128,14 @@ export interface ScenarioSpec {
   id: string;
   label: string;
   pass: CachePass;
+  /**
+   * the environment this scenario is measured in. the profile expands into a
+   * full `EnvironmentFingerprint` through the kernel, so nothing here states a
+   * viewport or a locale of its own, and coverage is part of it because
+   * instrumenting it moves js_execution_ms.
+   */
+  throttleProfile: ThrottleProfile;
+  coverage?: boolean;
   /** what the scenario settles at. the history is drawn from this. */
   metrics: Spreads;
   /** aggregations before the ones published here. below the minimum there is no floor. */
@@ -226,6 +237,31 @@ function buildHistory(spec: ScenarioSpec): AggregatedMetrics[] {
   });
 }
 
+/**
+ * one runner, one image, one region. the browser build and the image digest
+ * are the machine every scenario here was measured on, and they are authored
+ * once because they are facts about a container rather than about a page.
+ */
+const RUNNER = {
+  browserBuild: '127.0.6533.88',
+  imageDigest: 'sha256:4e91c2a7',
+  region: 'eu-west-par',
+} as const;
+
+/**
+ * the full environment, expanded from the profile by the kernel. a scenario
+ * names a profile and whether coverage ran; the viewport, the device scale
+ * factor, the locale and the timezone come from the profile table, so no
+ * fixture can state a machine the runner would not produce.
+ */
+function fingerprintFor(spec: ScenarioSpec): EnvironmentFingerprint {
+  return buildFingerprint({
+    ...RUNNER,
+    throttleProfile: spec.throttleProfile,
+    coverageEnabled: spec.coverage ?? false,
+  });
+}
+
 function buildScenario(spec: ScenarioSpec) {
   const history = buildHistory(spec);
 
@@ -295,6 +331,7 @@ function buildScenario(spec: ScenarioSpec) {
       label: spec.label,
       pass: spec.pass,
       historyCount: spec.historyCount,
+      fingerprint: fingerprintFor(spec),
       aggregationIds: spec.aggregations.map((aggregation) => aggregation.id),
     },
     aggregations,
@@ -322,6 +359,10 @@ const SCENARIOS: readonly ScenarioSpec[] = [
     id: 'service',
     label: 'médiane du service',
     pass: 'cold',
+    // continuous monitoring. coverage instrumentation costs time on every run
+    // and moves js_execution_ms, so it is not carried on the scenario that
+    // runs several times a day.
+    throttleProfile: 'mobile-4g',
     historyCount: 24,
     // the contractual engagements are read against this scenario, and a
     // quarterly tracker draws the movement of the thing it holds. the history
@@ -346,6 +387,11 @@ const SCENARIOS: readonly ScenarioSpec[] = [
     id: 'route-acte-naissance',
     label: '/demarches/acte-naissance',
     pass: 'cold',
+    // the pull request scenario. coverage is on because the check reports
+    // unexecuted bytes, which is also why this scenario is a different
+    // environment from the service median and is never compared to it.
+    throttleProfile: 'mobile-4g',
+    coverage: true,
     historyCount: 24,
     metrics: fromCapture(BASELINE_CAPTURE, {
       transferred_bytes: 12_000,
@@ -376,6 +422,7 @@ const SCENARIOS: readonly ScenarioSpec[] = [
     id: 'journey-demande-acte',
     label: 'journey:demande-acte',
     pass: 'cold',
+    throttleProfile: 'mobile-4g',
     historyCount: JOURNEY_HISTORY_BYTES.length,
     metrics: {
       transferred_bytes: { centre: 1_258_000, spread: 24_000 },
@@ -398,6 +445,9 @@ const SCENARIOS: readonly ScenarioSpec[] = [
     id: 'scan',
     label: 'bibliotheques-selo.fr',
     pass: 'cold',
+    // a stranger's page, measured once. coverage is not captured, which is why
+    // the scan's unexecuted-byte findings come back withheld rather than zero.
+    throttleProfile: 'mobile-4g',
     historyCount: 0,
     metrics: fromCapture(SCAN_CAPTURE, {
       transferred_bytes: 0,
@@ -465,6 +515,9 @@ function corpusScenario(service: CorpusService): ScenarioSpec {
     id: corpusScenarioId(service.domain),
     label: service.domain,
     pass: 'cold',
+    // the index compares twelve services, so all twelve are measured in one
+    // environment. a rank across two profiles would rank the profiles.
+    throttleProfile: 'mobile-4g',
     historyCount: service.historyCount,
     metrics,
     aggregations: [

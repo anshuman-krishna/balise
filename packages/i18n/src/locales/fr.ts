@@ -33,6 +33,44 @@ export const fr: Catalog = {
       ledgerVerification: 'Vérification du registre',
     },
   },
+  fingerprint: {
+    keys: {
+      browser: 'chromium',
+      image: 'image',
+      throttle: 'bridage',
+      viewport: 'fenêtre',
+      locale: 'locale',
+      region: 'région',
+      coverage: 'couverture',
+      models: 'modèles',
+      ledger: 'registre',
+    },
+    throttle: '{profile} · {mbps} Mbps · CPU x{cpu}',
+    throttleUnthrottled: '{profile} · lien non bridé · CPU x{cpu}',
+    viewport: '{width} x {height} · dpr {dpr}',
+    coverageOn: 'js + css instrumentés',
+    coverageOff: 'non instrumentée',
+    sharedAcross: '{count} scénarios',
+    variesLabel: 'varie',
+    variesNote:
+      "{fields} varie entre les {count} scénarios de ce service. Les mesures qui en viennent ne sont pas comparées entre elles.",
+    matched: "Identique à l'empreinte de référence. Comparaison autorisée sans indicateur.",
+    mismatched:
+      "{fields} diffère de l'empreinte de référence. L'invariant 3 exige un indicateur reconnu avant toute comparaison.",
+    // bare nouns, so they read in a chip and in a sentence without changing.
+    fields: {
+      browserBuild: 'navigateur',
+      imageDigest: 'image',
+      throttleProfile: 'bridage',
+      viewportWidth: 'largeur de fenêtre',
+      viewportHeight: 'hauteur de fenêtre',
+      deviceScaleFactor: "facteur d'échelle",
+      locale: 'locale',
+      timezone: 'fuseau horaire',
+      region: 'région',
+      coverageEnabled: 'couverture',
+    },
+  },
   appBar: {
     branch: 'branche',
     lastRun: 'dernier relevé',
@@ -181,8 +219,6 @@ export const fr: Catalog = {
         'Taille décompressée indisponible pour {decoded} ressources, couverture non relevée pour {coverage} scripts ou feuilles de style. Comptées comme telles, jamais estimées.',
     },
     fingerprintTitle: 'EMPREINTE ENVIRONNEMENT',
-    fingerprintMatchNote:
-      "Empreinte identique à celle de la base. Comparaison permise sans signalement.",
     plannedPanel:
       "Prévu pour la {version}. Rien ne s'affiche ici tant que ce ne peut pas être mesuré ; les autres onglets portent les vues de référence.",
   },
@@ -190,6 +226,7 @@ export const fr: Catalog = {
     baselineTag: 'BASE · {branch}',
     candidateTag: 'CANDIDAT · {branch}',
     fingerprintMatch: 'EMPREINTES IDENTIQUES',
+    fingerprintDiffers: 'EMPREINTES DIFFÉRENTES : {fields}',
     headers: {
       metric: 'MÉTRIQUE',
       baseline: 'BASE',

@@ -8,6 +8,12 @@ import {
   runsVaried,
   trendPoints,
 } from '../lib/measurement-view';
+import {
+  aggregationFingerprint,
+  corpusProfile,
+  scenarioFingerprint,
+  scenarioPass,
+} from '../lib/fingerprint-view';
 import { elidedHash, groupedHash, REF, shortHash, verifyUrl } from './ledger-refs';
 import { ledgerCanon } from './ledger-canon';
 
@@ -76,8 +82,9 @@ export const canon = {
     lastRunTime: '14:02',
     lastRunMinutesAgo: 8,
     userInitials: 'MC',
-    fingerprint:
-      'chromium 127.0.6533.88 · img sha256:4e91c2a7 · desktop-fibre + mobile-4g · eu-west-par',
+    // the environment the bar states is derived from the scenarios' own
+    // fingerprints, in lib/fingerprint-view. the string that used to sit here
+    // named two throttle profiles at once, which no single fingerprint can be.
     methodologyVersion: 'v1.2',
   },
   transferred: {
@@ -147,13 +154,18 @@ export const canon = {
   },
 } as const;
 
+/** the environment run #4812 was measured in, expanded from its named profile. */
+const RUN_ENVIRONMENT = aggregationFingerprint('candidate');
+
 // ---- run detail ----
 
 export const runDetailFixture = {
   id: '#4812',
   timestamp: '15 Aug 2026 14:02:41 UTC',
   route: '/demarches/acte-naissance',
-  profile: 'mobile-4g',
+  // the profile and the cache pass are the scenario's, not this fixture's.
+  profile: RUN_ENVIRONMENT.throttleProfile,
+  pass: scenarioPass('route-acte-naissance'),
   // the waterfall, the resource inventory and the by-type summary are all read
   // from this run's capture, which the measurement canon publishes beside the
   // metrics extracted from it: see lib/capture-view.ts. the version of this
@@ -179,18 +191,10 @@ export const runDetailFixture = {
     after: asAggregate(CAND_BYTES),
     floor: CAND_BYTES.floor,
   },
-  fingerprint: [
-    { key: 'chromium', value: '127.0.6533.88' },
-    { key: 'image', value: 'sha256:4e91c2a7…' },
-    { key: 'throttle', value: 'mobile-4g (1.6 Mbps / 4× CPU)' },
-    { key: 'region', value: 'eu-west-par' },
-    // coverage instruments script execution and moves the time it reports, so
-    // it is part of the environment and not a detail of the run.
-    { key: 'coverage', value: 'js + css' },
-    // the models row is filled at render time from what actually ran.
-    { key: 'models', value: '' },
-    { key: 'ledger', value: `${shortHash(REF.run)}…`, link: true },
-  ] as ReadonlyArray<{ key: string; value: string; link?: boolean }>,
+  // the environment panel reads the scenario's own EnvironmentFingerprint,
+  // built by the kernel from the named profile. the array that used to sit
+  // here typed "mobile-4g (1.6 Mbps / 4x CPU)", which is the profile table
+  // restated by hand and free to drift from it.
 } as const;
 
 // ---- comparison ----
@@ -521,7 +525,7 @@ export const prCheckFixture = {
 
 export const scanFixture = {
   domain: 'bibliotheques-selo.fr',
-  profile: 'mobile-4g',
+  profile: scenarioFingerprint('scan').throttleProfile,
   // the findings are raised by @balise/measure-core from this page's capture
   // and live in findings-canon.ts. the three that used to sit here were
   // authored sentences with authored savings, two of them describing things a
@@ -543,6 +547,8 @@ export const scanFixture = {
  */
 export const observatoryFixture = {
   measuredOn: '15 août 2026',
-  profile: 'mobile-4g',
+  // one profile across the whole corpus, or corpusProfile throws: a rank
+  // across two profiles would be ranking the profiles.
+  profile: corpusProfile(),
   methodology: 'v1.2',
 } as const;

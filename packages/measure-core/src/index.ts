@@ -39,3 +39,16 @@ export {
 } from './noise-floor.js';
 export { classifyDelta } from './classify-delta.js';
 export { gradeConfidence, CONFIDENCE_THRESHOLDS, type ConfidenceContext } from './confidence.js';
+export {
+  UNPINNED,
+  buildFingerprint,
+  isAuditable,
+  fingerprintDifferences,
+  fingerprintsMatch,
+  summariseFingerprints,
+  varyingFields,
+  sharedValue,
+  type FieldAgreement,
+  type FingerprintInput,
+  type FingerprintSummary,
+} from './fingerprint.js';

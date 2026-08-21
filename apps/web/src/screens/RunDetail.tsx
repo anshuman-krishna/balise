@@ -21,6 +21,13 @@ import { findingsView } from '../lib/findings-view';
 import { ResourceTable } from '../components/ResourceTable';
 import { ResourceTypeSummary } from '../components/ResourceTypeSummary';
 import { capture, inventory, resourceRows, waterfall } from '../lib/capture-view';
+import {
+  aggregationFingerprint,
+  comparable,
+  differences,
+  fieldList,
+  fingerprintRows,
+} from '../lib/fingerprint-view';
 
 // the verdict on this card comes from the kernel, like the comparison
 // verdicts do. nothing here decides for itself whether a delta is real.
@@ -141,41 +148,57 @@ function DispersionCard() {
 }
 
 function FingerprintCard() {
+  // every row is a field of the run's own EnvironmentFingerprint, expanded from
+  // its named profile by the kernel. the throttle row states the link speed and
+  // the cpu multiplier from the profile table rather than from a typed string,
+  // so it cannot go on quoting parameters the runner has stopped applying.
+  const fingerprint = aggregationFingerprint('candidate');
+  const matched = comparable('baseline', 'candidate');
+  const differing = differences('baseline', 'candidate');
+  const keys = t.fingerprint.keys;
+
   return (
     <div className="card">
       <span className="eyebrow">{t.runDetail.fingerprintTitle}</span>
       <div className="kv-grid" style={{ marginTop: 12 }}>
-        {run.fingerprint.map((entry) => (
-          // the models row is empty in the fixture on purpose: what ran is
-          // read from the registry, so it cannot name a model this build does
-          // not carry.
+        {fingerprintRows(fingerprint).map((entry) => (
           <div key={entry.key} style={{ display: 'contents' }}>
             <span className="mono" style={{ fontSize: 10, color: 'var(--text-tertiary)' }}>
               {entry.key}
             </span>
-            {entry.link === true ? (
-              <Link to={`/v/${shortHash(REF.run)}`} className="mono" style={{ fontSize: 10.5 }}>
-                {entry.value} ↗
-              </Link>
-            ) : (
-              <span className="mono" style={{ fontSize: 10.5 }}>
-                {entry.key === 'models' ? modelsRan() : entry.value}
-              </span>
-            )}
+            <span className="mono" style={{ fontSize: 10.5 }}>
+              {entry.value}
+            </span>
           </div>
         ))}
+        {/* what ran is read from the model registry, so it cannot name a model
+            this build does not carry. */}
+        <span className="mono" style={{ fontSize: 10, color: 'var(--text-tertiary)' }}>
+          {keys.models}
+        </span>
+        <span className="mono" style={{ fontSize: 10.5 }}>
+          {modelsRan()}
+        </span>
+        <span className="mono" style={{ fontSize: 10, color: 'var(--text-tertiary)' }}>
+          {keys.ledger}
+        </span>
+        <Link to={`/v/${shortHash(REF.run)}`} className="mono" style={{ fontSize: 10.5 }}>
+          {shortHash(REF.run)}… ↗
+        </Link>
       </div>
       <div
         className="left-rule"
         style={{
           marginTop: 14,
-          borderLeftColor: 'var(--conforme)',
-          background: 'rgba(62,122,94,.06)',
+          borderLeftColor: matched ? 'var(--conforme)' : 'var(--breach)',
+          background: matched ? 'rgba(62,122,94,.06)' : 'var(--tint-breach)',
           padding: '9px 11px 9px 11px',
         }}
       >
         <span style={{ fontSize: 10.5, lineHeight: 1.55, color: 'var(--ink)' }}>
-          {t.runDetail.fingerprintMatchNote}
+          {matched
+            ? t.fingerprint.matched
+            : fill(t.fingerprint.mismatched, { fields: fieldList(differing) })}
         </span>
       </div>
     </div>
@@ -195,7 +218,7 @@ export function RunDetail() {
         {' · '}
         <span className="mono" style={{ fontSize: 10.5 }}>{run.profile}</span>
         {' · '}
-        {t.runDetail.coldCache}
+        {run.pass === 'cold' ? t.runDetail.coldCache : t.runDetail.warmCache}
       </div>
 
       <div className="tabs" role="tablist" aria-label={fill(t.runDetail.title, { id: run.id })}>

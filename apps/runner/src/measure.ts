@@ -8,7 +8,12 @@ import type {
   RawCapture,
   ThrottleProfile,
 } from '@balise/schemas';
-import { aggregateRuns, extractMetrics, gradeConfidence } from '@balise/measure-core';
+import {
+  aggregateRuns,
+  computeNoiseFloor,
+  extractMetrics,
+  gradeConfidence,
+} from '@balise/measure-core';
 import { captureRun, launchBrowser, type CaptureOptions } from './capture.js';
 import { fingerprintsMatch } from './fingerprint.js';
 import { resolveRunCount, sufficientForAggregate, MIN_RUNS } from './policy.js';
@@ -28,6 +33,17 @@ export interface MeasureOptions {
   runTimeoutMs?: number;
   /** instrument js and css coverage. changes the fingerprint. */
   coverage?: boolean;
+  /**
+   * this scenario's prior aggregations, oldest first, for the noise floor.
+   *
+   * optional and defaulting to none, which is what a one-off measurement
+   * actually has. without history there is no floor, and METHODOLOGY.md
+   * sections 7 and 9 make every figure from that scenario low confidence.
+   * the runner does not read a store, so a caller that has the history passes
+   * it and a caller that does not gets the honest grade rather than one
+   * derived from dispersion alone.
+   */
+  history?: readonly AggregatedMetrics[];
 }
 
 interface MeasureBase {
@@ -50,6 +66,43 @@ export type MeasureResult =
       confidence: Readonly<Record<MetricId, Confidence>>;
     })
   | (MeasureBase & { status: 'insufficient-runs'; required: number });
+
+export interface GradeContext {
+  fingerprintStable: boolean;
+  /** this scenario's prior aggregations, oldest first. none is the default. */
+  history?: readonly AggregatedMetrics[];
+}
+
+/**
+ * grades every metric in an aggregate.
+ *
+ * separated from `measure` so that the decision can be tested without a
+ * browser. it was not, once, and a call site that never passed a noise floor
+ * went on grading from dispersion alone after the kernel started requiring
+ * one, because nothing exercised it.
+ *
+ * a floor belongs to a scenario rather than to a session, so it is computed per
+ * metric from the history the caller carried in. with no history
+ * `computeNoiseFloor` reports insufficient history and every grade is low,
+ * however tight the runs were: METHODOLOGY.md sections 7 and 9.
+ */
+export function gradeAggregate(
+  aggregate: AggregatedMetrics,
+  context: GradeContext,
+): Record<MetricId, Confidence> {
+  const history = context.history ?? [];
+  return Object.fromEntries(
+    aggregate.metrics.map((metric) => [
+      metric.metricId,
+      gradeConfidence(metric, {
+        fingerprintStable: context.fingerprintStable,
+        noiseFloor: computeNoiseFloor(history, metric.metricId),
+      }),
+    ]),
+    // Object.fromEntries widens the key back to string; every metric id in the
+    // aggregate is a MetricId by construction.
+  ) as Record<MetricId, Confidence>;
+}
 
 /**
  * measures one url n times and aggregates through the kernel.
@@ -110,12 +163,11 @@ export async function measure(options: MeasureOptions): Promise<MeasureResult> {
   }
 
   const aggregate = aggregateRuns(metricSets);
-  const confidence = Object.fromEntries(
-    aggregate.metrics.map((metric) => [
-      metric.metricId,
-      gradeConfidence(metric, { fingerprintStable }),
-    ]),
-  ) as Record<MetricId, Confidence>;
 
-  return { ...base, status: 'measured', aggregate, confidence };
+  return {
+    ...base,
+    status: 'measured',
+    aggregate,
+    confidence: gradeAggregate(aggregate, { fingerprintStable, history: options.history }),
+  };
 }

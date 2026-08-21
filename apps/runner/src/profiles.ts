@@ -1,81 +1,24 @@
-import type { ThrottleProfile } from '@balise/schemas';
-
-export interface NetworkConditions {
-  downloadBytesPerSecond: number;
-  uploadBytesPerSecond: number;
-  latencyMs: number;
-}
-
-export interface ProfileDefinition {
-  id: ThrottleProfile;
-  viewportWidth: number;
-  viewportHeight: number;
-  deviceScaleFactor: number;
-  isMobile: boolean;
-  locale: string;
-  timezone: string;
-  /** cdp multiplier. 1 is no throttling. */
-  cpuThrottlingRate: number;
-  /** null means the link is not throttled at all. */
-  network: NetworkConditions | null;
-}
-
-const KBPS = 1024 / 8;
-const MBPS = (1024 * 1024) / 8;
+import { THROTTLE_PROFILES, type ThrottleProfile, type ThrottleProfileDefinition } from '@balise/schemas';
 
 /**
- * provisional. the exact parameters of a named profile are a methodology
- * decision and are frozen only when METHODOLOGY.md v1 is signed off; changing
- * one after that is a breaking change to every historical comparison. the
- * values here are the ones the scenario canon already quotes.
- *
- * viewport, device scale factor, locale and timezone are part of the profile
- * for the same reason: a run is only comparable to another run made under an
- * identical description of a machine.
+ * what the runner adds to the shared profile definition: the one field only a
+ * browser needs. the parameters themselves (viewport, device scale factor,
+ * locale, timezone, cpu rate, network) are in `@balise/schemas`, because the
+ * screens that state which environment a figure came from read the same table.
+ * a runner-local copy is how a screen ends up quoting a link speed the runner
+ * no longer applies.
  */
+export interface ProfileDefinition extends ThrottleProfileDefinition {
+  isMobile: boolean;
+}
+
 export const PROFILES: Record<ThrottleProfile, ProfileDefinition> = {
-  'desktop-fibre': {
-    id: 'desktop-fibre',
-    viewportWidth: 1440,
-    viewportHeight: 900,
-    deviceScaleFactor: 1,
-    isMobile: false,
-    locale: 'fr-FR',
-    timezone: 'Europe/Paris',
-    cpuThrottlingRate: 1,
-    network: null,
-  },
-  'mobile-4g': {
-    id: 'mobile-4g',
-    viewportWidth: 390,
-    viewportHeight: 844,
-    deviceScaleFactor: 3,
-    isMobile: true,
-    locale: 'fr-FR',
-    timezone: 'Europe/Paris',
-    cpuThrottlingRate: 4,
-    network: {
-      downloadBytesPerSecond: 1.6 * MBPS,
-      uploadBytesPerSecond: 750 * KBPS,
-      latencyMs: 150,
-    },
-  },
-  'mobile-3g': {
-    id: 'mobile-3g',
-    viewportWidth: 390,
-    viewportHeight: 844,
-    deviceScaleFactor: 3,
-    isMobile: true,
-    locale: 'fr-FR',
-    timezone: 'Europe/Paris',
-    cpuThrottlingRate: 4,
-    network: {
-      downloadBytesPerSecond: 400 * KBPS,
-      uploadBytesPerSecond: 400 * KBPS,
-      latencyMs: 400,
-    },
-  },
+  'desktop-fibre': { ...THROTTLE_PROFILES['desktop-fibre'], isMobile: false },
+  'mobile-4g': { ...THROTTLE_PROFILES['mobile-4g'], isMobile: true },
+  'mobile-3g': { ...THROTTLE_PROFILES['mobile-3g'], isMobile: true },
 };
+
+export type { NetworkConditions } from '@balise/schemas';
 
 // we say who we are and where to read about it on every request we make
 // (the operating manual section 8).

@@ -158,7 +158,12 @@ describe('the markdown body', () => {
   });
 
   it('writes the measured value beside its dispersion, never alone', () => {
-    expect(output.text).toContain('842 KB ± 3 KB');
+    // one decimal under 10 KB, from formatMeasured: a 3 000 byte dispersion and
+    // a 3 900 byte one both reading "3 KB" throws away most of what was
+    // measured. this assertion sat on the old whole-kilobyte form for three
+    // slices, green, because the task cache never re-ran it after the shared
+    // formatter changed.
+    expect(output.text).toContain('842 KB ± 3.0 KB');
   });
 
   it('carries the provenance the report is verifiable from', () => {

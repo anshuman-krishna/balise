@@ -32,6 +32,46 @@ export const en = {
       ledgerVerification: 'Ledger verification',
     },
   },
+  fingerprint: {
+    keys: {
+      browser: 'chromium',
+      image: 'image',
+      throttle: 'throttle',
+      viewport: 'viewport',
+      locale: 'locale',
+      region: 'region',
+      coverage: 'coverage',
+      models: 'models',
+      ledger: 'ledger',
+    },
+    throttle: '{profile} · {mbps} Mbps · {cpu}x CPU',
+    throttleUnthrottled: '{profile} · link not throttled · {cpu}x CPU',
+    viewport: '{width} x {height} · dpr {dpr}',
+    coverageOn: 'js + css instrumented',
+    coverageOff: 'not instrumented',
+    // the app bar summarises the service's scenarios, which are not all one
+    // environment. it says what they share and names what they do not.
+    sharedAcross: '{count} scenarios',
+    variesLabel: 'varies',
+    variesNote:
+      '{fields} differs across the {count} scenarios of this service. Figures from them are not compared to each other.',
+    matched: 'Identical to the baseline environment. Comparison permitted without a flag.',
+    mismatched:
+      '{fields} differs from the baseline environment. Invariant 3 requires an acknowledged flag before these are compared.',
+    // bare nouns, so they read in a chip and in a sentence without changing.
+    fields: {
+      browserBuild: 'browser build',
+      imageDigest: 'image digest',
+      throttleProfile: 'throttle profile',
+      viewportWidth: 'viewport width',
+      viewportHeight: 'viewport height',
+      deviceScaleFactor: 'device scale factor',
+      locale: 'locale',
+      timezone: 'timezone',
+      region: 'region',
+      coverageEnabled: 'coverage',
+    },
+  },
   appBar: {
     branch: 'branch',
     lastRun: 'last run',
@@ -182,7 +222,6 @@ export const en = {
         'Decoded size unavailable for {decoded} resources, coverage not captured for {coverage} scripts or stylesheets. Counted as such, never estimated.',
     },
     fingerprintTitle: 'ENVIRONMENT FINGERPRINT',
-    fingerprintMatchNote: 'Identical to baseline fingerprint. Comparison permitted without a flag.',
     plannedPanel:
       'Planned for {version}. Nothing renders here until it can be measured; the other tabs hold the reference views today.',
   },
@@ -190,6 +229,7 @@ export const en = {
     baselineTag: 'BASELINE · {branch}',
     candidateTag: 'CANDIDATE · {branch}',
     fingerprintMatch: 'FINGERPRINT MATCH',
+    fingerprintDiffers: 'FINGERPRINTS DIFFER: {fields}',
     headers: {
       metric: 'METRIC',
       baseline: 'BASELINE',

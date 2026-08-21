@@ -268,6 +268,13 @@ extracted from, the inventory is grouped from, the findings are raised from, and
 attribution and budget engines are run over. Nothing sums a resource list of its own, which is
 how a page stops weighing one thing in its metric row and another in its resource table.
 
+Every scenario also carries a full `EnvironmentFingerprint`, expanded by the kernel from the
+profile it names. Two runs are comparable only where those match, so the chip that says they
+do is computed rather than drawn, and a surface describing several scenarios states what they
+share and names what they do not. The audited service is not one environment: continuous
+monitoring runs without coverage instrumentation and the pull request scenario runs with it,
+and the app bar says so.
+
 ## Status
 
 Early build, and honest about which parts are real.

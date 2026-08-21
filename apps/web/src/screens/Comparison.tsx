@@ -12,6 +12,7 @@ import {
   referenceSpecLabel,
 } from '../lib/carbon-view';
 import { confidenceLabel } from '../lib/measurement-view';
+import { comparable, differences, fieldList } from '../lib/fingerprint-view';
 import { VERDICT_COLOR, verdictKeyFor, type VerdictKey } from '../lib/verdict';
 import {
   attributionCoverage,
@@ -144,6 +145,11 @@ export function Comparison() {
   const attribution = attributionRows();
   const origins = originRows();
   const unexplained = unexplainedOrigin();
+  // invariant 3, computed rather than asserted. the chip used to say the
+  // environments matched whatever they were, on a screen whose whole job is to
+  // put two runs beside each other.
+  const matched = comparable('baseline', 'candidate');
+  const differing = differences('baseline', 'candidate');
 
   return (
     <>
@@ -155,18 +161,23 @@ export function Comparison() {
         <RunChip run={cmp.candidate.run} date={cmp.candidate.date} tag={fill(t.comparison.candidateTag, { branch: cmp.candidate.branch })} accent />
         <span
           className="mono"
+          title={
+            matched ? t.fingerprint.matched : fill(t.fingerprint.mismatched, { fields: fieldList(differing) })
+          }
           style={{
             marginLeft: 'auto',
             padding: '5px 9px',
-            border: '1px solid rgba(62,122,94,.4)',
-            background: 'rgba(62,122,94,.08)',
-            color: 'var(--conforme)',
+            border: `1px solid ${matched ? 'rgba(62,122,94,.4)' : 'rgba(179,49,44,.4)'}`,
+            background: matched ? 'rgba(62,122,94,.08)' : 'var(--tint-breach)',
+            color: matched ? 'var(--conforme)' : 'var(--breach)',
             fontWeight: 500,
             fontSize: 9,
             letterSpacing: '.06em',
           }}
         >
-          {t.comparison.fingerprintMatch}
+          {matched
+            ? t.comparison.fingerprintMatch
+            : fill(t.comparison.fingerprintDiffers, { fields: fieldList(differing) })}
         </span>
       </div>
 

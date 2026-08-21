@@ -8,7 +8,7 @@
 // median of the historical mads, and the grade is what gradeConfidence
 // returned for that dispersion at that sample count.
 
-import type { RawCapture } from '@balise/schemas';
+import type { EnvironmentFingerprint, RawCapture } from '@balise/schemas';
 import type { CanonHistoryPoint, CanonMetric } from './measurement-types';
 
 export const measurementCanon = {
@@ -21,6 +21,18 @@ export const measurementCanon = {
     "label": "médiane du service",
     "pass": "cold",
     "historyCount": 24,
+    "fingerprint": {
+      "browserBuild": "127.0.6533.88",
+      "imageDigest": "sha256:4e91c2a7",
+      "throttleProfile": "mobile-4g",
+      "viewportWidth": 390,
+      "viewportHeight": 844,
+      "deviceScaleFactor": 3,
+      "locale": "fr-FR",
+      "timezone": "Europe/Paris",
+      "region": "eu-west-par",
+      "coverageEnabled": false
+    },
     "aggregationIds": [
       "service"
     ]
@@ -30,6 +42,18 @@ export const measurementCanon = {
     "label": "/demarches/acte-naissance",
     "pass": "cold",
     "historyCount": 24,
+    "fingerprint": {
+      "browserBuild": "127.0.6533.88",
+      "imageDigest": "sha256:4e91c2a7",
+      "throttleProfile": "mobile-4g",
+      "viewportWidth": 390,
+      "viewportHeight": 844,
+      "deviceScaleFactor": 3,
+      "locale": "fr-FR",
+      "timezone": "Europe/Paris",
+      "region": "eu-west-par",
+      "coverageEnabled": true
+    },
     "aggregationIds": [
       "baseline",
       "candidate"
@@ -40,6 +64,18 @@ export const measurementCanon = {
     "label": "journey:demande-acte",
     "pass": "cold",
     "historyCount": 24,
+    "fingerprint": {
+      "browserBuild": "127.0.6533.88",
+      "imageDigest": "sha256:4e91c2a7",
+      "throttleProfile": "mobile-4g",
+      "viewportWidth": 390,
+      "viewportHeight": 844,
+      "deviceScaleFactor": 3,
+      "locale": "fr-FR",
+      "timezone": "Europe/Paris",
+      "region": "eu-west-par",
+      "coverageEnabled": false
+    },
     "aggregationIds": [
       "journey"
     ]
@@ -49,6 +85,18 @@ export const measurementCanon = {
     "label": "bibliotheques-selo.fr",
     "pass": "cold",
     "historyCount": 0,
+    "fingerprint": {
+      "browserBuild": "127.0.6533.88",
+      "imageDigest": "sha256:4e91c2a7",
+      "throttleProfile": "mobile-4g",
+      "viewportWidth": 390,
+      "viewportHeight": 844,
+      "deviceScaleFactor": 3,
+      "locale": "fr-FR",
+      "timezone": "Europe/Paris",
+      "region": "eu-west-par",
+      "coverageEnabled": false
+    },
     "aggregationIds": [
       "scan"
     ]
@@ -58,6 +106,18 @@ export const measurementCanon = {
     "label": "craonnais.fr",
     "pass": "cold",
     "historyCount": 24,
+    "fingerprint": {
+      "browserBuild": "127.0.6533.88",
+      "imageDigest": "sha256:4e91c2a7",
+      "throttleProfile": "mobile-4g",
+      "viewportWidth": 390,
+      "viewportHeight": 844,
+      "deviceScaleFactor": 3,
+      "locale": "fr-FR",
+      "timezone": "Europe/Paris",
+      "region": "eu-west-par",
+      "coverageEnabled": false
+    },
     "aggregationIds": [
       "corpus:craonnais.fr:prior",
       "corpus:craonnais.fr"
@@ -68,6 +128,18 @@ export const measurementCanon = {
     "label": "mairie-lanvaux.fr",
     "pass": "cold",
     "historyCount": 24,
+    "fingerprint": {
+      "browserBuild": "127.0.6533.88",
+      "imageDigest": "sha256:4e91c2a7",
+      "throttleProfile": "mobile-4g",
+      "viewportWidth": 390,
+      "viewportHeight": 844,
+      "deviceScaleFactor": 3,
+      "locale": "fr-FR",
+      "timezone": "Europe/Paris",
+      "region": "eu-west-par",
+      "coverageEnabled": false
+    },
     "aggregationIds": [
       "corpus:mairie-lanvaux.fr:prior",
       "corpus:mairie-lanvaux.fr"
@@ -78,6 +150,18 @@ export const measurementCanon = {
     "label": "ville-de-plessac.fr",
     "pass": "cold",
     "historyCount": 24,
+    "fingerprint": {
+      "browserBuild": "127.0.6533.88",
+      "imageDigest": "sha256:4e91c2a7",
+      "throttleProfile": "mobile-4g",
+      "viewportWidth": 390,
+      "viewportHeight": 844,
+      "deviceScaleFactor": 3,
+      "locale": "fr-FR",
+      "timezone": "Europe/Paris",
+      "region": "eu-west-par",
+      "coverageEnabled": false
+    },
     "aggregationIds": [
       "corpus:ville-de-plessac.fr:prior",
       "corpus:ville-de-plessac.fr"
@@ -88,6 +172,18 @@ export const measurementCanon = {
     "label": "musees-selo.fr",
     "pass": "cold",
     "historyCount": 24,
+    "fingerprint": {
+      "browserBuild": "127.0.6533.88",
+      "imageDigest": "sha256:4e91c2a7",
+      "throttleProfile": "mobile-4g",
+      "viewportWidth": 390,
+      "viewportHeight": 844,
+      "deviceScaleFactor": 3,
+      "locale": "fr-FR",
+      "timezone": "Europe/Paris",
+      "region": "eu-west-par",
+      "coverageEnabled": false
+    },
     "aggregationIds": [
       "corpus:musees-selo.fr:prior",
       "corpus:musees-selo.fr"
@@ -98,6 +194,18 @@ export const measurementCanon = {
     "label": "prefecture-arvor.fr",
     "pass": "cold",
     "historyCount": 24,
+    "fingerprint": {
+      "browserBuild": "127.0.6533.88",
+      "imageDigest": "sha256:4e91c2a7",
+      "throttleProfile": "mobile-4g",
+      "viewportWidth": 390,
+      "viewportHeight": 844,
+      "deviceScaleFactor": 3,
+      "locale": "fr-FR",
+      "timezone": "Europe/Paris",
+      "region": "eu-west-par",
+      "coverageEnabled": false
+    },
     "aggregationIds": [
       "corpus:prefecture-arvor.fr:prior",
       "corpus:prefecture-arvor.fr"
@@ -108,6 +216,18 @@ export const measurementCanon = {
     "label": "sevre-et-loire.fr",
     "pass": "cold",
     "historyCount": 24,
+    "fingerprint": {
+      "browserBuild": "127.0.6533.88",
+      "imageDigest": "sha256:4e91c2a7",
+      "throttleProfile": "mobile-4g",
+      "viewportWidth": 390,
+      "viewportHeight": 844,
+      "deviceScaleFactor": 3,
+      "locale": "fr-FR",
+      "timezone": "Europe/Paris",
+      "region": "eu-west-par",
+      "coverageEnabled": false
+    },
     "aggregationIds": [
       "corpus:sevre-et-loire.fr:prior",
       "corpus:sevre-et-loire.fr"
@@ -118,6 +238,18 @@ export const measurementCanon = {
     "label": "bibliotheques-selo.fr",
     "pass": "cold",
     "historyCount": 24,
+    "fingerprint": {
+      "browserBuild": "127.0.6533.88",
+      "imageDigest": "sha256:4e91c2a7",
+      "throttleProfile": "mobile-4g",
+      "viewportWidth": 390,
+      "viewportHeight": 844,
+      "deviceScaleFactor": 3,
+      "locale": "fr-FR",
+      "timezone": "Europe/Paris",
+      "region": "eu-west-par",
+      "coverageEnabled": false
+    },
     "aggregationIds": [
       "corpus:bibliotheques-selo.fr:prior",
       "corpus:bibliotheques-selo.fr"
@@ -128,6 +260,18 @@ export const measurementCanon = {
     "label": "eau-selo.fr",
     "pass": "cold",
     "historyCount": 24,
+    "fingerprint": {
+      "browserBuild": "127.0.6533.88",
+      "imageDigest": "sha256:4e91c2a7",
+      "throttleProfile": "mobile-4g",
+      "viewportWidth": 390,
+      "viewportHeight": 844,
+      "deviceScaleFactor": 3,
+      "locale": "fr-FR",
+      "timezone": "Europe/Paris",
+      "region": "eu-west-par",
+      "coverageEnabled": false
+    },
     "aggregationIds": [
       "corpus:eau-selo.fr:prior",
       "corpus:eau-selo.fr"
@@ -138,6 +282,18 @@ export const measurementCanon = {
     "label": "ars-bretagne.fr",
     "pass": "cold",
     "historyCount": 24,
+    "fingerprint": {
+      "browserBuild": "127.0.6533.88",
+      "imageDigest": "sha256:4e91c2a7",
+      "throttleProfile": "mobile-4g",
+      "viewportWidth": 390,
+      "viewportHeight": 844,
+      "deviceScaleFactor": 3,
+      "locale": "fr-FR",
+      "timezone": "Europe/Paris",
+      "region": "eu-west-par",
+      "coverageEnabled": false
+    },
     "aggregationIds": [
       "corpus:ars-bretagne.fr:prior",
       "corpus:ars-bretagne.fr"
@@ -148,6 +304,18 @@ export const measurementCanon = {
     "label": "transports-selo.fr",
     "pass": "cold",
     "historyCount": 24,
+    "fingerprint": {
+      "browserBuild": "127.0.6533.88",
+      "imageDigest": "sha256:4e91c2a7",
+      "throttleProfile": "mobile-4g",
+      "viewportWidth": 390,
+      "viewportHeight": 844,
+      "deviceScaleFactor": 3,
+      "locale": "fr-FR",
+      "timezone": "Europe/Paris",
+      "region": "eu-west-par",
+      "coverageEnabled": false
+    },
     "aggregationIds": [
       "corpus:transports-selo.fr:prior",
       "corpus:transports-selo.fr"
@@ -158,6 +326,18 @@ export const measurementCanon = {
     "label": "chu-armorique.fr",
     "pass": "cold",
     "historyCount": 11,
+    "fingerprint": {
+      "browserBuild": "127.0.6533.88",
+      "imageDigest": "sha256:4e91c2a7",
+      "throttleProfile": "mobile-4g",
+      "viewportWidth": 390,
+      "viewportHeight": 844,
+      "deviceScaleFactor": 3,
+      "locale": "fr-FR",
+      "timezone": "Europe/Paris",
+      "region": "eu-west-par",
+      "coverageEnabled": false
+    },
     "aggregationIds": [
       "corpus:chu-armorique.fr:prior",
       "corpus:chu-armorique.fr"
@@ -168,6 +348,18 @@ export const measurementCanon = {
     "label": "portail-arvor.fr",
     "pass": "cold",
     "historyCount": 24,
+    "fingerprint": {
+      "browserBuild": "127.0.6533.88",
+      "imageDigest": "sha256:4e91c2a7",
+      "throttleProfile": "mobile-4g",
+      "viewportWidth": 390,
+      "viewportHeight": 844,
+      "deviceScaleFactor": 3,
+      "locale": "fr-FR",
+      "timezone": "Europe/Paris",
+      "region": "eu-west-par",
+      "coverageEnabled": false
+    },
     "aggregationIds": [
       "corpus:portail-arvor.fr:prior",
       "corpus:portail-arvor.fr"
@@ -178,6 +370,13 @@ export const measurementCanon = {
     label: string;
     pass: 'cold' | 'warm';
     historyCount: number;
+    /**
+     * the environment this scenario was measured in, expanded from its named
+     * profile by the kernel. two scenarios are comparable only where these
+     * match (invariant 3), which is why it is published per scenario rather
+     * than stated once for the service.
+     */
+    fingerprint: EnvironmentFingerprint;
     /** the aggregations this scenario publishes, all read against its one floor. */
     aggregationIds: readonly string[];
   }>,

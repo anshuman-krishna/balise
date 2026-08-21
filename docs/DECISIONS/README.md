@@ -44,3 +44,5 @@ would otherwise have to reconstruct the reasoning from a diff.
 | [0004](0004-carbon-band-energy-models.md) | The carbon band carries energy models only | Accepted |
 | [0005](0005-confidence-requires-a-floor.md) | Confidence grading requires the scenario's noise floor | Accepted |
 | [0006](0006-palette-carries-its-own-contrast.md) | The palette carries its own contrast, and a test holds it there | Accepted |
+| [0007](0007-one-environment-per-scenario.md) | The environment is one object, expanded from a named profile | Accepted |
+| [0008](0008-task-cache-includes-dependencies.md) | The task cache includes what a package depends on | Accepted |

@@ -16,7 +16,50 @@ screenshots, the fidelity source).
 
 ## Current status
 
-**Phase: the palette is measured (2026-08-21).** A product whose second rule pack is RGAA
+**Phase: the environment is one object (2026-08-21).** Invariant 3 says two runs are
+comparable only when their fingerprints match. The schema was real, the runner built one on
+every capture, the ledger recorded one per run, and the interface described the environment
+four other ways, none of them connected to any of that.
+
+The app bar carried a typed string reading `desktop-fibre + mobile-4g`, which is two
+throttle profiles at once and therefore no fingerprint at all, on the bar whose stated
+purpose is answering "how do I know this is comparable". The run detail's panel typed
+`mobile-4g (1.6 Mbps / 4x CPU)`, which is the runner's profile table restated by hand and
+free to drift from it, and omitted viewport, device scale factor, locale and timezone, which
+are fields the comparison actually checks. The comparison screen printed a green
+`FINGERPRINT MATCH` chip and the run detail a green "comparison permitted without a flag"
+note, **with nothing checking either**. Three more surfaces typed `profile: 'mobile-4g'`.
+
+A scenario names a profile now and everything else is expanded from it. `THROTTLE_PROFILES`
+moved to `@balise/schemas`, where the runner and the screens read one table.
+`buildFingerprint`, `fingerprintsMatch`, `fingerprintDifferences` and
+`summariseFingerprints` moved to `@balise/measure-core`, because comparability is a
+measurement rule and an auditor reading the open packages should find invariant 3
+implemented there. `fingerprintDifferences` is driven from `FINGERPRINT_FIELDS`, which a
+compile-time assertion holds exhaustive against the schema, so a field added to the
+fingerprint is compared from the day it exists.
+
+What the bar says now is derived and is more interesting than what it said: the service
+median runs without coverage instrumentation and the pull request scenario runs with it,
+because the check reports unexecuted bytes and v8 precise coverage costs time on every run.
+So the bar states the browser, the image, the profile and the region as themselves, and
+prints **coverage varies** in caution. Those two scenarios are not comparable to each other,
+and the product says so on its busiest surface, which puts METHODOLOGY open decision 14 in
+front of a user rather than in a document.
+
+**Two failures were sitting behind the task cache.** `turbo.json` declared `test` and
+`typecheck` with no `dependsOn`, so a package's hash covered its own files and nothing
+upstream: changing `packages/schemas` re-ran one task and left eleven cached. Which means
+`pnpm typecheck` and `pnpm test` could report green on a workspace that does not compile,
+and did. `apps/runner/src/measure.ts` had not compiled since the slice that made
+`ConfidenceContext.noiseFloor` required, in the only code that measures anything. And
+`packages/budgets/test/report.test.ts` had been failing for three slices, still expecting
+`842 KB ± 3 KB` after the shared formatter started keeping a decimal below 10 KB. Both were
+found the moment the cache key was corrected. The runner's grading is also extracted into
+`gradeAggregate` now, so the decision can be tested without a browser: nothing caught it
+because `measure()` needs chromium and no test called it. ADRs 0007 and 0008. 879 tests.
+
+**Then: the palette is measured (2026-08-21).** A product whose second rule pack is RGAA
 had never computed a contrast ratio against its own tokens. Four failures, all on text a
 keyboard or low-vision reader has to read.
 
@@ -622,6 +665,20 @@ Later versions: see roadmap; detailed to-dos are appended when the version start
 
 ## Decisions log
 
+- **2026-08-21 · A scenario names a profile and the rest is expanded.** The profile table
+  moved to `@balise/schemas`, where the runner that applies it and the screens that state it
+  read one copy. The duplicate said "1.6 Mbps" and nothing would have noticed if the runner
+  had stopped applying it. ADR 0007.
+- **2026-08-21 · Invariant 3 lives in the kernel.** `fingerprintsMatch` and
+  `summariseFingerprints` are in `@balise/measure-core` beside `classifyDelta`, because
+  comparability is a measurement rule and the open packages are what an auditor reads.
+- **2026-08-21 · A surface describing several scenarios names what varies.** It does not
+  concatenate two values into a line no run was measured under. `summariseFingerprints([])`
+  reports not uniform, because an empty set describes nothing.
+- **2026-08-21 · The task cache includes what a package depends on.** `dependsOn` on `test`
+  and `typecheck`. Without it a local `pnpm test` can report green on a workspace whose
+  tests fail, and it had been doing so for three slices. A local check that lies is worse
+  than no local check, because it is trusted. ADR 0008.
 - **2026-08-21 · Three palette values are darker than the brief's.** `--text-tertiary`,
   `--caution` and `--on-dark-muted` all failed wcag aa as text and none could be fixed by
   restricting them to large sizes, because nothing in the instrument register reaches 24 px.
