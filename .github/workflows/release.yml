@@ -1,0 +1,60 @@
+name: release
+
+# publishing is manual on purpose.
+#
+# an automated release on every green main would put the measurement kernel on
+# npm before a person decided it was ready, and these packages are the trust
+# surface: once an auditor has installed 0.2.0, unpublishing it is not a fix.
+# a human dispatches this, having read the changelog they are about to make
+# true.
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Pack and verify without publishing'
+        type: boolean
+        default: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          registry-url: https://registry.npmjs.org
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - run: pnpm typecheck
+      - run: pnpm test
+      - run: pnpm build
+      - run: pnpm check:packages
+      - run: pnpm audit --prod --audit-level high
+
+      - name: pack every published package
+        run: |
+          for pkg in schemas measure-core carbon-models criteria-engine rule-packs; do
+            pnpm --filter "@balise/$pkg" pack --pack-destination "$RUNNER_TEMP/tarballs"
+          done
+          ls -l "$RUNNER_TEMP/tarballs"
+
+      - name: install the tarballs on their own and run them
+        # the packages must work outside this repository, which is the only
+        # thing a consumer will ever experience. this step is why the release
+        # is worth having a workflow for at all.
+        run: node scripts/verify-standalone.mjs "$RUNNER_TEMP/tarballs"
+
+      - name: publish
+        if: ${{ inputs.dry_run == false }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          for pkg in schemas measure-core carbon-models criteria-engine rule-packs; do
+            pnpm --filter "@balise/$pkg" publish --access public --no-git-checks
+          done

@@ -2,12 +2,51 @@
   "name": "@balise/rule-packs",
   "version": "0.1.0",
   "description": "Versioned referential packs. RGESN 2024 v2, statements verbatim from the published referential.",
+  "keywords": [
+    "rgesn",
+    "referential",
+    "ecodesign",
+    "arcep",
+    "conformity",
+    "france"
+  ],
   "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anshuman-krishna/balise.git",
+    "directory": "packages/rule-packs"
+  },
+  "homepage": "https://github.com/anshuman-krishna/balise/tree/main/packages/rule-packs#readme",
+  "bugs": {
+    "url": "https://github.com/anshuman-krishna/balise/issues"
+  },
   "type": "module",
+  "sideEffects": false,
   "exports": {
     ".": "./src/index.ts"
   },
+  "files": [
+    "dist",
+    "src",
+    "packs",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      }
+    }
+  },
   "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "prepack": "pnpm run build",
     "typecheck": "tsc --noEmit",
     "test": "vitest run"
   },

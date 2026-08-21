@@ -11,6 +11,8 @@
     "test": "turbo run test",
     "typecheck": "turbo run typecheck",
     "lint": "eslint .",
+    "check:packages": "node scripts/check-package-surface.mjs",
+    "audit:prod": "pnpm audit --prod --audit-level high",
     "runner:local": "pnpm --filter @balise/runner measure",
     "test:repro": "pnpm --filter @balise/runner test:repro",
     "gen:measurement-canon": "node --experimental-strip-types --import ./scripts/ts-loader.mjs apps/web/scripts/generate-measurement-canon.ts",

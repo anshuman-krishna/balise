@@ -197,6 +197,23 @@ dependency surface is kept deliberately small: a dependency is one more thing a 
 auditor gets to question. The platform around them (history, documents, multi-tenancy,
 workflow) is the proprietary part, and that is the right way round.
 
+Between them those five packages carry two runtime dependencies: `zod`, and each other.
+`scripts/check-package-surface.mjs` keeps it that way, and fails the build on a published
+source file that imports something undeclared, imports a Node builtin, or calls `fetch`,
+`process.env`, `Date.now` or `Math.random`. The last three are the reproducibility promise
+written as a check: given the same input these packages must return the same output
+forever, and a clock is the easiest way to break that without noticing.
+
+```bash
+pnpm check:packages   # licences, readmes, changelogs, dependency surface
+pnpm audit:prod       # what a consumer installs, high severity and above
+```
+
+Publishing is manual, by `workflow_dispatch`, and the release workflow packs the five,
+installs the tarballs into an empty directory and runs them there before it will publish
+anything. That last step is the only one that exercises the resolution path a consumer
+actually takes.
+
 ## Getting started
 
 Requirements: Node 22 or newer, and pnpm.
@@ -255,7 +272,8 @@ generated fixtures rather than typed numbers.
 
 Not yet real: the API and its database, document rendering, multi-tenancy and billing. The
 runner exists but has never executed its reproducibility suite in anger, and says so rather
-than implying otherwise.
+than implying otherwise. The five publishable packages are packaged, verified standalone and
+not published: `0.1.0` is the shape of a first release rather than a release.
 
 Waiting on a decision rather than on code: `docs/METHODOLOGY.md` is a v1.0 draft and not in
 force, the RGESN tier split ships as a proposal that nothing is answered automatically

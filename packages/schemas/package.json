@@ -2,12 +2,50 @@
   "name": "@balise/schemas",
   "version": "0.1.0",
   "description": "Zod contracts shared across Balise. Single source of truth for every shape crossing a boundary.",
+  "keywords": [
+    "zod",
+    "schemas",
+    "ecodesign",
+    "rgesn",
+    "measurement",
+    "web-measurement"
+  ],
   "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anshuman-krishna/balise.git",
+    "directory": "packages/schemas"
+  },
+  "homepage": "https://github.com/anshuman-krishna/balise/tree/main/packages/schemas#readme",
+  "bugs": {
+    "url": "https://github.com/anshuman-krishna/balise/issues"
+  },
   "type": "module",
+  "sideEffects": false,
   "exports": {
     ".": "./src/index.ts"
   },
+  "files": [
+    "dist",
+    "src",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      }
+    }
+  },
   "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "prepack": "pnpm run build",
     "typecheck": "tsc --noEmit",
     "test": "vitest run --passWithNoTests"
   },

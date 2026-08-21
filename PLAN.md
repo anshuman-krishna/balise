@@ -16,7 +16,43 @@ screenshots, the fidelity source).
 
 ## Current status
 
-**Phase: an engagement is one object (2026-08-21).** The tender proposes contractual
+**Phase: the packages are publishable (2026-08-21).** The whole competitive argument is
+that our measurement is the most *defensible* on the market, not the most accurate, and the
+mechanism for that argument is that four packages are Apache-2.0 and an auditor can read
+every line that produced a number. None of the four could have been published.
+
+There was no `LICENSE` file in any of them, on packages whose `license` field said
+Apache-2.0. There was no README for `measure-core` or `criteria-engine`, the two that matter
+most. There was no `files` field, so a publish would have shipped tests and fixtures; no
+`repository` field, so npm would have shown no source link on packages whose entire claim is
+that you can read the source; no build, so the published `exports` pointed at TypeScript;
+and no check that any of it stayed true.
+
+Five packages are published, not four: `@balise/schemas` goes too, because the other four
+depend on it and a dependency an auditor cannot read defeats the purpose of the four. Each
+one now carries the Apache text, a README written for someone who has never seen this
+repository, a changelog, and a `tsconfig.build.json` that emits JavaScript and declarations.
+`publishConfig` swaps the exports map at pack time, so the workspace keeps resolving to
+`src` while the tarball resolves to `dist`.
+
+Two scripts hold it. `scripts/check-package-surface.mjs` reads every published package and
+fails on a missing licence, a missing changelog, a runtime dependency not on an explicit
+allowlist, an import of something undeclared, an import of a Node builtin, or a source file
+that calls `fetch`, reads `process.env`, or reaches for `Date.now` or `Math.random`. The
+last three are the reproducibility promise stated as a grep: a model that can read a clock
+is a model whose output is not reproducible. `scripts/verify-standalone.mjs` packs the five,
+installs the tarballs into an empty directory, and runs them there, which is the only path a
+consumer will ever take. It asserts the refusals rather than the answers: no history gives
+no floor, no floor gives `indeterminate` and `low`, and an unsigned pack answers nothing.
+
+The dependency audit the operating manual has required since day one is in CI now, in two
+steps: the production tree at high severity blocks, the full tree at moderate reports.
+Releasing is `workflow_dispatch` only, and the reasoning is in the workflow file: an
+automated publish on every green main would put the measurement kernel on npm before a
+person decided it was ready, and once an auditor has installed 0.2.0, unpublishing is not a
+fix. 817 tests.
+
+**Then: an engagement is one object (2026-08-21).** The tender proposes contractual
 engagements, the contract carries them, and the execution report reports on them. All three
 authored their own copy of the same four rows, and the copies disagreed.
 
@@ -552,6 +588,26 @@ Later versions: see roadmap; detailed to-dos are appended when the version start
 
 ## Decisions log
 
+- **2026-08-21 · `@balise/schemas` is published too.** The operating manual names four OSS
+  packages and all four depend on schemas. Shipping four readable packages that rest on a
+  fifth nobody can read is the black box the licence was meant to avoid, so schemas carries
+  the same licence, the same README bar and the same surface check.
+- **2026-08-21 · The published tarball ships `src` as well as `dist`.** It doubles the
+  tarball and it is the point: the argument for open sourcing the kernel is that you can
+  read it, and `npm install` should be enough to do that. Tests and fixtures stay out.
+- **2026-08-21 · A clock or a random number in a published package is a build failure.**
+  `scripts/check-package-surface.mjs` greps for `Date.now`, `new Date()`, `Math.random`,
+  `fetch`, `XMLHttpRequest`, `sendBeacon` and `process.env` in published sources. Given the
+  same input these packages must return the same output forever, and that promise is easier
+  to keep mechanically than by review.
+- **2026-08-21 · Releasing is manual.** `workflow_dispatch`, defaulting to a dry run. An
+  automated publish would put the kernel on npm before a person decided it was ready, and
+  an unpublish is not a fix once someone has installed it. The workflow still runs lint,
+  typecheck, tests, build, the surface check, the audit and the standalone install first.
+- **2026-08-21 · The dependency audit blocks on the production tree only.** A high-severity
+  advisory in something a consumer installs stops a release; one in a devDependency is
+  reported and does not stop a merge. The manual says an advisory in an OSS package blocks
+  release, and the production tree is the accurate reading of "in an OSS package".
 - **2026-08-21 · Headroom has one definition and it is published.** `(seuil - mesuré) /
   seuil`. The alternative, over the measured value, is where the tender's 11 % came from
   against the tracker's 10 % on one contract. A supplier signs a ceiling, so the ceiling is
