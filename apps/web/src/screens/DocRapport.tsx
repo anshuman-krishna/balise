@@ -5,6 +5,7 @@ import { DocumentRegister } from '../components/DocumentRegister';
 import { VerificationUrl } from '../components/VerificationUrl';
 import {
   gaugeTone,
+  marginText,
   measuredText,
   signedEngagements,
   statusColor,
@@ -119,8 +120,9 @@ export function DocRapport() {
           {fill(t.docRapport.intro, { runs: formatInt(doc.runs) })}
         </p>
 
-        <div style={{ marginTop: 28 }}>
+        <div role="table" aria-label={tFr.a11y.tables.reportCommitments} style={{ marginTop: 28 }}>
           <div
+            role="row"
             className="mono"
             style={{
               display: 'grid',
@@ -134,15 +136,16 @@ export function DocRapport() {
               color: 'var(--text-secondary)',
             }}
           >
-            <span>{t.docRapport.headers.engagement}</span>
-            <span style={{ textAlign: 'right' }}>{t.docRapport.headers.seuil}</span>
-            <span style={{ textAlign: 'right' }}>{t.docRapport.headers.t3}</span>
-            <span>{t.docRapport.headers.marge}</span>
-            <span style={{ textAlign: 'right' }}>{t.docRapport.headers.etat}</span>
+            <span role="columnheader">{t.docRapport.headers.engagement}</span>
+            <span role="columnheader" style={{ textAlign: 'right' }}>{t.docRapport.headers.seuil}</span>
+            <span role="columnheader" style={{ textAlign: 'right' }}>{t.docRapport.headers.t3}</span>
+            <span role="columnheader">{t.docRapport.headers.marge}</span>
+            <span role="columnheader" style={{ textAlign: 'right' }}>{t.docRapport.headers.etat}</span>
           </div>
           {rows.map((row, index) => (
             <div
               key={row.id}
+              role="row"
               style={{
                 display: 'grid',
                 gridTemplateColumns: GRID,
@@ -153,16 +156,21 @@ export function DocRapport() {
                 fontSize: 11,
               }}
             >
-              <span>{row.labelFr}</span>
-              <span className="mono" style={{ textAlign: 'right' }}>{thresholdText(row, tFr)}</span>
+              <span role="cell">{row.labelFr}</span>
+              <span role="cell" className="mono" style={{ textAlign: 'right' }}>{thresholdText(row, tFr)}</span>
               <span
+                role="cell"
                 className="mono"
                 style={{ textAlign: 'right', color: row.status === 'nonTenu' ? 'var(--breach)' : 'var(--ink)' }}
               >
                 {measuredText(row)}
               </span>
-              <Gauge fillPct={row.gaugePct ?? 0} tone={gaugeTone(row)} />
-              <span className="mono" style={{ fontSize: 9.5, textAlign: 'right', color: statusColor(row) }}>
+              {/* the gauge is drawn and hidden, so the cell carries the figure
+                  it draws. */}
+              <span role="cell" aria-label={marginText(row, tFr)}>
+                <Gauge fillPct={row.gaugePct ?? 0} tone={gaugeTone(row)} />
+              </span>
+              <span role="cell" className="mono" style={{ fontSize: 9.5, textAlign: 'right', color: statusColor(row) }}>
                 {statusText(row, tFr)}
               </span>
             </div>

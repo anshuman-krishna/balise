@@ -1,5 +1,5 @@
-import { useState } from 'react';
 import { Link } from 'react-router';
+import { useTabParam } from '../lib/use-tab-param';
 import { classifyDelta } from '@balise/measure-core';
 import { formatInt, formatNumber, Tabs, tabPanelAttributes, ToleranceDispersion } from '@balise/ui';
 import { fill, t } from '../i18n';
@@ -47,7 +47,8 @@ const runFindings = findingsView('candidate', t);
 
 type Tab = 'waterfall' | 'resources' | 'dispersion' | 'models' | 'environment';
 
-const TABS: Tab[] = ['waterfall', 'resources', 'dispersion', 'models', 'environment'];
+export const RUN_TABS = ['waterfall', 'resources', 'dispersion', 'models', 'environment'] as const;
+const TABS: readonly Tab[] = RUN_TABS;
 
 function ModelOutputsCard() {
   const page = carbonPage('candidate');
@@ -206,7 +207,7 @@ function FingerprintCard() {
 }
 
 export function RunDetail() {
-  const [tab, setTab] = useState<Tab>('waterfall');
+  const [tab, setTab] = useTabParam<Tab>('tab', TABS, 'waterfall');
 
   return (
     <>

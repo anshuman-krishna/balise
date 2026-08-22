@@ -1,4 +1,5 @@
 import type { DeltaClassification } from '@balise/schemas';
+import { t } from '../i18n';
 
 export type VerdictKey = 'breach' | 'real' | 'noSig' | 'indeterminate';
 
@@ -31,3 +32,20 @@ export const VERDICT_COLOR: Record<VerdictKey, string> = {
   noSig: 'var(--text-secondary)',
   indeterminate: 'var(--text-tertiary)',
 };
+
+/**
+ * what a trend sparkline says, for the cell that holds it. the drawing is
+ * `aria-hidden`, so without this the column is empty to a screen reader.
+ */
+export function trendLabel(classification: DeltaClassification): string {
+  switch (classification) {
+    case 'regression':
+      return t.a11y.trend.regression;
+    case 'improvement':
+      return t.a11y.trend.improvement;
+    case 'no-significant-change':
+      return t.a11y.trend.noSignificantChange;
+    default:
+      return t.a11y.trend.indeterminate;
+  }
+}

@@ -153,7 +153,11 @@ export function Criteria() {
       </div>
 
       <div className="card" style={{ marginTop: 10, padding: 0, overflowX: 'auto' }}>
+        {/* the footnote below is not a row, so the table is the wrapper that
+            holds the rows and nothing else. */}
+        <div role="table" aria-label={t.a11y.tables.criteria}>
         <div
+          role="row"
           style={{
             display: 'grid',
             gridTemplateColumns: GRID,
@@ -174,6 +178,7 @@ export function Criteria() {
           ].map((header, index) => (
             <span
               key={header}
+              role="columnheader"
               className="mono"
               style={{
                 fontWeight: 500,
@@ -190,6 +195,7 @@ export function Criteria() {
         {rows.map((row) => (
           <div
             key={row.id}
+            role="row"
             className="row-hover"
             style={{
               display: 'grid',
@@ -200,21 +206,22 @@ export function Criteria() {
               borderBottom: '1px solid var(--divider-row)',
             }}
           >
-            <span className="mono" style={{ fontSize: 10.5, color: 'var(--text-secondary)' }}>{row.id}</span>
-            <span style={{ fontSize: 11.5, lineHeight: 1.4 }}>{row.statementFr}</span>
-            <span className="mono" style={{ fontSize: 10, lineHeight: 1.35, color: 'var(--text-secondary)' }}>{row.family}</span>
-            <span className="mono" style={{ fontWeight: 500, fontSize: 9, color: TIER_COLOR[row.tier] }}>
+            <span role="cell" className="mono" style={{ fontSize: 10.5, color: 'var(--text-secondary)' }}>{row.id}</span>
+            <span role="cell" style={{ fontSize: 11.5, lineHeight: 1.4 }}>{row.statementFr}</span>
+            <span role="cell" className="mono" style={{ fontSize: 10, lineHeight: 1.35, color: 'var(--text-secondary)' }}>{row.family}</span>
+            <span role="cell" className="mono" style={{ fontWeight: 500, fontSize: 9, color: TIER_COLOR[row.tier] }}>
               {tierShort(row.tier)}
             </span>
-            <span className="mono" style={{ fontWeight: 500, fontSize: 10, color: STATUS_COLOR[row.status] }}>
+            <span role="cell" className="mono" style={{ fontWeight: 500, fontSize: 10, color: STATUS_COLOR[row.status] }}>
               {statusLabel(row.status)}
             </span>
-            <span style={{ fontSize: 10.5, lineHeight: 1.45, color: 'var(--text-secondary)' }}>{evidenceText(row)}</span>
-            <span className="mono" style={{ fontSize: 10, lineHeight: 1.35, color: 'var(--text-tertiary)', textAlign: 'right' }}>
+            <span role="cell" style={{ fontSize: 10.5, lineHeight: 1.45, color: 'var(--text-secondary)' }}>{evidenceText(row)}</span>
+            <span role="cell" className="mono" style={{ fontSize: 10, lineHeight: 1.35, color: 'var(--text-tertiary)', textAlign: 'right' }}>
               {attestedText(row)}
             </span>
           </div>
         ))}
+        </div>
         <div style={{ padding: '11px 17px', fontSize: 10.5, color: 'var(--text-secondary)' }}>{t.criteria.footnote}</div>
       </div>
     </>

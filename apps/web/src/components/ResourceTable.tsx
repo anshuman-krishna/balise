@@ -39,8 +39,15 @@ export function ResourceTable({
           {fill(t.runDetail.resources.recordsTitle, { count: rows.length, requests: requestCount })}
         </span>
       </div>
-      <div style={{ overflowX: 'auto' }}>
+      {/* the eyebrow above is typed in capitals for the eye. a name is read
+          aloud, and some screen readers spell capitals out letter by letter. */}
+      <div
+        role="table"
+        aria-label={fill(t.a11y.tables.resources, { count: rows.length, requests: requestCount })}
+        style={{ overflowX: 'auto' }}
+      >
         <div
+          role="row"
           style={{
             display: 'grid',
             gridTemplateColumns: GRID,
@@ -52,6 +59,7 @@ export function ResourceTable({
           {columns.map((header, index) => (
             <span
               key={header}
+              role="columnheader"
               className="mono"
               style={{
                 fontWeight: 500,
@@ -65,10 +73,11 @@ export function ResourceTable({
             </span>
           ))}
         </div>
-        <div style={{ maxHeight: 460, overflowY: 'auto' }}>
+        <div role="rowgroup" style={{ maxHeight: 460, overflowY: 'auto' }}>
           {rows.map((row) => (
             <div
               key={row.url}
+              role="row"
               className="row-hover"
               style={{
                 display: 'grid',
@@ -80,7 +89,7 @@ export function ResourceTable({
                 background: row.kind === 'regression' ? 'var(--tint-breach)' : undefined,
               }}
             >
-              <span
+              <span role="cell"
                 className="mono"
                 style={{
                   fontSize: 10.5,
@@ -93,10 +102,10 @@ export function ResourceTable({
               >
                 {row.name}
               </span>
-              <span style={{ fontSize: 10.5, color: 'var(--text-secondary)' }}>
+              <span role="cell" style={{ fontSize: 10.5, color: 'var(--text-secondary)' }}>
                 {t.runDetail.resources.types[row.resourceType]}
               </span>
-              <span
+              <span role="cell"
                 className="mono"
                 style={{
                   fontSize: 10.5,
@@ -106,10 +115,10 @@ export function ResourceTable({
               >
                 {bytes(row.transferredBytes)}
               </span>
-              <span className="mono" style={{ fontSize: 10.5, textAlign: 'right', color: 'var(--text-secondary)' }}>
+              <span role="cell" className="mono" style={{ fontSize: 10.5, textAlign: 'right', color: 'var(--text-secondary)' }}>
                 {bytes(row.decodedBytes)}
               </span>
-              <span
+              <span role="cell"
                 className="mono"
                 style={{
                   fontSize: 10.5,
@@ -119,7 +128,7 @@ export function ResourceTable({
               >
                 {bytes(row.unusedDecodedBytes)}
               </span>
-              <span
+              <span role="cell"
                 className="mono"
                 style={{ fontSize: 10, color: row.origin === null ? 'var(--text-tertiary)' : 'var(--caution)' }}
               >

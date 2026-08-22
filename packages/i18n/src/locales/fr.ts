@@ -6,6 +6,33 @@ import type { Catalog } from './en.js';
 export const fr: Catalog = {
   a11y: {
     skipToContent: 'Aller au contenu',
+    // tables are drawn as css grids so the columns can be tuned; the role and
+    // the name are what a screen reader has instead of the alignment.
+    tables: {
+      resources: 'Relevés, {count} requêtes sur {requests}',
+      resourcesByType: 'Ressources par type',
+      comparison: 'Métriques comparées',
+      budgets: 'Budgets par périmètre',
+      criteria: 'Critères du référentiel',
+      tenderCommitments: 'Engagements proposés',
+      observatory: 'Services indexés',
+      contractCommitments: 'Engagements contractuels',
+      checkScenarios: 'Mesures par scénario',
+      reportCommitments: 'Engagements et état mesuré',
+      fleet: 'Services du parc',
+      nonConformities: 'Critères non conformes',
+      measuredState: 'État mesuré du service',
+    },
+    // a sparkline is drawn for the eye and hidden from the screen reader, so
+    // the cell holding it says what the line says. the kernel's own words: no
+    // direction is claimed, because whether a rise is a regression depends on
+    // the metric.
+    trend: {
+      regression: 'Tendance : régression',
+      improvement: 'Tendance : amélioration',
+      noSignificantChange: 'Tendance : aucun changement significatif',
+      indeterminate: 'Tendance : historique insuffisant',
+    },
   },
   nav: {
     groups: {
@@ -528,6 +555,10 @@ export const fr: Catalog = {
   },
   tender: {
     remiseDesOffres: 'REMISE DES OFFRES',
+    // the first column is the checkbox saying whether the commitment is in the
+    // offer. the mark is decorative, so the column and the cell are named.
+    inOffer: 'Retenu dans l\'offre',
+    notInOffer: 'Non retenu dans l\'offre',
     daysVia: '{days} jours · via {platform}',
     stepDone: 'FAIT',
     stepCurrent: 'EN COURS',
@@ -542,6 +573,7 @@ export const fr: Catalog = {
     commitmentsCaption:
       'Les seuils sont vos valeurs mesurées plus une marge déclarée : chaque engagement est atteignable le jour de la signature.',
     headers: {
+      inOffer: 'RETENU',
       commitment: 'ENGAGEMENT',
       measured: 'MESURÉ',
       proposed: 'PROPOSÉ',

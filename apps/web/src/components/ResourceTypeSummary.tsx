@@ -16,7 +16,9 @@ export function ResourceTypeSummary({ summary }: { summary: ResourceSummary }) {
           kb: formatInt(summary.totalTransferredBytes / 1000),
         })}
       </span>
+      <div role="table" aria-label={t.a11y.tables.resourcesByType}>
       <div
+        role="row"
         style={{
           display: 'grid',
           gridTemplateColumns: GRID,
@@ -28,6 +30,7 @@ export function ResourceTypeSummary({ summary }: { summary: ResourceSummary }) {
         {[headers.type, headers.requests, headers.transferred, headers.share].map((header, index) => (
           <span
             key={header}
+            role="columnheader"
             className="mono"
             style={{
               fontWeight: 500,
@@ -44,6 +47,7 @@ export function ResourceTypeSummary({ summary }: { summary: ResourceSummary }) {
       {summary.groups.map((group) => (
         <div
           key={group.resourceType}
+          role="row"
           style={{
             display: 'grid',
             gridTemplateColumns: GRID,
@@ -53,17 +57,19 @@ export function ResourceTypeSummary({ summary }: { summary: ResourceSummary }) {
             borderBottom: '1px solid var(--divider-row)',
           }}
         >
-          <span style={{ fontSize: 11 }}>{t.runDetail.resources.types[group.resourceType]}</span>
-          <span className="mono" style={{ fontSize: 10.5, textAlign: 'right', color: 'var(--text-secondary)' }}>
+          <span role="cell" style={{ fontSize: 11 }}>{t.runDetail.resources.types[group.resourceType]}</span>
+          <span role="cell" className="mono" style={{ fontSize: 10.5, textAlign: 'right', color: 'var(--text-secondary)' }}>
             {group.requestCount}
           </span>
-          <span className="mono" style={{ fontSize: 10.5, textAlign: 'right' }}>
+          <span role="cell" className="mono" style={{ fontSize: 10.5, textAlign: 'right' }}>
             {formatInt(group.transferredBytes / 1000)}
           </span>
-          <span className="mono" style={{ fontSize: 10, textAlign: 'right', color: 'var(--text-secondary)' }}>
+          <span role="cell" className="mono" style={{ fontSize: 10, textAlign: 'right', color: 'var(--text-secondary)' }}>
             {(group.transferredShare * 100).toFixed(1)}%
           </span>
-          <span style={{ gridColumn: '1 / -1', marginTop: 6 }}>
+          {/* the bar draws the share printed beside it. nothing new is in it,
+              so it is not a cell and not read twice. */}
+          <span aria-hidden="true" style={{ gridColumn: '1 / -1', marginTop: 6 }}>
             <span className="progress-track" style={{ display: 'block' }}>
               <span
                 className="progress-fill"
@@ -73,6 +79,7 @@ export function ResourceTypeSummary({ summary }: { summary: ResourceSummary }) {
           </span>
         </div>
       ))}
+      </div>
     </div>
   );
 }

@@ -2,6 +2,9 @@ import type { ReactElement } from 'react';
 
 import type { AppShellProps } from './layout/AppShell';
 import { ledgerCanon } from './fixtures/ledger-canon';
+import { RUN_TABS } from './screens/RunDetail';
+import { BUDGET_VIEWS } from './screens/Budgets';
+import { CHECK_VIEWS } from './screens/PrCheck';
 import { Dashboard } from './screens/Dashboard';
 import { RunDetail } from './screens/RunDetail';
 import { Comparison } from './screens/Comparison';
@@ -27,6 +30,12 @@ export interface AppRoute {
   shell: Omit<AppShellProps, 'children'>;
   /** a concrete path for a parameterised route, so an audit can visit it. */
   sample?: string;
+  /**
+   * the other states this route renders, as paths. a tabbed screen shows one
+   * panel at a time, so without these an audit covers the first and none of
+   * the rest.
+   */
+  variants?: readonly string[];
 }
 
 const APP: Omit<AppShellProps, 'children'> = {};
@@ -38,15 +47,25 @@ const PUBLIC: Omit<AppShellProps, 'children'> = { showAppBar: false, register: '
 // a screen nothing checks.
 export const ROUTES: readonly AppRoute[] = [
   { path: '/', screen: <Dashboard />, shell: APP },
-  { path: '/runs', screen: <RunDetail />, shell: APP },
+  { path: '/runs', screen: <RunDetail />, shell: APP, variants: RUN_TABS.map((tab) => `/runs?tab=${tab}`) },
   { path: '/comparison', screen: <Comparison />, shell: APP },
-  { path: '/budgets', screen: <Budgets />, shell: APP },
+  {
+    path: '/budgets',
+    screen: <Budgets />,
+    shell: APP,
+    variants: BUDGET_VIEWS.map((view) => `/budgets?view=${view}`),
+  },
   { path: '/criteria', screen: <Criteria />, shell: APP },
   { path: '/declaration', screen: <Declaration />, shell: APP },
   { path: '/tender', screen: <Tender />, shell: APP },
   { path: '/contract', screen: <Contract />, shell: APP },
   { path: '/fleet', screen: <Fleet />, shell: APP },
-  { path: '/pr-check', screen: <PrCheck />, shell: APP },
+  {
+    path: '/pr-check',
+    screen: <PrCheck />,
+    shell: APP,
+    variants: CHECK_VIEWS.map((view) => `/pr-check?view=${view}`),
+  },
   { path: '/documents/declaration', screen: <DocDeclaration />, shell: DOCUMENT },
   { path: '/documents/annexe', screen: <DocAnnexe />, shell: DOCUMENT },
   { path: '/documents/rapport', screen: <DocRapport />, shell: DOCUMENT },

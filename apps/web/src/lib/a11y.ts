@@ -26,7 +26,11 @@ export type A11yRule =
   | 'panel-unlabelled'
   | 'no-h1'
   | 'multiple-h1'
-  | 'heading-level-skipped';
+  | 'heading-level-skipped'
+  | 'shouty-name'
+  | 'table-unnamed'
+  | 'table-structure'
+  | 'row-cell-count';
 
 export interface A11yFinding {
   rule: A11yRule;
@@ -67,6 +71,16 @@ function visibleText(node: MarkupNode): string {
   if (attr(node, 'aria-hidden') === 'true') return '';
   if (node.tag === TEXT) return node.text;
   return node.children.map(visibleText).join(' ');
+}
+
+/**
+ * `tablist` and `table` take their name from the author only: the labels of
+ * the tabs and the text of the cells inside them name nothing. asking
+ * `accessibleName` would fall back to that content and report a name where
+ * a screen reader announces none.
+ */
+function authoredName(node: MarkupNode): boolean {
+  return collapse(attr(node, 'aria-label') ?? '') !== '' || attr(node, 'aria-labelledby') !== undefined;
 }
 
 export function accessibleName(node: MarkupNode, byId: ReadonlyMap<string, MarkupNode>): string {
@@ -205,7 +219,147 @@ export function auditMarkup(html: string): A11yFinding[] {
 
   findings.push(...auditTabs(nodes, byId));
   findings.push(...auditHeadings(nodes));
+  findings.push(...auditTables(nodes));
+  findings.push(...auditNames(nodes));
   return findings;
+}
+
+/**
+ * this codebase types its eyebrows in capitals rather than transforming them
+ * in css, so a display string reused as a name arrives in capitals too. some
+ * screen readers spell those out letter by letter.
+ */
+function auditNames(nodes: readonly MarkupNode[]): A11yFinding[] {
+  const findings: A11yFinding[] = [];
+  for (const node of nodes) {
+    const label = collapse(attr(node, 'aria-label') ?? '');
+    // a single token may legitimately be an acronym: RGESN, SWD, PDF.
+    if (!label.includes(' ')) continue;
+    if (!/\p{L}/u.test(label) || /\p{Ll}/u.test(label)) continue;
+    findings.push({
+      rule: 'shouty-name',
+      element: describe(node),
+      detail: `named "${label}", which is a display string rather than something to read aloud`,
+    });
+  }
+  return findings;
+}
+
+const CELL_ROLES = new Set(['cell', 'gridcell', 'columnheader', 'rowheader']);
+
+/**
+ * a table of measured numbers read without its columns is a run of numbers.
+ * the product's content is columns, so the roles that carry them are checked
+ * rather than assumed.
+ */
+function auditTables(nodes: readonly MarkupNode[]): A11yFinding[] {
+  const findings: A11yFinding[] = [];
+
+  for (const table of nodes.filter((node) => attr(node, 'role') === 'table')) {
+    if (!authoredName(table)) {
+      findings.push({
+        rule: 'table-unnamed',
+        element: describe(table),
+        detail: 'a table with no name is announced as "table" and nothing else',
+      });
+    }
+
+    const rows: MarkupNode[] = [];
+    for (const child of table.children) {
+      if (skip(child)) continue;
+      const role = attr(child, 'role');
+      if (role === 'row') {
+        rows.push(child);
+      } else if (role === 'rowgroup') {
+        for (const grandchild of child.children) {
+          if (skip(grandchild)) continue;
+          if (attr(grandchild, 'role') === 'row') rows.push(grandchild);
+          else {
+            findings.push({
+              rule: 'table-structure',
+              element: describe(grandchild),
+              detail: 'inside a rowgroup, which may hold rows and nothing else',
+            });
+          }
+        }
+      } else {
+        findings.push({
+          rule: 'table-structure',
+          element: describe(child),
+          detail: 'inside a table, which may hold rows and rowgroups and nothing else',
+        });
+      }
+    }
+
+    if (rows.length === 0) {
+      findings.push({
+        rule: 'table-structure',
+        element: describe(table),
+        detail: 'a table with no rows',
+      });
+      continue;
+    }
+
+    // the header row sets the column count. a row that disagrees with it has
+    // its values under the wrong headings, which is worse than none at all.
+    for (const row of rows) {
+      for (const child of row.children) {
+        if (skip(child)) continue;
+        const role = attr(child, 'role');
+        if (role !== undefined && CELL_ROLES.has(role)) continue;
+        findings.push({
+          rule: 'table-structure',
+          element: describe(child),
+          detail: 'inside a row and not a cell, so its content is read with no column',
+        });
+      }
+    }
+
+    const counts = rows.map((row) => cellsIn(row));
+    const expected = counts[0]!;
+    rows.forEach((row, index) => {
+      if (counts[index] === expected) return;
+      findings.push({
+        rule: 'row-cell-count',
+        element: describe(row),
+        detail: `${counts[index]} cells where the first row has ${expected}, so its values sit under the wrong headings`,
+      });
+    });
+  }
+
+  for (const node of nodes) {
+    const role = attr(node, 'role');
+    if (role === undefined || !CELL_ROLES.has(role)) continue;
+    if (!nodes.some((candidate) => attr(candidate, 'role') === 'row' && candidate.children.includes(node))) {
+      findings.push({
+        rule: 'table-structure',
+        element: describe(node),
+        detail: 'a cell whose parent is not a row',
+      });
+    }
+  }
+
+  return findings;
+}
+
+/**
+ * text, and anything hidden from assistive technology, is not part of the
+ * table structure: an `aria-hidden` drawing beside a figure is not a cell that
+ * disagrees with the header count, it is not there at all.
+ */
+function skip(node: MarkupNode): boolean {
+  return node.tag === TEXT || attr(node, 'aria-hidden') === 'true';
+}
+
+/** the columns a row covers: one per cell, more where a cell spans. */
+function cellsIn(row: MarkupNode): number {
+  return row.children.reduce((total, child) => {
+    if (skip(child)) return total;
+    const role = attr(child, 'role');
+    if (role === undefined || !CELL_ROLES.has(role)) return total;
+    const span = Number(attr(child, 'aria-colspan') ?? '1');
+    return total + (Number.isFinite(span) && span > 0 ? span : 1);
+  }, 0);
 }
 
 const HEADING = /^h([1-6])$/;
@@ -258,11 +412,7 @@ function auditTabs(nodes: readonly MarkupNode[], byId: ReadonlyMap<string, Marku
   const tablists = nodes.filter((node) => attr(node, 'role') === 'tablist');
 
   for (const tablist of tablists) {
-    // a tablist is not a role that takes its name from its content, so the
-    // labels of the tabs inside it name nothing. it needs its own.
-    const named =
-      collapse(attr(tablist, 'aria-label') ?? '') !== '' || attr(tablist, 'aria-labelledby') !== undefined;
-    if (!named) {
+    if (!authoredName(tablist)) {
       findings.push({
         rule: 'tablist-unnamed',
         element: describe(tablist),

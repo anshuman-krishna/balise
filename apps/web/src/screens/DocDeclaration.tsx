@@ -1,4 +1,4 @@
-import { fill, t } from '../i18n';
+import { fill, t, tFr } from '../i18n';
 import { canon, documentsFixture } from '../fixtures/canon';
 import { criteriaCanon } from '../fixtures/criteria-canon';
 import { conformityPct, nonConformeRows } from '../lib/criteria-view';
@@ -85,8 +85,9 @@ export function DocDeclaration() {
         <h2 className="archivo" style={{ margin: '36px 0 0', fontWeight: 600, fontSize: 14 }}>
           {t.docDeclaration.nonConformesTitle}
         </h2>
-        <div style={{ marginTop: 14 }}>
+        <div role="table" aria-label={tFr.a11y.tables.nonConformities} style={{ marginTop: 14 }}>
           <div
+            role="row"
             className="mono"
             style={{
               display: 'grid',
@@ -100,13 +101,14 @@ export function DocDeclaration() {
               color: 'var(--text-secondary)',
             }}
           >
-            <span>{t.docDeclaration.headers.id}</span>
-            <span>{t.docDeclaration.headers.criterion}</span>
-            <span>{t.docDeclaration.headers.justification}</span>
+            <span role="columnheader">{t.docDeclaration.headers.id}</span>
+            <span role="columnheader">{t.docDeclaration.headers.criterion}</span>
+            <span role="columnheader">{t.docDeclaration.headers.justification}</span>
           </div>
           {nonConformes.map((row, index) => (
             <div
               key={row.id}
+              role="row"
               style={{
                 display: 'grid',
                 gridTemplateColumns: '50px 1.9fr 1.4fr',
@@ -117,9 +119,9 @@ export function DocDeclaration() {
                 lineHeight: 1.6,
               }}
             >
-              <span className="mono" style={{ fontSize: 10 }}>{row.id}</span>
-              <span>{row.statementFr}</span>
-              <span style={{ color: row.justification === null ? 'var(--breach)' : 'var(--text-secondary)' }}>
+              <span role="cell" className="mono" style={{ fontSize: 10 }}>{row.id}</span>
+              <span role="cell">{row.statementFr}</span>
+              <span role="cell" style={{ color: row.justification === null ? 'var(--breach)' : 'var(--text-secondary)' }}>
                 {row.justification ?? t.docDeclaration.justificationMissing}
               </span>
             </div>

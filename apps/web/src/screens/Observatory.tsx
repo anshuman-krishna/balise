@@ -44,6 +44,7 @@ function IndexRow({ row }: { row: CorpusRow }) {
   const highlighted = row.domain === AUDITED_DOMAIN;
   return (
     <div
+      role="row"
       className="row-hover"
       style={{
         display: 'grid',
@@ -55,13 +56,14 @@ function IndexRow({ row }: { row: CorpusRow }) {
         background: highlighted ? 'var(--selected-row)' : undefined,
       }}
     >
-      <span className="mono" style={{ fontSize: 10, color: 'var(--text-tertiary)' }}>
+      <span role="cell" className="mono" style={{ fontSize: 10, color: 'var(--text-tertiary)' }}>
         {String(row.rank).padStart(2, '0')}
       </span>
-      <span className="mono" style={{ fontSize: 10.5, color: highlighted ? 'var(--measured)' : undefined }}>
+      <span role="cell" className="mono" style={{ fontSize: 10.5, color: highlighted ? 'var(--measured)' : undefined }}>
         {row.domain}
       </span>
-      <span style={{ fontSize: 10.5 }}>{row.organisme}</span>
+      <span role="cell" style={{ fontSize: 10.5 }}>{row.organisme}</span>
+      <span role="cell">
       <ToleranceBand
         size="compact"
         width={126}
@@ -77,7 +79,9 @@ function IndexRow({ row }: { row: CorpusRow }) {
         state="normal"
         unitLabel={tFr.dashboard.tiles.carbonUnit}
       />
+      </span>
       <span
+        role="cell"
         className="archivo"
         style={{
           fontWeight: 700,
@@ -89,6 +93,7 @@ function IndexRow({ row }: { row: CorpusRow }) {
         {row.carbon.grade}
       </span>
       <span
+        role="cell"
         className="mono"
         style={{
           fontSize: 10.5,
@@ -99,18 +104,19 @@ function IndexRow({ row }: { row: CorpusRow }) {
         {weightText(row)}
       </span>
       <span
+        role="cell"
         className="mono"
         style={{ fontSize: 10, textAlign: 'right', color: trendColor(row.trend.classification) }}
       >
         {trendText(row, tFr)}
       </span>
-      <span className="mono" style={{ fontSize: 10, color: TONE_COLOR[hostingTone(row)] }}>
+      <span role="cell" className="mono" style={{ fontSize: 10, color: TONE_COLOR[hostingTone(row)] }}>
         {hostingText(row, tFr)}
       </span>
-      <span className="mono" style={{ fontSize: 10, color: TONE_COLOR[declarationTone(row)] }}>
+      <span role="cell" className="mono" style={{ fontSize: 10, color: TONE_COLOR[declarationTone(row)] }}>
         {declarationText(row, tFr)}
       </span>
-      <span className="mono" style={{ fontSize: 10, textAlign: 'right', color: 'var(--text-secondary)' }}>
+      <span role="cell" className="mono" style={{ fontSize: 10, textAlign: 'right', color: 'var(--text-secondary)' }}>
         {row.agency ?? tFr.observatory.noAgency}
       </span>
     </div>
@@ -191,7 +197,10 @@ export function Observatory() {
         </div>
 
         <div className="card" style={{ marginTop: 12, padding: 0, overflowX: 'auto' }}>
+          {/* the empty state below is not a row. */}
+          <div role="table" aria-label={tFr.a11y.tables.observatory}>
           <div
+            role="row"
             style={{
               display: 'grid',
               gridTemplateColumns: GRID,
@@ -204,6 +213,7 @@ export function Observatory() {
             {headers.map((header, index) => (
               <span
                 key={header}
+                role="columnheader"
                 className="mono"
                 style={{
                   fontWeight: 500,
@@ -220,6 +230,7 @@ export function Observatory() {
           {rows.map((row) => (
             <IndexRow key={row.domain} row={row} />
           ))}
+          </div>
           {rows.length === 0 ? (
             <div style={{ padding: '26px 17px' }}>
               <div style={{ fontWeight: 500, fontSize: 12.5 }}>{tFr.observatory.emptyTitle}</div>

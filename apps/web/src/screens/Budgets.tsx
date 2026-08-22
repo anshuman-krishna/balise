@@ -1,5 +1,6 @@
-import { useState } from 'react';
 import { Link } from 'react-router';
+import { useTabParam } from '../lib/use-tab-param';
+import { Fragment } from 'react';
 import type { BudgetStatus } from '@balise/schemas';
 import { Tabs, tabPanelAttributes } from '@balise/ui';
 import { fill, t } from '../i18n';
@@ -9,6 +10,8 @@ import { budgetRows, overrideCard, type BudgetRow } from '../lib/budget-view';
 import { highlightYaml } from '../lib/yaml-highlight';
 
 const GRID = 'minmax(210px,1.5fr) 96px 96px minmax(130px,1fr) 92px';
+
+export const BUDGET_VIEWS = ['visual', 'yaml'] as const;
 
 const STATUS_COLOR: Record<BudgetStatus, string> = {
   conforme: 'var(--conforme)',
@@ -24,13 +27,13 @@ const override = overrideCard();
 function HeadroomCell({ row }: { row: BudgetRow }) {
   if (row.barPct === null || row.headroom === null) {
     return (
-      <span className="mono" style={{ fontSize: 9.5, color: 'var(--text-secondary)' }}>
+      <span role="cell" className="mono" style={{ fontSize: 9.5, color: 'var(--text-secondary)' }}>
         {row.reasonNote ?? t.budgets.relativeNote}
       </span>
     );
   }
   return (
-    <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+    <span role="cell" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
       <span className="progress-track" style={{ flex: 1 }}>
         <span
           className="progress-fill"
@@ -45,7 +48,7 @@ function HeadroomCell({ row }: { row: BudgetRow }) {
 }
 
 export function Budgets() {
-  const [mode, setMode] = useState<'visual' | 'yaml'>('visual');
+  const [mode, setMode] = useTabParam('view', BUDGET_VIEWS, 'visual');
 
   return (
     <>
@@ -72,8 +75,14 @@ export function Budgets() {
 
       <div {...tabPanelAttributes('budgets', mode)}>
       {mode === 'visual' ? (
-        <div className="card" style={{ marginTop: 16, padding: 0, overflowX: 'auto' }}>
+        <div
+          className="card"
+          role="table"
+          aria-label={t.a11y.tables.budgets}
+          style={{ marginTop: 16, padding: 0, overflowX: 'auto' }}
+        >
           <div
+            role="row"
             style={{
               display: 'grid',
               gridTemplateColumns: GRID,
@@ -91,6 +100,7 @@ export function Budgets() {
             ].map((header, index) => (
               <span
                 key={header}
+                role="columnheader"
                 className="mono"
                 style={{
                   fontWeight: 500,
@@ -104,20 +114,30 @@ export function Budgets() {
               </span>
             ))}
           </div>
-          {rows.map((row) => (
+          {rows.map((row) => {
+            const note = [
+              row.withinNoise ? t.budgets.withinNoiseNote : null,
+              row.overridden ? t.budgets.overriddenNote : null,
+            ]
+              .filter((entry) => entry !== null)
+              .join(' · ');
+            const tint = row.status === 'breach' ? 'var(--tint-breach)' : undefined;
+            return (
+            <Fragment key={row.key}>
             <div
-              key={row.key}
+              role="row"
               style={{
                 display: 'grid',
                 gridTemplateColumns: GRID,
                 gap: '0 14px',
                 alignItems: 'center',
-                padding: '10px 17px',
-                borderBottom: '1px solid var(--divider-row)',
-                background: row.status === 'breach' ? 'var(--tint-breach)' : undefined,
+                padding: note === '' ? '10px 17px' : '10px 17px 0',
+                borderBottom: note === '' ? '1px solid var(--divider-row)' : undefined,
+                background: tint,
               }}
             >
               <span
+                role="cell"
                 className="mono"
                 style={{ fontSize: 10.5, color: row.status === 'breach' ? 'var(--breach)' : 'var(--ink)' }}
               >
@@ -130,6 +150,7 @@ export function Budgets() {
                 ) : null}
               </span>
               <span
+                role="cell"
                 className="mono"
                 style={{
                   fontSize: 10.5,
@@ -140,6 +161,7 @@ export function Budgets() {
                 {row.current ?? '–'}
               </span>
               <span
+                role="cell"
                 className="mono"
                 style={{ fontSize: 10.5, textAlign: 'right', color: 'var(--measured)' }}
                 title={row.thresholdSource ?? undefined}
@@ -148,6 +170,7 @@ export function Budgets() {
               </span>
               <HeadroomCell row={row} />
               <span
+                role="cell"
                 className="mono"
                 style={{
                   fontWeight: 500,
@@ -159,18 +182,32 @@ export function Budgets() {
               >
                 {row.action === 'fail' ? t.verdicts.fail : t.verdicts.warn}
               </span>
-              {row.withinNoise || row.overridden ? (
-                <span
-                  className="mono"
-                  style={{ gridColumn: '1 / -1', fontSize: 9.5, color: 'var(--text-tertiary)', paddingTop: 3 }}
-                >
-                  {[row.withinNoise ? t.budgets.withinNoiseNote : null, row.overridden ? t.budgets.overriddenNote : null]
-                    .filter((note) => note !== null)
-                    .join(' · ')}
-                </span>
-              ) : null}
             </div>
-          ))}
+            {note === '' ? null : (
+              /* the note is a second line under the row it annotates. that is a
+                 row of its own spanning the five columns, not a sixth cell in a
+                 five column row. */
+              <div
+                role="row"
+                style={{
+                  padding: '3px 17px 10px',
+                  borderBottom: '1px solid var(--divider-row)',
+                  background: tint,
+                }}
+              >
+                <span
+                  role="cell"
+                  aria-colspan={5}
+                  className="mono"
+                  style={{ fontSize: 9.5, color: 'var(--text-tertiary)' }}
+                >
+                  {note}
+                </span>
+              </div>
+            )}
+            </Fragment>
+            );
+          })}
         </div>
       ) : (
         <div className="code-block" style={{ marginTop: 16 }}>

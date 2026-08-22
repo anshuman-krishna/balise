@@ -665,6 +665,27 @@ Later versions: see roadmap; detailed to-dos are appended when the version start
 
 ## Decisions log
 
+- **2026-08-22 · A table of measured numbers carries its columns, not its alignment.**
+  Thirteen tables were CSS grids of `div` and `span`. Alignment is the whole meaning of a
+  column and it is the one thing a screen reader cannot see, so each one reads as a flat run
+  of values: 546 of them on the criteria workspace. The roles apply to the existing markup
+  without moving a pixel, and `row-cell-count` makes the promise mechanical, because a row
+  that disagrees with its header row puts its values under the wrong headings, which is
+  worse than carrying none at all.
+- **2026-08-22 · A note that spans a table is a row, not a sixth cell.** Counting
+  `aria-colspan` is what makes that expressible. The alternative, a five-column row with six
+  cells, announces the note under the wrong heading and breaks the count for the rows below.
+- **2026-08-22 · An element hidden from assistive technology is not a cell.** The bars drawn
+  beside printed figures repeat them. Giving each one a cell would announce every measured
+  value twice, so they stay `aria-hidden` and the cell count skips them.
+- **2026-08-22 · A name is read aloud; a display string is not a name.** The eyebrows in this
+  app are typed in capitals rather than transformed in CSS, so reusing one as an `aria-label`
+  hands a screen reader a string some will spell out letter by letter. `shouty-name` fires on
+  two or more words with no lowercase letter, which leaves an acronym alone.
+- **2026-08-22 · `table` and `tablist` take their name from the author only.** Asking for an
+  accessible name falls back to content, and their content is the cell text and the tab
+  labels, so both reported named when a screen reader would announce neither. The same bug
+  twice, which is why it is now one function.
 - **2026-08-21 · A role is a promise about the keyboard.** `role="tab"` tells an assistive
   technology that the arrow keys move within the set and that the set is one stop in the page
   tab order. Three screens declared it and implemented neither. The pattern is implemented

@@ -14,6 +14,7 @@ import {
   headroomDefinition,
   type Engagement,
 } from '../lib/engagement-view';
+import { trendLabel } from '../lib/verdict';
 
 // the conformity engagement's outlook is read off the assessments. nothing
 // here draws a rate of change: the ceiling is what answering the open criteria
@@ -33,7 +34,7 @@ function HeadroomCell({ row }: { row: Engagement }) {
   const squares = deliverySquares(row);
   if (squares !== null) {
     return (
-      <span className="mono" style={{ fontSize: 10, color: 'var(--text-secondary)' }}>
+      <span role="cell" className="mono" style={{ fontSize: 10, color: 'var(--text-secondary)' }}>
         {fill(t.contract.deliveredOf, { delivered: squares.delivered, total: squares.total })}
       </span>
     );
@@ -41,7 +42,7 @@ function HeadroomCell({ row }: { row: Engagement }) {
   const caution = row.status !== 'tenu';
   const color = caution ? 'var(--caution)' : 'var(--conforme)';
   return (
-    <span style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
+    <span role="cell" style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
       <span className="progress-track" style={{ flex: 1, height: 6 }}>
         <span
           className="progress-fill"
@@ -61,6 +62,10 @@ function TrendCell({ row }: { row: Engagement }) {
     // quarterly deliveries render as squares: filled for delivered, outline
     // for still due
     return (
+      <span
+        role="cell"
+        aria-label={fill(t.contract.deliveredOf, { delivered: squares.delivered, total: squares.total })}
+      >
       <svg viewBox="0 0 110 20" width="110" height="20" aria-hidden="true">
         {Array.from({ length: squares.total }, (_, index) =>
           index < squares.delivered ? (
@@ -70,6 +75,7 @@ function TrendCell({ row }: { row: Engagement }) {
           ),
         )}
       </svg>
+      </span>
     );
   }
   // no history is no line, and a trend drawn from nothing is the one thing
@@ -77,12 +83,13 @@ function TrendCell({ row }: { row: Engagement }) {
   const line = trendLine(row, TREND.width, TREND.height);
   if (line === null) {
     return (
-      <span className="mono" style={{ fontSize: 9.5, color: 'var(--text-tertiary)' }}>
+      <span role="cell" className="mono" style={{ fontSize: 9.5, color: 'var(--text-tertiary)' }}>
         {t.contract.noHistory}
       </span>
     );
   }
   return (
+    <span role="cell" aria-label={trendLabel(line.classification)}>
     <svg viewBox="0 0 110 20" width="110" height="20" aria-hidden="true">
       <polyline
         fill="none"
@@ -92,6 +99,7 @@ function TrendCell({ row }: { row: Engagement }) {
         transform="translate(2 2)"
       />
     </svg>
+    </span>
   );
 }
 
@@ -116,7 +124,10 @@ export function Contract() {
       </div>
 
       <div className="card" style={{ marginTop: 16, padding: 0, overflowX: 'auto' }}>
+        {/* the notes below are not rows. */}
+        <div role="table" aria-label={t.a11y.tables.contractCommitments}>
         <div
+          role="row"
           style={{
             display: 'grid',
             gridTemplateColumns: GRID,
@@ -136,6 +147,7 @@ export function Contract() {
           ].map((header, index) => (
             <span
               key={header}
+              role="columnheader"
               className="mono"
               style={{
                 fontWeight: 500,
@@ -152,6 +164,7 @@ export function Contract() {
         {signedEngagements().map((row) => (
           <div
             key={row.id}
+            role="row"
             style={{
               display: 'grid',
               gridTemplateColumns: GRID,
@@ -162,9 +175,10 @@ export function Contract() {
               background: row.status === 'enCours' ? 'var(--tint-caution)' : undefined,
             }}
           >
-            <span style={{ fontSize: 11.5, lineHeight: 1.4 }}>{row.labelFr}</span>
-            <span className="mono" style={{ fontSize: 11, textAlign: 'right' }}>{thresholdText(row, t)}</span>
+            <span role="cell" style={{ fontSize: 11.5, lineHeight: 1.4 }}>{row.labelFr}</span>
+            <span role="cell" className="mono" style={{ fontSize: 11, textAlign: 'right' }}>{thresholdText(row, t)}</span>
             <span
+              role="cell"
               className="mono"
               style={{ fontSize: 11, textAlign: 'right', color: row.status === 'enCours' ? 'var(--caution)' : 'var(--ink)' }}
             >
@@ -173,6 +187,7 @@ export function Contract() {
             <HeadroomCell row={row} />
             <TrendCell row={row} />
             <span
+              role="cell"
               className="mono"
               style={{ fontWeight: 500, fontSize: 9.5, textAlign: 'right', color: statusColor(row) }}
             >
@@ -180,6 +195,7 @@ export function Contract() {
             </span>
           </div>
         ))}
+        </div>
         <div style={{ padding: '11px 17px', fontSize: 10.5, lineHeight: 1.6, color: 'var(--text-secondary)' }}>
           {t.engagements.signedNote}
           <br />

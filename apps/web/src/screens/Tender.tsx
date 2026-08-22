@@ -26,6 +26,7 @@ function CommitmentLine({ row }: { row: Engagement }) {
   const page = carbon ? carbonPage('dashboard') : null;
   return (
     <div
+      role="row"
       style={{
         display: 'grid',
         gridTemplateColumns: GRID,
@@ -36,6 +37,9 @@ function CommitmentLine({ row }: { row: Engagement }) {
         opacity: row.inOffer ? undefined : 0.55,
       }}
     >
+      {/* the mark is decorative; whether the commitment is in the offer is
+          said in the cell's own text. */}
+      <span role="cell" aria-label={row.inOffer ? t.tender.inOffer : t.tender.notInOffer}>
       {row.inOffer ? (
         <span
           aria-hidden="true"
@@ -56,10 +60,12 @@ function CommitmentLine({ row }: { row: Engagement }) {
       ) : (
         <span aria-hidden="true" style={{ width: 13, height: 13, border: '1px solid rgba(21,24,27,.35)', display: 'block' }} />
       )}
-      <span style={{ fontSize: 11.5, lineHeight: 1.4 }}>{row.labelFr}</span>
+      </span>
+      <span role="cell" style={{ fontSize: 11.5, lineHeight: 1.4 }}>{row.labelFr}</span>
       {/* invariant 1: an estimate is never a bare number, on any surface. the
           carbon commitment used to print "0.076 g" with no band and no model
           version, on the workspace that produces the annexe. */}
+      <span role="cell">
       {carbon && page !== null ? (
         <ToleranceBand
           size="compact"
@@ -88,10 +94,11 @@ function CommitmentLine({ row }: { row: Engagement }) {
           {measuredText(row)}
         </span>
       )}
-      <span className="mono" style={{ fontSize: 11, textAlign: 'right', color: 'var(--measured)' }}>
+      </span>
+      <span role="cell" className="mono" style={{ fontSize: 11, textAlign: 'right', color: 'var(--measured)' }}>
         {thresholdText(row, t)}
       </span>
-      <span className="mono" style={{ fontSize: 10, color: marginColor(row) }}>{marginText(row, t)}</span>
+      <span role="cell" className="mono" style={{ fontSize: 10, color: marginColor(row) }}>{marginText(row, t)}</span>
     </div>
   );
 }
@@ -191,7 +198,10 @@ export function Tender() {
             </div>
           </div>
           <div style={{ marginTop: 14 }}>
+            {/* the headroom definition below is not a row. */}
+            <div role="table" aria-label={t.a11y.tables.tenderCommitments}>
             <div
+              role="row"
               style={{
                 display: 'grid',
                 gridTemplateColumns: GRID,
@@ -201,11 +211,12 @@ export function Tender() {
                 borderBottom: '1px solid rgba(21,24,27,.14)',
               }}
             >
-              <span />
+              <span role="columnheader" aria-label={t.tender.headers.inOffer} />
               {[t.tender.headers.commitment, t.tender.headers.measured, t.tender.headers.proposed, t.tender.headers.margin].map(
                 (header, index) => (
                   <span
                     key={header}
+                    role="columnheader"
                     className="mono"
                     style={{
                       fontWeight: 500,
@@ -223,6 +234,7 @@ export function Tender() {
             {proposedEngagements().map((row) => (
               <CommitmentLine key={row.id} row={row} />
             ))}
+            </div>
             <div style={{ padding: '10px 17px', fontSize: 10.5, lineHeight: 1.6, color: 'var(--text-secondary)' }}>
               {headroomDefinition()}
             </div>

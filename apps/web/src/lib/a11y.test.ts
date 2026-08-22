@@ -136,3 +136,99 @@ describe('the tab pattern', () => {
     );
   });
 });
+
+// the product's content is columns of measured numbers. a table drawn as a
+// grid of div and span reads as a flat run of them, so the roles that carry
+// the columns are checked the same way: every rule shown catching something.
+describe('the table audit', () => {
+  const TABLE = `
+    <div role="table" aria-label="État mesuré">
+      <div role="row">
+        <span role="columnheader">Métrique</span>
+        <span role="columnheader">Valeur</span>
+      </div>
+      <div role="row">
+        <span role="cell">Poids transféré</span>
+        <span role="cell">842 Ko</span>
+      </div>
+    </div>`;
+
+  it('passes a table that carries its columns', () => {
+    expect(rules(TABLE)).toEqual([]);
+  });
+
+  it('catches a table with nothing to announce it by', () => {
+    expect(rules(TABLE.replace(' aria-label="État mesuré"', ''))).toContain('table-unnamed');
+  });
+
+  it('catches a row that disagrees with the header row', () => {
+    expect(rules(TABLE.replace('<span role="cell">842 Ko</span>', '<span role="cell">842 Ko</span><span role="cell">±7 Ko</span>'))).toContain(
+      'row-cell-count',
+    );
+  });
+
+  // a note under a row spans the table rather than adding a column to it, so
+  // the span is what counts.
+  it('counts a spanning cell as the columns it covers', () => {
+    expect(
+      rules(
+        TABLE.replace(
+          '<span role="cell">Poids transféré</span>\n        <span role="cell">842 Ko</span>',
+          '<span role="cell" aria-colspan="2">seuil hérité du service</span>',
+        ),
+      ),
+    ).toEqual([]);
+  });
+
+  it('accepts a rowgroup between the table and its rows', () => {
+    expect(rules(TABLE.replace('<div role="row">', '<div role="rowgroup"><div role="row">').replace(/<\/div>\s*<\/div>$/, '</div></div></div>'))).toEqual([]);
+  });
+
+  it('catches an element between the table and its rows', () => {
+    expect(rules(TABLE.replace('<div role="row">', '<div class="body"><div role="row">').replace(/<\/div>\s*<\/div>$/, '</div></div></div>'))).toContain(
+      'table-structure',
+    );
+  });
+
+  it('catches an element inside a row that carries no column', () => {
+    expect(rules(TABLE.replace('<span role="cell">842 Ko</span>', '<span>842 Ko</span>'))).toContain(
+      'table-structure',
+    );
+  });
+
+  it('catches a cell whose parent is not a row', () => {
+    expect(rules('<span role="cell">842 Ko</span>')).toContain('table-structure');
+  });
+
+  it('catches a table with no rows at all', () => {
+    expect(rules('<div role="table" aria-label="État mesuré"></div>')).toContain('table-structure');
+  });
+
+  // a bar drawn beside a printed figure repeats it. it is hidden, so it is
+  // not a cell and does not shift the columns.
+  it('does not count a decorative element as a cell', () => {
+    expect(
+      rules(TABLE.replace('<span role="cell">842 Ko</span>', '<span role="cell">842 Ko</span><span aria-hidden="true">▁▃▅</span>')),
+    ).toEqual([]);
+  });
+});
+
+// a name is read aloud. the app types its eyebrows in capitals rather than
+// transforming them in css, so reusing one as a name is a live risk here.
+describe('the name audit', () => {
+  it('catches a display string reused as a name', () => {
+    expect(
+      rules('<div role="table" aria-label="RELEVÉS · 84 SUR 84 REQUÊTES"><div role="row"><span role="cell">a</span></div></div>'),
+    ).toContain('shouty-name');
+  });
+
+  it('leaves an acronym alone', () => {
+    expect(rules('<button type="button" aria-label="RGESN">i</button>')).toEqual([]);
+  });
+
+  it('leaves a sentence-case name alone', () => {
+    expect(
+      rules('<div role="table" aria-label="Relevés, 84 requêtes sur 84"><div role="row"><span role="cell">a</span></div></div>'),
+    ).toEqual([]);
+  });
+});

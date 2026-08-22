@@ -35,6 +35,7 @@ function ServiceRow({ row }: { row: CorpusRow }) {
   const alert = alertFor(row, t);
   return (
     <div
+      role="row"
       className="row-hover"
       style={{
         display: 'grid',
@@ -45,7 +46,8 @@ function ServiceRow({ row }: { row: CorpusRow }) {
         borderBottom: '1px solid var(--divider-row)',
       }}
     >
-      <span className="mono" style={{ fontSize: 11 }}>{row.domain}</span>
+      <span role="cell" className="mono" style={{ fontSize: 11 }}>{row.domain}</span>
+      <span role="cell">
       <ToleranceBand
         size="compact"
         width={128}
@@ -61,7 +63,9 @@ function ServiceRow({ row }: { row: CorpusRow }) {
         state="normal"
         unitLabel={t.dashboard.tiles.carbonUnit}
       />
+      </span>
       <span
+        role="cell"
         className="mono"
         style={{
           fontWeight: 500,
@@ -72,16 +76,16 @@ function ServiceRow({ row }: { row: CorpusRow }) {
       >
         {t.confidence[row.confidence]}
       </span>
-      <span className="mono" style={{ fontSize: 11, textAlign: 'right' }}>
+      <span role="cell" className="mono" style={{ fontSize: 11, textAlign: 'right' }}>
         {row.rgesnPct ?? conformityPct()}%
       </span>
-      <span className="mono" style={{ fontSize: 10, color: TONE_COLOR[declarationTone(row)] }}>
+      <span role="cell" className="mono" style={{ fontSize: 10, color: TONE_COLOR[declarationTone(row)] }}>
         {declarationText(row, t)}
       </span>
-      <span className="mono" style={{ fontSize: 10, color: 'var(--text-secondary)' }}>
+      <span role="cell" className="mono" style={{ fontSize: 10, color: 'var(--text-secondary)' }}>
         {row.contract ?? '–'}
       </span>
-      <span className="mono" style={{ fontSize: 10, textAlign: 'right', color: TONE_COLOR[alert.tone] }}>
+      <span role="cell" className="mono" style={{ fontSize: 10, textAlign: 'right', color: TONE_COLOR[alert.tone] }}>
         {alert.text}
       </span>
     </div>
@@ -127,7 +131,10 @@ export function Fleet() {
       </div>
 
       <div className="card" style={{ marginTop: 16, padding: 0, overflowX: 'auto' }}>
+        {/* the measured-profile note below is not a row. */}
+        <div role="table" aria-label={t.a11y.tables.fleet}>
         <div
+          role="row"
           style={{
             display: 'grid',
             gridTemplateColumns: GRID,
@@ -148,6 +155,7 @@ export function Fleet() {
           ].map((header, index) => (
             <span
               key={header}
+              role="columnheader"
               className="mono"
               style={{
                 fontWeight: 500,
@@ -164,6 +172,7 @@ export function Fleet() {
         {rows.map((row) => (
           <ServiceRow key={row.domain} row={row} />
         ))}
+        </div>
         <div
           style={{
             padding: '10px 17px',

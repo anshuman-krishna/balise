@@ -1,5 +1,5 @@
 import { formatMeasured, ToleranceBand } from '@balise/ui';
-import { fill, t } from '../i18n';
+import { fill, t, tFr } from '../i18n';
 import { canon, documentsFixture, tenderFixture } from '../fixtures/canon';
 import { conformityPct } from '../lib/criteria-view';
 import { signedEngagements } from '../lib/engagement-view';
@@ -220,8 +220,9 @@ export function DocAnnexe() {
           </div>
         </div>
 
-        <div style={{ marginTop: 30 }}>
+        <div role="table" aria-label={tFr.a11y.tables.measuredState} style={{ marginTop: 30 }}>
           <div
+            role="row"
             className="mono"
             style={{
               display: 'grid',
@@ -235,14 +236,15 @@ export function DocAnnexe() {
               color: 'var(--text-secondary)',
             }}
           >
-            <span>{t.docAnnexe.headers.indicator}</span>
-            <span style={{ textAlign: 'right' }}>{t.docAnnexe.headers.median}</span>
-            <span style={{ textAlign: 'right' }}>{t.docAnnexe.headers.mad}</span>
-            <span>{t.docAnnexe.headers.confidence}</span>
+            <span role="columnheader">{t.docAnnexe.headers.indicator}</span>
+            <span role="columnheader" style={{ textAlign: 'right' }}>{t.docAnnexe.headers.median}</span>
+            <span role="columnheader" style={{ textAlign: 'right' }}>{t.docAnnexe.headers.mad}</span>
+            <span role="columnheader">{t.docAnnexe.headers.confidence}</span>
           </div>
           {doc.indicators.map((row, index) => (
             <div
               key={row.label}
+              role="row"
               style={{
                 display: 'grid',
                 gridTemplateColumns: '1.7fr 100px 100px 1fr',
@@ -252,10 +254,10 @@ export function DocAnnexe() {
                 fontSize: 11,
               }}
             >
-              <span>{row.label}</span>
-              <span className="mono" style={{ textAlign: 'right' }}>{row.median}</span>
-              <span className="mono" style={{ textAlign: 'right' }}>{row.mad}</span>
-              <span className="mono" style={{ fontSize: 10, color: row.conf === 'medium' ? 'var(--caution)' : 'var(--ink)' }}>
+              <span role="cell">{row.label}</span>
+              <span role="cell" className="mono" style={{ textAlign: 'right' }}>{row.median}</span>
+              <span role="cell" className="mono" style={{ textAlign: 'right' }}>{row.mad}</span>
+              <span role="cell" className="mono" style={{ fontSize: 10, color: row.conf === 'medium' ? 'var(--caution)' : 'var(--ink)' }}>
                 {row.conf === 'medium' ? t.docAnnexe.confMedium : t.docAnnexe.confHigh}
               </span>
             </div>

@@ -98,6 +98,7 @@ function VerdictCell({ verdict }: { verdict: VerdictKey }) {
           : t.verdicts.indeterminate;
   return (
     <span
+      role="cell"
       className="mono"
       style={{ fontWeight: 500, fontSize: 9.5, letterSpacing: '.05em', textAlign: 'right', color: VERDICT_COLOR[verdict] }}
     >
@@ -181,8 +182,14 @@ export function Comparison() {
         </span>
       </div>
 
-      <div className="card" style={{ marginTop: 14, padding: 0, overflowX: 'auto' }}>
+      <div
+        className="card"
+        role="table"
+        aria-label={t.a11y.tables.comparison}
+        style={{ marginTop: 14, padding: 0, overflowX: 'auto' }}
+      >
         <div
+          role="row"
           style={{
             display: 'grid',
             gridTemplateColumns: GRID,
@@ -201,6 +208,7 @@ export function Comparison() {
           ].map((header, index) => (
             <span
               key={header}
+              role="columnheader"
               className="mono"
               style={{
                 fontWeight: 500,
@@ -218,6 +226,7 @@ export function Comparison() {
         {rows.map((row) => (
           <div
             key={row.label}
+            role="row"
             style={{
               display: 'grid',
               gridTemplateColumns: GRID,
@@ -228,7 +237,7 @@ export function Comparison() {
               background: row.verdict === 'breach' ? 'var(--tint-breach)' : undefined,
             }}
           >
-            <span style={{ fontSize: 11.5 }}>
+            <span role="cell" style={{ fontSize: 11.5 }}>
               {row.label}
               {/* the grade is the kernel's. anything short of high is said on
                   the row it applies to, in caution, wherever that row appears. */}
@@ -239,19 +248,24 @@ export function Comparison() {
                 </span>
               )}
             </span>
-            <span className="mono" style={{ fontSize: 10.5, textAlign: 'right' }}>{row.baselineText}</span>
+            <span role="cell" className="mono" style={{ fontSize: 10.5, textAlign: 'right' }}>{row.baselineText}</span>
             <span
+              role="cell"
               className="mono"
               style={{ fontSize: 10.5, textAlign: 'right', color: row.verdict === 'breach' || row.verdict === 'real' ? VERDICT_COLOR[row.verdict] : 'var(--ink)' }}
             >
               {row.candidateText}
             </span>
             <span
+              role="cell"
               className="mono"
               style={{ fontSize: 10.5, textAlign: 'right', color: row.verdict === 'breach' ? 'var(--breach)' : 'var(--ink)' }}
             >
               {row.deltaText}
             </span>
+            {/* a component cannot take the cell role, so it is wrapped rather
+                than left outside the row's column count. */}
+            <span role="cell">
             <ToleranceBand
               size="compact"
               width={146}
@@ -268,12 +282,14 @@ export function Comparison() {
               deltaClassification={row.classification}
               unitLabel={t.comparison.headers.delta}
             />
+            </span>
             <VerdictCell verdict={row.verdict} />
           </div>
         ))}
 
         {carbon === null || driver === undefined ? null : (
           <div
+            role="row"
             style={{
               display: 'grid',
               gridTemplateColumns: GRID,
@@ -283,22 +299,25 @@ export function Comparison() {
               background: driver.verdict === 'breach' ? 'var(--tint-breach)' : undefined,
             }}
           >
-            <span style={{ fontSize: 11.5 }}>
+            <span role="cell" style={{ fontSize: 11.5 }}>
               {fill(t.comparison.carbonRow, { model: referenceSpecLabel(carbonPage('candidate')) })}
             </span>
-            <span className="mono" style={{ fontSize: 10.5, textAlign: 'right' }}>{formatCarbon(carbon.before)}</span>
+            <span role="cell" className="mono" style={{ fontSize: 10.5, textAlign: 'right' }}>{formatCarbon(carbon.before)}</span>
             <span
+              role="cell"
               className="mono"
               style={{ fontSize: 10.5, textAlign: 'right', color: driver.verdict === 'breach' ? 'var(--breach)' : 'var(--ink)' }}
             >
               {formatCarbon(carbon.after)}
             </span>
             <span
+              role="cell"
               className="mono"
               style={{ fontSize: 10.5, textAlign: 'right', color: driver.verdict === 'breach' ? 'var(--breach)' : 'var(--ink)' }}
             >
               {formatSigned(carbon.delta, 3)}
             </span>
+            <span role="cell">
             <ToleranceBand
               size="compact"
               width={146}
@@ -315,6 +334,7 @@ export function Comparison() {
               deltaClassification={driver.classification}
               unitLabel={t.comparison.headers.delta}
             />
+            </span>
             <VerdictCell verdict={driver.verdict} />
           </div>
         )}

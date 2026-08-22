@@ -1,6 +1,6 @@
-import { useState } from 'react';
 import { formatInt, formatSigned, Tabs, tabPanelAttributes, ToleranceBand } from '@balise/ui';
 import { Link } from 'react-router';
+import { useTabParam } from '../lib/use-tab-param';
 import { fill, t } from '../i18n';
 import { prCheckFixture as pr } from '../fixtures/canon';
 import { referenceModelRef } from '../lib/carbon-view';
@@ -17,6 +17,8 @@ import {
 import { Wordmark } from '../components/Wordmark';
 
 const GRID = 'minmax(190px,1.5fr) 82px 82px 82px 132px 76px';
+
+export const CHECK_VIEWS = ['rendered', 'markdown'] as const;
 
 const VERDICT_LABEL: Record<CheckVerdict, () => string> = {
   fail: () => t.verdicts.fail,
@@ -76,6 +78,7 @@ function MeasurementRow({ row }: { row: CheckRow }) {
   const spread = Math.max(row.deltaKb + row.madKb, row.floorKb * 2);
   return (
     <div
+      role="row"
       style={{
         display: 'grid',
         gridTemplateColumns: GRID,
@@ -86,22 +89,25 @@ function MeasurementRow({ row }: { row: CheckRow }) {
         background: row.verdict === 'fail' ? 'var(--tint-breach)' : undefined,
       }}
     >
-      <span className="mono" style={{ fontSize: 10.5, color: row.verdict === 'fail' ? 'var(--breach)' : 'var(--ink)' }}>
+      <span role="cell" className="mono" style={{ fontSize: 10.5, color: row.verdict === 'fail' ? 'var(--breach)' : 'var(--ink)' }}>
         {row.label}
       </span>
-      <span className="mono" style={{ fontSize: 10.5, textAlign: 'right' }}>{formatInt(row.baseKb)}</span>
+      <span role="cell" className="mono" style={{ fontSize: 10.5, textAlign: 'right' }}>{formatInt(row.baseKb)}</span>
       <span
+        role="cell"
         className="mono"
         style={{ fontSize: 10.5, textAlign: 'right', color: row.verdict === 'noSig' ? 'var(--ink)' : VERDICT_COLOR[row.verdict] }}
       >
         {formatInt(row.headKb)}
       </span>
       <span
+        role="cell"
         className="mono"
         style={{ fontSize: 10.5, textAlign: 'right', color: row.verdict === 'noSig' ? 'var(--ink)' : VERDICT_COLOR[row.verdict] }}
       >
         {formatSigned(row.deltaKb)}
       </span>
+      <span role="cell">
       <ToleranceBand
         size="compact"
         width={132}
@@ -118,7 +124,9 @@ function MeasurementRow({ row }: { row: CheckRow }) {
         deltaClassification={row.classification}
         unitLabel={t.prCheck.headers.delta}
       />
+      </span>
       <span
+        role="cell"
         className="mono"
         style={{ fontWeight: 500, fontSize: 9.5, letterSpacing: '.05em', textAlign: 'right', color: VERDICT_COLOR[row.verdict] }}
       >
@@ -294,7 +302,10 @@ function Rendered() {
               {fill(t.prCheck.measurementLine, { runs: pr.runsPerScenario }).split(' · ').slice(1).join(' · ')}
             </span>
           </div>
+          {/* the attribution paragraphs below are not rows. */}
+          <div role="table" aria-label={t.a11y.tables.checkScenarios}>
           <div
+            role="row"
             style={{
               display: 'grid',
               gridTemplateColumns: GRID,
@@ -313,6 +324,7 @@ function Rendered() {
             ].map((header, index) => (
               <span
                 key={header}
+                role="columnheader"
                 className="mono"
                 style={{
                   fontWeight: 500,
@@ -329,6 +341,7 @@ function Rendered() {
           {rows.map((row) => (
             <MeasurementRow key={row.scenarioId} row={row} />
           ))}
+          </div>
 
           <div style={{ padding: '12px 14px 0' }}>
             <div style={{ fontSize: 11.5, fontWeight: 600 }}>{t.prCheck.attributionHeading}</div>
@@ -418,7 +431,7 @@ function Rendered() {
 }
 
 export function PrCheck() {
-  const [mode, setMode] = useState<'rendered' | 'markdown'>('rendered');
+  const [mode, setMode] = useTabParam('view', CHECK_VIEWS, 'rendered');
 
   return (
     <>

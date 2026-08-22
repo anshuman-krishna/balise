@@ -5,6 +5,33 @@
 export const en = {
   a11y: {
     skipToContent: 'Skip to content',
+    // tables are drawn as css grids so the columns can be tuned; the role and
+    // the name are what a screen reader has instead of the alignment.
+    tables: {
+      resources: 'Records, {count} of {requests} requests',
+      resourcesByType: 'Resources by type',
+      comparison: 'Compared metrics',
+      budgets: 'Budgets by scope',
+      criteria: 'Referential criteria',
+      tenderCommitments: 'Proposed commitments',
+      observatory: 'Indexed services',
+      contractCommitments: 'Contractual commitments',
+      checkScenarios: 'Measurements by scenario',
+      reportCommitments: 'Commitments and measured state',
+      fleet: 'Fleet services',
+      nonConformities: 'Non-conforming criteria',
+      measuredState: 'Measured state of the service',
+    },
+    // a sparkline is drawn for the eye and hidden from the screen reader, so
+    // the cell holding it says what the line says. the kernel's own words: no
+    // direction is claimed, because whether a rise is a regression depends on
+    // the metric.
+    trend: {
+      regression: 'Trend: regression',
+      improvement: 'Trend: improvement',
+      noSignificantChange: 'Trend: no significant change',
+      indeterminate: 'Trend: not enough history',
+    },
   },
   nav: {
     groups: {
@@ -534,6 +561,10 @@ export const en = {
   },
   tender: {
     remiseDesOffres: 'REMISE DES OFFRES',
+    // the first column is the checkbox saying whether the commitment is in the
+    // offer. the mark is decorative, so the column and the cell are named.
+    inOffer: 'Included in the offer',
+    notInOffer: 'Not included in the offer',
     daysVia: '{days} days · via {platform}',
     stepDone: 'DONE',
     stepCurrent: 'CURRENT',
@@ -548,6 +579,7 @@ export const en = {
     commitmentsCaption:
       'Thresholds are your own measured values plus a stated margin, so every commitment is achievable on the day it is signed.',
     headers: {
+      inOffer: 'INCLUDED',
       commitment: 'COMMITMENT',
       measured: 'MEASURED',
       proposed: 'PROPOSED',
