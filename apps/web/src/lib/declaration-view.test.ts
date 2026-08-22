@@ -9,6 +9,7 @@ import {
   draftVersion,
   latestEntryAt,
   longDateFr,
+  measurementSpan,
   publishedVersion,
   reviewCountdown,
   reviewDue,
@@ -91,5 +92,30 @@ describe('the review countdown', () => {
   it('calls the declaration due on the threshold the fleet reads', () => {
     expect(countdown.ageDays).toBeLessThanOrEqual(corpusCanon.declarationDueDays);
     expect(countdown.due).toBe(false);
+  });
+});
+
+// "continuous measurement since 03 Mar 2026, 165 days, 4 812 runs" was stated
+// twice from a fixture that sat beside the register holding the runs.
+describe('the measurement span', () => {
+  const span = measurementSpan();
+
+  it('counts the runs the register retains', () => {
+    expect(span.runs).toBe(ledgerCanon.runs.count);
+    expect(span.runs).toBeLessThan(ledgerCanon.entryCount);
+  });
+
+  it('starts on the register\'s first run', () => {
+    expect(dateWithYear(span.since)).toBe(dateWithYear(ledgerCanon.runs.firstAt));
+  });
+
+  it('runs to the register\'s latest entry', () => {
+    expect(span.days).toBe(
+      Math.round(
+        (Date.UTC(latestEntryAt().getUTCFullYear(), latestEntryAt().getUTCMonth(), latestEntryAt().getUTCDate()) -
+          Date.UTC(span.since.getUTCFullYear(), span.since.getUTCMonth(), span.since.getUTCDate())) /
+          (24 * 60 * 60 * 1000),
+      ),
+    );
   });
 });

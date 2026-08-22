@@ -135,3 +135,23 @@ export function reviewCountdown(): ReviewCountdown {
     due: ageDays > corpusCanon.declarationDueDays,
   };
 }
+
+export interface MeasurementSpan {
+  /** the day the register's first run was recorded. */
+  since: Date;
+  /** whole days from that day to the register's latest entry. */
+  days: number;
+  /** runs the register retains. */
+  runs: number;
+}
+
+/**
+ * "continuous measurement since X, N days, M runs", which the dashboard and
+ * the tender both state. it is a fact about the register, so it is read from
+ * the register rather than typed twice beside it.
+ */
+export function measurementSpan(): MeasurementSpan {
+  const { runs } = ledgerCanon;
+  const since = new Date(runs.firstAt);
+  return { since, days: daysBetween(since, latestEntryAt()), runs: runs.count };
+}

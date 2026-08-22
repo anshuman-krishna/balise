@@ -28,6 +28,8 @@ export const ledgerCanon = {
   entryCount: ${chain.entryCount},
   merkleRoot: ${JSON.stringify(chain.merkleRoot)},
   anchoredAt: ${JSON.stringify(chain.anchoredAt)},
+  /** the runs the register retains, which is what "measured since" counts. */
+  runs: ${JSON.stringify(chain.runs)},
   verification: ${JSON.stringify({ status: chain.verification.status, checkedCount: chain.verification.checkedCount })},
   // the entries the interface and the documents cite. the rest of the chain
   // is history: it exists, it is counted, and nothing displays it.

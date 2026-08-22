@@ -662,6 +662,12 @@ export const fr: Catalog = {
     },
     measuredNote:
       "Une page d'accueil par service, cache froid, profil {profile}, médiane de cinq exécutions. Mesurer les lignes à l'identique est ce qui rend l'échelle partagée lisible.",
+    rgesnSource: {
+      assessed: 'évalué par le moteur sur les 78 critères du référentiel',
+      recorded: 'taux communiqué par le client, non évalué ici',
+    },
+    rgesnNote:
+      "Un seul taux RGESN est évalué ici, celui du service audité : il sort du moteur de critères sur les 78 du référentiel. Les autres sont ce que chaque client a communiqué, repris tel quel et signalé comme tel.",
     declarationNone: 'aucune',
     declarationCell: 'v{version} · {days} j',
     alerts: {

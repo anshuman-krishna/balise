@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { PROVISIONAL_FINDING_THRESHOLDS } from '@balise/measure-core';
 import { catalogs } from '@balise/i18n';
 import { corpusCanon } from '../fixtures/corpus-canon';
+import { conformityPct } from './criteria-view';
 import {
   alertFor,
   AUDITED_DOMAIN,
@@ -122,5 +123,27 @@ describe('the corpus, read for a screen', () => {
     // the caption states the corpus, and the corpus is what was measured.
     expect(chart.caption).toContain(String(corpusCanon.size));
     expect(chart.caption).toContain(String(corpusRow(AUDITED_DOMAIN).rank));
+  });
+});
+
+// two different claims used to wear one number in one style: the audited
+// service's rate is the criteria engine's verdict over 78 assessments, the
+// other five are what each client reported to the agency.
+describe('the RGESN column', () => {
+  const rows = fleetRows();
+
+  it('assesses exactly one service and records the rest', () => {
+    const assessed = rows.filter((row) => row.rgesn.source === 'assessed');
+    expect(assessed.map((row) => row.domain)).toEqual([AUDITED_DOMAIN]);
+    expect(rows.filter((row) => row.rgesn.source === 'recorded').length).toBeGreaterThan(0);
+  });
+
+  it('reads the assessed rate from the engine, not from a fixture', () => {
+    const audited = rows.find((row) => row.domain === AUDITED_DOMAIN)!;
+    expect(audited.rgesn.pct).toBe(conformityPct());
+  });
+
+  it('carries a rate for every row it draws', () => {
+    for (const row of rows) expect(row.rgesn.pct).toBeGreaterThan(0);
   });
 });

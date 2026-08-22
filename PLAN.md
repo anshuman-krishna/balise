@@ -665,6 +665,17 @@ Later versions: see roadmap; detailed to-dos are appended when the version start
 
 ## Decisions log
 
+- **2026-08-22 · A conformity rate carries whether it was assessed or reported.** The fleet
+  printed six percentages in one column and one style: one the criteria engine answered over
+  seventy-eight assessments, five a client emailed the agency. The whole distinction lived in
+  a `??`. `source` is on the canon row now, so a second surface cannot draw the figure without
+  the qualifier, and colour is not asked to carry it alone.
+- **2026-08-22 · Mark the claim, do not hide it.** Dropping the five recorded rates was the
+  other option. They are the agency's own record and are useful; what was wrong was printing
+  them as though the agency had verified them.
+- **2026-08-22 · "Measured since X, N runs" is a fact about the register.** It was typed on
+  the dashboard and typed again on the tender, beside a chain holding 4 812 run entries with
+  real timestamps. `buildCanonChain` reports its own runs and refuses a register with none.
 - **2026-08-22 · A declaration version is the assessment state on the day it was
   established.** Its conformity count is the engine answering that day's evidence, not the
   current count carried backwards. Two of the three points on the tender's "the part nobody

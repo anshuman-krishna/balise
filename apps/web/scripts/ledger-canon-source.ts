@@ -211,6 +211,13 @@ export interface CanonChain {
   merkleRoot: string;
   anchoredAt: string;
   verification: Awaited<ReturnType<typeof verify>>;
+  /**
+   * how many runs the register retains, and when the first and last of them
+   * were recorded. the dashboard and the tender both state "continuous
+   * measurement since X, N runs", and both used to state it from a fixture
+   * beside the register that actually holds the runs.
+   */
+  runs: { count: number; firstAt: string; lastAt: string };
 }
 
 const ANCHORED_AT = '2026-08-15T04:00:00.000Z';
@@ -232,11 +239,19 @@ export async function buildCanonChain(): Promise<CanonChain> {
 
   const root = await anchor(store, ORGANIZATION, { now: () => new Date(ANCHORED_AT) });
 
+  const runs = entries.filter((entry) => entry.kind === 'run');
+  if (runs.length === 0) throw new Error('a register with no run retains no measurement');
+
   return {
     entries,
     entryCount: entries.length,
     merkleRoot: root.root,
     anchoredAt: root.anchoredAt,
     verification: await verify(store, ORGANIZATION),
+    runs: {
+      count: runs.length,
+      firstAt: runs[0]!.createdAt,
+      lastAt: runs.at(-1)!.createdAt,
+    },
   };
 }

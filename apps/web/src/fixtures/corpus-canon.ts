@@ -77,7 +77,10 @@ export const corpusCanon = {
       "agency": "Sextant",
       "inFleet": true,
       "contract": null,
-      "rgesnPct": 82,
+      "rgesn": {
+        "pct": 82,
+        "source": "recorded"
+      },
       "scenarioId": "corpus:craonnais.fr",
       "measured": {
         "transferredBytes": 210000,
@@ -128,7 +131,10 @@ export const corpusCanon = {
       "agency": null,
       "inFleet": false,
       "contract": null,
-      "rgesnPct": null,
+      "rgesn": {
+        "pct": 59,
+        "source": "assessed"
+      },
       "scenarioId": "corpus:mairie-lanvaux.fr",
       "measured": {
         "transferredBytes": 318000,
@@ -179,7 +185,10 @@ export const corpusCanon = {
       "agency": null,
       "inFleet": false,
       "contract": null,
-      "rgesnPct": null,
+      "rgesn": {
+        "pct": 59,
+        "source": "assessed"
+      },
       "scenarioId": "corpus:ville-de-plessac.fr",
       "measured": {
         "transferredBytes": 402000,
@@ -230,7 +239,10 @@ export const corpusCanon = {
       "agency": "Kerlann",
       "inFleet": false,
       "contract": null,
-      "rgesnPct": null,
+      "rgesn": {
+        "pct": 59,
+        "source": "assessed"
+      },
       "scenarioId": "corpus:musees-selo.fr",
       "measured": {
         "transferredBytes": 604000,
@@ -281,7 +293,10 @@ export const corpusCanon = {
       "agency": null,
       "inFleet": false,
       "contract": null,
-      "rgesnPct": null,
+      "rgesn": {
+        "pct": 59,
+        "source": "assessed"
+      },
       "scenarioId": "corpus:prefecture-arvor.fr",
       "measured": {
         "transferredBytes": 712000,
@@ -332,7 +347,10 @@ export const corpusCanon = {
       "agency": "Sextant",
       "inFleet": true,
       "contract": "0417 · Q3 due",
-      "rgesnPct": null,
+      "rgesn": {
+        "pct": 59,
+        "source": "assessed"
+      },
       "scenarioId": "corpus:sevre-et-loire.fr",
       "measured": {
         "transferredBytes": 842000,
@@ -383,7 +401,10 @@ export const corpusCanon = {
       "agency": "Sextant",
       "inFleet": true,
       "contract": null,
-      "rgesnPct": 71,
+      "rgesn": {
+        "pct": 71,
+        "source": "recorded"
+      },
       "scenarioId": "corpus:bibliotheques-selo.fr",
       "measured": {
         "transferredBytes": 980000,
@@ -434,7 +455,10 @@ export const corpusCanon = {
       "agency": "Sextant",
       "inFleet": true,
       "contract": null,
-      "rgesnPct": 64,
+      "rgesn": {
+        "pct": 64,
+        "source": "recorded"
+      },
       "scenarioId": "corpus:eau-selo.fr",
       "measured": {
         "transferredBytes": 1246000,
@@ -485,7 +509,10 @@ export const corpusCanon = {
       "agency": null,
       "inFleet": false,
       "contract": null,
-      "rgesnPct": null,
+      "rgesn": {
+        "pct": 59,
+        "source": "assessed"
+      },
       "scenarioId": "corpus:ars-bretagne.fr",
       "measured": {
         "transferredBytes": 1588000,
@@ -536,7 +563,10 @@ export const corpusCanon = {
       "agency": "Sextant",
       "inFleet": true,
       "contract": "0392 · active",
-      "rgesnPct": 44,
+      "rgesn": {
+        "pct": 44,
+        "source": "recorded"
+      },
       "scenarioId": "corpus:transports-selo.fr",
       "measured": {
         "transferredBytes": 2184000,
@@ -587,7 +617,10 @@ export const corpusCanon = {
       "agency": "Sextant",
       "inFleet": true,
       "contract": null,
-      "rgesnPct": 38,
+      "rgesn": {
+        "pct": 38,
+        "source": "recorded"
+      },
       "scenarioId": "corpus:chu-armorique.fr",
       "measured": {
         "transferredBytes": 3062000,
@@ -635,7 +668,10 @@ export const corpusCanon = {
       "agency": null,
       "inFleet": false,
       "contract": null,
-      "rgesnPct": null,
+      "rgesn": {
+        "pct": 59,
+        "source": "assessed"
+      },
       "scenarioId": "corpus:portail-arvor.fr",
       "measured": {
         "transferredBytes": 4418000,

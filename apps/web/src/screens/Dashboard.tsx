@@ -3,6 +3,7 @@ import { formatInt, formatNumber, formatSigned, ToleranceTrend } from '@balise/u
 import { fill, t } from '../i18n';
 import { canon } from '../fixtures/canon';
 import { criteriaCanon } from '../fixtures/criteria-canon';
+import { dateWithYear, measurementSpan } from '../lib/declaration-view';
 import { pendingDeclarative, sourceLine, tierCards } from '../lib/criteria-view';
 import {
   bandRangeText,
@@ -54,6 +55,7 @@ function TierRow({ label, done, total, color }: { label: string; done: number; t
 }
 
 export function Dashboard() {
+  const span = measurementSpan();
   // the third-party ceiling is the one the offer proposed and did not sign. it
   // is read from the engagement it belongs to, so the tile and the tender
   // cannot state two different targets.
@@ -71,8 +73,8 @@ export function Dashboard() {
         {fill(d.scopeLine, { scenarios: canon.service.scenarios, journeys: canon.service.journeys })}
         {' · '}
         {fill(d.continuousSince, {
-          date: canon.service.continuousSince,
-          runs: formatInt(canon.service.runsRetained),
+          date: dateWithYear(span.since),
+          runs: formatInt(span.runs),
         })}
       </div>
 

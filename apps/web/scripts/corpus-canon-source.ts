@@ -2,6 +2,7 @@ import type { Confidence, MetricId } from '@balise/schemas';
 import { classifyDelta, getAggregatedMetric } from '@balise/measure-core';
 import { ecoIndexPercentile } from '@balise/carbon-models';
 import { estimateMeasured } from './carbon-canon-source';
+import { buildCriteriaCanon } from './criteria-canon-source';
 import { canonAggregate, canonFloor, canonMetric } from './measurement-canon-source';
 import {
   CORPUS_SERVICES,
@@ -37,6 +38,18 @@ const RANK_METRIC: MetricId = 'transferred_bytes';
  * is modelled on). so the state of one is its age against that year, computed,
  * and not a tone typed beside the age.
  */
+/**
+ * the audited service's rate, from the engine that answered its pack. it is
+ * the one row in this corpus that is a measurement of conformity rather than a
+ * client's own record of it.
+ */
+const AUDITED_RGESN_PCT = (() => {
+  const { completion } = buildCriteriaCanon();
+  return completion.applicable === 0
+    ? 0
+    : Math.round((completion.conforme / completion.applicable) * 100);
+})();
+
 export const DECLARATION_DUE_DAYS = 270;
 export const DECLARATION_EXPIRED_DAYS = 365;
 
@@ -117,7 +130,15 @@ function buildService(service: CorpusService) {
     agency: service.agency,
     inFleet: service.agency === TENANT_AGENCY,
     contract: service.contract,
-    rgesnPct: service.rgesnPct,
+    // two different things wearing one number. the audited service's rate is
+    // the criteria engine's verdict over 78 assessments; the others are what
+    // each client's own reviewers recorded and told the agency. the column
+    // printed both in one style, so the row that is evidence looked exactly
+    // like the five that are claims.
+    rgesn:
+      service.rgesnPct === null
+        ? { pct: AUDITED_RGESN_PCT, source: 'assessed' as const }
+        : { pct: service.rgesnPct, source: 'recorded' as const },
     scenarioId: id,
     measured,
     confidence,

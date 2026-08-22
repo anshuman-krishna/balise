@@ -3,7 +3,6 @@ import { fill, t } from '../i18n';
 import { canon, fleetFixture as fleet, observatoryFixture as obs } from '../fixtures/canon';
 import { corpusCanon } from '../fixtures/corpus-canon';
 import { referenceModelRef } from '../lib/carbon-view';
-import { conformityPct } from '../lib/criteria-view';
 import {
   alertFor,
   benchmark,
@@ -76,8 +75,21 @@ function ServiceRow({ row }: { row: CorpusRow }) {
       >
         {t.confidence[row.confidence]}
       </span>
-      <span role="cell" className="mono" style={{ fontSize: 11, textAlign: 'right' }}>
-        {row.rgesnPct ?? conformityPct()}%
+      {/* a rate the engine answered and a rate a client reported are two
+          different claims. the assessed one carries the ink; the recorded ones
+          are quieter and say so when read aloud, because colour alone carries
+          nothing to a screen reader. */}
+      <span
+        role="cell"
+        className="mono"
+        aria-label={`${row.rgesn.pct}% · ${t.fleet.rgesnSource[row.rgesn.source]}`}
+        style={{
+          fontSize: 11,
+          textAlign: 'right',
+          color: row.rgesn.source === 'assessed' ? 'var(--ink)' : 'var(--text-secondary)',
+        }}
+      >
+        {row.rgesn.pct}%
       </span>
       <span role="cell" className="mono" style={{ fontSize: 10, color: TONE_COLOR[declarationTone(row)] }}>
         {declarationText(row, t)}
@@ -183,6 +195,7 @@ export function Fleet() {
           }}
         >
           {fill(t.fleet.measuredNote, { profile: obs.profile })}
+          <div style={{ marginTop: 4 }}>{t.fleet.rgesnNote}</div>
         </div>
       </div>
 

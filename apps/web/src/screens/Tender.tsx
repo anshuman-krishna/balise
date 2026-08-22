@@ -3,7 +3,7 @@ import { formatInt, ToleranceBand } from '@balise/ui';
 import { canon, tenderFixture as tender } from '../fixtures/canon';
 import { carbonPage, carbonScale, referenceModelRef } from '../lib/carbon-view';
 import { conformityHistory, criteriaCount } from '../lib/criteria-view';
-import { declarationVersions } from '../lib/declaration-view';
+import { dateWithYear, declarationVersions, measurementSpan } from '../lib/declaration-view';
 import {
   marginColor,
   marginText,
@@ -105,6 +105,7 @@ function CommitmentLine({ row }: { row: Engagement }) {
 }
 
 export function Tender() {
+  const span = measurementSpan();
   const history = conformityHistory();
   const lowest = Math.min(...history.map((point) => point.conforme));
   const highest = Math.max(...history.map((point) => point.conforme));
@@ -254,10 +255,11 @@ export function Tender() {
           <div className="card">
             <span className="eyebrow">{t.tender.historyTitle}</span>
             <div style={{ marginTop: 11, fontSize: 11.5, lineHeight: 1.6 }}>
-              {t.tender.historySince} <span className="mono" style={{ fontSize: 11 }}>{tender.history.since}</span> ·{' '}
+              {t.tender.historySince}{' '}
+              <span className="mono" style={{ fontSize: 11 }}>{dateWithYear(span.since)}</span> ·{' '}
               {fill(t.tender.historyCounts, {
-                days: tender.history.days,
-                runs: formatInt(tender.history.runs),
+                days: span.days,
+                runs: formatInt(span.runs),
                 // the string says published, so the draft is not counted. the
                 // sparkline below plots three, and its own caption says the
                 // third is still a draft.

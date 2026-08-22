@@ -74,8 +74,8 @@ export const canon = {
     branch: 'main',
     scenarios: 14,
     journeys: 4,
-    continuousSince: '03 March 2026',
-    runsRetained: 4812,
+    // "measured since X, N runs" is a fact about the register, and is read
+    // from it: lib/declaration-view.ts, measurementSpan().
   },
   appBar: {
     // the declaration countdown is derived: lib/declaration-view.ts reads the
@@ -295,11 +295,6 @@ export const tenderFixture = {
   // the commitments, their margins, the points the unsigned proposal falls
   // short by, and the conformity history all come from engagement-canon.ts and
   // criteria-view.ts. what is left here is the tender itself.
-  history: {
-    since: '03 Mar 2026',
-    days: 165,
-    runs: 4812,
-  },
   output: {
     branding: 'Atelier Sextant · sans marque Balise',
     // the white-label method sentence, printed on the annex cover

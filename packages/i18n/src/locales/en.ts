@@ -666,6 +666,12 @@ export const en = {
     },
     measuredNote:
       'One home page per service, cold cache, {profile} profile, median of five runs. Measuring the rows identically is what makes the shared scale readable.',
+    rgesnSource: {
+      assessed: 'assessed by the engine over all 78 criteria of the referential',
+      recorded: 'rate reported by the client, not assessed here',
+    },
+    rgesnNote:
+      'One RGESN rate here is assessed: the audited service, answered by the criteria engine over all 78 criteria of the referential. The others are what each client reported, carried as given and marked as such.',
     declarationNone: 'none',
     declarationCell: 'v{version} · {days} d',
     alerts: {

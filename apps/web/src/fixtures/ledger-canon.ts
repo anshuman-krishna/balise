@@ -9,6 +9,8 @@ export const ledgerCanon = {
   entryCount: 4820,
   merkleRoot: "974b537f400c368a4eebea5cf9b7d82e1bf173e914045c8a2302a52ba96635cd",
   anchoredAt: "2026-08-15T04:00:00.000Z",
+  /** the runs the register retains, which is what "measured since" counts. */
+  runs: {"count":4812,"firstAt":"2026-03-03T09:00:00.000Z","lastAt":"2026-08-15T14:02:41.000Z"},
   verification: {"status":"intact","checkedCount":4820},
   // the entries the interface and the documents cite. the rest of the chain
   // is history: it exists, it is counted, and nothing displays it.
