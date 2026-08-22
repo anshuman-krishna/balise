@@ -12,7 +12,8 @@ import type { EngagementCanon } from '../../scripts/engagement-canon-source';
 
 export const engagementCanon = {
   "referenceModelId": "swd",
-  "periodsElapsed": 2,
+  "periodsElapsed": 1,
+  "reportsDelivered": 2,
   "headroomDefinitionFr": "Marge = (seuil - valeur mesurée) / seuil. Le dénominateur est le seuil signé, jamais la valeur mesurée.",
   "engagements": [
     {
@@ -168,9 +169,7 @@ export const engagementCanon = {
       "id": "quarterly-report",
       "labelFr": "Rapport d'exécution trimestriel horodaté",
       "basis": {
-        "kind": "process",
-        "delivered": 2,
-        "periodsPerYear": 4
+        "kind": "process"
       },
       "threshold": 4,
       "direction": "gte",
@@ -404,9 +403,7 @@ export const engagementCanon = {
       "id": "quarterly-report",
       "labelFr": "Rapport d'exécution trimestriel horodaté",
       "basis": {
-        "kind": "process",
-        "delivered": 2,
-        "periodsPerYear": 4
+        "kind": "process"
       },
       "threshold": 4,
       "direction": "gte",

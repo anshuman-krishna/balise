@@ -45,7 +45,10 @@ export function registerPosition(refId: string): number {
 
 export const REF = {
   run: 'run_4812',
-  report: 'rapport_2026_sl_0417_t3',
+  // the register holds one report per generation, so the reference names the
+  // period it covers rather than "the report".
+  report: 'rapport_2026_sl_0417_t3_2026',
+  reportPrevious: 'rapport_2026_sl_0417_t2_2026',
   declarationV1: 'declaration_v1',
   declarationV2: 'declaration_v2',
   declarationV3: 'declaration_v3',

@@ -3,6 +3,7 @@ import { entryHashOf, payloadHashOf, verifyEntries } from '@balise/ledger';
 import { LedgerEntry } from '@balise/schemas';
 import { buildCanonChain, CITED_REF_IDS } from '../../scripts/ledger-canon-source';
 import { ledgerCanon } from './ledger-canon';
+import { REF } from './ledger-refs';
 
 // the generated file is data, and data drifts. this rebuilds the chain from
 // the generator and holds the checked-in copy to it, so a hand edit or a
@@ -42,10 +43,17 @@ describe('the generated canon', () => {
 
   it('places the cited run and its report at the end of the register', () => {
     const run = ledgerCanon.entries.find((entry) => entry.refId === 'run_4812')!;
-    const report = ledgerCanon.entries.find((entry) => entry.refId === 'rapport_2026_sl_0417_t3')!;
+    const report = ledgerCanon.entries.find((entry) => entry.refId === REF.report)!;
     expect(report.sequence).toBe(run.sequence + 1);
     expect(report.prevHash).toBe(run.entryHash);
     expect(report.sequence).toBe(ledgerCanon.entryCount - 1);
+  });
+
+  // the report the document renders is the second one: the register holds one
+  // per generation, and the tracker counts them rather than stating a number.
+  it('holds a report for each period the contract has reported on', () => {
+    const reports = ledgerCanon.entries.filter((entry) => entry.kind === 'report_generated');
+    expect(reports.map((entry) => entry.refId)).toEqual([REF.reportPrevious, REF.report]);
   });
 
   it('gives every cited entry a distinct eight character prefix, so a permalink resolves to one entry', () => {

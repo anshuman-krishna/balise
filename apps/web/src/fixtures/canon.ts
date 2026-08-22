@@ -14,6 +14,8 @@ import {
   scenarioFingerprint,
   scenarioPass,
 } from '../lib/fingerprint-view';
+import { latestReport } from '../lib/contract-view';
+import { latestEntryAt, measurementSpan, slashDate } from '../lib/declaration-view';
 import { elidedHash, groupedHash, REF, verifyUrl } from './ledger-refs';
 import { ledgerCanon } from './ledger-canon';
 
@@ -290,7 +292,13 @@ export const declarationFixture = {
 export const tenderFixture = {
   ref: 'AO-2026-SL-0417',
   title: 'Refonte du portail métropolitain',
-  deadline: { date: '12 SEP 2026 · 12:00', days: 28, platform: 'PLACE' },
+  // the hour the platform closes is the buyer's, and nothing here can derive
+  // it. the countdown beside it is ours, and was typed.
+  deadline: {
+    at: '2026-09-12T12:00:00.000Z',
+    time: '12:00',
+    platform: 'PLACE',
+  },
   currentStep: 2,
   // the commitments, their margins, the points the unsigned proposal falls
   // short by, and the conformity history all come from engagement-canon.ts and
@@ -304,30 +312,6 @@ export const tenderFixture = {
     figureCount: 6,
     verifyUrl: verifyUrl(REF.run),
   },
-} as const;
-
-export const contractFixture = {
-  ref: '2026-SL-0417',
-  notified: '02 Apr 2026',
-  months: 36,
-  article: '8.4',
-  quarter: 'Q3',
-  // the engagements this contract carries come from engagement-canon.ts, and
-  // only the ones that were in the offer are there, so the tracker cannot hold
-  // a row the supplier never signed.
-
-  // the contractual conformity target, which the row and the warning under it
-  // are both measured against.
-  conformityTargetPct: 75,
-  /** the review the conformity target is measured at, not the contract length. */
-  conformityReviewMonths: 12,
-  calendar: [
-    { date: '30 SEP 26', label: "Rapport d'exécution Q3", days: 45, urgent: true },
-    { date: '31 DEC 26', label: "Rapport d'exécution Q4", days: 137 },
-    { date: '12 MAR 27', label: 'Revue annuelle · déclaration', days: 208 },
-    { date: '02 APR 27', label: 'Revue contractuelle 12 mois', days: 229 },
-    { date: '02 APR 29', label: 'Fin du marché · reconduction', days: null },
-  ] as ReadonlyArray<{ date: string; label: string; days: number | null; urgent?: boolean }>,
 } as const;
 
 // ---- fleet ----
@@ -349,6 +333,13 @@ export const fleetFixture = {
     pendingInvitations: 2,
   },
 } as const;
+
+/** the hour the merkle root was anchored, from the anchor rather than beside it. */
+function anchorTime(): string {
+  const at = new Date(ledgerCanon.anchoredAt);
+  const pad = (value: number) => String(value).padStart(2, '0');
+  return `${pad(at.getUTCHours())}:${pad(at.getUTCMinutes())}`;
+}
 
 // ---- the three documents, print register ----
 
@@ -376,8 +367,8 @@ export const documentsFixture = {
     // assessments and the engagement count off the engagements the offer
     // carries, rather than either being repeated here.
     coverStats: [
-      { value: '165 j' },
-      { value: formatInt(4812) },
+      { value: `${formatInt(measurementSpan().days)} j` },
+      { value: formatInt(measurementSpan().runs) },
       { value: '%' },
       { value: '#' },
     ],
@@ -418,28 +409,32 @@ export const documentsFixture = {
     // is the first thing an auditor pulls on.
     ecartsBody: `La part des tiers (${fr(formatNumber(SERVICE_SHARE.median, 1))}%) dépasse la cible de 30% que nous nous fixons. Le lecteur vidéo de la rubrique actualités en représente 15 points. Son remplacement par une intégration à la demande est planifié au 1er septembre 2026 et figure au chapitre 5 comme engagement daté.`,
     footerLine1: 'MÉTHODOLOGIE v1.2 · balise.fr/methodologie',
-    footerLine2: 'RELEVÉS 03/03/2026 → 15/08/2026 · CHROMIUM 127.0.6533.88',
+    footerLine2: `RELEVÉS ${slashDate(measurementSpan().since)} → ${slashDate(latestEntryAt())} · CHROMIUM 127.0.6533.88`,
     hash: elidedHash(REF.run, 12, 4),
     verifyUrl: verifyUrl(REF.run),
     page: 3,
     pages: 9,
   },
   rapport: {
-    ref: '2026-SL-0417',
-    quarterLabel: 'Q3 2026',
-    quarter: 'T3 2026',
-    period: '01/07 → 30/09/2026',
-    article: '8.4',
-    runs: 1284,
+    // the reference, the article, the period and the count of relevés it was
+    // established from are the register's, read from the report entry the
+    // footer's own hash resolves to. `runs: 1284` was typed here, typed again
+    // in the footer line, and hashed into the register payload, on a chain
+    // holding 4 812 timestamped runs of which the period it named holds a
+    // different number.
     // the engagement rows come from engagement-canon.ts, and only the signed
     // ones are there. the version this replaces reported the supplier
     // `nonTenu` on a commitment the tender left unchecked, two paragraphs
     // above a narrative calling the same figure a target we set ourselves.
 
-    // period events are engine and reviewer output, kept as data
+    // an event in the period is an entry in the register: the regression the
+    // check blocked, the override that was authorised, the baseline that was
+    // moved. the prose describing each one is the reviewer's, the date is the
+    // entry's, and the order is the order they happened. all three dates were
+    // typed, and they were printed 15/08, 08/07, 03/08.
     events: [
       {
-        date: '15/08',
+        ref: REF.run,
         parts: [
           { text: 'Régression de 184 KB détectée sur ' },
           { text: '/demarches/acte-naissance', mono: true },
@@ -447,7 +442,7 @@ export const documentsFixture = {
         ],
       },
       {
-        date: '08/07',
+        ref: REF.override,
         parts: [
           { text: 'Dérogation enregistrée', strong: true },
           {
@@ -456,18 +451,18 @@ export const documentsFixture = {
         ],
       },
       {
-        date: '03/08',
+        ref: REF.rebaseline4790,
         parts: [
           { text: 'Nouvelle référence de comparaison établie sur ' },
           { text: 'main', mono: true },
           { text: ' après refonte, consignée au registre.' },
         ],
       },
-    ] as ReadonlyArray<{ date: string; parts: readonly DocEventPart[] }>,
+    ] as ReadonlyArray<{ ref: string; parts: readonly DocEventPart[] }>,
     calloutBody:
       'Le lecteur vidéo tiers représente 15 des 38 points mesurés. Son remplacement par une intégration à la demande est engagé, livraison au 01/09/2026. Aucune valeur après remplacement n\'est avancée ici : la mesure du trimestre suivant dira ce qu\'elle est.',
-    footerLine1: `MÉTHODOLOGIE v1.2 · ${formatInt(1284)} RELEVÉS · CHROMIUM 127.0.6533.88`,
-    footerLine2: `REGISTRE : ${formatInt(ledgerCanon.entryCount)} ENTRÉES · RACINE ANCRÉE 15/08/2026 04:00 UTC`,
+    footerLine1: `MÉTHODOLOGIE v1.2 · ${formatInt(latestReport().runs)} RELEVÉS · CHROMIUM 127.0.6533.88`,
+    footerLine2: `REGISTRE : ${formatInt(ledgerCanon.entryCount)} ENTRÉES · RACINE ANCRÉE ${slashDate(ledgerCanon.anchoredAt)} ${anchorTime()} UTC`,
     hash: groupedHash(REF.report),
     verifyUrl: verifyUrl(REF.report),
   },

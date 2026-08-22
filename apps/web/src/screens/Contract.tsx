@@ -1,5 +1,12 @@
 import { fill, t } from '../i18n';
-import { contractFixture as contract } from '../fixtures/canon';
+import {
+  CONTRACT,
+  calendarDate,
+  contractCalendar,
+  currentQuarter,
+  quarterShort,
+} from '../lib/contract-view';
+import { dateWithYear } from '../lib/declaration-view';
 import { conformityOutlook } from '../lib/criteria-view';
 import {
   deliverySquares,
@@ -19,7 +26,10 @@ import { trendLabel } from '../lib/verdict';
 // the conformity engagement's outlook is read off the assessments. nothing
 // here draws a rate of change: the ceiling is what answering the open criteria
 // can reach, which is a fact, not a forecast.
-const outlook = conformityOutlook(contract.conformityTargetPct);
+const outlook = conformityOutlook(CONTRACT.conformityTargetPct);
+
+// every date the contract still owes, in the order it falls.
+const calendar = contractCalendar();
 
 const GRID = 'minmax(200px,1.6fr) 92px 92px minmax(130px,1fr) 118px 84px';
 
@@ -111,15 +121,15 @@ export function Contract() {
           <h1 className="screen-title">{t.nav.items.contractTracker}</h1>
           <div className="screen-subtitle">
             {fill(t.contract.subtitle, {
-              ref: contract.ref,
-              date: contract.notified,
-              months: contract.months,
-              article: contract.article,
+              ref: CONTRACT.ref,
+              date: dateWithYear(CONTRACT.notifiedAt),
+              months: CONTRACT.termMonths,
+              article: CONTRACT.article,
             })}
           </div>
         </div>
         <button type="button" className="btn" style={{ fontSize: 11, padding: '6px 12px', borderColor: 'var(--ink)', color: 'var(--ink)' }}>
-          {fill(t.contract.generateReport, { quarter: contract.quarter })}
+          {fill(t.contract.generateReport, { quarter: quarterShort(currentQuarter().quarter) })}
         </button>
       </div>
 
@@ -210,8 +220,8 @@ export function Contract() {
             <div style={{ fontSize: 12.5, lineHeight: 1.55 }}>
               {fill(t.contract.earlyWarning.rate, {
                 current: outlook.currentPct,
-                target: contract.conformityTargetPct,
-                months: contract.conformityReviewMonths,
+                target: CONTRACT.conformityTargetPct,
+                months: CONTRACT.conformityReviewMonths,
               })}{' '}
               {fill(t.contract.earlyWarning.ceiling, {
                 unanswered: outlook.unanswered,
@@ -239,24 +249,33 @@ export function Contract() {
         <div className="card">
           <span className="eyebrow">{t.contract.calendarTitle}</span>
           <div style={{ marginTop: 12 }}>
-            {contract.calendar.map((entry, index) => (
+            {calendar.map((entry, index) => (
               <div
-                key={entry.date}
+                key={entry.at.toISOString()}
                 style={{
                   display: 'grid',
-                  gridTemplateColumns: '88px 1fr auto',
+                  gridTemplateColumns: '92px 1fr auto',
                   gap: 12,
                   alignItems: 'baseline',
                   padding: '7px 0',
-                  borderBottom: index < contract.calendar.length - 1 ? '1px solid var(--divider-row)' : undefined,
+                  borderBottom: index < calendar.length - 1 ? '1px solid var(--divider-row)' : undefined,
                 }}
               >
-                <span className="mono" style={{ fontSize: 10.5, color: entry.urgent === true ? 'var(--caution)' : 'var(--text-secondary)' }}>
-                  {entry.date}
+                {/* uppercased in css, so what a screen reader is given is the
+                    date as it is written rather than a run of capitals. */}
+                <span
+                  className="mono"
+                  style={{
+                    fontSize: 10.5,
+                    textTransform: 'uppercase',
+                    color: entry.urgent ? 'var(--caution)' : 'var(--text-secondary)',
+                  }}
+                >
+                  {calendarDate(entry.at)}
                 </span>
                 <span style={{ fontSize: 11.5 }}>{entry.label}</span>
                 <span className="mono" style={{ fontSize: 10, color: 'var(--text-secondary)' }}>
-                  {entry.days === null ? '–' : fill(t.contract.daysShort, { days: entry.days })}
+                  {fill(t.contract.daysShort, { days: entry.days })}
                 </span>
               </div>
             ))}

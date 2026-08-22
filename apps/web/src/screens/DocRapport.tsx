@@ -1,6 +1,9 @@
 import { formatInt } from '@balise/ui';
 import { fill, t, tFr } from '../i18n';
 import { canon, documentsFixture, type DocEventPart } from '../fixtures/canon';
+import { dayMonth, latestReport, periodText, quarterLabelFr, quarterShort } from '../lib/contract-view';
+import { ledgerEntry } from '../fixtures/ledger-refs';
+import { CONTRACT } from '../lib/contract-terms';
 import { DocumentRegister } from '../components/DocumentRegister';
 import { VerificationUrl } from '../components/VerificationUrl';
 import {
@@ -14,6 +17,17 @@ import {
 } from '../lib/engagement-view';
 
 const doc = documentsFixture.rapport;
+
+// the period, its quarter and the relevés it was established from are the
+// register's own record of this report, not three strings beside it.
+const report = latestReport();
+
+// each event is an entry in the register, so its date is the entry's and the
+// list is in the order the entries were recorded. the three were typed, and
+// they printed 15/08, 08/07, 03/08.
+const events = documentsFixture.rapport.events
+  .map((event) => ({ ...event, at: new Date(ledgerEntry(event.ref).createdAt) }))
+  .sort((a, b) => a.at.getTime() - b.at.getTime());
 
 /**
  * only the engagements the contract carries.
@@ -72,8 +86,8 @@ export function DocRapport() {
     <DocumentRegister
       title={
         <>
-          {t.nav.items.docRapport} {doc.quarterLabel} ·{' '}
-          <span className="mono" style={{ fontSize: 11.5 }}>{fill(t.docRapport.marcheRef, { ref: doc.ref })}</span>
+          {t.nav.items.docRapport} {quarterShort(report.period.quarter)} {report.period.year} ·{' '}
+          <span className="mono" style={{ fontSize: 11.5 }}>{fill(t.docRapport.marcheRef, { ref: CONTRACT.ref })}</span>
         </>
       }
       actions={
@@ -101,15 +115,15 @@ export function DocRapport() {
               {canon.tenant.agency.toUpperCase()}
             </div>
             <div className="mono" style={{ marginTop: 3, fontSize: 9, color: 'var(--text-secondary)' }}>
-              {fill(t.docRapport.holder, { ref: doc.ref })}
+              {fill(t.docRapport.holder, { ref: CONTRACT.ref })}
             </div>
           </div>
           <div className="mono" style={{ textAlign: 'right', fontSize: 9, lineHeight: 1.6, color: 'var(--text-secondary)' }}>
-            {fill(t.docRapport.headRight1, { quarter: doc.quarter })}
+            {fill(t.docRapport.headRight1, { quarter: quarterLabelFr(report.period) })}
             <br />
-            {fill(t.docRapport.headRight2, { period: doc.period })}
+            {fill(t.docRapport.headRight2, { period: periodText(report) })}
             <br />
-            {fill(t.docRapport.headRight3, { article: doc.article })}
+            {fill(t.docRapport.headRight3, { article: CONTRACT.article })}
           </div>
         </div>
 
@@ -117,7 +131,7 @@ export function DocRapport() {
           {t.docRapport.title}
         </h1>
         <p style={{ margin: '12px 0 0', fontSize: 12, lineHeight: 1.75, color: 'var(--text-secondary)', maxWidth: '58ch' }}>
-          {fill(t.docRapport.intro, { runs: formatInt(doc.runs) })}
+          {fill(t.docRapport.intro, { runs: formatInt(report.runs) })}
         </p>
 
         <div role="table" aria-label={tFr.a11y.tables.reportCommitments} style={{ marginTop: 28 }}>
@@ -138,7 +152,7 @@ export function DocRapport() {
           >
             <span role="columnheader">{t.docRapport.headers.engagement}</span>
             <span role="columnheader" style={{ textAlign: 'right' }}>{t.docRapport.headers.seuil}</span>
-            <span role="columnheader" style={{ textAlign: 'right' }}>{t.docRapport.headers.t3}</span>
+            <span role="columnheader" style={{ textAlign: 'right' }}>{fill(t.docRapport.headers.periode, { quarter: quarterLabelFr(report.period) })}</span>
             <span role="columnheader">{t.docRapport.headers.marge}</span>
             <span role="columnheader" style={{ textAlign: 'right' }}>{t.docRapport.headers.etat}</span>
           </div>
@@ -179,18 +193,18 @@ export function DocRapport() {
 
         <h2 className="archivo" style={{ margin: '30px 0 0', fontWeight: 600, fontSize: 13 }}>{t.docRapport.eventsTitle}</h2>
         <div style={{ marginTop: 12, fontSize: 11, lineHeight: 1.85 }}>
-          {doc.events.map((event, index) => (
+          {events.map((event, index) => (
             <div
-              key={event.date}
+              key={event.ref}
               style={{
                 display: 'grid',
                 gridTemplateColumns: '74px 1fr',
                 gap: 14,
                 padding: '6px 0',
-                borderBottom: index < doc.events.length - 1 ? '1px solid rgba(21,24,27,.1)' : undefined,
+                borderBottom: index < events.length - 1 ? '1px solid rgba(21,24,27,.1)' : undefined,
               }}
             >
-              <span className="mono" style={{ fontSize: 10, color: 'var(--text-secondary)' }}>{event.date}</span>
+              <span className="mono" style={{ fontSize: 10, color: 'var(--text-secondary)' }}>{dayMonth(event.at)}</span>
               <span>
                 <EventParts parts={event.parts} />
               </span>

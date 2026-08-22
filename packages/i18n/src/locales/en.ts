@@ -647,6 +647,13 @@ export const en = {
     openCriteria: 'Open the {count} criteria',
     calendarTitle: 'CONTRACT CALENDAR',
     daysShort: '{days} d',
+    quarterShort: 'Q{n}',
+    calendar: {
+      report: 'Execution report {quarter}',
+      declarationReview: 'Annual review · declaration',
+      contractReview: 'Contract review, {months} months',
+      termEnd: 'End of contract · renewal',
+    },
   },
   fleet: {
     subtitle: '{agency} · {services} services under measurement · {contracts} active contracts · {tenders} open tender',
@@ -769,7 +776,7 @@ export const en = {
     title: 'Suivi des engagements environnementaux',
     intro:
       'Établi à partir de {runs} relevés horodatés sur la période. Les valeurs sont des médianes de cinq exécutions ; les écarts inférieurs au plancher de bruit sont déclarés sans évolution significative.',
-    headers: { engagement: 'ENGAGEMENT', seuil: 'SEUIL', t3: 'T3', marge: 'MARGE', etat: 'ÉTAT' },
+    headers: { engagement: 'ENGAGEMENT', seuil: 'SEUIL', periode: '{quarter}', marge: 'MARGE', etat: 'ÉTAT' },
     etats: { tenu: 'TENU', enCours: 'EN COURS', nonTenu: 'NON TENU' },
     eventsTitle: 'Événements de la période',
     calloutStrong: 'Cible interne dépassée : part des tiers. Cet engagement a été proposé et non retenu au marché.',

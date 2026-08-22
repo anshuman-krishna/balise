@@ -129,7 +129,7 @@ export function gaugeTone(engagement: Engagement): 'held' | 'caution' | 'breach'
 /** the delivery squares for a process engagement, filled and outstanding. */
 export function deliverySquares(engagement: Engagement): { delivered: number; total: number } | null {
   if (engagement.basis.kind !== 'process') return null;
-  return { delivered: engagement.basis.delivered, total: engagement.threshold };
+  return { delivered: engagement.measured.value, total: engagement.threshold };
 }
 
 export interface TrendLine {

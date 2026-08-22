@@ -79,6 +79,13 @@ export function longDateFr(iso: string | Date): string {
   return `${at.getUTCDate()} ${tFr.monthsLong[at.getUTCMonth()] ?? ''} ${at.getUTCFullYear()}`;
 }
 
+/** `03/03/2026`, the form a printed footer uses for a range of days. */
+export function slashDate(iso: string | Date): string {
+  const at = iso instanceof Date ? iso : new Date(iso);
+  const pad = (value: number) => String(value).padStart(2, '0');
+  return `${pad(at.getUTCDate())}/${pad(at.getUTCMonth() + 1)}/${at.getUTCFullYear()}`;
+}
+
 /** `15.08.26`, the embeddable badge, which has room for nothing longer. */
 export function badgeDate(iso: string | Date): string {
   const at = iso instanceof Date ? iso : new Date(iso);
@@ -109,7 +116,7 @@ function utcMidnight(at: Date): number {
  * read off a timestamp at 15:20 is a different date from the one the editor
  * prints, and the reader counts calendar days.
  */
-function daysBetween(from: Date, to: Date): number {
+export function daysBetween(from: Date, to: Date): number {
   return Math.round((utcMidnight(to) - utcMidnight(from)) / DAY_MS);
 }
 

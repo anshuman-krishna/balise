@@ -642,6 +642,13 @@ export const fr: Catalog = {
     openCriteria: 'Ouvrir les {count} critères',
     calendarTitle: 'CALENDRIER DU MARCHÉ',
     daysShort: '{days} j',
+    quarterShort: 'T{n}',
+    calendar: {
+      report: "Rapport d'exécution {quarter}",
+      declarationReview: 'Revue annuelle · déclaration',
+      contractReview: 'Revue contractuelle {months} mois',
+      termEnd: 'Fin du marché · reconduction',
+    },
   },
   fleet: {
     subtitle:
@@ -762,7 +769,7 @@ export const fr: Catalog = {
     title: 'Suivi des engagements environnementaux',
     intro:
       'Établi à partir de {runs} relevés horodatés sur la période. Les valeurs sont des médianes de cinq exécutions ; les écarts inférieurs au plancher de bruit sont déclarés sans évolution significative.',
-    headers: { engagement: 'ENGAGEMENT', seuil: 'SEUIL', t3: 'T3', marge: 'MARGE', etat: 'ÉTAT' },
+    headers: { engagement: 'ENGAGEMENT', seuil: 'SEUIL', periode: '{quarter}', marge: 'MARGE', etat: 'ÉTAT' },
     etats: { tenu: 'TENU', enCours: 'EN COURS', nonTenu: 'NON TENU' },
     eventsTitle: 'Événements de la période',
     calloutStrong: 'Cible interne dépassée : part des tiers. Cet engagement a été proposé et non retenu au marché.',

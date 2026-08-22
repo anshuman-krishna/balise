@@ -3,6 +3,10 @@ import { classifyDelta } from '@balise/measure-core';
 import { estimateMeasured, REFERENCE_MODEL_ID } from './carbon-canon-source';
 import { canonFloor, canonMetric } from './measurement-canon-source';
 import { buildCriteriaCanon } from './criteria-canon-source';
+import { CONTRACT } from '../src/lib/contract-terms';
+import { latestEntryAt } from '../src/lib/declaration-view';
+import { contractReports } from '../src/lib/contract-view';
+import { reportsDueBy } from '../src/lib/contract-terms';
 
 /**
  * the contractual engagements: proposed in the tender, carried by the contract,
@@ -34,7 +38,7 @@ export type EngagementBasis =
   | { kind: 'metric'; aggregationId: string; metricId: MetricId }
   | { kind: 'carbon'; pageId: string; aggregationId: string }
   | { kind: 'conformity' }
-  | { kind: 'process'; delivered: number; periodsPerYear: number };
+  | { kind: 'process' };
 
 export interface AuthoredEngagement {
   id: string;
@@ -102,7 +106,7 @@ const ENGAGEMENTS: readonly AuthoredEngagement[] = [
     id: 'rgesn-conformity',
     labelFr: 'Taux de conformité RGESN à 12 mois',
     basis: { kind: 'conformity' },
-    threshold: 75,
+    threshold: CONTRACT.conformityTargetPct,
     direction: 'gte',
     unit: 'pct',
     inOffer: true,
@@ -110,8 +114,8 @@ const ENGAGEMENTS: readonly AuthoredEngagement[] = [
   {
     id: 'quarterly-report',
     labelFr: "Rapport d'exécution trimestriel horodaté",
-    basis: { kind: 'process', delivered: 2, periodsPerYear: 4 },
-    threshold: 4,
+    basis: { kind: 'process' },
+    threshold: CONTRACT.reportsPerYear,
     direction: 'gte',
     unit: 'count',
     inOffer: true,
@@ -196,8 +200,11 @@ function measure(engagement: AuthoredEngagement): Measured {
       // and the assessments behind it are attestations rather than runs.
       return { value: conformityRate(), confidence: null, mad: null, band: null, model: null };
     case 'process':
+      // the reports the register holds for this contract, counted. this was a
+      // typed 2, on a register that held one report entry, beside a typed
+      // count of the periods that had closed.
       return {
-        value: engagement.basis.delivered,
+        value: reportsDelivered(),
         confidence: null,
         mad: null,
         band: null,
@@ -233,17 +240,25 @@ function statusOf(engagement: AuthoredEngagement, margin: EngagementMargin): Eng
       // it "en cours".
       return 'enCours';
     case 'process':
-      return engagement.basis.kind === 'process' &&
-        engagement.basis.delivered >= periodsElapsed(engagement.basis.periodsPerYear)
-        ? 'tenu'
-        : 'nonTenu';
+      return reportsDelivered() >= periodsElapsed() ? 'tenu' : 'nonTenu';
   }
 }
 
-/** how many quarterly reports were due by the period this canon describes. */
-const PERIODS_ELAPSED = 2;
-function periodsElapsed(_perYear: number): number {
-  return PERIODS_ELAPSED;
+/** execution reports the register holds for this contract. */
+function reportsDelivered(): number {
+  return contractReports().length;
+}
+
+/**
+ * how many reports had fallen due on the canon's today: one per reporting
+ * period that has closed since the contract was notified.
+ *
+ * this was `PERIODS_ELAPSED = 2`, next to a function that took the cadence as
+ * an argument and ignored it. the contract was notified on 2 april and the
+ * canon's today is 15 august, so one period has closed.
+ */
+function periodsElapsed(): number {
+  return reportsDueBy(latestEntryAt()).length;
 }
 
 /**
@@ -253,7 +268,7 @@ function periodsElapsed(_perYear: number): number {
  */
 function gaugePct(engagement: AuthoredEngagement, measured: number): number {
   if (engagement.basis.kind === 'process') {
-    return (engagement.basis.delivered / engagement.threshold) * 100;
+    return (reportsDelivered() / engagement.threshold) * 100;
   }
   if (engagement.threshold === 0) return 0;
   const raw =
@@ -352,7 +367,9 @@ export function buildEngagementCanon() {
   const engagements = ENGAGEMENTS.map(build);
   return {
     referenceModelId: REFERENCE_MODEL_ID,
-    periodsElapsed: PERIODS_ELAPSED,
+    /** reporting periods closed, and reports the register holds against them. */
+    periodsElapsed: periodsElapsed(),
+    reportsDelivered: reportsDelivered(),
     /** the definition, published with the numbers it produced. */
     headroomDefinitionFr:
       "Marge = (seuil - valeur mesurée) / seuil. Le dénominateur est le seuil signé, jamais la valeur mesurée.",

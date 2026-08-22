@@ -3,7 +3,13 @@ import { formatInt, ToleranceBand } from '@balise/ui';
 import { canon, tenderFixture as tender } from '../fixtures/canon';
 import { carbonPage, carbonScale, referenceModelRef } from '../lib/carbon-view';
 import { conformityHistory, criteriaCount } from '../lib/criteria-view';
-import { dateWithYear, declarationVersions, measurementSpan } from '../lib/declaration-view';
+import {
+  dateWithYear,
+  daysBetween,
+  declarationVersions,
+  latestEntryAt,
+  measurementSpan,
+} from '../lib/declaration-view';
 import {
   marginColor,
   marginText,
@@ -141,9 +147,14 @@ export function Tender() {
         </div>
         <div style={{ textAlign: 'right' }}>
           <div className="mono" style={{ fontSize: 9, color: 'var(--text-tertiary)' }}>{t.tender.remiseDesOffres}</div>
-          <div className="mono" style={{ fontSize: 15, color: 'var(--caution)' }}>{tender.deadline.date}</div>
+          <div className="mono" style={{ fontSize: 15, color: 'var(--caution)', textTransform: 'uppercase' }}>
+            {`${dateWithYear(tender.deadline.at)} · ${tender.deadline.time}`}
+          </div>
           <div className="mono" style={{ fontSize: 10, color: 'var(--text-secondary)' }}>
-            {fill(t.tender.daysVia, { days: tender.deadline.days, platform: tender.deadline.platform })}
+            {fill(t.tender.daysVia, {
+              days: daysBetween(latestEntryAt(), new Date(tender.deadline.at)),
+              platform: tender.deadline.platform,
+            })}
           </div>
         </div>
       </div>

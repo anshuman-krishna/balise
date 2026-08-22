@@ -665,6 +665,31 @@ Later versions: see roadmap; detailed to-dos are appended when the version start
 
 ## Decisions log
 
+- **2026-08-22 · A contract is a term, and every date it owes follows from it.** The tracker's
+  calendar was five typed rows with typed countdowns. Four of the five were a day short, and
+  one of them stated 208 days to the same declaration review the app bar, counting properly,
+  puts at 209. `contract-terms.ts` holds the reference, the notification date, the term, the
+  article and the cadence; the calendar, the reporting deadlines, the contractual review and
+  the end of term are arithmetic over them.
+- **2026-08-22 · A report covers what had happened when it was established.** The execution
+  report printed `PÉRIODE 01/07 → 30/09/2026` under a sentence saying it was established from
+  N relevés on that period. It was established on 15 August. The period is cut at the
+  notification on one end and at the moment of generation on the other; the quarter it belongs
+  to is stated separately.
+- **2026-08-22 · Relevés in a period are counted, not stated.** `runsInPeriod: 1284` was in
+  the hashed payload of a register entry, on a chain holding 4 812 runs with real timestamps.
+  The count for the period that entry named is 1 328. Two report entries exist now, one per
+  generation, each carrying its own period and its own count.
+- **2026-08-22 · Delivered means what the register holds.** The tracker reported two execution
+  reports delivered against a constant, on a register holding one report entry. Adding the
+  report the contract actually owed for the period that closed on 30 June was the fix, not
+  lowering the claim: a tracker whose evidence is missing is a tracker, not a claim to soften.
+- **2026-08-22 · Urgent is the window the agency already watches.** Thirty days, the same
+  threshold the fleet's summary counts deadlines at. Nothing is inside it today, so the
+  calendar has no amber, which is the honest state rather than the designed one.
+- **2026-08-22 · An event in a period is an entry in the register.** The report's three period
+  events were typed dates printed 15/08, 08/07, 03/08, which is not an order. Each names the
+  entry it describes and takes that entry's date. The prose stays the reviewer's.
 - **2026-08-22 · A conformity rate carries whether it was assessed or reported.** The fleet
   printed six percentages in one column and one style: one the criteria engine answered over
   seventy-eight assessments, five a client emailed the agency. The whole distinction lived in

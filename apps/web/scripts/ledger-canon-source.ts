@@ -3,6 +3,7 @@ import { anchor, append, createMemoryStore, verify } from '@balise/ledger';
 import { buildCarbonCanon } from './carbon-canon-source';
 import { canonMetric } from './measurement-canon-source';
 import { buildCriteriaCanon } from './criteria-canon-source';
+import { CONTRACT, reportPeriod } from '../src/lib/contract-terms';
 
 /**
  * the canon's register, as an actual chain rather than a set of hashes typed
@@ -65,6 +66,15 @@ function runAt(index: number): string {
   return new Date(at).toISOString();
 }
 
+/** every run's recorded moment, so a period can be counted rather than typed. */
+const RUN_AT: readonly string[] = Array.from({ length: RUN_COUNT }, (_, index) => runAt(index));
+
+function runsBetween(from: Date, to: Date): number {
+  const first = from.toISOString();
+  const last = to.toISOString();
+  return RUN_AT.filter((at) => at >= first && at <= last).length;
+}
+
 function runEntry(number: number): Planned {
   const index = number - 1;
   const scenario = SCENARIOS[index % SCENARIOS.length]!;
@@ -124,6 +134,50 @@ function finalRunEntry(): Planned {
   };
 }
 
+/**
+ * the execution reports the register holds, one per generation, each covering
+ * what it could cover on the day it was established.
+ *
+ * the run count used to be typed into the payload, and the payload is hashed:
+ * `runsInPeriod: 1284` was in the chain, on a register holding 4 812 runs with
+ * real timestamps, and the number of them inside the period it named is not
+ * 1 284. the report for the period that closed on 30 june was not here at all,
+ * while the tracker reported two of them delivered.
+ */
+const REPORTS = [
+  { quarter: 2, year: 2026, at: '2026-07-15T09:40:00.000Z' },
+  { quarter: 3, year: 2026, at: '2026-08-15T15:20:08.000Z' },
+] as const;
+
+function isoDay(at: Date): string {
+  return at.toISOString().slice(0, 10);
+}
+
+export function reportRefId(period: { year: number; quarter: number }): string {
+  return `rapport_${CONTRACT.ref.toLowerCase().replace(/-/g, '_')}_t${period.quarter}_${period.year}`;
+}
+
+const REPORT_ENTRIES: readonly Planned[] = REPORTS.map((report) => {
+  const generatedAt = new Date(report.at);
+  const covered = reportPeriod({ year: report.year, quarter: report.quarter }, generatedAt);
+  return {
+    at: report.at,
+    input: {
+      organizationId: ORGANIZATION,
+      kind: 'report_generated' as const,
+      refId: reportRefId(covered.period),
+      payload: {
+        contract: CONTRACT.ref,
+        quarter: `T${covered.period.quarter} ${covered.period.year}`,
+        period: `${isoDay(covered.from)}/${isoDay(covered.to)}`,
+        article: CONTRACT.article,
+        runsInPeriod: runsBetween(covered.from, covered.to),
+        methodologyVersion: 'v1.2',
+      },
+    },
+  };
+});
+
 const NARRATIVE: readonly Planned[] = [
   {
     at: '2026-03-01T00:00:00.000Z',
@@ -174,28 +228,13 @@ const NARRATIVE: readonly Planned[] = [
       payload: { branch: 'main', toRun: '#4790', reason: 'post-refonte', author: 'c. bellanger' },
     },
   },
-  {
-    at: '2026-08-15T15:20:08.000Z',
-    input: {
-      organizationId: ORGANIZATION,
-      kind: 'report_generated',
-      refId: 'rapport_2026_sl_0417_t3',
-      payload: {
-        contract: '2026-SL-0417',
-        quarter: 'T3 2026',
-        period: '2026-07-01/2026-09-30',
-        article: '8.4',
-        runsInPeriod: 1284,
-        methodologyVersion: 'v1.2',
-      },
-    },
-  },
+  ...REPORT_ENTRIES,
 ];
 
 /** the refIds every surface cites, so the generator knows what to write out. */
 export const CITED_REF_IDS = [
   `run_${RUN_COUNT}`,
-  'rapport_2026_sl_0417_t3',
+  ...REPORTS.map((report) => reportRefId({ year: report.year, quarter: report.quarter })),
   'declaration_v1',
   'declaration_v2',
   'declaration_v3',
