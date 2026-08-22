@@ -14,8 +14,16 @@ import {
   scenarioFingerprint,
   scenarioPass,
 } from '../lib/fingerprint-view';
-import { latestReport } from '../lib/contract-view';
-import { latestEntryAt, measurementSpan, slashDate } from '../lib/declaration-view';
+import { contractCalendar, latestReport } from '../lib/contract-view';
+import { CONTRACT } from '../lib/contract-terms';
+import {
+  draftVersion,
+  latestEntryAt,
+  longDateFr,
+  measurementSpan,
+  slashDate,
+} from '../lib/declaration-view';
+import { clockTime, fullTimestamp, lastRun, rebaselines, runMoment, shortDateTime } from '../lib/register-view';
 import { elidedHash, groupedHash, REF, verifyUrl } from './ledger-refs';
 import { ledgerCanon } from './ledger-canon';
 
@@ -83,8 +91,11 @@ export const canon = {
     // the declaration countdown is derived: lib/declaration-view.ts reads the
     // review a year after the version in force, against the register's own
     // latest entry.
-    lastRunTime: '14:02',
-    lastRunMinutesAgo: 8,
+    // the run the register puts last, and how long before the register's own
+    // latest entry it was recorded. these were `14:02` and `8`, and the
+    // register says 78 minutes.
+    lastRunTime: clockTime(lastRun().at),
+    lastRunMinutesAgo: lastRun().minutesAgo,
     userInitials: 'MC',
     // the environment the bar states is derived from the scenarios' own
     // fingerprints, in lib/fingerprint-view. the string that used to sit here
@@ -151,10 +162,14 @@ export const canon = {
     gainedKb: 184,
     detail: ['160 KB is ', 'date-fns', ' locale data introduced by ', 'PR #412', ' · c. bellanger'],
   },
+  // the next date the contract owes, from the same calendar the tracker draws.
+  // this card said 45 days to 30 SEP 2026 and the tracker said 45 too; both
+  // were a day short, and the card had no way of following when the tracker
+  // was fixed.
   deadline: {
-    date: '30 SEP 2026',
-    contract: '2026-SL-0417',
-    days: 45,
+    date: contractCalendar()[0]!.at,
+    contract: CONTRACT.ref,
+    days: contractCalendar()[0]!.days,
   },
 } as const;
 
@@ -165,7 +180,7 @@ const RUN_ENVIRONMENT = aggregationFingerprint('candidate');
 
 export const runDetailFixture = {
   id: '#4812',
-  timestamp: '15 Aug 2026 14:02:41 UTC',
+  timestamp: fullTimestamp(runMoment(REF.run).at),
   route: '/demarches/acte-naissance',
   // the profile and the cache pass are the scenario's, not this fixture's.
   profile: RUN_ENVIRONMENT.throttleProfile,
@@ -241,8 +256,18 @@ function comparisonRow(
 }
 
 export const comparisonFixture = {
-  baseline: { run: '#4790', date: '09 Aug 03:00', branch: 'main' },
-  candidate: { run: '#4812', date: '15 Aug 14:02', branch: 'pr/412' },
+  // both runs are entries in the register, and both dates were typed. the
+  // baseline read `09 Aug 03:00` for a run the register records on 14 august.
+  baseline: {
+    run: runMoment(REF.baselineRun).id,
+    date: shortDateTime(runMoment(REF.baselineRun).at),
+    branch: 'main',
+  },
+  candidate: {
+    run: runMoment(REF.run).id,
+    date: shortDateTime(runMoment(REF.run).at),
+    branch: 'pr/412',
+  },
   rows: [
     comparisonRow('Transferred bytes', 'kb', 'transferred_bytes', true),
     comparisonRow('Requests', 'count', 'request_count', false),
@@ -260,10 +285,15 @@ export const budgetsFixture = {
   // the table, the file and the override are computed: see budget-canon.ts,
   // written by `pnpm gen:budget-canon`. what is left here is narrative the
   // engine has no opinion about.
-  rebaselines: [
-    { date: '03 AUG', move: 'main → #4790', author: 'c. bellanger', reason: '"post-refonte"' },
-    { date: '11 JUL', move: 'main → #4612', author: 'm. carbonne', reason: '"new hosting"' },
-  ],
+  // the whole row is in the register entry that records it: the date, the
+  // branch, the run, the author and the reason. all five were typed beside it,
+  // and the dates put both moves before the runs they point at.
+  rebaselines: rebaselines().map((entry) => ({
+    at: entry.at,
+    move: `${entry.branch} → ${entry.toRun}`,
+    author: entry.author,
+    reason: `"${entry.reason}"`,
+  })),
 } as const;
 
 // ---- declaration editor ----
@@ -281,7 +311,7 @@ export const declarationFixture = {
     host: 'Scaleway, Paris (DC5)',
     // the green hosting check has its own date, which is not the declaration's:
     // a hosting claim is worth what its check date says it is.
-    verifiedDate: '15 août 2026',
+    verifiedDate: longDateFr(draftVersion().establishedAt),
     methodologyVersion: 'v1.2',
     verifyUrl: verifyUrl(REF.declarationV3),
   },
@@ -352,7 +382,7 @@ export interface DocEventPart {
 export const documentsFixture = {
   declaration: {
     url: 'sevre-et-loire.fr/ecoconception',
-    since: '3 mars 2026',
+    since: longDateFr(measurementSpan().since),
     methodology: 'v1.2',
     hash: elidedHash(REF.declarationV3, 16, 4),
     verifyUrl: verifyUrl(REF.declarationV3),
@@ -361,7 +391,7 @@ export const documentsFixture = {
   annexe: {
     agencyName: 'ATELIER SEXTANT',
     agencyLine: '14 rue Kervégan · 44000 Nantes · SIRET 892 411 507 00018',
-    date: '15 août 2026',
+    date: longDateFr(latestEntryAt()),
     ref: 'AO-2026-SL-0417',
     // '%' and '#' are placeholders: the conformity rate is read off the
     // assessments and the engagement count off the engagements the offer

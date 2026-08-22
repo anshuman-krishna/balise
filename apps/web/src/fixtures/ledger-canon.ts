@@ -7,7 +7,7 @@ import type { LedgerEntry } from '@balise/schemas';
 export const ledgerCanon = {
   organizationId: "org_atelier_sextant",
   entryCount: 4821,
-  merkleRoot: "8a01e31d97f4ca90bcf0ad32d926f962e230db9cd2dc7559b007fdd5eea6c9b5",
+  merkleRoot: "86a59c5e0b86bee3e6c69cc4ac703222b72aff10531b84f48eec2f5698e71705",
   anchoredAt: "2026-08-15T04:00:00.000Z",
   /** the runs the register retains, which is what "measured since" counts. */
   runs: {"count":4812,"firstAt":"2026-03-03T09:00:00.000Z","lastAt":"2026-08-15T14:02:41.000Z"},
@@ -56,8 +56,44 @@ export const ledgerCanon = {
     "sequence": 4819,
     "createdAt": "2026-08-15T14:02:41.000Z",
     "payloadHash": "c75a770cf93f18a9593ea0836c7eccddf37f67097be34cf25f092586cbf3c801",
-    "prevHash": "80e857d927d659dc4e5414762ef9108421ffe87c249bd1711dfbdb0a7754aedf",
-    "entryHash": "26b4fd8ab1ea44b275f1c3e2809d65e4025ca029efc518fe55b1f9adca5fb5cc"
+    "prevHash": "bfa88adedf4df063882edca282595740dd76cab1e4a44e5d301cc092ab418015",
+    "entryHash": "8ec4b0aa694aaf334772379a0e41340be99470cc792a4fe68ceab4a0c8479b5e"
+  },
+  {
+    "organizationId": "org_atelier_sextant",
+    "kind": "run",
+    "refId": "run_4790",
+    "payload": {
+      "runId": "#4790",
+      "scenario": "/demarches/acte-naissance",
+      "profile": "desktop-fibre",
+      "pass": "cold",
+      "runs": 5,
+      "methodologyVersion": "v1.2"
+    },
+    "sequence": 4795,
+    "createdAt": "2026-08-14T19:54:47.348Z",
+    "payloadHash": "2f05d22583006d47c53d91c4dee8667e28e541ec91262355ecc9b2a3e32f291d",
+    "prevHash": "23a9cf7cf1676dcae7245e52c88c3ddc9ce0a408347d4d6cb2122e08d228ed0b",
+    "entryHash": "e5537c8f2ff9062daf3bc92dbe38d1aa1ecbdf11cf97fa25d4178712897844af"
+  },
+  {
+    "organizationId": "org_atelier_sextant",
+    "kind": "run",
+    "refId": "run_4612",
+    "payload": {
+      "runId": "#4612",
+      "scenario": "/accueil",
+      "profile": "desktop-fibre",
+      "pass": "cold",
+      "runs": 5,
+      "methodologyVersion": "v1.2"
+    },
+    "sequence": 4616,
+    "createdAt": "2026-08-08T17:12:44.159Z",
+    "payloadHash": "835fa0cf06851fe96842fd5fa9603ec1b4e232e9ad76b36ef92d355f02d891af",
+    "prevHash": "3ba677ef66d3e74e6cba440baeaf3759ea3d7e44a2709a27bbab593888781de7",
+    "entryHash": "b603c68b45ce38eb5e2ba8f5ce433f5767390ac16f28b702e65dc9165857456f"
   },
   {
     "organizationId": "org_atelier_sextant",
@@ -71,11 +107,11 @@ export const ledgerCanon = {
       "runsInPeriod": 2621,
       "methodologyVersion": "v1.2"
     },
-    "sequence": 3908,
+    "sequence": 3907,
     "createdAt": "2026-07-15T09:40:00.000Z",
     "payloadHash": "a65a26d38bada4097b778b31ad1994a1175e078dbff5fff6c4007b6a238e8985",
-    "prevHash": "ffd48121f508012b60a6d2f8e41b11c25bb3db797897f913e4d8390fe800ef2a",
-    "entryHash": "7057ee15cfb595df241c33db20f1bdbc29ff7c0165a8c4167b68b00937d28e82"
+    "prevHash": "f2d8c2d5c128ae77fe3b24beff5ace77b4f8838ef462d99d94147795f9976899",
+    "entryHash": "8d6a718455d3bb4fa1b743c51b4c03cb4a52a816216cf76cb742474c83c2d257"
   },
   {
     "organizationId": "org_atelier_sextant",
@@ -92,8 +128,8 @@ export const ledgerCanon = {
     "sequence": 4820,
     "createdAt": "2026-08-15T15:20:08.000Z",
     "payloadHash": "e980bf33f5bef0ae554d87bb984f56d7f298e28789706341993d829c97240d7a",
-    "prevHash": "26b4fd8ab1ea44b275f1c3e2809d65e4025ca029efc518fe55b1f9adca5fb5cc",
-    "entryHash": "d69edf2fcfc91d0ae09a39dc5350c07e286ac2f18f26e5e87f9c982217531726"
+    "prevHash": "8ec4b0aa694aaf334772379a0e41340be99470cc792a4fe68ceab4a0c8479b5e",
+    "entryHash": "cfb4356cd83b366558291d9bac8cef72f9a36fe6210f442c42c3fa52ccd5b693"
   },
   {
     "organizationId": "org_atelier_sextant",
@@ -140,8 +176,8 @@ export const ledgerCanon = {
     "sequence": 4801,
     "createdAt": "2026-08-15T00:00:00.000Z",
     "payloadHash": "7b0eeb929df4f775096c469f542ae937b027e36eb65c2a05507c65b1544b3bf8",
-    "prevHash": "813aa697f43fa4373ffa0498a5ddf41cac544e8e3438dcac91d250e305a08fdb",
-    "entryHash": "2d1a9836315cff937c7ece07645f1b9a2b2c3c70a881e21e19716dff72c3042f"
+    "prevHash": "ffd51463a6658a46d9c0170d9835788c2d3c7fe3fb6f29dc13cb8b5581f199e7",
+    "entryHash": "b6ff321bc9b4e8fe80db9e98a1df048d0fcf70d47f42333c5ad4afba8b4f7e4d"
   },
   {
     "organizationId": "org_atelier_sextant",
@@ -169,11 +205,11 @@ export const ledgerCanon = {
       "reason": "post-refonte",
       "author": "c. bellanger"
     },
-    "sequence": 4462,
-    "createdAt": "2026-08-03T09:15:00.000Z",
+    "sequence": 4796,
+    "createdAt": "2026-08-14T20:30:47.348Z",
     "payloadHash": "58f7607f8714c3c60cfc16629d0b49be70bc185ce4741594abb6b2763ec7a29e",
-    "prevHash": "cca5aee5ec98f09fa35483b8844033fda6eb2d648a4f27336def1739db94c829",
-    "entryHash": "5fb4e619a18a7880fb97280e3762aa3b532264e30e5ad919dae1aeee38fd732f"
+    "prevHash": "e5537c8f2ff9062daf3bc92dbe38d1aa1ecbdf11cf97fa25d4178712897844af",
+    "entryHash": "c1f57a039cbdf21939713d27ecd62d91d9e41f6f18b1c8c57c3b1685e4e3101b"
   },
   {
     "organizationId": "org_atelier_sextant",
@@ -185,11 +221,11 @@ export const ledgerCanon = {
       "reason": "new hosting",
       "author": "m. carbonne"
     },
-    "sequence": 3790,
-    "createdAt": "2026-07-11T08:30:00.000Z",
+    "sequence": 4617,
+    "createdAt": "2026-08-08T17:59:44.159Z",
     "payloadHash": "622d0460b5bb6298ab62cd5fb42948879bab213be0ff336d6b136f9080f86a61",
-    "prevHash": "d40af2f983d8bd7fdaa9472f8fb6384b9bcb3cd7e0a129a34ecd8361179a2351",
-    "entryHash": "7d084dfddae374b8dadeca84d1d39339c6b06a3eba450cb84737c206a9051dd8"
+    "prevHash": "b603c68b45ce38eb5e2ba8f5ce433f5767390ac16f28b702e65dc9165857456f",
+    "entryHash": "3de94127cc5488a85c6e204eb4d9df34971a1f22310f94606c48b9f9e5380ecd"
   },
   {
     "organizationId": "org_atelier_sextant",

@@ -4,6 +4,7 @@ import { Fragment } from 'react';
 import type { BudgetStatus } from '@balise/schemas';
 import { Disclosure, Tabs, tabPanelAttributes } from '@balise/ui';
 import { fill, t } from '../i18n';
+import { shortDate } from '../lib/register-view';
 import { budgetsFixture as budgets } from '../fixtures/canon';
 import { budgetCanon } from '../fixtures/budget-canon';
 import { budgetRows, overrideCard, type BudgetRow } from '../lib/budget-view';
@@ -239,10 +240,15 @@ export function Budgets() {
           <div style={{ marginTop: 10 }}>
             {budgets.rebaselines.map((entry) => (
               <div
-                key={entry.date}
+                key={entry.at.toISOString()}
                 style={{ display: 'flex', gap: 12, alignItems: 'baseline', padding: '8px 0', borderBottom: '1px solid var(--divider-row)' }}
               >
-                <span className="mono" style={{ fontSize: 10, color: 'var(--text-tertiary)' }}>{entry.date}</span>
+                <span
+                  className="mono"
+                  style={{ fontSize: 10, textTransform: 'uppercase', color: 'var(--text-tertiary)' }}
+                >
+                  {shortDate(entry.at)}
+                </span>
                 <span className="mono" style={{ fontSize: 10.5 }}>{entry.move}</span>
                 <span style={{ fontSize: 10.5, color: 'var(--text-secondary)' }}>{entry.author}</span>
                 <span className="mono" style={{ marginLeft: 'auto', fontSize: 10, color: 'var(--text-secondary)' }}>{entry.reason}</span>

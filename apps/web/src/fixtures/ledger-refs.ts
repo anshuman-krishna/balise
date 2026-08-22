@@ -45,6 +45,9 @@ export function registerPosition(refId: string): number {
 
 export const REF = {
   run: 'run_4812',
+  /** the run the branch is baselined to, which the comparison reads against. */
+  baselineRun: 'run_4790',
+  previousBaselineRun: 'run_4612',
   // the register holds one report per generation, so the reference names the
   // period it covers rather than "the report".
   report: 'rapport_2026_sl_0417_t3_2026',

@@ -69,6 +69,27 @@ function runAt(index: number): string {
 /** every run's recorded moment, so a period can be counted rather than typed. */
 const RUN_AT: readonly string[] = Array.from({ length: RUN_COUNT }, (_, index) => runAt(index));
 
+/** the moment a run was recorded, by the number every surface calls it. */
+function runRecordedAt(number: number): string {
+  const at = RUN_AT[number - 1];
+  if (at === undefined) throw new Error(`the register holds no run #${number}`);
+  return at;
+}
+
+/**
+ * a moment shortly after a run, for the entry a person wrote in response to
+ * one.
+ *
+ * both re-baselines used to carry a date picked independently of the run they
+ * point at: `main → #4790` was recorded on 3 august, and the register puts run
+ * #4790 on 14 august. an entry citing a run that has not happened is a chain
+ * that verifies and means nothing, which is the one failure this product
+ * exists to make impossible.
+ */
+function afterRun(number: number, minutes: number): string {
+  return new Date(Date.parse(runRecordedAt(number)) + minutes * 60_000).toISOString();
+}
+
 function runsBetween(from: Date, to: Date): number {
   const first = from.toISOString();
   const last = to.toISOString();
@@ -211,7 +232,7 @@ const NARRATIVE: readonly Planned[] = [
     },
   },
   {
-    at: '2026-07-11T08:30:00.000Z',
+    at: afterRun(4612, 47),
     input: {
       organizationId: ORGANIZATION,
       kind: 'rebaseline',
@@ -220,7 +241,7 @@ const NARRATIVE: readonly Planned[] = [
     },
   },
   {
-    at: '2026-08-03T09:15:00.000Z',
+    at: afterRun(4790, 36),
     input: {
       organizationId: ORGANIZATION,
       kind: 'rebaseline',
@@ -234,6 +255,11 @@ const NARRATIVE: readonly Planned[] = [
 /** the refIds every surface cites, so the generator knows what to write out. */
 export const CITED_REF_IDS = [
   `run_${RUN_COUNT}`,
+  // the two runs a branch was baselined to. the comparison names one of them
+  // and both re-baseline rows name theirs, so the register has to carry the
+  // moment each one was measured.
+  'run_4790',
+  'run_4612',
   ...REPORTS.map((report) => reportRefId({ year: report.year, quarter: report.quarter })),
   'declaration_v1',
   'declaration_v2',

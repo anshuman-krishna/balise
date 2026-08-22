@@ -287,8 +287,11 @@ export function Dashboard() {
 
           <div className="card-dark">
             <span className="eyebrow">{d.deadline.title}</span>
-            <div className="mono" style={{ marginTop: 12, fontSize: 22, letterSpacing: '-.02em' }}>
-              {canon.deadline.date}
+            <div
+              className="mono"
+              style={{ marginTop: 12, fontSize: 22, letterSpacing: '-.02em', textTransform: 'uppercase' }}
+            >
+              {dateWithYear(canon.deadline.date)}
             </div>
             <div style={{ marginTop: 6, fontSize: 10.5, color: 'var(--on-dark-text)' }}>
               {fill(d.deadline.detail, { contract: canon.deadline.contract, days: canon.deadline.days })}

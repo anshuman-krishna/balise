@@ -1656,8 +1656,8 @@ export const budgetCanon: BudgetCanon = {
     "onebyte@0.1.0"
   ],
   "runId": "#4812",
-  "ledgerRef": "26b4fd8a",
-  "verificationUrl": "balise.fr/v/26b4fd8a",
+  "ledgerRef": "8ec4b0aa",
+  "verificationUrl": "balise.fr/v/8ec4b0aa",
   "fingerprintMatched": true
 },
 };

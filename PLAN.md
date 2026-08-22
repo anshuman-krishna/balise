@@ -665,6 +665,20 @@ Later versions: see roadmap; detailed to-dos are appended when the version start
 
 ## Decisions log
 
+- **2026-08-22 · A register entry may not cite a run that has not happened.** Both re-baselines
+  carried a date picked independently of the run they point at: `main → #4790` was recorded on
+  3 August, and the register records run #4790 on the 14th. The chain verified. A hash chain
+  proves nobody edited the record afterwards and proves nothing about whether it is coherent,
+  which is what an auditor reads for first. Narrative entries are dated from the run they cite,
+  and the canon test fails on any entry that precedes the run it names.
+- **2026-08-22 · The run numbering is the model and the prose follows it.** The other repair was
+  to renumber the runs to fit the dates that had been written. The register spreads its runs
+  evenly across the days it claims to have measured, at a rate a reader can check.
+- **2026-08-22 · Every printed moment is read from the register.** The app bar stated `14:02`
+  beside `8 min ago` where the register's own latest entry is 77 minutes after that run, the
+  comparison dated a run to a day it was not measured on, and the dashboard's deadline card
+  restated a countdown the tracker had just been corrected on. `register-view.ts` holds the
+  moments and the four formats; seven surfaces stopped typing a time.
 - **2026-08-22 · A contract is a term, and every date it owes follows from it.** The tracker's
   calendar was five typed rows with typed countdowns. Four of the five were a day short, and
   one of them stated 208 days to the same declaration review the app bar, counting properly,

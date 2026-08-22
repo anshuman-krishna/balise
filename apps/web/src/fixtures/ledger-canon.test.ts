@@ -56,6 +56,28 @@ describe('the generated canon', () => {
     expect(reports.map((entry) => entry.refId)).toEqual([REF.reportPrevious, REF.report]);
   });
 
+  // both re-baselines used to carry a date picked independently of the run
+  // they point at: `main → #4790` was recorded on 3 august, and the register
+  // puts run #4790 on 14 august. a chain that verifies and says something
+  // impossible is the one failure this product exists to prevent.
+  it('records no entry before the run it cites', () => {
+    const runAt = new Map(
+      ledgerCanon.entries
+        .filter((entry) => entry.kind === 'run')
+        .map((entry) => [(entry.payload as { runId: string }).runId, entry.createdAt]),
+    );
+    const citing = ledgerCanon.entries.filter(
+      (entry) => typeof (entry.payload as { toRun?: unknown }).toRun === 'string',
+    );
+    expect(citing.length).toBeGreaterThan(0);
+    for (const entry of citing) {
+      const cited = (entry.payload as { toRun: string }).toRun;
+      const at = runAt.get(cited);
+      expect(at, `the register cites ${cited} and does not hold it`).toBeDefined();
+      expect(entry.createdAt >= at!).toBe(true);
+    }
+  });
+
   it('gives every cited entry a distinct eight character prefix, so a permalink resolves to one entry', () => {
     const prefixes = ledgerCanon.entries.map((entry) => entry.entryHash.slice(0, 8));
     expect(new Set(prefixes).size).toBe(prefixes.length);
