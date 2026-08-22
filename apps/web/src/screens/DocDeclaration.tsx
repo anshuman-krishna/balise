@@ -2,6 +2,7 @@ import { fill, t, tFr } from '../i18n';
 import { canon, documentsFixture } from '../fixtures/canon';
 import { criteriaCanon } from '../fixtures/criteria-canon';
 import { conformityPct, nonConformeRows } from '../lib/criteria-view';
+import { draftVersion, longDateFr, reviewDue } from '../lib/declaration-view';
 import { DocumentRegister } from '../components/DocumentRegister';
 import { VerificationUrl } from '../components/VerificationUrl';
 
@@ -19,12 +20,15 @@ const stats = {
 const nonConformes = nonConformeRows();
 
 export function DocDeclaration() {
+  const draft = draftVersion();
+  const established = longDateFr(draft.establishedAt);
+
   return (
     <DocumentRegister
       eyebrowSuffix={t.docs.publishedPage}
       title={
         <>
-          {doc.url} · {fill(t.docs.draft, { version: doc.version })}
+          {doc.url} · {fill(t.docs.draft, { version: draft.tag })}
         </>
       }
       actions={
@@ -43,7 +47,7 @@ export function DocDeclaration() {
         </h1>
         <p style={{ margin: '14px 0 0', fontSize: 12.5, lineHeight: 1.75, color: 'var(--text-secondary)', maxWidth: '58ch' }}>
           {t.docDeclaration.intro1} <strong style={{ color: 'var(--ink)' }}>{canon.service.title.toLowerCase()}</strong>{' '}
-          {fill(t.docDeclaration.intro2, { domain: canon.service.domain, reviewDate: doc.reviewDate })}
+          {fill(t.docDeclaration.intro2, { domain: canon.service.domain, reviewDate: longDateFr(reviewDue()) })}
         </p>
 
         <div
@@ -133,7 +137,7 @@ export function DocDeclaration() {
         </h2>
         <p style={{ margin: '12px 0 0', fontSize: 12, lineHeight: 1.8, maxWidth: '60ch' }}>
           {fill(t.docDeclaration.hostingBody, {
-            verifiedDate: doc.established,
+            verifiedDate: established,
             since: doc.since,
             methodology: doc.methodology,
           })}
@@ -162,7 +166,7 @@ export function DocDeclaration() {
         </div>
 
         <div style={{ marginTop: 20, fontSize: 10, lineHeight: 1.7, color: 'var(--text-secondary)' }}>
-          {fill(t.docDeclaration.footer, { date: doc.established, contact: doc.contact })}
+          {fill(t.docDeclaration.footer, { date: established, contact: doc.contact })}
         </div>
       </div>
     </DocumentRegister>

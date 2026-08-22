@@ -665,6 +665,21 @@ Later versions: see roadmap; detailed to-dos are appended when the version start
 
 ## Decisions log
 
+- **2026-08-22 · A declaration version is the assessment state on the day it was
+  established.** Its conformity count is the engine answering that day's evidence, not the
+  current count carried backwards. Two of the three points on the tender's "the part nobody
+  can fake" line were typed, and one of them could not have existed: every attestation in the
+  canon was dated five months after versions 1 and 2 were published.
+- **2026-08-22 · The date belongs to the review, the person to the answer.** A reviewer goes
+  through a family in a sitting, so the sitting is what carries a timestamp. That is what
+  makes "the answers version 1 could have held" a question with an answer.
+- **2026-08-22 · The review date is a rule, not a string.** The referential asks for an annual
+  update, so the review falls a year after the version in force. It was typed twice, once per
+  register, which is two chances to be wrong about one date.
+- **2026-08-22 · A countdown is a fact; the tone is a judgement about it.** The app bar
+  counted down 47 days to a review nothing dated, in caution, on every screen. It counts
+  calendar days to the real date now, and turns amber on the same threshold the fleet already
+  uses to call a declaration due.
 - **2026-08-22 · An explanation opens on focus and closes on escape.** `title` reaches no
   keyboard, no touch screen and no dismissal, and three of the five it carried in this app
   were disclosing a limit on comparability, which is the product's whole claim. `Disclosure`

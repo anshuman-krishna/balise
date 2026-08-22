@@ -3,6 +3,7 @@ import { criteriaCanon } from '../fixtures/criteria-canon';
 import {
   attestedText,
   blockingRows,
+  conformityHistory,
   conformityOutlook,
   conformityPct,
   evidenceText,
@@ -156,5 +157,28 @@ describe('the conformity outlook', () => {
     const outlook = conformityOutlook(100);
     expect(outlook.neededForTarget).toBe(outlook.applicable);
     expect(outlook.ceilingPct).toBeLessThan(100);
+  });
+});
+
+describe('the conformity history', () => {
+  const history = conformityHistory();
+
+  it('plots one point per version of the declaration, oldest first', () => {
+    expect(history.map((point) => point.tag)).toEqual(['v1', 'v2', 'v3']);
+    expect(history.at(-1)!.draft).toBe(true);
+  });
+
+  // the counts used to be typed. two of the three could not have been produced
+  // at all: every attestation in the canon was dated five months after
+  // versions 1 and 2 were published.
+  it('reads every count from the engine, never from a fixture', () => {
+    expect(history.map((point) => point.conforme)).toEqual(
+      criteriaCanon.versions.map((version) => version.conforme),
+    );
+  });
+
+  it('dates each point on the day its version was established', () => {
+    expect(history[0]!.date).toBe('4 Mar');
+    expect(history.at(-1)!.date).toBe('15 Aug');
   });
 });

@@ -124,3 +124,60 @@ describe('what stands between the draft and a publication', () => {
     expect(completion(filled).conforme).toBe(rgesn2024v2.criteria.length);
   });
 });
+
+// a published declaration is the assessment state on the day it was
+// established. its conformity count is therefore a fact about that day, and
+// the only way to keep it one is to answer the pack again with that day's
+// evidence.
+describe('the declaration versions', () => {
+  const versions = criteriaCanon.versions;
+
+  it('holds the three the register holds', () => {
+    expect(versions.map((version) => version.tag)).toEqual(['v1', 'v2', 'v3']);
+    expect(versions.filter((version) => version.draft)).toHaveLength(1);
+    expect(versions.at(-1)!.draft).toBe(true);
+  });
+
+  it('answers every version against the evidence it could have held', () => {
+    for (const version of versions) {
+      const asOf = evaluate(rgesn2024v2, {
+        metrics: {},
+        attestations: Object.fromEntries(
+          criteriaCanon.rows
+            .filter((row) => row.attestedAt !== null && row.attestedAt <= version.establishedAt)
+            .map((row) => [
+              row.id,
+              {
+                status: row.status,
+                ...(row.justification === null ? {} : { justification: row.justification }),
+                attestedBy: row.attestedBy!,
+                attestedAt: row.attestedAt!,
+                evidenceRefs: [],
+              },
+            ]),
+        ),
+      });
+      expect(asOf.filter((assessment) => assessment.status === 'conforme')).toHaveLength(version.conforme);
+    }
+  });
+
+  // the point of the whole exercise: an answer cannot be in a version that was
+  // published before it was recorded.
+  it('holds no answer recorded after the version was established', () => {
+    for (const version of versions) {
+      const later = criteriaCanon.rows.filter(
+        (row) => row.attestedAt !== null && row.attestedAt > version.establishedAt,
+      );
+      expect(version.answered).toBe(criteriaCanon.rows.length - later.length - unanswered());
+    }
+  });
+
+  it('never loses a conforming criterion between versions', () => {
+    const counts = versions.map((version) => version.conforme);
+    expect([...counts].sort((a, b) => a - b)).toEqual(counts);
+  });
+});
+
+function unanswered(): number {
+  return criteriaCanon.rows.filter((row) => row.attestedAt === null).length;
+}

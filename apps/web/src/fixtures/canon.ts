@@ -14,7 +14,7 @@ import {
   scenarioFingerprint,
   scenarioPass,
 } from '../lib/fingerprint-view';
-import { elidedHash, groupedHash, REF, shortHash, verifyUrl } from './ledger-refs';
+import { elidedHash, groupedHash, REF, verifyUrl } from './ledger-refs';
 import { ledgerCanon } from './ledger-canon';
 
 // ---- the measured state, from @balise/measure-core ----
@@ -78,7 +78,9 @@ export const canon = {
     runsRetained: 4812,
   },
   appBar: {
-    deadlineDays: 47,
+    // the declaration countdown is derived: lib/declaration-view.ts reads the
+    // review a year after the version in force, against the register's own
+    // latest entry.
     lastRunTime: '14:02',
     lastRunMinutesAgo: 8,
     userInitials: 'MC',
@@ -265,28 +267,21 @@ export const budgetsFixture = {
 // ---- declaration editor ----
 
 export const declarationFixture = {
-  draft: 'v3',
-  published: 'v2',
-  publishedDate: '12 Mar 2026',
-  reviewDate: '12 Mar 2027',
+  // the tags, the dates, the counts and the review date are all derived from
+  // the versions the criteria canon holds: see lib/declaration-view.ts.
   // the known-gaps text is customer-authored content, not template copy
   knownGapsText:
     "Le lecteur vidéo tiers utilisé sur la rubrique actualités déclenche une lecture automatique et n'offre aucun mode écoute seule : les critères 4.1 et 5.5 ne sont pas conformes. Son remplacement est planifié pour le 1er septembre 2026. Trois carrousels animés subsistent en page d'accueil et sont comptés au même critère 4.1.",
-  versions: [
-    { tag: 'v3', draft: true, date: '15 Aug', conforme: 41 },
-    { tag: 'v2', draft: false, date: '12 Mar', conforme: 34, ledger: `${shortHash(REF.declarationV2)}…` },
-    { tag: 'v1', draft: false, date: '04 Mar', conforme: 28, ledger: `${shortHash(REF.declarationV1)}…` },
-  ] as ReadonlyArray<{ tag: string; draft: boolean; date: string; conforme: number; ledger?: string }>,
   preview: {
     url: 'sevre-et-loire.fr/ecoconception',
     orgEyebrow: 'MÉTROPOLE DE SÈVRE-ET-LOIRE',
-    establishedDate: '15 août 2026',
     referential: 'RGESN version 2 (2024)',
     host: 'Scaleway, Paris (DC5)',
+    // the green hosting check has its own date, which is not the declaration's:
+    // a hosting claim is worth what its check date says it is.
     verifiedDate: '15 août 2026',
     methodologyVersion: 'v1.2',
     verifyUrl: verifyUrl(REF.declarationV3),
-    badgeDate: '15.08.26',
   },
 } as const;
 
@@ -304,7 +299,6 @@ export const tenderFixture = {
     since: '03 Mar 2026',
     days: 165,
     runs: 4812,
-    declarationVersions: 3,
   },
   output: {
     branding: 'Atelier Sextant · sans marque Balise',
@@ -372,9 +366,6 @@ export interface DocEventPart {
 export const documentsFixture = {
   declaration: {
     url: 'sevre-et-loire.fr/ecoconception',
-    version: 'v3',
-    reviewDate: '12 mars 2027',
-    established: '15 août 2026',
     since: '3 mars 2026',
     methodology: 'v1.2',
     hash: elidedHash(REF.declarationV3, 16, 4),

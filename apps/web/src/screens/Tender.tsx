@@ -3,6 +3,7 @@ import { formatInt, ToleranceBand } from '@balise/ui';
 import { canon, tenderFixture as tender } from '../fixtures/canon';
 import { carbonPage, carbonScale, referenceModelRef } from '../lib/carbon-view';
 import { conformityHistory, criteriaCount } from '../lib/criteria-view';
+import { declarationVersions } from '../lib/declaration-view';
 import {
   marginColor,
   marginText,
@@ -257,7 +258,10 @@ export function Tender() {
               {fill(t.tender.historyCounts, {
                 days: tender.history.days,
                 runs: formatInt(tender.history.runs),
-                versions: tender.history.declarationVersions,
+                // the string says published, so the draft is not counted. the
+                // sparkline below plots three, and its own caption says the
+                // third is still a draft.
+                versions: declarationVersions().filter((version) => !version.draft).length,
               })}
             </div>
             {/* one point per published version of the declaration, which is

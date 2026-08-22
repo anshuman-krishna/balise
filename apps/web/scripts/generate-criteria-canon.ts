@@ -7,7 +7,7 @@ import { buildCriteriaCanon } from './criteria-canon-source.ts';
 const OUT = fileURLToPath(new URL('../src/fixtures/criteria-canon.ts', import.meta.url));
 
 const canon = buildCriteriaCanon();
-const { pack, assessments, completion, blocking } = canon;
+const { pack, assessments, completion, blocking, versions } = canon;
 
 if (assessments.length !== pack.criteria.length) {
   throw new Error('refusing to write a canon that does not answer every criterion in the pack');
@@ -118,6 +118,12 @@ export const criteriaCanon = {
   /** the tier each criterion is proposed at, which is not a count of answers. */
   byTier: ${JSON.stringify(byTier, null, 2)},
   completion: ${JSON.stringify(completion, null, 2)},
+  /**
+   * the three declaration versions, each answered again against the evidence
+   * it could have held. a version's count is the engine's verdict on that
+   * version, never the current count carried backwards.
+   */
+  versions: ${JSON.stringify(versions, null, 2)},
   families: ${JSON.stringify(families, null, 2)},
   rows: ${JSON.stringify(rows, null, 2)},
   blocking: ${JSON.stringify(blocking, null, 2)} as BlockingFinding[],
@@ -136,6 +142,9 @@ console.log(
 console.log(`  status  ${STATUSES.map((status) => `${status} ${byStatus[status]}`).join('  ')}`);
 console.log(`  source  measured ${bySource.measured}  attested ${bySource.attested}  unevaluated ${bySource.unevaluated}`);
 console.log(`  tier    ${TIERS.map((tier) => `${tier} ${byTier[tier]}`).join('  ')}`);
+for (const version of versions) {
+  console.log(`  ${version.tag.padEnd(4)} ${version.conforme} conforme, ${version.answered}/${version.total} answered`);
+}
 for (const tier of completion.byTier) {
   console.log(`  answered ${tier.tier.padEnd(12)} ${tier.answered}/${tier.total}`);
 }

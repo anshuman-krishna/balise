@@ -65,6 +65,40 @@ export const criteriaCanon = {
   "conforme": 41,
   "applicable": 70
 },
+  /**
+   * the three declaration versions, each answered again against the evidence
+   * it could have held. a version's count is the engine's verdict on that
+   * version, never the current count carried backwards.
+   */
+  versions: [
+  {
+    "tag": "v1",
+    "draft": false,
+    "establishedAt": "2026-03-04T00:00:00.000Z",
+    "conforme": 26,
+    "answered": 40,
+    "applicable": 78,
+    "total": 78
+  },
+  {
+    "tag": "v2",
+    "draft": false,
+    "establishedAt": "2026-03-12T00:00:00.000Z",
+    "conforme": 34,
+    "answered": 58,
+    "applicable": 77,
+    "total": 78
+  },
+  {
+    "tag": "v3",
+    "draft": true,
+    "establishedAt": "2026-08-15T00:00:00.000Z",
+    "conforme": 41,
+    "answered": 73,
+    "applicable": 70,
+    "total": 78
+  }
+],
   families: [
   {
     "id": "strategie",
@@ -179,7 +213,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par m. carbonne.",
     "justification": null,
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-03-03T10:15:00.000Z",
     "answered": true
   },
   {
@@ -194,7 +228,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par m. carbonne.",
     "justification": null,
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-03-03T10:15:00.000Z",
     "answered": true
   },
   {
@@ -209,7 +243,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par m. carbonne.",
     "justification": null,
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-03-03T10:15:00.000Z",
     "answered": true
   },
   {
@@ -224,7 +258,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par m. carbonne.",
     "justification": null,
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-03-03T10:15:00.000Z",
     "answered": true
   },
   {
@@ -239,7 +273,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par m. carbonne.",
     "justification": "Un objectif de poids par page est fixé et suivi en continu. Aucun objectif n'est fixé sur les autres impacts du service.",
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-03-03T10:15:00.000Z",
     "answered": true
   },
   {
@@ -254,7 +288,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par m. carbonne.",
     "justification": null,
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-03-03T10:15:00.000Z",
     "answered": true
   },
   {
@@ -269,7 +303,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par m. carbonne.",
     "justification": null,
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-03-03T10:15:00.000Z",
     "answered": true
   },
   {
@@ -284,7 +318,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par m. carbonne.",
     "justification": "Aucun composant du service n'est publié en open source à ce jour. Une ouverture du thème est à l'étude pour 2027.",
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-03-03T10:15:00.000Z",
     "answered": true
   },
   {
@@ -299,7 +333,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par m. carbonne.",
     "justification": null,
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-03-03T10:15:00.000Z",
     "answered": true
   },
   {
@@ -329,7 +363,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par m. carbonne.",
     "justification": null,
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-03-03T14:20:00.000Z",
     "answered": true
   },
   {
@@ -344,7 +378,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par c. bellanger.",
     "justification": "Le service reste utilisable sur terminal ancien, mais le profil mobile-3g mesure un affichage du contenu principal à 6,2 s sur le parcours de demande d'acte.",
     "attestedBy": "c. bellanger",
-    "attestedAt": "2026-08-14T16:05:00.000Z",
+    "attestedAt": "2026-03-03T14:20:00.000Z",
     "answered": true
   },
   {
@@ -359,7 +393,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par c. bellanger.",
     "justification": "Le parcours de demande d'acte est inopérant sans JavaScript et aucun mode hors connexion n'est proposé.",
     "attestedBy": "c. bellanger",
-    "attestedAt": "2026-08-14T16:05:00.000Z",
+    "attestedAt": "2026-03-03T14:20:00.000Z",
     "answered": true
   },
   {
@@ -374,7 +408,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par c. bellanger.",
     "justification": null,
     "attestedBy": "c. bellanger",
-    "attestedAt": "2026-08-14T16:05:00.000Z",
+    "attestedAt": "2026-03-03T14:20:00.000Z",
     "answered": true
   },
   {
@@ -389,7 +423,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par c. bellanger.",
     "justification": null,
     "attestedBy": "c. bellanger",
-    "attestedAt": "2026-08-14T16:05:00.000Z",
+    "attestedAt": "2026-03-03T14:20:00.000Z",
     "answered": true
   },
   {
@@ -404,7 +438,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par m. carbonne.",
     "justification": null,
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-03-03T14:20:00.000Z",
     "answered": true
   },
   {
@@ -419,7 +453,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par m. carbonne.",
     "justification": "Une stratégie de maintenance est contractualisée jusqu'en 2029. Le décommissionnement n'est pas décrit.",
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-03-03T14:20:00.000Z",
     "answered": true
   },
   {
@@ -434,7 +468,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par m. carbonne.",
     "justification": "Le marché en cours n'impose aucune démarche de réduction d'impact aux fournisseurs. La clause est prévue au renouvellement de 2026.",
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-03-03T14:20:00.000Z",
     "answered": true
   },
   {
@@ -449,7 +483,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par m. carbonne.",
     "justification": null,
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-03-03T14:20:00.000Z",
     "answered": true
   },
   {
@@ -464,7 +498,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par m. carbonne.",
     "justification": "Le lecteur vidéo tiers a été retenu sans évaluation de son impact. Les autres services tiers ont été évalués.",
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-03-03T14:20:00.000Z",
     "answered": true
   },
   {
@@ -479,7 +513,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par m. carbonne.",
     "justification": null,
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-03-03T16:45:00.000Z",
     "answered": true
   },
   {
@@ -494,7 +528,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par m. carbonne.",
     "justification": null,
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-03-03T16:45:00.000Z",
     "answered": true
   },
   {
@@ -509,7 +543,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par m. carbonne.",
     "justification": null,
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-03-03T16:45:00.000Z",
     "answered": true
   },
   {
@@ -524,7 +558,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par m. carbonne.",
     "justification": null,
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-03-03T16:45:00.000Z",
     "answered": true
   },
   {
@@ -539,7 +573,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par m. carbonne.",
     "justification": null,
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-03-03T16:45:00.000Z",
     "answered": true
   },
   {
@@ -554,7 +588,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par m. carbonne.",
     "justification": "Les mises à jour du thème sont incrémentielles. Celles du socle applicatif remplacent l'ensemble du code livré.",
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-03-03T16:45:00.000Z",
     "answered": true
   },
   {
@@ -569,7 +603,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par m. carbonne.",
     "justification": null,
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-03-03T16:45:00.000Z",
     "answered": true
   },
   {
@@ -584,7 +618,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par c. bellanger.",
     "justification": "Le lecteur vidéo de la rubrique actualités déclenche une lecture automatique, et trois carrousels animés défilent seuls en page d'accueil.",
     "attestedBy": "c. bellanger",
-    "attestedAt": "2026-08-14T16:05:00.000Z",
+    "attestedAt": "2026-03-03T17:30:00.000Z",
     "answered": true
   },
   {
@@ -599,7 +633,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par c. bellanger.",
     "justification": null,
     "attestedBy": "c. bellanger",
-    "attestedAt": "2026-08-14T16:05:00.000Z",
+    "attestedAt": "2026-03-03T17:30:00.000Z",
     "answered": true
   },
   {
@@ -614,7 +648,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par m. carbonne.",
     "justification": null,
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-03-03T17:30:00.000Z",
     "answered": true
   },
   {
@@ -629,7 +663,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par c. bellanger.",
     "justification": "Le gestionnaire de consentement permet de refuser les services tiers, mais la mesure d'audience est chargée avant le choix de l'utilisateur.",
     "attestedBy": "c. bellanger",
-    "attestedAt": "2026-08-14T16:05:00.000Z",
+    "attestedAt": "2026-03-03T17:30:00.000Z",
     "answered": true
   },
   {
@@ -644,7 +678,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par c. bellanger.",
     "justification": null,
     "attestedBy": "c. bellanger",
-    "attestedAt": "2026-08-14T16:05:00.000Z",
+    "attestedAt": "2026-03-03T17:30:00.000Z",
     "answered": true
   },
   {
@@ -659,7 +693,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par m. carbonne.",
     "justification": "Les vidéos institutionnelles portent une information. Les carrousels de la page d'accueil n'en portent aucune.",
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-03-03T17:30:00.000Z",
     "answered": true
   },
   {
@@ -674,7 +708,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par m. carbonne.",
     "justification": null,
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-03-03T17:30:00.000Z",
     "answered": true
   },
   {
@@ -689,7 +723,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par m. carbonne.",
     "justification": "Trois familles de caractères sont téléchargées sur chaque page, pour 186 KB transférés.",
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-03-03T17:30:00.000Z",
     "answered": true
   },
   {
@@ -704,7 +738,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par c. bellanger.",
     "justification": null,
     "attestedBy": "c. bellanger",
-    "attestedAt": "2026-08-14T16:05:00.000Z",
+    "attestedAt": "2026-03-03T17:30:00.000Z",
     "answered": true
   },
   {
@@ -719,7 +753,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par c. bellanger.",
     "justification": null,
     "attestedBy": "c. bellanger",
-    "attestedAt": "2026-08-14T16:05:00.000Z",
+    "attestedAt": "2026-03-03T17:30:00.000Z",
     "answered": true
   },
   {
@@ -734,7 +768,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par c. bellanger.",
     "justification": "Le formulaire de demande annonce les formats acceptés, pas le poids maximum attendu.",
     "attestedBy": "c. bellanger",
-    "attestedAt": "2026-08-14T16:05:00.000Z",
+    "attestedAt": "2026-03-03T17:30:00.000Z",
     "answered": true
   },
   {
@@ -764,7 +798,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par m. carbonne.",
     "justification": null,
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-03-03T17:30:00.000Z",
     "answered": true
   },
   {
@@ -779,7 +813,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par m. carbonne.",
     "justification": null,
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-03-03T17:30:00.000Z",
     "answered": true
   },
   {
@@ -794,7 +828,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par m. carbonne.",
     "justification": null,
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-03-03T17:30:00.000Z",
     "answered": true
   },
   {
@@ -809,7 +843,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par c. bellanger.",
     "justification": "L'image d'en-tête est passée en webp. Six visuels de la rubrique actualités restent au format jpeg.",
     "attestedBy": "c. bellanger",
-    "attestedAt": "2026-08-14T16:05:00.000Z",
+    "attestedAt": "2026-03-11T09:10:00.000Z",
     "answered": true
   },
   {
@@ -824,7 +858,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par c. bellanger.",
     "justification": "Six des quarante-et-une images de la page sont servies sans compression adaptée au contexte de consultation.",
     "attestedBy": "c. bellanger",
-    "attestedAt": "2026-08-14T16:05:00.000Z",
+    "attestedAt": "2026-03-11T09:10:00.000Z",
     "answered": true
   },
   {
@@ -839,7 +873,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par c. bellanger.",
     "justification": null,
     "attestedBy": "c. bellanger",
-    "attestedAt": "2026-08-14T16:05:00.000Z",
+    "attestedAt": "2026-03-11T09:10:00.000Z",
     "answered": true
   },
   {
@@ -869,7 +903,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par c. bellanger.",
     "justification": "Le lecteur tiers ne propose pas de mode écoute seule et n'est pas paramétrable sur ce point.",
     "attestedBy": "c. bellanger",
-    "attestedAt": "2026-08-14T16:05:00.000Z",
+    "attestedAt": "2026-03-11T09:10:00.000Z",
     "answered": true
   },
   {
@@ -884,7 +918,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par c. bellanger.",
     "justification": null,
     "attestedBy": "c. bellanger",
-    "attestedAt": "2026-08-14T16:05:00.000Z",
+    "attestedAt": "2026-03-11T09:10:00.000Z",
     "answered": true
   },
   {
@@ -899,7 +933,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par c. bellanger.",
     "justification": null,
     "attestedBy": "c. bellanger",
-    "attestedAt": "2026-08-14T16:05:00.000Z",
+    "attestedAt": "2026-03-11T09:10:00.000Z",
     "answered": true
   },
   {
@@ -914,7 +948,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par m. carbonne.",
     "justification": "Les actualités sont archivées après deux ans. Aucune règle de suppression n'existe pour les pièces jointes des démarches.",
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-03-11T09:10:00.000Z",
     "answered": true
   },
   {
@@ -929,7 +963,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par c. bellanger.",
     "justification": "Le budget de poids est dépassé sur le parcours de demande d'acte, à 1 442 KB pour une limite de 1 400 KB.",
     "attestedBy": "c. bellanger",
-    "attestedAt": "2026-08-14T16:05:00.000Z",
+    "attestedAt": "2026-03-11T11:35:00.000Z",
     "answered": true
   },
   {
@@ -944,7 +978,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par c. bellanger.",
     "justification": null,
     "attestedBy": "c. bellanger",
-    "attestedAt": "2026-08-14T16:05:00.000Z",
+    "attestedAt": "2026-03-11T11:35:00.000Z",
     "answered": true
   },
   {
@@ -959,7 +993,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par c. bellanger.",
     "justification": null,
     "attestedBy": "c. bellanger",
-    "attestedAt": "2026-08-14T16:05:00.000Z",
+    "attestedAt": "2026-03-11T11:35:00.000Z",
     "answered": true
   },
   {
@@ -974,7 +1008,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par c. bellanger.",
     "justification": "Les visuels de la page d'accueil sont dimensionnés à l'affichage. Ceux des fiches démarches sont servis en pleine résolution.",
     "attestedBy": "c. bellanger",
-    "attestedAt": "2026-08-14T16:05:00.000Z",
+    "attestedAt": "2026-03-11T11:35:00.000Z",
     "answered": true
   },
   {
@@ -989,7 +1023,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par c. bellanger.",
     "justification": "Le bundle de la route embarque les quatre-vingt-seize locales de date-fns, dont deux sont utilisées à l’exécution.",
     "attestedBy": "c. bellanger",
-    "attestedAt": "2026-08-14T16:05:00.000Z",
+    "attestedAt": "2026-03-11T11:35:00.000Z",
     "answered": true
   },
   {
@@ -1004,7 +1038,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par c. bellanger.",
     "justification": null,
     "attestedBy": "c. bellanger",
-    "attestedAt": "2026-08-14T16:05:00.000Z",
+    "attestedAt": "2026-03-11T11:35:00.000Z",
     "answered": true
   },
   {
@@ -1019,7 +1053,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par c. bellanger.",
     "justification": "Le lecteur vidéo et le gestionnaire de consentement sont chargés depuis leurs propres domaines.",
     "attestedBy": "c. bellanger",
-    "attestedAt": "2026-08-14T16:05:00.000Z",
+    "attestedAt": "2026-03-11T11:35:00.000Z",
     "answered": true
   },
   {
@@ -1034,7 +1068,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par c. bellanger.",
     "justification": null,
     "attestedBy": "c. bellanger",
-    "attestedAt": "2026-08-14T16:05:00.000Z",
+    "attestedAt": "2026-03-11T14:00:00.000Z",
     "answered": true
   },
   {
@@ -1049,7 +1083,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par m. carbonne.",
     "justification": "Une durée de conservation est fixée sur les pièces des démarches. Les journaux applicatifs n'en ont aucune.",
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-03-11T14:00:00.000Z",
     "answered": true
   },
   {
@@ -1064,7 +1098,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par c. bellanger.",
     "justification": null,
     "attestedBy": "c. bellanger",
-    "attestedAt": "2026-08-14T16:05:00.000Z",
+    "attestedAt": "2026-03-11T14:00:00.000Z",
     "answered": true
   },
   {
@@ -1079,7 +1113,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par m. carbonne.",
     "justification": "Le service ne repose sur aucun mécanisme de consensus distribué. Critère hors périmètre.",
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-03-11T14:00:00.000Z",
     "answered": true
   },
   {
@@ -1244,7 +1278,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par m. carbonne.",
     "justification": "Le service ne comporte aucune phase d'apprentissage ni d'inférence de modèle. Critère hors périmètre.",
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-08-14T16:05:00.000Z",
     "answered": true
   },
   {
@@ -1259,7 +1293,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par m. carbonne.",
     "justification": "Le service ne comporte aucune phase d'apprentissage ni d'inférence de modèle. Critère hors périmètre.",
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-08-14T16:05:00.000Z",
     "answered": true
   },
   {
@@ -1274,7 +1308,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par m. carbonne.",
     "justification": "Le service ne comporte aucune phase d'apprentissage ni d'inférence de modèle. Critère hors périmètre.",
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-08-14T16:05:00.000Z",
     "answered": true
   },
   {
@@ -1289,7 +1323,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par m. carbonne.",
     "justification": "Le service ne comporte aucune phase d'apprentissage ni d'inférence de modèle. Critère hors périmètre.",
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-08-14T16:05:00.000Z",
     "answered": true
   },
   {
@@ -1304,7 +1338,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par m. carbonne.",
     "justification": "Le service ne comporte aucune phase d'apprentissage ni d'inférence de modèle. Critère hors périmètre.",
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-08-14T16:05:00.000Z",
     "answered": true
   },
   {
@@ -1319,7 +1353,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par m. carbonne.",
     "justification": "Le service ne comporte aucune phase d'apprentissage ni d'inférence de modèle. Critère hors périmètre.",
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-08-14T16:05:00.000Z",
     "answered": true
   },
   {
@@ -1334,7 +1368,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par m. carbonne.",
     "justification": "Le service ne comporte aucune phase d'apprentissage ni d'inférence de modèle. Critère hors périmètre.",
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-08-14T16:05:00.000Z",
     "answered": true
   }
 ],
@@ -1387,7 +1421,7 @@ export const criteriaCanon = {
     "source": "attested",
     "evidenceFr": "Attesté par m. carbonne.",
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-03-03T10:15:00.000Z",
     "requiresConfirmation": false
   },
   {
@@ -1399,7 +1433,7 @@ export const criteriaCanon = {
     "source": "attested",
     "evidenceFr": "Attesté par m. carbonne.",
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-03-03T10:15:00.000Z",
     "requiresConfirmation": false
   },
   {
@@ -1411,7 +1445,7 @@ export const criteriaCanon = {
     "source": "attested",
     "evidenceFr": "Attesté par m. carbonne.",
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-03-03T10:15:00.000Z",
     "requiresConfirmation": false
   },
   {
@@ -1423,7 +1457,7 @@ export const criteriaCanon = {
     "source": "attested",
     "evidenceFr": "Attesté par m. carbonne.",
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-03-03T10:15:00.000Z",
     "requiresConfirmation": false
   },
   {
@@ -1436,7 +1470,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par m. carbonne.",
     "justification": "Un objectif de poids par page est fixé et suivi en continu. Aucun objectif n'est fixé sur les autres impacts du service.",
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-03-03T10:15:00.000Z",
     "requiresConfirmation": false
   },
   {
@@ -1448,7 +1482,7 @@ export const criteriaCanon = {
     "source": "attested",
     "evidenceFr": "Attesté par m. carbonne.",
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-03-03T10:15:00.000Z",
     "requiresConfirmation": false
   },
   {
@@ -1460,7 +1494,7 @@ export const criteriaCanon = {
     "source": "attested",
     "evidenceFr": "Attesté par m. carbonne.",
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-03-03T10:15:00.000Z",
     "requiresConfirmation": false
   },
   {
@@ -1473,7 +1507,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par m. carbonne.",
     "justification": "Aucun composant du service n'est publié en open source à ce jour. Une ouverture du thème est à l'étude pour 2027.",
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-03-03T10:15:00.000Z",
     "requiresConfirmation": false
   },
   {
@@ -1485,7 +1519,7 @@ export const criteriaCanon = {
     "source": "attested",
     "evidenceFr": "Attesté par m. carbonne.",
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-03-03T10:15:00.000Z",
     "requiresConfirmation": false
   },
   {
@@ -1507,7 +1541,7 @@ export const criteriaCanon = {
     "source": "attested",
     "evidenceFr": "Attesté par m. carbonne.",
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-03-03T14:20:00.000Z",
     "requiresConfirmation": false
   },
   {
@@ -1520,7 +1554,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par c. bellanger.",
     "justification": "Le service reste utilisable sur terminal ancien, mais le profil mobile-3g mesure un affichage du contenu principal à 6,2 s sur le parcours de demande d'acte.",
     "attestedBy": "c. bellanger",
-    "attestedAt": "2026-08-14T16:05:00.000Z",
+    "attestedAt": "2026-03-03T14:20:00.000Z",
     "requiresConfirmation": false
   },
   {
@@ -1533,7 +1567,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par c. bellanger.",
     "justification": "Le parcours de demande d'acte est inopérant sans JavaScript et aucun mode hors connexion n'est proposé.",
     "attestedBy": "c. bellanger",
-    "attestedAt": "2026-08-14T16:05:00.000Z",
+    "attestedAt": "2026-03-03T14:20:00.000Z",
     "requiresConfirmation": false
   },
   {
@@ -1545,7 +1579,7 @@ export const criteriaCanon = {
     "source": "attested",
     "evidenceFr": "Attesté par c. bellanger.",
     "attestedBy": "c. bellanger",
-    "attestedAt": "2026-08-14T16:05:00.000Z",
+    "attestedAt": "2026-03-03T14:20:00.000Z",
     "requiresConfirmation": false
   },
   {
@@ -1557,7 +1591,7 @@ export const criteriaCanon = {
     "source": "attested",
     "evidenceFr": "Attesté par c. bellanger.",
     "attestedBy": "c. bellanger",
-    "attestedAt": "2026-08-14T16:05:00.000Z",
+    "attestedAt": "2026-03-03T14:20:00.000Z",
     "requiresConfirmation": false
   },
   {
@@ -1569,7 +1603,7 @@ export const criteriaCanon = {
     "source": "attested",
     "evidenceFr": "Attesté par m. carbonne.",
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-03-03T14:20:00.000Z",
     "requiresConfirmation": false
   },
   {
@@ -1582,7 +1616,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par m. carbonne.",
     "justification": "Une stratégie de maintenance est contractualisée jusqu'en 2029. Le décommissionnement n'est pas décrit.",
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-03-03T14:20:00.000Z",
     "requiresConfirmation": false
   },
   {
@@ -1595,7 +1629,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par m. carbonne.",
     "justification": "Le marché en cours n'impose aucune démarche de réduction d'impact aux fournisseurs. La clause est prévue au renouvellement de 2026.",
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-03-03T14:20:00.000Z",
     "requiresConfirmation": false
   },
   {
@@ -1607,7 +1641,7 @@ export const criteriaCanon = {
     "source": "attested",
     "evidenceFr": "Attesté par m. carbonne.",
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-03-03T14:20:00.000Z",
     "requiresConfirmation": false
   },
   {
@@ -1620,7 +1654,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par m. carbonne.",
     "justification": "Le lecteur vidéo tiers a été retenu sans évaluation de son impact. Les autres services tiers ont été évalués.",
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-03-03T14:20:00.000Z",
     "requiresConfirmation": false
   },
   {
@@ -1632,7 +1666,7 @@ export const criteriaCanon = {
     "source": "attested",
     "evidenceFr": "Attesté par m. carbonne.",
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-03-03T16:45:00.000Z",
     "requiresConfirmation": false
   },
   {
@@ -1644,7 +1678,7 @@ export const criteriaCanon = {
     "source": "attested",
     "evidenceFr": "Attesté par m. carbonne.",
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-03-03T16:45:00.000Z",
     "requiresConfirmation": false
   },
   {
@@ -1656,7 +1690,7 @@ export const criteriaCanon = {
     "source": "attested",
     "evidenceFr": "Attesté par m. carbonne.",
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-03-03T16:45:00.000Z",
     "requiresConfirmation": false
   },
   {
@@ -1668,7 +1702,7 @@ export const criteriaCanon = {
     "source": "attested",
     "evidenceFr": "Attesté par m. carbonne.",
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-03-03T16:45:00.000Z",
     "requiresConfirmation": false
   },
   {
@@ -1680,7 +1714,7 @@ export const criteriaCanon = {
     "source": "attested",
     "evidenceFr": "Attesté par m. carbonne.",
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-03-03T16:45:00.000Z",
     "requiresConfirmation": false
   },
   {
@@ -1693,7 +1727,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par m. carbonne.",
     "justification": "Les mises à jour du thème sont incrémentielles. Celles du socle applicatif remplacent l'ensemble du code livré.",
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-03-03T16:45:00.000Z",
     "requiresConfirmation": false
   },
   {
@@ -1705,7 +1739,7 @@ export const criteriaCanon = {
     "source": "attested",
     "evidenceFr": "Attesté par m. carbonne.",
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-03-03T16:45:00.000Z",
     "requiresConfirmation": false
   },
   {
@@ -1718,7 +1752,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par c. bellanger.",
     "justification": "Le lecteur vidéo de la rubrique actualités déclenche une lecture automatique, et trois carrousels animés défilent seuls en page d'accueil.",
     "attestedBy": "c. bellanger",
-    "attestedAt": "2026-08-14T16:05:00.000Z",
+    "attestedAt": "2026-03-03T17:30:00.000Z",
     "requiresConfirmation": false
   },
   {
@@ -1730,7 +1764,7 @@ export const criteriaCanon = {
     "source": "attested",
     "evidenceFr": "Attesté par c. bellanger.",
     "attestedBy": "c. bellanger",
-    "attestedAt": "2026-08-14T16:05:00.000Z",
+    "attestedAt": "2026-03-03T17:30:00.000Z",
     "requiresConfirmation": false
   },
   {
@@ -1742,7 +1776,7 @@ export const criteriaCanon = {
     "source": "attested",
     "evidenceFr": "Attesté par m. carbonne.",
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-03-03T17:30:00.000Z",
     "requiresConfirmation": false
   },
   {
@@ -1755,7 +1789,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par c. bellanger.",
     "justification": "Le gestionnaire de consentement permet de refuser les services tiers, mais la mesure d'audience est chargée avant le choix de l'utilisateur.",
     "attestedBy": "c. bellanger",
-    "attestedAt": "2026-08-14T16:05:00.000Z",
+    "attestedAt": "2026-03-03T17:30:00.000Z",
     "requiresConfirmation": false
   },
   {
@@ -1767,7 +1801,7 @@ export const criteriaCanon = {
     "source": "attested",
     "evidenceFr": "Attesté par c. bellanger.",
     "attestedBy": "c. bellanger",
-    "attestedAt": "2026-08-14T16:05:00.000Z",
+    "attestedAt": "2026-03-03T17:30:00.000Z",
     "requiresConfirmation": false
   },
   {
@@ -1780,7 +1814,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par m. carbonne.",
     "justification": "Les vidéos institutionnelles portent une information. Les carrousels de la page d'accueil n'en portent aucune.",
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-03-03T17:30:00.000Z",
     "requiresConfirmation": false
   },
   {
@@ -1792,7 +1826,7 @@ export const criteriaCanon = {
     "source": "attested",
     "evidenceFr": "Attesté par m. carbonne.",
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-03-03T17:30:00.000Z",
     "requiresConfirmation": false
   },
   {
@@ -1805,7 +1839,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par m. carbonne.",
     "justification": "Trois familles de caractères sont téléchargées sur chaque page, pour 186 KB transférés.",
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-03-03T17:30:00.000Z",
     "requiresConfirmation": false
   },
   {
@@ -1817,7 +1851,7 @@ export const criteriaCanon = {
     "source": "attested",
     "evidenceFr": "Attesté par c. bellanger.",
     "attestedBy": "c. bellanger",
-    "attestedAt": "2026-08-14T16:05:00.000Z",
+    "attestedAt": "2026-03-03T17:30:00.000Z",
     "requiresConfirmation": false
   },
   {
@@ -1829,7 +1863,7 @@ export const criteriaCanon = {
     "source": "attested",
     "evidenceFr": "Attesté par c. bellanger.",
     "attestedBy": "c. bellanger",
-    "attestedAt": "2026-08-14T16:05:00.000Z",
+    "attestedAt": "2026-03-03T17:30:00.000Z",
     "requiresConfirmation": false
   },
   {
@@ -1842,7 +1876,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par c. bellanger.",
     "justification": "Le formulaire de demande annonce les formats acceptés, pas le poids maximum attendu.",
     "attestedBy": "c. bellanger",
-    "attestedAt": "2026-08-14T16:05:00.000Z",
+    "attestedAt": "2026-03-03T17:30:00.000Z",
     "requiresConfirmation": false
   },
   {
@@ -1864,7 +1898,7 @@ export const criteriaCanon = {
     "source": "attested",
     "evidenceFr": "Attesté par m. carbonne.",
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-03-03T17:30:00.000Z",
     "requiresConfirmation": false
   },
   {
@@ -1876,7 +1910,7 @@ export const criteriaCanon = {
     "source": "attested",
     "evidenceFr": "Attesté par m. carbonne.",
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-03-03T17:30:00.000Z",
     "requiresConfirmation": false
   },
   {
@@ -1888,7 +1922,7 @@ export const criteriaCanon = {
     "source": "attested",
     "evidenceFr": "Attesté par m. carbonne.",
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-03-03T17:30:00.000Z",
     "requiresConfirmation": false
   },
   {
@@ -1901,7 +1935,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par c. bellanger.",
     "justification": "L'image d'en-tête est passée en webp. Six visuels de la rubrique actualités restent au format jpeg.",
     "attestedBy": "c. bellanger",
-    "attestedAt": "2026-08-14T16:05:00.000Z",
+    "attestedAt": "2026-03-11T09:10:00.000Z",
     "requiresConfirmation": false
   },
   {
@@ -1914,7 +1948,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par c. bellanger.",
     "justification": "Six des quarante-et-une images de la page sont servies sans compression adaptée au contexte de consultation.",
     "attestedBy": "c. bellanger",
-    "attestedAt": "2026-08-14T16:05:00.000Z",
+    "attestedAt": "2026-03-11T09:10:00.000Z",
     "requiresConfirmation": false
   },
   {
@@ -1926,7 +1960,7 @@ export const criteriaCanon = {
     "source": "attested",
     "evidenceFr": "Attesté par c. bellanger.",
     "attestedBy": "c. bellanger",
-    "attestedAt": "2026-08-14T16:05:00.000Z",
+    "attestedAt": "2026-03-11T09:10:00.000Z",
     "requiresConfirmation": false
   },
   {
@@ -1949,7 +1983,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par c. bellanger.",
     "justification": "Le lecteur tiers ne propose pas de mode écoute seule et n'est pas paramétrable sur ce point.",
     "attestedBy": "c. bellanger",
-    "attestedAt": "2026-08-14T16:05:00.000Z",
+    "attestedAt": "2026-03-11T09:10:00.000Z",
     "requiresConfirmation": false
   },
   {
@@ -1961,7 +1995,7 @@ export const criteriaCanon = {
     "source": "attested",
     "evidenceFr": "Attesté par c. bellanger.",
     "attestedBy": "c. bellanger",
-    "attestedAt": "2026-08-14T16:05:00.000Z",
+    "attestedAt": "2026-03-11T09:10:00.000Z",
     "requiresConfirmation": false
   },
   {
@@ -1973,7 +2007,7 @@ export const criteriaCanon = {
     "source": "attested",
     "evidenceFr": "Attesté par c. bellanger.",
     "attestedBy": "c. bellanger",
-    "attestedAt": "2026-08-14T16:05:00.000Z",
+    "attestedAt": "2026-03-11T09:10:00.000Z",
     "requiresConfirmation": false
   },
   {
@@ -1986,7 +2020,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par m. carbonne.",
     "justification": "Les actualités sont archivées après deux ans. Aucune règle de suppression n'existe pour les pièces jointes des démarches.",
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-03-11T09:10:00.000Z",
     "requiresConfirmation": false
   },
   {
@@ -1999,7 +2033,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par c. bellanger.",
     "justification": "Le budget de poids est dépassé sur le parcours de demande d'acte, à 1 442 KB pour une limite de 1 400 KB.",
     "attestedBy": "c. bellanger",
-    "attestedAt": "2026-08-14T16:05:00.000Z",
+    "attestedAt": "2026-03-11T11:35:00.000Z",
     "requiresConfirmation": false
   },
   {
@@ -2011,7 +2045,7 @@ export const criteriaCanon = {
     "source": "attested",
     "evidenceFr": "Attesté par c. bellanger.",
     "attestedBy": "c. bellanger",
-    "attestedAt": "2026-08-14T16:05:00.000Z",
+    "attestedAt": "2026-03-11T11:35:00.000Z",
     "requiresConfirmation": false
   },
   {
@@ -2023,7 +2057,7 @@ export const criteriaCanon = {
     "source": "attested",
     "evidenceFr": "Attesté par c. bellanger.",
     "attestedBy": "c. bellanger",
-    "attestedAt": "2026-08-14T16:05:00.000Z",
+    "attestedAt": "2026-03-11T11:35:00.000Z",
     "requiresConfirmation": false
   },
   {
@@ -2036,7 +2070,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par c. bellanger.",
     "justification": "Les visuels de la page d'accueil sont dimensionnés à l'affichage. Ceux des fiches démarches sont servis en pleine résolution.",
     "attestedBy": "c. bellanger",
-    "attestedAt": "2026-08-14T16:05:00.000Z",
+    "attestedAt": "2026-03-11T11:35:00.000Z",
     "requiresConfirmation": false
   },
   {
@@ -2049,7 +2083,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par c. bellanger.",
     "justification": "Le bundle de la route embarque les quatre-vingt-seize locales de date-fns, dont deux sont utilisées à l’exécution.",
     "attestedBy": "c. bellanger",
-    "attestedAt": "2026-08-14T16:05:00.000Z",
+    "attestedAt": "2026-03-11T11:35:00.000Z",
     "requiresConfirmation": false
   },
   {
@@ -2061,7 +2095,7 @@ export const criteriaCanon = {
     "source": "attested",
     "evidenceFr": "Attesté par c. bellanger.",
     "attestedBy": "c. bellanger",
-    "attestedAt": "2026-08-14T16:05:00.000Z",
+    "attestedAt": "2026-03-11T11:35:00.000Z",
     "requiresConfirmation": false
   },
   {
@@ -2074,7 +2108,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par c. bellanger.",
     "justification": "Le lecteur vidéo et le gestionnaire de consentement sont chargés depuis leurs propres domaines.",
     "attestedBy": "c. bellanger",
-    "attestedAt": "2026-08-14T16:05:00.000Z",
+    "attestedAt": "2026-03-11T11:35:00.000Z",
     "requiresConfirmation": false
   },
   {
@@ -2086,7 +2120,7 @@ export const criteriaCanon = {
     "source": "attested",
     "evidenceFr": "Attesté par c. bellanger.",
     "attestedBy": "c. bellanger",
-    "attestedAt": "2026-08-14T16:05:00.000Z",
+    "attestedAt": "2026-03-11T14:00:00.000Z",
     "requiresConfirmation": false
   },
   {
@@ -2099,7 +2133,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par m. carbonne.",
     "justification": "Une durée de conservation est fixée sur les pièces des démarches. Les journaux applicatifs n'en ont aucune.",
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-03-11T14:00:00.000Z",
     "requiresConfirmation": false
   },
   {
@@ -2111,7 +2145,7 @@ export const criteriaCanon = {
     "source": "attested",
     "evidenceFr": "Attesté par c. bellanger.",
     "attestedBy": "c. bellanger",
-    "attestedAt": "2026-08-14T16:05:00.000Z",
+    "attestedAt": "2026-03-11T14:00:00.000Z",
     "requiresConfirmation": false
   },
   {
@@ -2124,7 +2158,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par m. carbonne.",
     "justification": "Le service ne repose sur aucun mécanisme de consensus distribué. Critère hors périmètre.",
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-03-11T14:00:00.000Z",
     "requiresConfirmation": false
   },
   {
@@ -2254,7 +2288,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par m. carbonne.",
     "justification": "Le service ne comporte aucune phase d'apprentissage ni d'inférence de modèle. Critère hors périmètre.",
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-08-14T16:05:00.000Z",
     "requiresConfirmation": false
   },
   {
@@ -2267,7 +2301,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par m. carbonne.",
     "justification": "Le service ne comporte aucune phase d'apprentissage ni d'inférence de modèle. Critère hors périmètre.",
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-08-14T16:05:00.000Z",
     "requiresConfirmation": false
   },
   {
@@ -2280,7 +2314,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par m. carbonne.",
     "justification": "Le service ne comporte aucune phase d'apprentissage ni d'inférence de modèle. Critère hors périmètre.",
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-08-14T16:05:00.000Z",
     "requiresConfirmation": false
   },
   {
@@ -2293,7 +2327,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par m. carbonne.",
     "justification": "Le service ne comporte aucune phase d'apprentissage ni d'inférence de modèle. Critère hors périmètre.",
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-08-14T16:05:00.000Z",
     "requiresConfirmation": false
   },
   {
@@ -2306,7 +2340,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par m. carbonne.",
     "justification": "Le service ne comporte aucune phase d'apprentissage ni d'inférence de modèle. Critère hors périmètre.",
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-08-14T16:05:00.000Z",
     "requiresConfirmation": false
   },
   {
@@ -2319,7 +2353,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par m. carbonne.",
     "justification": "Le service ne comporte aucune phase d'apprentissage ni d'inférence de modèle. Critère hors périmètre.",
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-08-14T16:05:00.000Z",
     "requiresConfirmation": false
   },
   {
@@ -2332,7 +2366,7 @@ export const criteriaCanon = {
     "evidenceFr": "Attesté par m. carbonne.",
     "justification": "Le service ne comporte aucune phase d'apprentissage ni d'inférence de modèle. Critère hors périmètre.",
     "attestedBy": "m. carbonne",
-    "attestedAt": "2026-08-12T09:40:00.000Z",
+    "attestedAt": "2026-08-14T16:05:00.000Z",
     "requiresConfirmation": false
   }
 ] as CriterionAssessment[],

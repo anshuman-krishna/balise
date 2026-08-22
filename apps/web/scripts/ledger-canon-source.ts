@@ -2,6 +2,7 @@ import { OrganizationId, type LedgerEntry, type LedgerEntryInput } from '@balise
 import { anchor, append, createMemoryStore, verify } from '@balise/ledger';
 import { buildCarbonCanon } from './carbon-canon-source';
 import { canonMetric } from './measurement-canon-source';
+import { buildCriteriaCanon } from './criteria-canon-source';
 
 /**
  * the canon's register, as an actual chain rather than a set of hashes typed
@@ -15,6 +16,24 @@ import { canonMetric } from './measurement-canon-source';
  */
 
 export const ORGANIZATION = OrganizationId.parse('org_atelier_sextant');
+
+// a declaration version is recorded on the day it is established, carrying the
+// conformity the engine reads for that day's evidence. one source for the date,
+// one for the count, and the editor's history reads them back from here.
+const DECLARATION_ENTRIES = buildCriteriaCanon().versions.map((version) => ({
+  at: version.establishedAt,
+  input: {
+    organizationId: ORGANIZATION,
+    kind: 'declaration_version' as const,
+    refId: `declaration_${version.tag}`,
+    payload: {
+      version: version.tag,
+      packVersion: 'rgesn-2024-v2',
+      conforme: version.conforme,
+      applicable: version.applicable,
+    },
+  },
+}));
 
 // the estimate the register records is the one the models produced for the
 // same page, read from the same build. a verification permalink that stated a
@@ -115,33 +134,11 @@ const NARRATIVE: readonly Planned[] = [
       payload: { version: 'v1.2', url: 'balise.fr/methodologie' },
     },
   },
-  {
-    at: '2026-03-04T10:12:00.000Z',
-    input: {
-      organizationId: ORGANIZATION,
-      kind: 'declaration_version',
-      refId: 'declaration_v1',
-      payload: { version: 'v1', packVersion: 'rgesn-2024-v2', conforme: 28, applicable: 70 },
-    },
-  },
-  {
-    at: '2026-03-12T16:40:00.000Z',
-    input: {
-      organizationId: ORGANIZATION,
-      kind: 'declaration_version',
-      refId: 'declaration_v2',
-      payload: { version: 'v2', packVersion: 'rgesn-2024-v2', conforme: 34, applicable: 70 },
-    },
-  },
-  {
-    at: '2026-08-15T13:00:00.000Z',
-    input: {
-      organizationId: ORGANIZATION,
-      kind: 'declaration_version',
-      refId: 'declaration_v3',
-      payload: { version: 'v3', packVersion: 'rgesn-2024-v2', conforme: 41, applicable: 70 },
-    },
-  },
+  // the three declaration versions, from the same place the editor's history
+  // reads: a version's conformity count is the engine's verdict on the answers
+  // that version could have held. the register used to carry `conforme: 28` on
+  // version 1 while the engine, asked the same question, says 26.
+  ...DECLARATION_ENTRIES,
   {
     at: '2026-07-08T11:05:00.000Z',
     input: {

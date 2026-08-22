@@ -108,6 +108,7 @@ export const fr: Catalog = {
     minutesAgo: 'il y a {minutes} min',
   },
   months: ['janv.', 'févr.', 'mars', 'avr.', 'mai', 'juin', 'juil.', 'août', 'sept.', 'oct.', 'nov.', 'déc.'],
+  monthsLong: ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'],
   carbon: {
     provenance: '{model} · référence · bande = {count} modèles · réseau {grid} gCO2e/kWh ({zone})',
     gradeAndScore: '{grade} · {score}/100',

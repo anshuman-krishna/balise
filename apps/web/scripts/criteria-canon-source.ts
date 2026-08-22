@@ -17,11 +17,38 @@ import { rgesn2024v2 } from '@balise/rule-packs';
 const REFERENT = 'm. carbonne';
 const DEVELOPER = 'c. bellanger';
 
-/** the two reviewers, and when they went through their families. */
-const REVIEWED_AT = {
-  [REFERENT]: '2026-08-12T09:40:00.000Z',
-  [DEVELOPER]: '2026-08-14T16:05:00.000Z',
+/**
+ * a review happens family by family, in sittings. the date belongs to the
+ * sitting; who answered belongs to the answer.
+ *
+ * this matters beyond tidiness: a published declaration is the assessment
+ * state on the day it was published, so the dates here are what decides what
+ * each version of the declaration could contain. every attestation used to
+ * carry one of two dates in august 2026, which put versions 1 and 2, published
+ * in march, five months ahead of the answers they would have to be built from.
+ */
+const REVIEWED = {
+  strategie: '2026-03-03T10:15:00.000Z',
+  specifications: '2026-03-03T14:20:00.000Z',
+  architecture: '2026-03-03T16:45:00.000Z',
+  'ux-ui': '2026-03-03T17:30:00.000Z',
+  contenus: '2026-03-11T09:10:00.000Z',
+  frontend: '2026-03-11T11:35:00.000Z',
+  backend: '2026-03-11T14:00:00.000Z',
+  hebergement: '2026-08-12T09:40:00.000Z',
+  algorithmie: '2026-08-14T16:05:00.000Z',
 } as const;
+
+/**
+ * the three declaration versions, by the date each was established. a version
+ * holds the answers recorded on or before its date and nothing after, which is
+ * what makes its conformity count a fact rather than a figure.
+ */
+export const DECLARATION_VERSIONS = [
+  { tag: 'v1', establishedAt: '2026-03-04T00:00:00.000Z', draft: false },
+  { tag: 'v2', establishedAt: '2026-03-12T00:00:00.000Z', draft: false },
+  { tag: 'v3', establishedAt: '2026-08-15T00:00:00.000Z', draft: true },
+] as const;
 
 type Attester = typeof REFERENT | typeof DEVELOPER;
 
@@ -249,30 +276,64 @@ const METRICS = {
   third_party_share_pct: 29.1,
 } as const;
 
-export function buildCriteriaCanon() {
-  const pack = rgesn2024v2;
+type FamilyId = keyof typeof REVIEWED;
 
-  const evidence: CriterionEvidence = {
-    metrics: { ...METRICS },
-    attestations: Object.fromEntries(
-      Object.entries(ANSWERS).map(([id, answer]) => [
+function familyOf(criterionId: string): FamilyId {
+  const criterion = rgesn2024v2.criteria.find((entry) => entry.id === criterionId);
+  if (criterion === undefined) throw new Error(`no criterion ${criterionId} in the pack`);
+  return criterion.family as FamilyId;
+}
+
+/**
+ * the answers on the books at `asOf`, or all of them when it is omitted.
+ * an answer not yet recorded is absent, not failed: the engine returns
+ * `non_evalue` for it, which is the absence of an answer.
+ */
+function evidenceAsOf(asOf?: string): CriterionEvidence {
+  const entries = Object.entries(ANSWERS).flatMap(([id, answer]) => {
+    const attestedAt = REVIEWED[familyOf(id)];
+    if (asOf !== undefined && attestedAt > asOf) return [];
+    return [
+      [
         id,
         {
           status: answer.status,
           ...(answer.why === undefined ? {} : { justification: answer.why }),
           attestedBy: answer.by as string,
-          attestedAt: REVIEWED_AT[answer.by] as string,
+          attestedAt: attestedAt as string,
           // no artifact is referenced: this canon carries the answers, not the
           // files behind them, and the engine is told so rather than left to
           // assume one exists.
-          evidenceRefs: [],
+          evidenceRefs: [] as string[],
         },
-      ]),
-    ),
-  };
+      ] as const,
+    ];
+  });
+  return { metrics: { ...METRICS }, attestations: Object.fromEntries(entries) };
+}
 
+export function buildCriteriaCanon() {
+  const pack = rgesn2024v2;
+  const evidence = evidenceAsOf();
   const assessments = evaluate(pack, evidence);
   const blocking = blockingFindings(pack, assessments);
+
+  // each published version, answered again against the answers it could have
+  // held. the counts are not carried forward from the current state: version 1
+  // is the engine's verdict on version 1's evidence.
+  const versions = DECLARATION_VERSIONS.map((version) => {
+    const answered = evaluate(pack, evidenceAsOf(version.establishedAt));
+    return {
+      tag: version.tag,
+      draft: version.draft,
+      establishedAt: version.establishedAt,
+      conforme: answered.filter((assessment) => assessment.status === 'conforme').length,
+      answered: answered.filter((assessment) => assessment.status !== 'non_evalue').length,
+      // the denominator the rate is out of, everywhere: criteria in scope.
+      applicable: answered.filter((assessment) => assessment.status !== 'non_applicable').length,
+      total: pack.criteria.length,
+    };
+  });
 
   return {
     pack,
@@ -281,5 +342,6 @@ export function buildCriteriaCanon() {
     completion: completion(assessments),
     blocking,
     publishable: canPublish(blocking),
+    versions,
   };
 }

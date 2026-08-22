@@ -186,7 +186,7 @@ export const budgetCanon: BudgetCanon = {
   "recordedAt": "2026-07-08T11:05:00.000Z",
   "expiresAt": "2026-09-01T00:00:00.000Z",
   "requestedIn": "PR #401",
-  "ledgerRef": "8737fb74"
+  "ledgerRef": "102ae192"
 },
   main: {
     assessments: [
@@ -354,7 +354,7 @@ export const budgetCanon: BudgetCanon = {
             "recordedAt": "2026-07-08T11:05:00.000Z",
             "expiresAt": "2026-09-01T00:00:00.000Z",
             "requestedIn": "PR #401",
-            "ledgerRef": "8737fb74"
+            "ledgerRef": "102ae192"
         },
         "status": "breach",
         "observed": 1240000,
@@ -784,7 +784,7 @@ export const budgetCanon: BudgetCanon = {
                 "recordedAt": "2026-07-08T11:05:00.000Z",
                 "expiresAt": "2026-09-01T00:00:00.000Z",
                 "requestedIn": "PR #401",
-                "ledgerRef": "8737fb74"
+                "ledgerRef": "102ae192"
             },
             "status": "breach",
             "observed": 1240000,
@@ -1656,8 +1656,8 @@ export const budgetCanon: BudgetCanon = {
     "onebyte@0.1.0"
   ],
   "runId": "#4812",
-  "ledgerRef": "e9167c61",
-  "verificationUrl": "balise.fr/v/e9167c61",
+  "ledgerRef": "1551ae36",
+  "verificationUrl": "balise.fr/v/1551ae36",
   "fingerprintMatched": true
 },
 };

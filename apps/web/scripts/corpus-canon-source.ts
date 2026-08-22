@@ -37,8 +37,8 @@ const RANK_METRIC: MetricId = 'transferred_bytes';
  * is modelled on). so the state of one is its age against that year, computed,
  * and not a tone typed beside the age.
  */
-const DECLARATION_DUE_DAYS = 270;
-const DECLARATION_EXPIRED_DAYS = 365;
+export const DECLARATION_DUE_DAYS = 270;
+export const DECLARATION_EXPIRED_DAYS = 365;
 
 export type DeclarationState = 'current' | 'due' | 'expired' | 'none';
 

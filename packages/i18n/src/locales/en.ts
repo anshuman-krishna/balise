@@ -109,6 +109,7 @@ export const en = {
     minutesAgo: '{minutes} min ago',
   },
   months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+  monthsLong: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
   carbon: {
     provenance: '{model} · reference · band = {count} models · grid {grid} gCO2e/kWh ({zone})',
     gradeAndScore: '{grade} · {score}/100',

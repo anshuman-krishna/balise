@@ -1,7 +1,6 @@
 import type { AssessmentStatus, CriterionTier } from '@balise/schemas';
 import { fill, t } from '../i18n';
 import { criteriaCanon, type CriteriaRow } from '../fixtures/criteria-canon';
-import { declarationFixture } from '../fixtures/canon';
 import { shortDate } from './attribution-view';
 
 /**
@@ -70,16 +69,20 @@ export interface ConformityPoint {
  * both ends of its own line.
  *
  * three published versions is a short history and the caption says three.
+ *
+ * every point is the engine's verdict on that version's own evidence: the
+ * answers recorded on or before the day it was established, and nothing after.
+ * the counts used to be typed, and two of the three were wrong by construction,
+ * because every attestation in the canon was dated five months after versions 1
+ * and 2 were published.
  */
 export function conformityHistory(): ConformityPoint[] {
-  return [...declarationFixture.versions]
-    .map((version) => ({
-      tag: version.tag,
-      date: version.date,
-      conforme: version.conforme,
-      draft: version.draft,
-    }))
-    .reverse();
+  return criteriaCanon.versions.map((version) => ({
+    tag: version.tag,
+    date: shortDate(version.establishedAt),
+    conforme: version.conforme,
+    draft: version.draft,
+  }));
 }
 
 /** the pack's own criterion count, which the history is a count out of. */

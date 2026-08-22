@@ -2,6 +2,16 @@ import { fill, t } from '../i18n';
 import { canon, declarationFixture as decl } from '../fixtures/canon';
 import { criteriaCanon } from '../fixtures/criteria-canon';
 import { blockingRows, conformityPct, familyBars } from '../lib/criteria-view';
+import { shortDate } from '../lib/attribution-view';
+import {
+  badgeDate,
+  dateWithYear,
+  declarationHistory,
+  draftVersion,
+  longDateFr,
+  publishedVersion,
+  reviewDue,
+} from '../lib/declaration-view';
 
 // the published page repeats the workspace figures, and reads them where the
 // workspace does: the assessments the engine answered.
@@ -30,6 +40,9 @@ function FamilyBar({ family }: { family: (typeof families)[number] }) {
 }
 
 export function Declaration() {
+  const draft = draftVersion();
+  const published = publishedVersion();
+
   return (
     <>
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 20 }}>
@@ -37,16 +50,16 @@ export function Declaration() {
           <h1 className="screen-title">{t.nav.items.declarationEditor}</h1>
           <div className="screen-subtitle">
             {fill(t.declaration.subtitle, {
-              draft: decl.draft,
-              published: decl.published,
-              publishedDate: decl.publishedDate,
-              reviewDate: decl.reviewDate,
+              draft: draft.tag,
+              published: published.tag,
+              publishedDate: dateWithYear(published.establishedAt),
+              reviewDate: dateWithYear(reviewDue()),
             })}
           </div>
         </div>
         <div style={{ display: 'flex', gap: 8 }}>
           <button type="button" className="btn" style={{ fontSize: 11, padding: '6px 12px' }}>
-            {fill(t.declaration.diffVs, { version: decl.published })}
+            {fill(t.declaration.diffVs, { version: published.tag })}
           </button>
           <button
             type="button"
@@ -129,15 +142,16 @@ export function Declaration() {
           <div className="card">
             <span className="eyebrow">{t.declaration.versionHistoryTitle}</span>
             <div className="mono" style={{ marginTop: 12, fontSize: 10.5, lineHeight: 1.95 }}>
-              {decl.versions.map((version) => (
+              {declarationHistory().map((version) => (
                 <div key={version.tag} style={{ display: 'flex', gap: 12 }}>
                   <span style={{ color: version.draft ? 'var(--measured)' : 'var(--text-tertiary)' }}>
                     {version.tag}
                     {version.draft ? ` ${t.declaration.draftTag}` : ''}
                   </span>
                   <span style={{ color: 'var(--text-secondary)' }}>
-                    {version.date} · {fill(t.declaration.conformeCount, { count: version.conforme })}
-                    {version.ledger !== undefined ? ` · ${fill(t.declaration.ledgerRef, { hash: version.ledger })}` : ''}
+                    {shortDate(version.establishedAt)} ·{' '}
+                    {fill(t.declaration.conformeCount, { count: version.conforme })}
+                    {version.ledger === null ? '' : ` · ${fill(t.declaration.ledgerRef, { hash: version.ledger })}`}
                   </span>
                 </div>
               ))}
@@ -161,7 +175,7 @@ export function Declaration() {
             <div style={{ marginTop: 8, fontSize: 11, lineHeight: 1.6, color: 'var(--text-secondary)' }}>
               {fill(t.declaration.preview.meta, {
                 service: canon.service.title,
-                date: decl.preview.establishedDate,
+                date: longDateFr(draft.establishedAt),
                 referential: decl.preview.referential,
               })}
             </div>
@@ -252,7 +266,7 @@ export function Declaration() {
                 BALISE
               </span>
               <span style={{ padding: '5px 9px', fontSize: 9.5 }}>
-                {t.declaration.preview.badgeName} <span className="mono">{conformity}%</span> · {decl.preview.badgeDate}
+                {t.declaration.preview.badgeName} <span className="mono">{conformity}%</span> · {badgeDate(draft.establishedAt)}
               </span>
             </span>
           </div>

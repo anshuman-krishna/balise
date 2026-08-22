@@ -2,12 +2,17 @@ import { Disclosure } from '@balise/ui';
 import { fill, t } from '../i18n';
 import { canon } from '../fixtures/canon';
 import { fieldList, serviceEnvironment } from '../lib/fingerprint-view';
+import { reviewCountdown } from '../lib/declaration-view';
 
 // row 2 is a credibility feature, not debug output. the full environment
 // fingerprint stays visible at all times; it answers "how do i know this is
 // comparable?".
 export function AppBar() {
   const { service, appBar } = canon;
+  // the review falls a year after the version in force, and the countdown is
+  // measured from the last thing in the register. the bar used to state a
+  // typed "47 d" to a date nothing held.
+  const review = reviewCountdown();
   // the service's scenarios are not all one environment: continuous monitoring
   // runs without coverage instrumentation, the pull request scenario runs with
   // it. the bar states what they share and names what they do not, because a
@@ -34,8 +39,11 @@ export function AppBar() {
             {service.branch}
           </span>
         </span>
-        <span style={{ marginLeft: 'auto' }} className="deadline-pill">
-          {fill(t.appBar.declarationDue, { days: appBar.deadlineDays })}
+        <span
+          style={{ marginLeft: 'auto' }}
+          className={review.due ? 'deadline-pill is-due' : 'deadline-pill'}
+        >
+          {fill(t.appBar.declarationDue, { days: review.days })}
         </span>
         <span className="mono" style={{ fontSize: 10, color: 'var(--text-secondary)' }}>
           {t.appBar.lastRun} {appBar.lastRunTime} ·{' '}

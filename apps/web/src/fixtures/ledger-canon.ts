@@ -7,7 +7,7 @@ import type { LedgerEntry } from '@balise/schemas';
 export const ledgerCanon = {
   organizationId: "org_atelier_sextant",
   entryCount: 4820,
-  merkleRoot: "3f6d43602776466f8c32c657bd1a574de25263bb949c1f6d5e82904432a32034",
+  merkleRoot: "974b537f400c368a4eebea5cf9b7d82e1bf173e914045c8a2302a52ba96635cd",
   anchoredAt: "2026-08-15T04:00:00.000Z",
   verification: {"status":"intact","checkedCount":4820},
   // the entries the interface and the documents cite. the rest of the chain
@@ -54,8 +54,8 @@ export const ledgerCanon = {
     "sequence": 4818,
     "createdAt": "2026-08-15T14:02:41.000Z",
     "payloadHash": "c75a770cf93f18a9593ea0836c7eccddf37f67097be34cf25f092586cbf3c801",
-    "prevHash": "ed09b53a002f15112d3c5b2b4f4e6ddf1aab9623dab0c4135e9cbccd2453c941",
-    "entryHash": "e9167c61073843e2700fc962f91fb521b58274b51903bdd4802e343d72a3243b"
+    "prevHash": "79ddb00f952bb6249c7e1453906c9bbcf97b8405ac9d9c810a20db1988a2437b",
+    "entryHash": "1551ae36a7a578462faf73bf4ab64eb90e58431f7bdd851e407d7910a5f10564"
   },
   {
     "organizationId": "org_atelier_sextant",
@@ -72,8 +72,8 @@ export const ledgerCanon = {
     "sequence": 4819,
     "createdAt": "2026-08-15T15:20:08.000Z",
     "payloadHash": "fd70dbfeb08568cb91a20cf8352a41c5c4102f04bfe4f9d8a3f7a562bb5bc820",
-    "prevHash": "e9167c61073843e2700fc962f91fb521b58274b51903bdd4802e343d72a3243b",
-    "entryHash": "a766eb5c937fd7efb7bf3ba2d4e7f65957c9afb34fb23a034a049a568658ea43"
+    "prevHash": "1551ae36a7a578462faf73bf4ab64eb90e58431f7bdd851e407d7910a5f10564",
+    "entryHash": "d17c1b16ccbd49d2ad38a8cfc5e02cf7a3ac4c950721124cdb0e549eefa6fcf9"
   },
   {
     "organizationId": "org_atelier_sextant",
@@ -82,14 +82,14 @@ export const ledgerCanon = {
     "payload": {
       "version": "v1",
       "packVersion": "rgesn-2024-v2",
-      "conforme": 28,
-      "applicable": 70
+      "conforme": 26,
+      "applicable": 78
     },
-    "sequence": 32,
-    "createdAt": "2026-03-04T10:12:00.000Z",
-    "payloadHash": "80ea86b8f26461b0003595dd82b6b5dd91920048b2ea04cb736ecf1a641a2357",
-    "prevHash": "0ec8bca55b38acff26e27f00eb9a0a555c6c9f9543ef5c58e751f0bba4263aac",
-    "entryHash": "6f192bc3deea6c1760699c32bd6220c45c75b5d374d1ae9cb16876b31f834a4b"
+    "sequence": 20,
+    "createdAt": "2026-03-04T00:00:00.000Z",
+    "payloadHash": "37fc04fc36a13a9d3004b9167a53358a9e5346df86052d497077a5e4d3f76979",
+    "prevHash": "5912038027a289b2b13522d295efc23e5edd5a76b3f204f199ca1718c568415b",
+    "entryHash": "384e81546b715fbb5a2340059823db58574bbea0fcb61ed64f30512f9f1140bb"
   },
   {
     "organizationId": "org_atelier_sextant",
@@ -99,13 +99,13 @@ export const ledgerCanon = {
       "version": "v2",
       "packVersion": "rgesn-2024-v2",
       "conforme": 34,
-      "applicable": 70
+      "applicable": 77
     },
-    "sequence": 274,
-    "createdAt": "2026-03-12T16:40:00.000Z",
-    "payloadHash": "ce202c8bafd875129b94aadb3c28ecbf78e8eb7476cbacf5a6633e08aaf97c38",
-    "prevHash": "010840e624c0e2f1d21470907dc21fd5a161d14cc848c0d54cc5c37adfe939d6",
-    "entryHash": "920b0146e3b4f03d4fd3342c9da2376bd7d67d693afe279cb99475aa30728820"
+    "sequence": 254,
+    "createdAt": "2026-03-12T00:00:00.000Z",
+    "payloadHash": "48782bf2206dc8a01ebbb276fcc955b398c4de65fed3508645dac0b79ffbf97c",
+    "prevHash": "d61d52f6589094ce35924bc5b745d5a09bd8562399eb5c2d3553ca8d1273d99d",
+    "entryHash": "f42dae04c9dd3eefb7c2ee14dc7f2cff8876a304ebc484836eee10adb04c660d"
   },
   {
     "organizationId": "org_atelier_sextant",
@@ -117,11 +117,11 @@ export const ledgerCanon = {
       "conforme": 41,
       "applicable": 70
     },
-    "sequence": 4816,
-    "createdAt": "2026-08-15T13:00:00.000Z",
+    "sequence": 4800,
+    "createdAt": "2026-08-15T00:00:00.000Z",
     "payloadHash": "7b0eeb929df4f775096c469f542ae937b027e36eb65c2a05507c65b1544b3bf8",
-    "prevHash": "c4c2fbe7528f31d8f4db1163789af538cf38ea5a63daeee1acb6ce85df3da8a1",
-    "entryHash": "754c6fbbf787e88e24c2adb54f70ea673620e4f3219b044eac6c82fc704f33e1"
+    "prevHash": "2e047ec32b8f5a7f5d0e4d48a947e72257195acce60fe80c1c9c3c4797fbb949",
+    "entryHash": "82a33178d75f6bd20a4ff815b01c57435e6a21521054e9fb6ce62985cc4dd2b1"
   },
   {
     "organizationId": "org_atelier_sextant",
@@ -136,8 +136,8 @@ export const ledgerCanon = {
     "sequence": 3704,
     "createdAt": "2026-07-08T11:05:00.000Z",
     "payloadHash": "5bf30bfdc5f5ad6b540b1c1766726f9f992d3770f17a407511a5a271d6e71682",
-    "prevHash": "720a42e135c5dbf83bff3230f328743005bae5cbb238441bea16e1320e793b5c",
-    "entryHash": "8737fb74a797ff0c12f0bfdf79013fd574d59e30ded5bea77f13c259842c1492"
+    "prevHash": "3fdd6445142e38db9d8b75030b89b8f5d865334db34a1ece0a5ffb7ecce5eb1c",
+    "entryHash": "102ae1927d6c5e26efe9c6065c07db3fa8077ee950da148ba2a5b9fd25a2f726"
   },
   {
     "organizationId": "org_atelier_sextant",
@@ -152,8 +152,8 @@ export const ledgerCanon = {
     "sequence": 4461,
     "createdAt": "2026-08-03T09:15:00.000Z",
     "payloadHash": "58f7607f8714c3c60cfc16629d0b49be70bc185ce4741594abb6b2763ec7a29e",
-    "prevHash": "9afa17c9340cd4094f021d20c167469e1bf8346aa718370b8e312018b0e4796c",
-    "entryHash": "be35597ce811e884d109736035a27002379714a6ad260da8e223ebbbeb9b4df2"
+    "prevHash": "bbae0e7fd5071b72c0a0d0a21c84a380a0f12e9a942f7757b31b2ad54e812a4b",
+    "entryHash": "bfbc27d0ef8fe0986938494c7bfefb06eedc6b7ae349f072491425865df75bbc"
   },
   {
     "organizationId": "org_atelier_sextant",
@@ -168,8 +168,8 @@ export const ledgerCanon = {
     "sequence": 3790,
     "createdAt": "2026-07-11T08:30:00.000Z",
     "payloadHash": "622d0460b5bb6298ab62cd5fb42948879bab213be0ff336d6b136f9080f86a61",
-    "prevHash": "aff0a25c72c8c615a743d8b1a96911d01123e373fd19601475134f51e270d075",
-    "entryHash": "57192464d5228e1b7a27dd56385eb4f78783959f640c718a12449dee758f6444"
+    "prevHash": "d40af2f983d8bd7fdaa9472f8fb6384b9bcb3cd7e0a129a34ecd8361179a2351",
+    "entryHash": "7d084dfddae374b8dadeca84d1d39339c6b06a3eba450cb84737c206a9051dd8"
   },
   {
     "organizationId": "org_atelier_sextant",

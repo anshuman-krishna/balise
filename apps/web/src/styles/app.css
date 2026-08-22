@@ -218,15 +218,23 @@ a:hover {
   border-color: var(--measured);
 }
 
+/* a countdown is a fact; the tone is a judgement about it. caution is for a
+   declaration old enough that the fleet calls it due, not for every day of the
+   year it is in force. */
 .deadline-pill {
   padding: 5px 9px;
-  border: 1px solid rgba(196, 118, 26, 0.45);
-  background: rgba(196, 118, 26, 0.08);
-  color: var(--caution);
+  border: 1px solid var(--border-card);
+  color: var(--text-secondary);
   font-family: var(--font-mono);
   font-weight: 500;
   font-size: 9px;
   letter-spacing: 0.06em;
+}
+
+.deadline-pill.is-due {
+  border-color: rgba(158, 95, 20, 0.45);
+  background: var(--tint-caution);
+  color: var(--caution);
 }
 
 .avatar {
