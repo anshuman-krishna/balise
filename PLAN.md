@@ -665,6 +665,19 @@ Later versions: see roadmap; detailed to-dos are appended when the version start
 
 ## Decisions log
 
+- **2026-08-22 · An explanation opens on focus and closes on escape.** `title` reaches no
+  keyboard, no touch screen and no dismissal, and three of the five it carried in this app
+  were disclosing a limit on comparability, which is the product's whole claim. `Disclosure`
+  in `packages/ui` is a real button with a panel that is in the accessible tree whether it is
+  open or not, so what a screen reader is told does not depend on a pointer.
+- **2026-08-22 · A disclosure is for information that exists nowhere else.** Expanding a
+  truncated name is not disclosure, it is the same information at full length, and eighty-four
+  of them would be eighty-four tab stops. The full url is the accessible name instead. That is
+  the line between the three that got a disclosure and the two that did not.
+- **2026-08-22 · A hover that repeats the cell under it is not information.** The budgets
+  threshold disclosed `1300KB` beside a cell reading `1 300 KB`. It states the line of
+  `balise.yml` that set it now, which is the part written by hand and the part the check
+  annotates.
 - **2026-08-22 · A table of measured numbers carries its columns, not its alignment.**
   Thirteen tables were CSS grids of `div` and `span`. Alignment is the whole meaning of a
   column and it is the one thing a screen reader cannot see, so each one reads as a flat run

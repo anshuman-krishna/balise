@@ -1,7 +1,7 @@
 import { Link } from 'react-router';
 import type { Confidence, DeltaClassification } from '@balise/schemas';
 import { classifyDelta } from '@balise/measure-core';
-import { formatInt, formatNumber, formatSigned, ToleranceBand } from '@balise/ui';
+import { Disclosure, formatInt, formatNumber, formatSigned, ToleranceBand } from '@balise/ui';
 import { fill, t } from '../i18n';
 import { comparisonFixture as cmp, type ComparisonRow } from '../fixtures/canon';
 import {
@@ -160,13 +160,14 @@ export function Comparison() {
         <RunChip run={cmp.baseline.run} date={cmp.baseline.date} tag={fill(t.comparison.baselineTag, { branch: cmp.baseline.branch })} />
         <span aria-hidden="true" style={{ color: 'var(--text-secondary)' }}>→</span>
         <RunChip run={cmp.candidate.run} date={cmp.candidate.date} tag={fill(t.comparison.candidateTag, { branch: cmp.candidate.branch })} accent />
-        <span
+        <Disclosure
           className="mono"
-          title={
+          align="end"
+          content={
             matched ? t.fingerprint.matched : fill(t.fingerprint.mismatched, { fields: fieldList(differing) })
           }
+          wrapperStyle={{ marginLeft: 'auto' }}
           style={{
-            marginLeft: 'auto',
             padding: '5px 9px',
             border: `1px solid ${matched ? 'rgba(62,122,94,.4)' : 'rgba(179,49,44,.4)'}`,
             background: matched ? 'rgba(62,122,94,.08)' : 'var(--tint-breach)',
@@ -179,7 +180,7 @@ export function Comparison() {
           {matched
             ? t.comparison.fingerprintMatch
             : fill(t.comparison.fingerprintDiffers, { fields: fieldList(differing) })}
-        </span>
+        </Disclosure>
       </div>
 
       <div

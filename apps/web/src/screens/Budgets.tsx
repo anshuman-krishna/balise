@@ -2,7 +2,7 @@ import { Link } from 'react-router';
 import { useTabParam } from '../lib/use-tab-param';
 import { Fragment } from 'react';
 import type { BudgetStatus } from '@balise/schemas';
-import { Tabs, tabPanelAttributes } from '@balise/ui';
+import { Disclosure, Tabs, tabPanelAttributes } from '@balise/ui';
 import { fill, t } from '../i18n';
 import { budgetsFixture as budgets } from '../fixtures/canon';
 import { budgetCanon } from '../fixtures/budget-canon';
@@ -164,9 +164,14 @@ export function Budgets() {
                 role="cell"
                 className="mono"
                 style={{ fontSize: 10.5, textAlign: 'right', color: 'var(--measured)' }}
-                title={row.thresholdSource ?? undefined}
               >
-                {row.threshold ?? '–'}
+                {row.thresholdSource === null ? (
+                  (row.threshold ?? '–')
+                ) : (
+                  <Disclosure content={row.thresholdSource} align="end">
+                    {row.threshold ?? '–'}
+                  </Disclosure>
+                )}
               </span>
               <HeadroomCell row={row} />
               <span

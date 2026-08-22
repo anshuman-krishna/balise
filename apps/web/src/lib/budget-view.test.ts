@@ -78,9 +78,15 @@ describe('the budgets table', () => {
     expect(relative!.scenario).toBeNull();
   });
 
-  it('shows a threshold in the unit of the value beside it, and keeps what the file wrote', () => {
+  // the cell reads the threshold in the unit of the value beside it; the
+  // disclosure states where that limit was set, which is the line the check
+  // annotates and the only place it is written by hand.
+  it('shows a threshold in the unit of the value beside it, and says where it was set', () => {
     const route = rows.find((row) => row.scope === '/demarches/*' && row.metric === 'bytes');
-    expect(route).toMatchObject({ threshold: `1${NARROW_NBSP}300 KB`, thresholdSource: '1300KB' });
+    expect(route!.threshold).toBe(`1${NARROW_NBSP}300 KB`);
+    expect(route!.thresholdSource).toMatch(/balise\.yml/);
+    expect(route!.thresholdSource).toContain('1300KB');
+    expect(route!.thresholdSource).toMatch(/\d+/);
   });
 
   it('fills the bar from the measured value against its threshold', () => {

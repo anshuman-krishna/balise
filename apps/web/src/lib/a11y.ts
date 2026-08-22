@@ -28,6 +28,7 @@ export type A11yRule =
   | 'multiple-h1'
   | 'heading-level-skipped'
   | 'shouty-name'
+  | 'title-not-reachable'
   | 'table-unnamed'
   | 'table-structure'
   | 'row-cell-count';
@@ -232,6 +233,19 @@ export function auditMarkup(html: string): A11yFinding[] {
 function auditNames(nodes: readonly MarkupNode[]): A11yFinding[] {
   const findings: A11yFinding[] = [];
   for (const node of nodes) {
+    // `title` is not reachable by keyboard, not shown on touch, and not
+    // dismissible. on a focusable element it is at least a supplement to
+    // something a keyboard can reach; on anything else it is the only carrier
+    // of the explanation, and it fails WCAG 1.4.13 three ways.
+    const title = collapse(attr(node, 'title') ?? '');
+    if (title !== '' && node.tag !== 'iframe' && !isFocusable(node)) {
+      findings.push({
+        rule: 'title-not-reachable',
+        element: describe(node),
+        detail: `explains "${title}" in a title attribute on something the keyboard cannot reach`,
+      });
+    }
+
     const label = collapse(attr(node, 'aria-label') ?? '');
     // a single token may legitimately be an acronym: RGESN, SWD, PDF.
     if (!label.includes(' ')) continue;

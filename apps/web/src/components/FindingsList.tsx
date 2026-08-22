@@ -1,3 +1,4 @@
+import { tFr } from '../i18n';
 import type { FindingsView } from '../lib/findings-view';
 
 /**
@@ -43,14 +44,22 @@ export function FindingsList({
           </span>
           <div>
             <span style={{ fontSize: 11.5, lineHeight: 1.5 }}>{finding.sentence}</span>
+            {/* the visible name is truncated to a file name. the url is what
+                identifies the response, so it names the item rather than hiding
+                behind a hover on something the keyboard cannot reach. */}
             {finding.evidence.length === 0 ? null : (
-              <div style={{ marginTop: 4, display: 'flex', flexWrap: 'wrap', gap: '0 12px' }}>
+              <div
+                role="list"
+                aria-label={tFr.a11y.evidence}
+                style={{ marginTop: 4, display: 'flex', flexWrap: 'wrap', gap: '0 12px' }}
+              >
                 {finding.evidence.map((entry) => (
                   <span
                     key={entry.url}
+                    role="listitem"
+                    aria-label={`${entry.url} ${entry.amount}`}
                     className="mono"
                     style={{ fontSize: 9.5, color: 'var(--text-tertiary)' }}
-                    title={entry.url}
                   >
                     {entry.name} {entry.amount}
                   </span>

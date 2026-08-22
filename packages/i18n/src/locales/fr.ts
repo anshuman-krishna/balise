@@ -6,6 +6,7 @@ import type { Catalog } from './en.js';
 export const fr: Catalog = {
   a11y: {
     skipToContent: 'Aller au contenu',
+    evidence: 'Réponses citées',
     // tables are drawn as css grids so the columns can be tuned; the role and
     // the name are what a screen reader has instead of the alignment.
     tables: {
@@ -287,6 +288,7 @@ export const fr: Catalog = {
   },
   budgets: {
     subtitle: 'Écrit dans {file} sur {branch} · chaque modification est un commit',
+    thresholdSource: 'Seuil défini dans balise.yml, ligne {line} : {text}',
     toggleLabel: 'Affichage des budgets',
     toggleVisual: 'Visuel',
     toggleYaml: 'YAML',

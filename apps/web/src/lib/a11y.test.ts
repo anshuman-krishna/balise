@@ -232,3 +232,22 @@ describe('the name audit', () => {
     ).toEqual([]);
   });
 });
+
+// `title` is not reachable by keyboard, not shown on touch, and not
+// dismissible. three of the five it carried in this app disclosed a limit on
+// comparability, which is the last thing to put behind a hover.
+describe('the title audit', () => {
+  it('catches an explanation the keyboard cannot reach', () => {
+    expect(rules('<span title="deux profils, donc pas comparable">coverage varies</span>')).toContain(
+      'title-not-reachable',
+    );
+  });
+
+  it('leaves a title on something focusable alone', () => {
+    expect(rules('<button type="button" title="le seuil vient du service">900 KB</button>')).toEqual([]);
+  });
+
+  it('leaves an iframe title alone', () => {
+    expect(rules('<iframe title="Aperçu de la déclaration"></iframe>')).toEqual([]);
+  });
+});

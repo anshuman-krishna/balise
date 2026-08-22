@@ -1,5 +1,6 @@
 export { ToleranceBand, type ToleranceBandProps, type ToleranceBandModel } from './ToleranceBand.js';
 export { ConfidenceBadge, type ConfidenceBadgeProps } from './ConfidenceBadge.js';
+export { Disclosure, type DisclosureProps } from './Disclosure.js';
 export { ToleranceTrend, type ToleranceTrendProps, type TrendDeploy } from './ToleranceTrend.js';
 export {
   ToleranceDispersion,

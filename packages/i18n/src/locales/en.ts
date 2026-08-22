@@ -5,6 +5,7 @@
 export const en = {
   a11y: {
     skipToContent: 'Skip to content',
+    evidence: 'Cited responses',
     // tables are drawn as css grids so the columns can be tuned; the role and
     // the name are what a screen reader has instead of the alignment.
     tables: {
@@ -290,6 +291,7 @@ export const en = {
   },
   budgets: {
     subtitle: 'Writes back to {file} on {branch} · every edit is a commit',
+    thresholdSource: 'Threshold set in balise.yml, line {line}: {text}',
     toggleLabel: 'Budget view',
     toggleVisual: 'Visual',
     toggleYaml: 'YAML',

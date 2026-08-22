@@ -1,7 +1,7 @@
 import type { BudgetAssessment, BudgetStatus, CheckRunOutput, DeltaClassification, Unit } from '@balise/schemas';
 import { buildCheckRun, checkTitle, measurementRows, outcomesByRule } from '@balise/budgets';
 import { formatMeasured, formatSigned } from '@balise/ui';
-import { t } from '../i18n';
+import { fill, t } from '../i18n';
 import { budgetCanon } from '../fixtures/budget-canon';
 import { attributionCanon } from '../fixtures/attribution-canon';
 import { attributionCoverage, attributionLead } from './attribution-view';
@@ -44,7 +44,10 @@ export interface BudgetRow {
   current: string | null;
   /** the limit, in the same unit as the value beside it. */
   threshold: string | null;
-  /** the limit exactly as the file writes it, for the title attribute. */
+  /**
+   * where the limit comes from: the line of `balise.yml` that decided it and
+   * the text written there. the same line the check annotates.
+   */
   thresholdSource: string | null;
   headroom: string | null;
   /** how full the budget is, for the bar. null when nothing was decided. */
@@ -84,7 +87,10 @@ export function budgetRows(assessments: readonly BudgetAssessment[] = budgetCano
           : null,
       current: decided.observed === null ? null : formatMeasured(decided.observed, decided.unit),
       threshold: threshold === null ? null : formatMeasured(threshold.value, decided.unit),
-      thresholdSource: threshold === null ? null : threshold.sourceText,
+      thresholdSource:
+        threshold === null
+          ? null
+          : fill(t.budgets.thresholdSource, { line: threshold.line, text: threshold.sourceText }),
       headroom:
         decided.headroom === null || threshold === null
           ? null

@@ -1,3 +1,4 @@
+import { Disclosure } from '@balise/ui';
 import { fill, t } from '../i18n';
 import { canon } from '../fixtures/canon';
 import { fieldList, serviceEnvironment } from '../lib/fingerprint-view';
@@ -53,16 +54,16 @@ export function AppBar() {
           ))}
         </span>
         {environment.uniform ? null : (
-          <span
+          <Disclosure
             className="mono"
             style={{ color: 'var(--caution)' }}
-            title={fill(t.fingerprint.variesNote, {
+            content={fill(t.fingerprint.variesNote, {
               fields: fieldList(environment.varying),
               count: environment.scenarioCount,
             })}
           >
             {fieldList(environment.varying)} {t.fingerprint.variesLabel}
-          </span>
+          </Disclosure>
         )}
         <a href="#methodology" style={{ marginLeft: 'auto' }}>
           {t.appBar.methodology} {appBar.methodologyVersion}

@@ -98,7 +98,7 @@ export function ResourceTable({
                   textOverflow: 'ellipsis',
                   whiteSpace: 'nowrap',
                 }}
-                title={row.url}
+                aria-label={row.url}
               >
                 {row.name}
               </span>
